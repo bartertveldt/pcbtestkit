@@ -1,0 +1,102 @@
+{
+  "id": "jlcpcb-2026",
+  "name": "JLCPCB rigid PCB capabilities",
+  "short": "JLCPCB",
+  "vendor": "JLCPCB",
+  "kind": "fab-capability",
+  "status": "verified",
+  "source": "https://jlcpcb.com/capabilities/pcb-capabilities",
+  "verified": "2026-11-20",
+  "notes": [
+    "Standard FR-4 rigid boards. The page gives no date; numbers were read on 2026-11-20 (LDI upgrade noted June 2025).",
+    "Track/space depends on layer count and finished copper; inner layers are not listed separately, so the outer-copper table is applied to all layers.",
+    "Via holes of 0.1/0.15 mm, and 0.2/0.25 mm holes with a pad under 0.45 mm, cost extra. 0.1 mm holes need a board of at most 1.0 mm with ENIG or OSP.",
+    "PTH annular ring: 0.25 mm (2-layer) / 0.20 mm (multilayer) recommended; the limits below are the published absolute minimums.",
+    "Not on the page and therefore not checked: aspect ratio, inner-layer track/space by inner copper weight."
+  ],
+  "hole_basis": {"pth_offset": 0.0, "npth_offset": 0.0, "ring": "finished", "hole_clearance": "finished"},
+  "dimensions": [
+    {"id": "tier", "label": "Via process", "choose": "cheapest", "levels": [
+      {"id": "standard", "label": "Standard vias (no surcharge)", "aliases": ["std"], "limits": {
+        "drill_via": 0.2,
+        "via_pad": [{"items": {"finished": {"max": 0.299}}, "value": 0.45, "note": "0.2-0.25 mm via holes need a pad of at least 0.45 mm to avoid the surcharge"}]
+      }},
+      {"id": "small-via", "label": "Small vias (surcharge)", "aliases": ["small", "advanced"],
+       "note": "Small via holes cost extra.",
+       "limits": {
+        "drill_via": [{"when": {"thickness_mm": {"max": 1.0}, "finish": ["ENIG", "OSP"]}, "value": 0.10, "note": "0.1 mm holes: board <= 1.0 mm, ENIG or OSP"}, {"value": 0.15}],
+        "via_pad": [{"when": {"thickness_mm": {"max": 1.0}, "finish": ["ENIG", "OSP"]}, "value": 0.20}, {"value": 0.25}]
+      }}
+    ]}
+  ],
+  "always": {
+    "track": [
+      {"when": {"copper_um": {"max": 40}, "layers": {"max": 2}}, "value": 0.10, "note": "1 oz, 1-2 layers"},
+      {"when": {"copper_um": {"max": 40}}, "value": 0.09, "note": "1 oz, multilayer"},
+      {"when": {"copper_um": {"max": 75}, "layers": {"max": 2}}, "value": 0.16, "note": "2 oz, 2 layers"},
+      {"when": {"copper_um": {"max": 75}}, "value": 0.15, "note": "2 oz, multilayer"},
+      {"when": {"copper_um": {"max": 90}}, "value": 0.20, "note": "2.5 oz"},
+      {"when": {"copper_um": {"max": 125}}, "value": 0.25, "note": "3.5 oz"},
+      {"when": {"copper_um": {"max": 160}}, "value": 0.30, "note": "4.5 oz"}
+    ],
+    "gap": [
+      {"when": {"copper_um": {"max": 40}, "layers": {"max": 2}}, "value": 0.10, "note": "1 oz, 1-2 layers"},
+      {"when": {"copper_um": {"max": 40}}, "value": 0.09, "note": "1 oz, multilayer"},
+      {"when": {"copper_um": {"max": 75}, "layers": {"max": 2}}, "value": 0.16, "note": "2 oz, 2 layers"},
+      {"when": {"copper_um": {"max": 75}}, "value": 0.15, "note": "2 oz, multilayer"},
+      {"when": {"copper_um": {"max": 90}}, "value": 0.20, "note": "2.5 oz"},
+      {"when": {"copper_um": {"max": 125}}, "value": 0.25, "note": "3.5 oz"},
+      {"when": {"copper_um": {"max": 160}}, "value": 0.30, "note": "4.5 oz"}
+    ],
+    "gap_pad_pad_outer": 0.15,
+    "smd_pad_min": [{"when": {"finish": ["ENIG"]}, "value": 0.20, "note": "0.2-0.25 mm pads need ENIG"}, {"value": 0.25}],
+    "ring_via": 0.05,
+    "ring_pth": [
+      {"when": {"copper_um": {"min": 41}}, "value": 0.254, "note": "2 oz copper"},
+      {"when": {"layers": {"max": 2}}, "value": 0.18, "note": "absolute minimum; 0.25 mm recommended"},
+      {"value": 0.15, "note": "absolute minimum; 0.20 mm recommended"}
+    ],
+    "drill_pth": 0.15,
+    "drill_npth": 0.50,
+    "slot_plated": [{"when": {"layers": {"max": 2}}, "value": 0.50}, {"value": 0.35}],
+    "slot_npth": 1.0,
+    "hole_to_hole_via": 0.2,
+    "hole_to_hole_pth": 0.45,
+    "hole_to_copper_via": 0.2,
+    "hole_to_copper_pth": [{"value": 0.28, "note": "0.35 mm recommended"}],
+    "hole_to_copper_npth": 0.2,
+    "hole_to_copper_inner_via": 0.2,
+    "hole_to_copper_inner_pth": 0.3,
+    "copper_to_edge": [{"when": {"edge_process": "vscore"}, "value": 0.4, "note": "V-cut edge"}, {"value": 0.2, "note": "routed edge"}],
+    "mask_web": [
+      {"when": {"copper_um": {"min": 41}}, "value": 0.20, "note": "2 oz copper"},
+      {"when": {"mask_color": ["black", "white"]}, "value": 0.13, "note": "black/white mask"},
+      {"value": 0.10}
+    ],
+    "silk_line": 0.15,
+    "silk_text_height": 1.0,
+    "silk_to_pad": {"value": 0.15, "note": "pad to silkscreen"},
+    "thickness_min": 0.4,
+    "thickness_max": 4.5,
+    "layers_max": 32,
+    "board_size_min": 3,
+    "board_size_max": [{"when": {"layers": {"max": 1}}, "value": 606}, {"when": {"layers": {"max": 2}}, "value": 670},
+                       {"when": {"layers": {"max": 4}}, "value": 663}, {"value": 656}]
+  },
+  "tests": [
+    {"name": "ordinary 2-layer board", "measured": {"track_outer": 0.15, "gap_outer": 0.15, "drill_via": 0.3, "via_pad": [{"value": 0.6, "finished": 0.3}], "ring_pth_outer": 0.3},
+     "expect": {"required": "standard", "fits": true}},
+    {"name": "0.2 mm via with 0.4 mm pad costs extra", "measured": {"drill_via": 0.2, "via_pad": [{"value": 0.4, "finished": 0.2}]},
+     "expect": {"required": "small-via"}},
+    {"name": "3.5 mil track is fine on 4 layers", "context": {"layers": 4}, "measured": {"track_outer": 0.09, "gap_outer": 0.09},
+     "expect": {"required": "standard", "fits": true}},
+    {"name": "3.5 mil track is too thin on 2 layers", "measured": {"track_outer": 0.09},
+     "expect": {"required": "standard", "fits": false}},
+    {"name": "0.1 mm drill on 1.6 mm board", "measured": {"drill_via": 0.1},
+     "expect": {"required": null}},
+    {"name": "0.1 mm drill on 0.8 mm ENIG board", "context": {"thickness_mm": 0.8, "finish": "ENIG"}, "measured": {"drill_via": 0.1, "via_pad": [{"value": 0.2, "finished": 0.1}]},
+     "expect": {"required": "small-via"}},
+    {"name": "2 oz copper needs 0.16 mm gaps", "context": {"copper_um": 70}, "measured": {"gap_outer": 0.15},
+     "expect": {"target": "standard", "ok": false, "violations": ["gap_outer"]}}
+  ]
+}

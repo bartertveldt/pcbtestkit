@@ -1,0 +1,80 @@
+{
+  "id": "wurth-basic-2022",
+  "name": "Wurth Elektronik BASIC design rules",
+  "short": "Wurth BASIC",
+  "vendor": "Wurth Elektronik",
+  "kind": "fab-classes",
+  "status": "verified",
+  "version": "2.2 / 12.2022",
+  "source": "https://www.we-online.com/files/pdf1/design-rules-poster-basic-cbt-en.pdf",
+  "verified": "2026-11-20",
+  "notes": [
+    "BASIC DESIGN RULES poster, version 2.2 / 12.2022 (504809 EN). Copper spacing depends on the starting foil; the 'minimum possible line width' column is applied to both tiers.",
+    "Plated holes: finished 0.25 / 0.20 mm with 0.60 / 0.55 mm pads (Standard); finished 0.15 mm with a 0.50 mm pad for up to about 12 layers, 1.80 mm thickness and 35 um copper; 0.45 mm pads only for less complex stack-ups (ask Wurth).",
+    "Drill tool = finished + 0.10 mm; rings, aspect ratio (8:1) and inner-layer clearances are measured from the tool. Hole-to-hole spacing is measured from the finished diameter.",
+    "Silkscreen to copper 300 um, to NPTH 300 um, between markings 200 um. Finer parameters are possible by arrangement."
+  ],
+  "hole_basis": {"pth_offset": 0.10, "npth_offset": 0.0, "ring": "toolsize", "hole_clearance": "toolsize", "aspect": "toolsize", "hole_to_hole": "finished"},
+  "dimensions": [
+    {"id": "tier", "label": "Technology", "choose": "cheapest", "levels": [
+      {"id": "standard", "aliases": ["std"], "limits": {
+        "gap_outer": [
+          {"when": {"copper_um": {"max": 9}}, "value": 0.100}, {"when": {"copper_um": {"max": 13}}, "value": 0.100},
+          {"when": {"copper_um": {"max": 18}}, "value": 0.120}, {"when": {"copper_um": {"max": 36}}, "value": 0.180},
+          {"when": {"copper_um": {"max": 71}}, "value": 0.275}, {"when": {"copper_um": {"max": 106}}, "value": 0.390}],
+        "gap_inner": [
+          {"when": {"inner_copper_um": {"max": 18}}, "value": 0.100}, {"when": {"inner_copper_um": {"max": 36}}, "value": 0.120},
+          {"when": {"inner_copper_um": {"max": 71}}, "value": 0.180}, {"when": {"inner_copper_um": {"max": 106}}, "value": 0.250}],
+        "drill_plated": 0.20,
+        "ring": 0.125,
+        "mask_web": 0.070,
+        "silk_line": 0.150
+      }},
+      {"id": "advanced", "aliases": ["adv"], "limits": {
+        "gap_outer": [
+          {"when": {"copper_um": {"max": 9}}, "value": 0.075}, {"when": {"copper_um": {"max": 13}}, "value": 0.080},
+          {"when": {"copper_um": {"max": 18}}, "value": 0.100}, {"when": {"copper_um": {"max": 36}}, "value": 0.160},
+          {"when": {"copper_um": {"max": 71}}, "value": 0.225}, {"when": {"copper_um": {"max": 106}}, "value": 0.320}],
+        "gap_inner": [
+          {"when": {"inner_copper_um": {"max": 18}}, "value": 0.075}, {"when": {"inner_copper_um": {"max": 36}}, "value": 0.100},
+          {"when": {"inner_copper_um": {"max": 71}}, "value": 0.150}, {"when": {"inner_copper_um": {"max": 106}}, "value": 0.225}],
+        "drill_plated": [{"when": {"copper_um": {"max": 36}, "layers": {"max": 12}, "thickness_mm": {"max": 1.8}}, "value": 0.15,
+                          "note": "0.15 mm finished: up to ~12 layers, 1.8 mm, 35 um copper"}, {"value": 0.20}],
+        "ring": 0.125,
+        "silk_line": {"value": 0.100, "note": "white legend"}
+      }}
+    ]}
+  ],
+  "always": {
+    "track_outer": [
+      {"when": {"copper_um": {"max": 18}}, "value": 0.060}, {"when": {"copper_um": {"max": 36}}, "value": 0.120},
+      {"when": {"copper_um": {"max": 71}}, "value": 0.125}, {"when": {"copper_um": {"max": 106}}, "value": 0.150}],
+    "track_inner": [
+      {"when": {"inner_copper_um": {"max": 36}}, "value": 0.060}, {"when": {"inner_copper_um": {"max": 71}}, "value": 0.125},
+      {"when": {"inner_copper_um": {"max": 106}}, "value": 0.175}],
+    "aspect_ratio": 8,
+    "hole_to_copper_inner": {"value": 0.225, "note": "copper clearance on inner layers (plane without pad), from the drill tool"},
+    "hole_to_hole": [
+      {"items": {"diffnet": true}, "value": 0.500, "note": "different potential"},
+      {"items": {"npth_pair": true}, "value": 0.350, "note": "NPTH to NPTH"},
+      {"value": 0.300, "note": "same potential"}],
+    "copper_to_edge": [{"when": {"edge_process": "vscore"}, "value": 0.45, "note": "V-scored edge (1.6 mm board)"}, {"value": 0.23, "note": "routed edge"}],
+    "silk_to_pad": {"value": 0.3, "note": "silkscreen clearance to copper and NPTH"}
+  },
+  "tests": [
+    {"name": "1 oz standard board", "measured": {"track_outer": 0.2, "gap_outer": 0.2, "drill_via": 0.25, "ring_via_outer": 0.15},
+     "expect": {"required": "standard", "fits": true}},
+    {"name": "0.17 mm gap needs advanced", "measured": {"gap_outer": 0.17},
+     "expect": {"required": "advanced"}},
+    {"name": "0.15 mm gap on 1 oz is beyond BASIC", "measured": {"gap_outer": 0.15},
+     "expect": {"required": null}},
+    {"name": "0.15 mm via on a 4-layer 1.6 mm board", "context": {"layers": 4}, "measured": {"drill_via": 0.15, "ring_via_outer": 0.125},
+     "expect": {"required": "advanced"}},
+    {"name": "0.15 mm via on a 2.0 mm board", "context": {"thickness_mm": 2.0}, "measured": {"drill_via": 0.15},
+     "expect": {"required": null}},
+    {"name": "holes of different nets 0.4 mm apart", "measured": {"hole_to_hole": [{"value": 0.4, "diffnet": true}]},
+     "expect": {"target": "standard", "ok": false, "violations": ["hole_to_hole"]}},
+    {"name": "18 um foil allows 0.12 mm gaps", "context": {"copper_um": 18}, "measured": {"gap_outer": 0.12, "track_outer": 0.07},
+     "expect": {"required": "standard"}}
+  ]
+}

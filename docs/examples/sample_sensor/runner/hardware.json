@@ -1,0 +1,61 @@
+{
+  "_comment": "Map test channels to your ADC hardware. Types: ads1115, mcp3008, serial (MCU firmware), simulated.",
+  "adc": {
+    "type": "ads1115",
+    "i2c_bus": 1,
+    "addresses": [
+      "0x48",
+      "0x49",
+      "0x4A",
+      "0x4B"
+    ],
+    "fsr_v": 4.096
+  },
+  "channel_map": "auto",
+  "channel_map_example": {
+    "CH01": {
+      "device": "0x48",
+      "input": 0
+    },
+    "CH02": {
+      "device": "0x48",
+      "input": 1
+    },
+    "CH03": {
+      "device": "0x48",
+      "input": 2
+    },
+    "CH04": {
+      "device": "0x48",
+      "input": 3
+    },
+    "CH05": {
+      "device": "0x49",
+      "input": 0
+    }
+  },
+  "power": {
+    "type": "gpio",
+    "pin": 17,
+    "active_high": true
+  },
+  "current_sensor": {
+    "type": "none",
+    "_example": {
+      "type": "ina219",
+      "address": "0x40",
+      "shunt_ohm": 0.1
+    }
+  },
+  "resistance": {
+    "type": "none",
+    "_example": {
+      "type": "source_resistor",
+      "gpio": 27,
+      "r_ref_ohm": 1000,
+      "v_source": 3.3
+    }
+  },
+  "adc_max_v": 3.3,
+  "site": 1
+}

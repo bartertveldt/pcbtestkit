@@ -1,0 +1,202 @@
+{
+  "sites": [
+    {
+      "site": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": "J2",
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 175.26,
+          "y": 76.2,
+          "fixture_net": "VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 190.5,
+          "y": 71.12,
+          "fixture_net": "VIN"
+        },
+        {
+          "probe": "PP03",
+          "x": 81.8,
+          "y": 60.0,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 175.26,
+          "y": 68.58,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP05",
+          "x": 175.26,
+          "y": 50.8,
+          "fixture_net": "TP_VPP_slash_MCLR"
+        },
+        {
+          "probe": "PP06",
+          "x": 125.73,
+          "y": 67.23,
+          "fixture_net": "TP_VCC"
+        },
+        {
+          "probe": "PP07",
+          "x": 139.7,
+          "y": 54.61,
+          "fixture_net": "TP_VPP"
+        },
+        {
+          "probe": "PP08",
+          "x": 79.76,
+          "y": 113.275,
+          "fixture_net": "TP_PC-DATA-IN"
+        },
+        {
+          "probe": "PP09",
+          "x": 81.8,
+          "y": 65.0,
+          "fixture_net": "TP_Net-_D1-A"
+        },
+        {
+          "probe": "PP10",
+          "x": 79.76,
+          "y": 116.045,
+          "fixture_net": "TP_PC-CLOCK-OUT"
+        },
+        {
+          "probe": "PP11",
+          "x": 82.6,
+          "y": 111.89,
+          "fixture_net": "TP_PC-DATA-OUT"
+        },
+        {
+          "probe": "PP12",
+          "x": 82.6,
+          "y": 114.66,
+          "fixture_net": "TP_VPP_ON"
+        },
+        {
+          "probe": "PP13",
+          "x": 190.5,
+          "y": 53.34,
+          "fixture_net": "TP_CLOCK-RB6"
+        },
+        {
+          "probe": "PP14",
+          "x": 190.5,
+          "y": 50.8,
+          "fixture_net": "TP_DATA-RB7"
+        }
+      ],
+      "net_prefix": ""
+    }
+  ],
+  "warnings": [],
+  "channel_map": [
+    {
+      "site": 1,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 2,
+      "dut_net": "/pic_sockets/VCC_PIC",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 3,
+      "dut_net": "/VPP{slash}MCLR",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 4,
+      "dut_net": "VCC",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 5,
+      "dut_net": "VPP",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 6,
+      "dut_net": "/PC-DATA-IN",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 7,
+      "dut_net": "Net-(D1-A)",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH07",
+      "header": "J1",
+      "pin": 8,
+      "dut_net": "/PC-CLOCK-OUT",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH08",
+      "header": "J1",
+      "pin": 9,
+      "dut_net": "/PC-DATA-OUT",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH09",
+      "header": "J1",
+      "pin": 11,
+      "dut_net": "/VPP_ON",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH10",
+      "header": "J1",
+      "pin": 12,
+      "dut_net": "/CLOCK-RB6",
+      "divider_ratio": 1.12
+    },
+    {
+      "site": 1,
+      "channel": "CH11",
+      "header": "J1",
+      "pin": 13,
+      "dut_net": "/DATA-RB7",
+      "divider_ratio": 1.12
+    }
+  ],
+  "outline_mode": "rect",
+  "outline": {
+    "x_min": 65.66,
+    "y_min": 32.64,
+    "x_max": 241.68,
+    "y_max": 172.78,
+    "width": 176.02,
+    "height": 140.14
+  },
+  "pogo_count": 14,
+  "nets": 23
+}

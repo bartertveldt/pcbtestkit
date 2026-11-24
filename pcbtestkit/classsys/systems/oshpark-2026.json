@@ -1,0 +1,62 @@
+{
+  "id": "oshpark-2026",
+  "name": "OSH Park services",
+  "short": "OSH Park",
+  "vendor": "OSH Park",
+  "kind": "fab-capability",
+  "status": "verified",
+  "source": "https://docs.oshpark.com/design-tools/kicad/kicad-design-rules/",
+  "sources": ["https://docs.oshpark.com/services/two-layer/", "https://docs.oshpark.com/services/four-layer/",
+              "https://docs.oshpark.com/services/six-layer/", "https://docs.oshpark.com/services/two-layer-hhdc/"],
+  "verified": "2026-11-20",
+  "notes": [
+    "Values are published in mil; mm values below are exact conversions, so a 0.15 mm track does not meet a 6 mil (0.1524 mm) rule.",
+    "Via diameters come from the KiCad design-rule page; the 2 oz 0.8 mm service page does not give one.",
+    "Plated drill to inner-layer copper: 10 mil on 4- and 6-layer boards (in addition to 5 mil copper-to-hole everywhere).",
+    "Super Swift, Medium Run and After Dark variants are not encoded."
+  ],
+  "hole_basis": {"pth_offset": 0.0, "npth_offset": 0.0, "ring": "finished", "hole_clearance": "finished"},
+  "dimensions": [
+    {"id": "service", "label": "Service", "choose": "cheapest", "monotonic_exempt": ["copper_max_um"], "levels": [
+      {"id": "2-layer", "aliases": ["2L", "two-layer"], "label": "2 layer, 1 oz, 1.6 mm", "limits": {
+        "layers_allowed": [1, 2], "thickness_allowed": [1.6], "copper_max_um": 35,
+        "track": "6mil", "gap": "6mil", "ring": "5mil", "drill_plated": "10mil", "via_pad": "20mil"}},
+      {"id": "2-layer-2oz-0.8mm", "aliases": ["2L-2oz", "hhdc"], "label": "2 layer, 2 oz, 0.8 mm", "limits": {
+        "layers_allowed": [1, 2], "thickness_allowed": [0.8], "copper_max_um": 70,
+        "track": "6mil", "gap": "6mil", "ring": "5mil", "drill_plated": "10mil"}},
+      {"id": "4-layer", "aliases": ["4L", "four-layer"], "label": "4 layer, 1 oz outer / 0.5 oz inner, 1.6 mm", "limits": {
+        "layers_allowed": [4], "thickness_allowed": [1.6], "copper_max_um": 35,
+        "track": "5mil", "gap": "5mil", "ring": "4mil", "drill_plated": "10mil", "via_pad": "18mil", "hole_to_copper_inner": "10mil"}},
+      {"id": "6-layer", "aliases": ["6L", "six-layer"], "label": "6 layer, 1 oz outer / 0.5 oz inner, 1.6 mm", "limits": {
+        "layers_allowed": [6], "thickness_allowed": [1.6], "copper_max_um": 35,
+        "track": "5mil", "gap": "5mil", "ring": "4mil", "drill_plated": "8mil", "via_pad": "16mil", "hole_to_copper_inner": "10mil"}}
+    ]}
+  ],
+  "always": {
+    "hole_to_copper": "5mil",
+    "hole_to_hole": {"value": "5mil", "severity": "minor", "note": "recommended clearance between holes"},
+    "copper_to_edge": "15mil",
+    "slot": {"value": "20mil", "note": "drilled slots; milled cut-outs use a 1.01 mm tool"},
+    "mask_web": "4mil",
+    "silk_line": {"value": "3mil", "note": "3 mil for short lines and text, 5 mil recommended"},
+    "silk_text_thickness": "5mil",
+    "board_size_min": "0.25in",
+    "board_size_max": "22in",
+    "blind_vias": false,
+    "microvias": false
+  },
+  "tests": [
+    {"name": "6/6 mil 2-layer board", "measured": {"layers_allowed": 2, "thickness_allowed": 1.6, "copper_max_um": 35, "track_outer": 0.16, "gap_outer": 0.16, "ring_via_outer": 0.13, "drill_via": 0.3, "via_pad": 0.6},
+     "expect": {"required": "2-layer", "fits": true}},
+    {"name": "5 mil 4-layer board", "context": {"layers": 4}, "measured": {"layers_allowed": 4, "thickness_allowed": 1.6, "copper_max_um": 35, "track_outer": 0.127, "gap_outer": 0.13, "ring_via_outer": 0.11, "drill_via": 0.254, "via_pad": 0.46},
+     "expect": {"required": "4-layer"}},
+    {"name": "5 mil tracks on a 2-layer board", "measured": {"layers_allowed": 2, "thickness_allowed": 1.6, "copper_max_um": 35, "track_outer": 0.13},
+     "expect": {"required": null}},
+    {"name": "8 mil drill needs the 6-layer service", "context": {"layers": 6}, "measured": {"layers_allowed": 6, "thickness_allowed": 1.6, "copper_max_um": 35, "drill_via": 0.2032, "via_pad": 0.41},
+     "expect": {"required": "6-layer"}},
+    {"name": "2 oz 0.8 mm board", "context": {"thickness_mm": 0.8, "copper_um": 70}, "measured": {"layers_allowed": 2, "thickness_allowed": 0.8, "copper_max_um": 70, "track_outer": 0.16},
+     "expect": {"required": "2-layer-2oz-0.8mm"}},
+    {"name": "0.15 mm track is not 6 mil", "measured": {"layers_allowed": 2, "thickness_allowed": 1.6, "track_outer": 0.15},
+     "expect": {"target": "2L", "ok": false, "violations": ["track_outer"]}}
+  ]
+}

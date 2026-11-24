@@ -1,0 +1,12 @@
+{
+  "name": "pcbtestkit",
+  "description": "PCB TestKit: KiCad production-test toolkit (skill + MCP server).",
+  "owner": { "name": "Bart Ertveldt" },
+  "plugins": [
+    {
+      "name": "pcbtestkit",
+      "source": "./",
+      "description": "Skill and MCP server that let Claude review KiCad boards, pick a fab class and generate test fixtures, solder jigs and test plans."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "ipc-6012-ring",
+  "name": "IPC-6012 performance class: annular ring and plating",
+  "short": "IPC-6012 class",
+  "vendor": "IPC",
+  "kind": "standard",
+  "finding_id": "MFG-IPC-CLASS",
+  "status": "partial",
+  "source": "https://resources.altium.com/p/meeting-standards-ipc-6012-class-3-annular-ring",
+  "verified": "2026-11-20",
+  "notes": [
+    "IPC-6012 is an acceptance standard for the finished board. Class 3 requires at least 50 um external and 25 um internal annular ring after fabrication; Class 2 allows up to 90 degrees breakout, Class 1 up to 180 degrees.",
+    "A design needs extra ring for the fab's drill-to-pad registration: the design limits are the acceptance values plus 'registration_mm' (default 0.075 mm, the hole-position tolerance JLCPCB and PCBWay publish). Set tech.context.registration_mm for your fab.",
+    "Class 1 and 2 limits here are conservative (no breakout at worst-case registration). Hole plating (20 um Class 1/2, 25 um Class 3 average) cannot be checked in the design: put the class on the order.",
+    "Only the ring and plating parts of IPC-6012 are encoded. Reproduced from a secondary source; check against your copy of the standard."
+  ],
+  "parameters": {"registration_mm": {"default": 0.075, "description": "drill-to-pad registration tolerance of the fab (mm)"}},
+  "hole_basis": {"pth_offset": 0.0, "npth_offset": 0.0, "ring": "finished"},
+  "dimensions": [
+    {"id": "class", "label": "IPC-6012 class", "choose": "user", "default": "2", "levels": [
+      {"id": "1", "aliases": ["class1"], "label": "Class 1 - general electronic products", "limits": {
+        "ring": {"value": 0, "note": "180 degree breakout allowed: the hole must only stay inside its pad"},
+        "plating_um": {"value": 20, "note": "average hole wall copper"}}},
+      {"id": "2", "aliases": ["class2"], "label": "Class 2 - dedicated service products", "limits": {
+        "ring": {"value": "registration_mm", "note": "90 degree breakout allowed; ring covers the drill registration"},
+        "plating_um": {"value": 20, "note": "average hole wall copper"}}},
+      {"id": "3", "aliases": ["class3"], "label": "Class 3 - high-reliability products", "limits": {
+        "ring_outer": {"value": "0.050 + registration_mm", "note": "50 um external ring after fabrication + registration"},
+        "ring_inner": {"value": "0.025 + registration_mm", "note": "25 um internal ring after fabrication + registration"},
+        "plating_um": {"value": 25, "note": "average hole wall copper"}}}
+    ]}
+  ],
+  "tests": [
+    {"name": "0.1 mm ring is not enough for class 3", "measured": {"ring_via_outer": 0.1},
+     "expect": {"target": "3", "ok": false, "violations": ["ring_via_outer"], "passing": {"class": ["1", "2"]}}},
+    {"name": "0.2 mm ring passes every class", "measured": {"ring_via_outer": 0.2, "ring_via_inner": 0.2},
+     "expect": {"passing": {"class": ["1", "2", "3"]}}},
+    {"name": "tighter registration", "context": {"registration_mm": 0.05}, "measured": {"ring_pth_outer": 0.1},
+     "expect": {"target": "class 3", "ok": true}}
+  ]
+}

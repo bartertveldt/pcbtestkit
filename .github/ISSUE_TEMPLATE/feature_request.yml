@@ -1,0 +1,15 @@
+name: Feature or fab class system
+description: Suggest a feature, a check, or a fab/standard to add as a class system
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What would help
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source (for a new fab class system)
+      description: Link to the fab's capability page or design-rule document

@@ -1,0 +1,73 @@
+{
+  "id": "ipc-2221-voltage",
+  "name": "IPC-2221 conductor spacing by voltage (Table 6-1)",
+  "short": "IPC-2221 spacing",
+  "vendor": "IPC",
+  "kind": "standard",
+  "category": "electrical",
+  "finding_id": "ELEC-VOLTAGE-SPACING",
+  "status": "secondary",
+  "source": "https://www.ema-eda.com/ema-resources/blog/pcb-clearance-and-creepage-distance-table/",
+  "sources": ["https://philipmcgaw.com/creepage-and-clearance/",
+              "https://blogs.sw.siemens.com/electronic-systems-design/2025/04/29/pcb-high-voltage-spacing-what-every-engineer-should-know/"],
+  "verified": "2026-11-20",
+  "notes": [
+    "Reproduced from secondary sources (the standard is paywalled). Check against your copy of IPC-2221B/C before relying on it for safety approval.",
+    "Voltage = DC or AC peak between the two conductors. Set net voltages (nets.<name>.nominal) for every high-voltage net; nets without a known voltage count as 0 V.",
+    "251-300 V, B2: sources disagree (1.25 mm vs 2.5 mm); the larger 2.5 mm is used.",
+    "Above 500 V: the 301-500 V value plus the per-volt increment for every volt above 500 (IPC adds the increments to the 500 V value).",
+    "Columns: B1 internal conductors; B2 external uncoated up to 3050 m; B3 external uncoated above 3050 m; B4 external with permanent polymer coating; A5 external with conformal coating; A6 external component lead/termination uncoated; A7 external component lead/termination coated.",
+    "Inner layers always use B1. Pad-to-pad gaps between different parts use the lead column (A6, or A7 when coated, B3 above 3050 m). Pin-to-pin spacing inside one footprint is the part's design and is not checked. Solder resist is not a coating.",
+    "This is electrical clearance on the board surface, not a full creepage/clearance assessment (IEC 60664/62368)."
+  ],
+  "tables": {
+    "spacing": {
+      "key": "dv",
+      "unit": "V",
+      "rows": [
+        {"upto": 15,  "B1": 0.05, "B2": 0.1,  "B3": 0.1,  "B4": 0.05, "A5": 0.13, "A6": 0.13, "A7": 0.13},
+        {"upto": 30,  "B1": 0.05, "B2": 0.1,  "B3": 0.1,  "B4": 0.05, "A5": 0.13, "A6": 0.25, "A7": 0.13},
+        {"upto": 50,  "B1": 0.1,  "B2": 0.6,  "B3": 0.6,  "B4": 0.13, "A5": 0.13, "A6": 0.4,  "A7": 0.13},
+        {"upto": 100, "B1": 0.1,  "B2": 0.6,  "B3": 1.5,  "B4": 0.13, "A5": 0.13, "A6": 0.5,  "A7": 0.13},
+        {"upto": 150, "B1": 0.2,  "B2": 0.6,  "B3": 3.2,  "B4": 0.4,  "A5": 0.4,  "A6": 0.8,  "A7": 0.4},
+        {"upto": 170, "B1": 0.2,  "B2": 1.25, "B3": 3.2,  "B4": 0.4,  "A5": 0.4,  "A6": 0.8,  "A7": 0.4},
+        {"upto": 250, "B1": 0.2,  "B2": 1.25, "B3": 6.4,  "B4": 0.4,  "A5": 0.4,  "A6": 0.8,  "A7": 0.4},
+        {"upto": 300, "B1": 0.2,  "B2": 2.5,  "B3": 12.5, "B4": 0.4,  "A5": 0.4,  "A6": 0.8,  "A7": 0.8},
+        {"upto": 500, "B1": 0.25, "B2": 2.5,  "B3": 12.5, "B4": 0.8,  "A5": 0.8,  "A6": 1.5,  "A7": 0.8}
+      ],
+      "beyond": {"from": 500, "per_unit": {"B1": 0.0025, "B2": 0.005, "B3": 0.025, "B4": 0.00305, "A5": 0.00305, "A6": 0.00305, "A7": 0.00305}}
+    }
+  },
+  "dimensions": [
+    {"id": "environment", "label": "External conductors", "choose": "user", "default": "B2", "levels": [
+      {"id": "B2", "aliases": ["uncoated"], "label": "Uncoated, sea level to 3050 m", "limits": {
+        "voltage_gap_inner": {"lookup": "spacing", "column": "B1"},
+        "voltage_gap_outer": {"lookup": "spacing", "column": "B2"},
+        "voltage_gap_lead": {"lookup": "spacing", "column": "A6"}}},
+      {"id": "B3", "aliases": ["uncoated-high-altitude"], "label": "Uncoated, above 3050 m", "limits": {
+        "voltage_gap_inner": {"lookup": "spacing", "column": "B1"},
+        "voltage_gap_outer": {"lookup": "spacing", "column": "B3"},
+        "voltage_gap_lead": {"lookup": "spacing", "column": "B3", "note": "A6 covers leads up to 3050 m only; B3 used above"}}},
+      {"id": "B4", "aliases": ["polymer"], "label": "Permanent polymer coating", "limits": {
+        "voltage_gap_inner": {"lookup": "spacing", "column": "B1"},
+        "voltage_gap_outer": {"lookup": "spacing", "column": "B4"},
+        "voltage_gap_lead": {"lookup": "spacing", "column": "A7"}}},
+      {"id": "A5", "aliases": ["conformal"], "label": "Conformal coating over the assembly", "limits": {
+        "voltage_gap_inner": {"lookup": "spacing", "column": "B1"},
+        "voltage_gap_outer": {"lookup": "spacing", "column": "A5"},
+        "voltage_gap_lead": {"lookup": "spacing", "column": "A7"}}}
+    ]}
+  ],
+  "tests": [
+    {"name": "48 V track 0.5 mm from ground, uncoated", "measured": {"voltage_gap_outer": [{"value": 0.5, "dv": 48}]},
+     "expect": {"target": "B2", "ok": false, "violations": ["voltage_gap_outer"], "passing": {"environment": ["B4", "A5"]}}},
+    {"name": "12 V at 0.1 mm", "measured": {"voltage_gap_outer": [{"value": 0.1, "dv": 12}]},
+     "expect": {"passing": {"environment": ["B2", "B3", "B4"]}}},
+    {"name": "600 V inner layers need 0.5 mm", "measured": {"voltage_gap_inner": [{"value": 0.45, "dv": 600}]},
+     "expect": {"target": "B2", "ok": false, "violations": ["voltage_gap_inner"]}},
+    {"name": "600 V inner layers at 0.5 mm pass", "measured": {"voltage_gap_inner": [{"value": 0.5, "dv": 600}]},
+     "expect": {"target": "B2", "ok": true}},
+    {"name": "230 V mains lead spacing", "measured": {"voltage_gap_lead": [{"value": 0.7, "dv": 325}]},
+     "expect": {"target": "B2", "ok": false, "violations": ["voltage_gap_lead"]}}
+  ]
+}

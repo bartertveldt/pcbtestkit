@@ -1,0 +1,47 @@
+{
+  "id": "pcbway-standard-2026",
+  "name": "PCBWay standard PCB capabilities",
+  "short": "PCBWay",
+  "vendor": "PCBWay",
+  "kind": "fab-capability",
+  "status": "verified",
+  "source": "https://www.pcbway.com/capabilities.html",
+  "verified": "2026-11-20",
+  "notes": [
+    "The 'Standard PCB' table (1-14 layers, FR-4). The page lists one track/space value for all copper weights and layers.",
+    "Holes smaller than 0.2 mm or larger than 6 mm are charged extra.",
+    "The annular ring value (0.15 mm) is given for via pads only; component-hole rings are not stated.",
+    "Not stated for this tier and therefore not checked: NPTH minimum, slots, hole-to-hole, hole-to-track, copper-to-edge, aspect ratio, solder mask bridge.",
+    "The Advanced PCB table (Normal / Medium / High difficulty per copper weight) is not encoded yet: its column mapping is ambiguous on the page."
+  ],
+  "hole_basis": {"pth_offset": 0.0, "npth_offset": 0.0, "ring": "finished", "hole_clearance": "finished"},
+  "dimensions": [
+    {"id": "tier", "label": "Hole sizes", "choose": "cheapest", "levels": [
+      {"id": "standard", "label": "Standard (no hole surcharge)", "aliases": ["std"], "limits": {"drill_plated": 0.20, "drill_max": 6.0}},
+      {"id": "extra-charge-holes", "label": "Holes under 0.2 mm or over 6 mm (surcharge)", "aliases": ["small-holes", "surcharge"],
+       "note": "Holes under 0.2 mm or over 6 mm cost extra.", "limits": {"drill_plated": 0.15}}
+    ]}
+  ],
+  "always": {
+    "track": 0.10,
+    "gap": 0.10,
+    "ring_via": {"value": 0.15, "note": "pads with vias in the middle"},
+    "thickness_min": 0.2,
+    "thickness_max": 3.2,
+    "layers_max": 14,
+    "silk_text_thickness": 0.15,
+    "silk_text_height": 0.8,
+    "board_size_min": 3,
+    "board_size_max": [{"when": {"layers": {"max": 2}}, "value": 1200}, {"value": 1150}]
+  },
+  "tests": [
+    {"name": "ordinary board", "measured": {"track_outer": 0.15, "gap_outer": 0.15, "drill_via": 0.3, "ring_via_outer": 0.15},
+     "expect": {"required": "standard", "fits": true}},
+    {"name": "0.15 mm via costs extra", "measured": {"drill_via": 0.15},
+     "expect": {"required": "extra-charge-holes"}},
+    {"name": "3.5 mil track is below the standard table", "measured": {"track_outer": 0.09},
+     "expect": {"fits": false}},
+    {"name": "16 layers is beyond the standard service", "measured": {"layers_max": 16},
+     "expect": {"fits": false}}
+  ]
+}

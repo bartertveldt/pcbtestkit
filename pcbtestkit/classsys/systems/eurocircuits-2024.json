@@ -1,0 +1,72 @@
+{
+  "id": "eurocircuits-2024",
+  "name": "Eurocircuits pattern + drill classes",
+  "short": "Eurocircuits",
+  "vendor": "Eurocircuits",
+  "kind": "fab-classes",
+  "status": "verified",
+  "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+  "verified": "2026-11-19",
+  "notes": [
+    "eC-classification table dated 07/05/2024. Values are lower limits; the smallest feature decides the class.",
+    "Drill class is based on the production tool size = finished plated hole + 0.10 mm (NPTH + 0.00 mm); annular rings and inner-layer pad isolation (IPI) are measured from the tool size.",
+    "The table applies to designs with a plating index of 0.40 or higher.",
+    "Service codes: P = PCB proto, S = STANDARD pool, DZ = defined impedance, RF = RF pool, SF = semi-flex pool, I = IMS pool, B = BINDI pool."
+  ],
+  "hole_basis": {"pth_offset": 0.10, "npth_offset": 0.0, "ring": "toolsize", "hole_clearance": "toolsize", "aspect": "toolsize"},
+  "class_format": "{pattern}{drill}",
+  "offer_labels": {"P": "PCB proto", "S": "STANDARD pool", "DZ": "Defined impedance", "RF": "RF pool",
+                   "SF": "Semi-flex pool", "I": "IMS pool", "B": "BINDI pool"},
+  "dimensions": [
+    {"id": "pattern", "label": "Pattern class", "choose": "cheapest", "monotonic": true, "levels": [
+      {"id": "3", "offers": "all", "limits": {"track_outer": 0.250, "gap_outer": 0.250, "ring_outer": 0.200, "track_inner": 0.250, "gap_inner": 0.250, "ring_inner": 0.200, "hole_to_copper_inner": 0.275}},
+      {"id": "4", "offers": "all", "limits": {"track_outer": 0.200, "gap_outer": 0.200, "ring_outer": 0.150, "track_inner": 0.200, "gap_inner": 0.200, "ring_inner": 0.150, "hole_to_copper_inner": 0.225}},
+      {"id": "5", "offers": "all", "limits": {"track_outer": 0.175, "gap_outer": 0.175, "ring_outer": 0.150, "track_inner": 0.175, "gap_inner": 0.175, "ring_inner": 0.150, "hole_to_copper_inner": 0.225}},
+      {"id": "6", "offers": "all", "limits": {"track_outer": 0.150, "gap_outer": 0.150, "ring_outer": 0.125, "track_inner": 0.150, "gap_inner": 0.150, "ring_inner": 0.125, "hole_to_copper_inner": 0.200}},
+      {"id": "7", "offers": "S DZ RF SF", "limits": {"track_outer": 0.125, "gap_outer": 0.125, "ring_outer": 0.125, "track_inner": 0.125, "gap_inner": 0.125, "ring_inner": 0.125, "hole_to_copper_inner": 0.200}},
+      {"id": "8", "offers": "S DZ RF", "limits": {"track_outer": 0.100, "gap_outer": 0.100, "ring_outer": 0.100, "track_inner": 0.100, "gap_inner": 0.100, "ring_inner": 0.125, "hole_to_copper_inner": 0.200}},
+      {"id": "9", "offers": "S DZ RF", "limits": {"track_outer": 0.090, "gap_outer": 0.090, "ring_outer": 0.100, "track_inner": 0.090, "gap_inner": 0.090, "ring_inner": 0.100, "hole_to_copper_inner": 0.200}}
+    ]},
+    {"id": "drill", "label": "Drill class", "choose": "cheapest", "monotonic_exempt": ["thickness_max"], "levels": [
+      {"id": "A", "offers": "all", "limits": {"drill_plated": 0.50, "drill_npth": 0.60, "thickness_max": 3.20}},
+      {"id": "B", "offers": "P S DZ RF SF B", "limits": {"drill_plated": 0.35, "drill_npth": 0.45, "thickness_max": 3.20}},
+      {"id": "C", "offers": "P S DZ RF SF B", "limits": {"drill_plated": 0.25, "drill_npth": 0.35, "thickness_max": 2.40}},
+      {"id": "D", "offers": "S DZ RF SF", "limits": {"drill_plated": 0.15, "drill_npth": 0.25, "thickness_max": 2.00}},
+      {"id": "E", "offers": "S DZ RF SF", "limits": {"drill_plated": 0.10, "drill_npth": 0.20, "thickness_max": 1.60}}
+    ]}
+  ],
+  "always": {
+    "aspect_ratio": 8,
+    "track_outer": [
+      {"when": {"copper_um": {"max": 12}}, "value": 0.090, "note": "12 um base copper"},
+      {"when": {"copper_um": {"max": 18}}, "value": 0.090, "note": "18 um base copper"},
+      {"when": {"copper_um": {"max": 35}}, "value": 0.125, "note": "35 um base copper"},
+      {"when": {"copper_um": {"max": 70}}, "value": 0.200, "note": "70 um base copper"},
+      {"when": {"copper_um": {"max": 105}}, "value": 0.250, "note": "105 um base copper"}
+    ],
+    "gap_outer": [
+      {"when": {"copper_um": {"max": 12}}, "value": 0.090, "note": "12 um base copper"},
+      {"when": {"copper_um": {"max": 18}}, "value": 0.100, "note": "18 um base copper"},
+      {"when": {"copper_um": {"max": 35}}, "value": 0.125, "note": "35 um base copper"},
+      {"when": {"copper_um": {"max": 70}}, "value": 0.200, "note": "70 um base copper"},
+      {"when": {"copper_um": {"max": 105}}, "value": 0.250, "note": "105 um base copper"}
+    ],
+    "microvias": false
+  },
+  "tests": [
+    {"name": "6C board", "measured": {"track_outer": 0.15, "gap_outer": 0.15, "ring_via_outer": 0.125, "drill_via": 0.25},
+     "expect": {"required": "6C", "fits": true}},
+    {"name": "0.17 mm gap and 0.15 mm via need 6D", "measured": {"track_outer": 0.2, "gap_outer": 0.17, "ring_via_outer": 0.2, "drill_via": 0.15},
+     "expect": {"required": "6D"}},
+    {"name": "inner-layer track decides", "context": {"layers": 4}, "measured": {"track_outer": 0.3, "gap_outer": 0.3, "track_inner": 0.1, "drill_via": 0.6},
+     "expect": {"required": "8A"}},
+    {"name": "finer than class 9", "measured": {"track_outer": 0.05, "drill_via": 0.6},
+     "expect": {"required": null, "fits": false}},
+    {"name": "ordered 6C, track too thin", "measured": {"track_outer": 0.12, "gap_outer": 0.15, "drill_via": 0.3},
+     "expect": {"target": "6C", "ok": false, "violations": ["track_outer"]}},
+    {"name": "2.4 mm board cannot have 0.15 mm holes", "measured": {"drill_via": 0.15, "thickness_max": 2.4},
+     "expect": {"required": null}},
+    {"name": "70 um copper limits the gap", "context": {"copper_um": 70}, "measured": {"gap_outer": 0.15},
+     "expect": {"target": "6A", "ok": false, "violations": ["gap_outer"]}}
+  ]
+}

@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.png binary
+*.mp4 binary
+*.stl binary
+*.gif binary
+
+# Generated example outputs: keep them out of language stats and collapse them in diffs
+docs/examples/** linguist-generated=true
+*.kicad_pcb linguist-language=KiCad-Layout

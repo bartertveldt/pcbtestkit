@@ -1,0 +1,52 @@
+# The CLI, MCP server and library as a Python package (`pip install .`, `pipx install .`).
+# The KiCad plugin itself is distributed as a KiCad Plugin Manager zip: python3 tools/build_pcm.py
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pcbtestkit"
+dynamic = ["version"]
+description = "KiCad production-test toolkit: weak-point analysis, fab class checks, test plan, pogo-pin fixture PCB, 3D-printed solder jig, 3D-animated explainer, CLI and MCP server for AI agents."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Bart Ertveldt" }]
+requires-python = ">=3.9"
+dependencies = []                     # standard library only
+keywords = ["kicad", "pcb", "dfm", "production-test", "test-fixture", "pogo-pin", "solder-jig", "mcp", "ai-agent"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+]
+
+[project.optional-dependencies]
+ipc = ["kicad-python>=0.3.0"]         # only for the KiCad 9+/11 IPC-API entry point (ipc_main.py)
+
+[project.urls]
+Homepage = "https://github.com/YOUR-GITHUB-USER/pcbtestkit"
+Documentation = "https://github.com/YOUR-GITHUB-USER/pcbtestkit#readme"
+Issues = "https://github.com/YOUR-GITHUB-USER/pcbtestkit/issues"
+Changelog = "https://github.com/YOUR-GITHUB-USER/pcbtestkit/blob/main/CHANGELOG.md"
+
+[project.scripts]
+pcbtestkit = "pcbtestkit.cli:main"
+pcbtestkit-mcp = "pcbtestkit.mcp_server:main"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["pcbtestkit", "pcbtestkit.*"]
+
+[tool.setuptools.package-data]
+pcbtestkit = ["classsys/systems/*.json", "runner/*.py", "runner/*.md", "runner/firmware/*.py"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pcbtestkit.__version__" }

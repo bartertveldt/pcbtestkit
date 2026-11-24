@@ -1,0 +1,28 @@
+name: Bug report
+description: Something produced wrong output, crashed or did not install
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you got. Paste the error text.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: "PCB TestKit (`pcbtestkit --version`), KiCad, OS"
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options: [KiCad plugin dialog, CLI, MCP server / AI agent, Generated files, Install]
+  - type: textarea
+    id: board
+    attributes:
+      label: Board
+      description: If you can share it, attach the .kicad_pcb (zip it) or a minimal board that shows the problem.

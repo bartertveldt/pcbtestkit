@@ -1,0 +1,118 @@
+{
+  "sites": [
+    {
+      "site": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": "J2",
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 110.0,
+          "y": 89.0,
+          "fixture_net": "VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 122.0,
+          "y": 88.0,
+          "fixture_net": "VIN"
+        },
+        {
+          "probe": "PP03",
+          "x": 120.0,
+          "y": 114.0,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 115.0,
+          "y": 89.0,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP05",
+          "x": 120.0,
+          "y": 110.0,
+          "fixture_net": "TP_+3V3"
+        },
+        {
+          "probe": "PP06",
+          "x": 124.0,
+          "y": 110.0,
+          "fixture_net": "TP_+5V"
+        },
+        {
+          "probe": "PP07",
+          "x": 124.0,
+          "y": 114.0,
+          "fixture_net": "TP_SDA"
+        },
+        {
+          "probe": "PP08",
+          "x": 110.0,
+          "y": 118.08,
+          "fixture_net": "TP_SCL"
+        }
+      ],
+      "net_prefix": ""
+    }
+  ],
+  "warnings": [],
+  "channel_map": [
+    {
+      "site": 1,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 2,
+      "dut_net": "VIN_12V",
+      "divider_ratio": 4.3
+    },
+    {
+      "site": 1,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 3,
+      "dut_net": "+3V3",
+      "divider_ratio": 1.18
+    },
+    {
+      "site": 1,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 4,
+      "dut_net": "+5V",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 5,
+      "dut_net": "/SDA",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 6,
+      "dut_net": "/SCL",
+      "divider_ratio": 1.82
+    }
+  ],
+  "outline_mode": "rect",
+  "outline": {
+    "x_min": 92.0,
+    "y_min": 72.0,
+    "x_max": 168.0,
+    "y_max": 158.08,
+    "width": 76.0,
+    "height": 86.08
+  },
+  "pogo_count": 8,
+  "nets": 11
+}

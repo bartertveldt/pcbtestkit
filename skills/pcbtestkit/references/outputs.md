@@ -1,0 +1,34 @@
+# Outputs and how to read them cheaply
+
+`pcbtestkit run P` (or the `generate_outputs` tool) writes to `<project>/production_test/` unless `--out` /
+`out_dir` says otherwise. The command prints the paths; it never prints file contents.
+
+| File | What it is | How an agent should read it |
+|---|---|---|
+| `<board>-spec.json` | "Good unit" specification: board, technology class, fab limits and measured stats, BOM, nets, supply, acceptance criteria, findings, decision log | `read_output` with a pointer (below) |
+| `<board>-testplan.json` | Probes, channels, dividers, header pinout, ordered test sequence, coverage | `read_output file=testplan`, or `api get_testplan --args '{"section":"summary"}'` |
+| `<board>-fixture.kicad_pcb` (+ `.kicad_pro`) | Pogo-pin fixture PCB, placed but not routed | Don't read. Open in KiCad. |
+| `<board>-fixture.json`, `-fixture-probes.csv` | Fixture sites, channel map, every pogo position | `read_output file=fixture` |
+| `<board>-jig.stl`, `.scad`, `.png`, `.json` | 3D-printable solder jig, editable OpenSCAD, pocket map, metadata | `read_output file=jig` |
+| `<board>-report.html` | All findings with a board map | Don't read (large). Use `list_findings`. |
+| `<board>-guide.html` | Visual step-by-step guide with KiCad renders | Don't read (large, embedded images). |
+| `<board>-explainer.mp4` | 3D-animated explainer (only with `--video`) | Binary. |
+| `runner/` | Raspberry Pi / MCU test runner + `testplan.json` + `hardware.json` | Read `runner/README.md` if the user sets up the tester. |
+| `visuals/` | KiCad 3D renders used by the guide | Binary. |
+
+## `read_output` pointers
+
+```bash
+pcbtestkit api read_output --project P --args '{"file":"spec","pointer":"/electrical/supply","max_chars":1500}' --compact
+```
+
+| File | Useful pointers (small) | Large (add `max_chars`, or page into them) |
+|---|---|---|
+| spec | `/board`, `/summary`, `/technology/required`, `/technology/ordered`, `/manufacturing/fab_limits`, `/electrical/supply`, `/electrical/power_nets`, `/acceptance_criteria` | `/assembly/components`, `/electrical/nets`, `/findings`, `/manufacturing/measured`, `/decision_log` |
+| testplan | `/probe_side`, `/probe_side_reason`, `/pogo`, `/adc`, `/supply`, `/coverage`, `/header`, `/warnings` | `/probes`, `/sequence` (use `/probes/0`, `/sequence/2`, ...) |
+| fixture | `/pogo_count`, `/outline_mode`, `/warnings`, `/sites` | `/channel_map`, `/nets` |
+| jig | `/jig_size_mm`, `/support_height_mm`, `/parts_to_place`, `/notes`, `/mesh` | `/pockets`, `/posts` |
+
+Pointers follow RFC 6901: `/a/b/0`. A missing pointer returns `BAD_POINTER` with the keys that exist.
+Prefer the live tools over files when possible: `get_overview`, `list_findings`, `get_testplan`, `check_classes`
+answer from the board directly and don't need a prior `run`.

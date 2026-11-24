@@ -1,0 +1,3 @@
+# Only needed for the KiCad 9+/11 IPC-API entry point (ipc_main.py).
+# The core toolkit, CLI, MCP server and SWIG plugin use the Python standard library only.
+kicad-python>=0.3.0

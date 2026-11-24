@@ -1,0 +1,2636 @@
+{
+  "schema": "pcbtestkit/spec@1",
+  "generator": "PCB TestKit 1.0.0",
+  "generated": "2026-11-21T09:00:30",
+  "source": {
+    "board": "pic_programmer.kicad_pcb",
+    "schematic": "pic_programmer.kicad_sch",
+    "file_format_version": 20260206,
+    "generator": "pcbnew 10.0"
+  },
+  "board": {
+    "name": "pic_programmer",
+    "title": "SERIAL PIC PROGRAMMER",
+    "revision": "",
+    "date": "",
+    "company": "",
+    "outline_mm": {
+      "x_min": 73.66,
+      "y_min": 40.64,
+      "x_max": 233.68,
+      "y_max": 139.7,
+      "width": 160.02,
+      "height": 99.06
+    },
+    "area_mm2": 15851.6,
+    "thickness_mm": 1.6,
+    "copper_layers": 2,
+    "layer_names": [
+      "F.Cu",
+      "B.Cu"
+    ],
+    "copper_thickness_um": 35.0,
+    "finish": "None",
+    "stackup": [
+      {
+        "name": "F.SilkS",
+        "type": "Top Silk Screen",
+        "thickness": 0.0
+      },
+      {
+        "name": "F.Paste",
+        "type": "Top Solder Paste",
+        "thickness": 0.0
+      },
+      {
+        "name": "F.Mask",
+        "type": "Top Solder Mask",
+        "thickness": 0.01
+      },
+      {
+        "name": "F.Cu",
+        "type": "copper",
+        "thickness": 0.035
+      },
+      {
+        "name": "dielectric 1",
+        "type": "core",
+        "thickness": 1.51,
+        "material": "FR4"
+      },
+      {
+        "name": "B.Cu",
+        "type": "copper",
+        "thickness": 0.035
+      },
+      {
+        "name": "B.Mask",
+        "type": "Bottom Solder Mask",
+        "thickness": 0.01
+      },
+      {
+        "name": "B.Paste",
+        "type": "Bottom Solder Paste",
+        "thickness": 0.0
+      },
+      {
+        "name": "B.SilkS",
+        "type": "Bottom Silk Screen",
+        "thickness": 0.0
+      }
+    ]
+  },
+  "technology": {
+    "system": "eurocircuits-2024",
+    "name": "Eurocircuits pattern + drill classes",
+    "status": "verified",
+    "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+    "required": {
+      "class": "3A",
+      "fits": true,
+      "services": [
+        "PCB proto",
+        "STANDARD pool",
+        "Defined impedance",
+        "RF pool",
+        "Semi-flex pool",
+        "IMS pool",
+        "BINDI pool"
+      ],
+      "levels": {
+        "pattern": "3",
+        "drill": "A"
+      },
+      "beyond": null
+    },
+    "ordered": null,
+    "layers": 2,
+    "thickness_mm": 1.6,
+    "base_copper_um": 35.0,
+    "finish": null,
+    "short_count": 0,
+    "microvias": 0,
+    "primary": {
+      "system": "eurocircuits-2024",
+      "name": "Eurocircuits pattern + drill classes",
+      "status": "verified",
+      "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+      "verified": "2026-11-19",
+      "category": "manufacturing",
+      "context": {
+        "layers": 2,
+        "copper_um": 35.0,
+        "thickness_mm": 1.6,
+        "board_w_mm": 160.02,
+        "board_h_mm": 99.06,
+        "mask_color": "green",
+        "edge_process": "routed"
+      },
+      "measured": {
+        "aspect_ratio": 2.2857,
+        "drill_npth": 3.5,
+        "drill_pth": 0.75,
+        "drill_via": 0.6,
+        "gap_outer": 0.25,
+        "microvias": 0.0,
+        "ring_pth_outer": 0.225,
+        "ring_via_outer": 0.45,
+        "thickness_max": 1.6,
+        "track_outer": 0.35
+      },
+      "required": {
+        "levels": {
+          "pattern": "3",
+          "drill": "A"
+        },
+        "fits": true,
+        "class": "3A",
+        "services": [
+          "PCB proto",
+          "STANDARD pool",
+          "Defined impedance",
+          "RF pool",
+          "Semi-flex pool",
+          "IMS pool",
+          "BINDI pool"
+        ],
+        "drivers": []
+      },
+      "process": {
+        "ok": true,
+        "violations": {}
+      }
+    },
+    "checks": [],
+    "overview": [
+      {
+        "system": "aisler-2025",
+        "name": "AISLER design rules (all published stack-ups)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper",
+          "component hole annular ring (outer)"
+        ],
+        "services": []
+      },
+      {
+        "system": "eurocircuits-2024",
+        "name": "Eurocircuits pattern + drill classes",
+        "kind": "fab-classes",
+        "status": "verified",
+        "class": "3A",
+        "fits": true,
+        "blockers": [],
+        "services": [
+          "PCB proto",
+          "STANDARD pool",
+          "Defined impedance",
+          "RF pool",
+          "Semi-flex pool",
+          "IMS pool",
+          "BINDI pool"
+        ]
+      },
+      {
+        "system": "ipc-2221-voltage",
+        "name": "IPC-2221 conductor spacing by voltage (Table 6-1)",
+        "kind": "standard",
+        "status": "secondary",
+        "class": "B2",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "ipc-6012-ring",
+        "name": "IPC-6012 performance class: annular ring and plating",
+        "kind": "standard",
+        "status": "partial",
+        "class": "2",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "jlcpcb-2026",
+        "name": "JLCPCB rigid PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper"
+        ],
+        "services": []
+      },
+      {
+        "system": "oshpark-2026",
+        "name": "OSH Park services",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "2-layer",
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper"
+        ],
+        "services": []
+      },
+      {
+        "system": "pcbway-standard-2026",
+        "name": "PCBWay standard PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "wurth-basic-2022",
+        "name": "Wurth Elektronik BASIC design rules",
+        "kind": "fab-classes",
+        "status": "verified",
+        "class": "standard",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      }
+    ]
+  },
+  "manufacturing": {
+    "fab_profile": "standard",
+    "fab_limits": {
+      "min_track": 0.127,
+      "min_clearance": 0.127,
+      "min_drill": 0.3,
+      "min_via_annular": 0.1,
+      "min_tht_annular": 0.15,
+      "min_edge_clearance": 0.3,
+      "min_hole_to_hole": 0.25,
+      "max_aspect_ratio": 8.0,
+      "warn_factor": 1.25,
+      "source": "fab profile standard"
+    },
+    "project_rules": {
+      "max_error": 0.01,
+      "min_clearance": 0.0,
+      "min_connection": 0.0,
+      "min_copper_edge_clearance": 0.01,
+      "min_groove_width": 0.0,
+      "min_hole_clearance": 0.0,
+      "min_hole_to_hole": 0.25,
+      "min_microvia_diameter": 0.508,
+      "min_microvia_drill": 0.127,
+      "min_resolved_spokes": 1.0,
+      "min_silk_clearance": 0.0,
+      "min_text_height": 0.8,
+      "min_text_thickness": 0.12,
+      "min_through_hole_diameter": 0.5,
+      "min_track_width": 0.25,
+      "min_via_annular_width": 0.05,
+      "min_via_diameter": 0.9,
+      "solder_mask_to_copper_clearance": 0.0
+    },
+    "netclasses": [
+      {
+        "name": "Default",
+        "clearance": 0.25,
+        "track_width": 0.5,
+        "via_diameter": 1.6,
+        "via_drill": 0.6,
+        "diff_pair_width": 0.25,
+        "diff_pair_gap": 0.25
+      },
+      {
+        "name": "POWER",
+        "clearance": 0.28,
+        "track_width": 0.8,
+        "via_diameter": 1.6,
+        "via_drill": 0.6,
+        "diff_pair_width": 0.28,
+        "diff_pair_gap": 0.28
+      }
+    ],
+    "measured": {
+      "min_track_width_mm": 0.35,
+      "min_via_drill_mm": 0.6,
+      "min_via_annular_mm": 0.5,
+      "min_tht_annular_mm": 0.275,
+      "min_hole_mm": 0.6,
+      "max_via_aspect_ratio": 2.67,
+      "min_pad_via_edge_clearance_mm": 1.66,
+      "via_count": 6,
+      "plated_holes": 244,
+      "non_plated_holes": 7,
+      "drill_histogram_mm": {
+        "0.60": 6,
+        "0.75": 9,
+        "0.80": 156,
+        "0.90": 6,
+        "1.00": 49,
+        "1.10": 3,
+        "1.20": 4,
+        "1.27": 3,
+        "1.30": 4,
+        "2.00": 2,
+        "3.20": 2,
+        "3.50": 1,
+        "4.30": 6
+      },
+      "track_count": 370,
+      "zone_count": 1
+    }
+  },
+  "assembly": {
+    "component_count": 63,
+    "smd_top": 0,
+    "smd_bottom": 1,
+    "tht": 56,
+    "dnp": [],
+    "components": [
+      {
+        "ref": "C1",
+        "value": "100\u00b5F",
+        "footprint": "Capacitor_THT:CP_Axial_L18.0mm_D6.5mm_P25.00mm_Horizontal",
+        "side": "top",
+        "x": 110.49,
+        "y": 78.867,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 6.96,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "VCC",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C2",
+        "value": "220uF",
+        "footprint": "Capacitor_THT:CP_Axial_L18.0mm_D6.5mm_P25.00mm_Horizontal",
+        "side": "top",
+        "x": 84.582,
+        "y": 90.17,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 6.96,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D1-K)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C3",
+        "value": "22uF/25V",
+        "footprint": "Capacitor_THT:C_Axial_L12.0mm_D6.5mm_P20.00mm_Horizontal",
+        "side": "top",
+        "x": 134.112,
+        "y": 62.23,
+        "rotation": -90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 6.5,
+        "height_source": "3D model",
+        "rated_voltage_v": 25.0,
+        "pins": {
+          "1": "VPP",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C4",
+        "value": "0",
+        "footprint": "Capacitor_THT:C_Disc_D5.1mm_W3.2mm_P5.00mm",
+        "side": "top",
+        "x": 114.3,
+        "y": 52.07,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 5.2,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(U4-Vc)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C5",
+        "value": "10nF",
+        "footprint": "Capacitor_THT:C_Disc_D5.1mm_W3.2mm_P5.00mm",
+        "side": "top",
+        "x": 129.54,
+        "y": 49.53,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 5.2,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(C5-Pad1)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C6",
+        "value": "100nF",
+        "footprint": "Capacitor_THT:C_Disc_D5.1mm_W3.2mm_P5.00mm",
+        "side": "top",
+        "x": 196.85,
+        "y": 112.395,
+        "rotation": -90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 5.2,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/pic_sockets/VCC_PIC",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C7",
+        "value": "100nF",
+        "footprint": "Capacitor_THT:C_Disc_D5.1mm_W3.2mm_P5.00mm",
+        "side": "top",
+        "x": 198.755,
+        "y": 71.12,
+        "rotation": -90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 5.2,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/pic_sockets/VCC_PIC",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C9",
+        "value": "220nF",
+        "footprint": "Capacitor_THT:C_Disc_D5.1mm_W3.2mm_P5.00mm",
+        "side": "top",
+        "x": 143.002,
+        "y": 49.784,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 5.2,
+        "height_source": "3D model",
+        "pins": {
+          "1": "VPP",
+          "2": "Net-(Q2-B)"
+        }
+      },
+      {
+        "ref": "D1",
+        "value": "1N4004",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P12.70mm_Horizontal",
+        "side": "top",
+        "x": 78.3,
+        "y": 89.7,
+        "rotation": 90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D1-K)",
+          "2": "Net-(D1-A)"
+        }
+      },
+      {
+        "ref": "D2",
+        "value": "BAT43",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+        "side": "top",
+        "x": 107.95,
+        "y": 118.237,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "VCC",
+          "2": "Net-(D2-A)"
+        }
+      },
+      {
+        "ref": "D3",
+        "value": "BAT43",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+        "side": "top",
+        "x": 107.95,
+        "y": 121.92,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D2-A)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "D4",
+        "value": "BAT43",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+        "side": "top",
+        "x": 107.95,
+        "y": 111.887,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "VCC",
+          "2": "Net-(D4-A)"
+        }
+      },
+      {
+        "ref": "D5",
+        "value": "BAT43",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+        "side": "top",
+        "x": 107.95,
+        "y": 108.585,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D4-A)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "D6",
+        "value": "BAT43",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+        "side": "top",
+        "x": 107.95,
+        "y": 125.095,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "VCC",
+          "2": "Net-(D6-A)"
+        }
+      },
+      {
+        "ref": "D7",
+        "value": "BAT43",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+        "side": "top",
+        "x": 107.95,
+        "y": 115.316,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D6-A)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "D8",
+        "value": "RED-LED",
+        "footprint": "LED_THT:LED_D5.0mm",
+        "side": "top",
+        "x": 156.21,
+        "y": 77.47,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 11.6,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "Net-(D8-A)"
+        }
+      },
+      {
+        "ref": "D9",
+        "value": "GREEN-LED",
+        "footprint": "LED_THT:LED_D5.0mm",
+        "side": "top",
+        "x": 156.21,
+        "y": 87.63,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 11.6,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "Net-(D9-A)"
+        }
+      },
+      {
+        "ref": "D10",
+        "value": "SCHOTTKY",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P12.70mm_Horizontal",
+        "side": "top",
+        "x": 137.16,
+        "y": 57.15,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "VPP",
+          "2": "Net-(D10-A)"
+        }
+      },
+      {
+        "ref": "D11",
+        "value": "BAT43",
+        "footprint": "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal",
+        "side": "top",
+        "x": 139.065,
+        "y": 80.645,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.51,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D11-K)",
+          "2": "Net-(D11-A)"
+        }
+      },
+      {
+        "ref": "D12",
+        "value": "YELLOW-LED",
+        "footprint": "LED_THT:LED_D5.0mm",
+        "side": "top",
+        "x": 156.21,
+        "y": 97.155,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 11.6,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "Net-(D12-A)"
+        }
+      },
+      {
+        "ref": "J1",
+        "value": "DB9-FEMAL",
+        "footprint": "Connector_Dsub:DSUB-9_Socket_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm",
+        "side": "top",
+        "x": 82.6,
+        "y": 120.2,
+        "rotation": -90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 12.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "unconnected-(J1-Pad1)",
+          "2": "unconnected-(J1-Pad2)",
+          "3": "/VPP_ON",
+          "4": "/PC-DATA-OUT",
+          "5": "GND",
+          "6": "unconnected-(J1-P6-Pad6)",
+          "7": "/PC-CLOCK-OUT",
+          "8": "/PC-DATA-IN",
+          "9": "unconnected-(J1-P9-Pad9)"
+        }
+      },
+      {
+        "ref": "JP1",
+        "value": "JUMPER",
+        "footprint": "Jumper:SolderJumper-2_P1.3mm_Open_TrianglePad1.0x1.5mm",
+        "side": "bottom",
+        "x": 148.082,
+        "y": 97.79,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "VCC",
+          "2": "/pic_sockets/VCC_PIC"
+        }
+      },
+      {
+        "ref": "L1",
+        "value": "22uH",
+        "footprint": "Inductor_THT:L_Radial_D7.8mm_P5.00mm_Fastron_07HCP",
+        "side": "top",
+        "x": 125.73,
+        "y": 62.23,
+        "rotation": -90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 7.6,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D10-A)",
+          "2": "VCC"
+        }
+      },
+      {
+        "ref": "P1",
+        "value": "CONN_2",
+        "footprint": "TerminalBlock_Altech:Altech_AK300_1x02_P5.00mm_45-Degree",
+        "side": "top",
+        "x": 81.8,
+        "y": 60.0,
+        "rotation": -90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 13.04,
+        "height_source": "3D model",
+        "pins": {
+          "1": "GND",
+          "2": "Net-(D1-A)"
+        }
+      },
+      {
+        "ref": "P2",
+        "value": "SUPP28",
+        "footprint": "Package_DIP:DIP-28_W7.62mm_Socket_LongPads",
+        "side": "top",
+        "x": 207.645,
+        "y": 50.8,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 4.01,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/VPP{slash}MCLR",
+          "2": "unconnected-(P2-Pad2)",
+          "3": "unconnected-(P2-Pad3)",
+          "4": "unconnected-(P2-Pad4)",
+          "5": "unconnected-(P2-Pad5)",
+          "6": "unconnected-(P2-Pad6)",
+          "7": "unconnected-(P2-Pad7)",
+          "8": "GND",
+          "9": "unconnected-(P2-Pad9)",
+          "10": "unconnected-(P2-Pad10)",
+          "11": "unconnected-(P2-Pad11)",
+          "12": "unconnected-(P2-Pad12)",
+          "13": "unconnected-(P2-Pad13)",
+          "14": "unconnected-(P2-Pad14)",
+          "15": "unconnected-(P2-Pad15)",
+          "16": "unconnected-(P2-Pad16)",
+          "17": "unconnected-(P2-Pad17)",
+          "18": "unconnected-(P2-Pad18)",
+          "19": "GND",
+          "20": "/pic_sockets/VCC_PIC",
+          "21": "unconnected-(P2-Pad21)",
+          "22": "unconnected-(P2-Pad22)",
+          "23": "unconnected-(P2-Pad23)",
+          "24": "unconnected-(P2-Pad24)",
+          "25": "unconnected-(P2-Pad25)",
+          "26": "unconnected-(P2-Pad26)",
+          "27": "/CLOCK-RB6",
+          "28": "/DATA-RB7"
+        }
+      },
+      {
+        "ref": "P3",
+        "value": "SUPP40",
+        "footprint": "footprints:40tex-Ell600",
+        "side": "top",
+        "x": 175.26,
+        "y": 50.8,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 7.51,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/VPP{slash}MCLR",
+          "2": "unconnected-(P3-Pad2)",
+          "3": "unconnected-(P3-Pad3)",
+          "4": "unconnected-(P3-Pad4)",
+          "5": "unconnected-(P3-Pad5)",
+          "6": "unconnected-(P3-Pad6)",
+          "7": "unconnected-(P3-Pad7)",
+          "8": "GND",
+          "9": "unconnected-(P3-Pad9)",
+          "10": "unconnected-(P3-Pad10)",
+          "11": "/pic_sockets/VCC_PIC",
+          "12": "GND",
+          "13": "unconnected-(P3-Pad13)",
+          "14": "unconnected-(P3-Pad14)",
+          "15": "unconnected-(P3-Pad15)",
+          "16": "unconnected-(P3-Pad16)",
+          "17": "unconnected-(P3-Pad17)",
+          "18": "unconnected-(P3-Pad18)",
+          "19": "unconnected-(P3-Pad19)",
+          "20": "unconnected-(P3-Pad20)",
+          "21": "unconnected-(P3-Pad21)",
+          "22": "unconnected-(P3-Pad22)",
+          "23": "unconnected-(P3-Pad23)",
+          "24": "unconnected-(P3-Pad24)",
+          "25": "unconnected-(P3-Pad25)",
+          "26": "unconnected-(P3-Pad26)",
+          "27": "unconnected-(P3-Pad27)",
+          "28": "unconnected-(P3-Pad28)",
+          "29": "unconnected-(P3-Pad29)",
+          "30": "unconnected-(P3-Pad30)",
+          "31": "GND",
+          "32": "/pic_sockets/VCC_PIC",
+          "33": "unconnected-(P3-Pad33)",
+          "34": "unconnected-(P3-Pad34)",
+          "35": "unconnected-(P3-Pad35)",
+          "36": "unconnected-(P3-Pad36)",
+          "37": "unconnected-(P3-Pad37)",
+          "38": "unconnected-(P3-Pad38)",
+          "39": "/CLOCK-RB6",
+          "40": "/DATA-RB7"
+        }
+      },
+      {
+        "ref": "P101",
+        "value": "CONN_1",
+        "footprint": "MountingHole:MountingHole_4.3mm_M4",
+        "side": "top",
+        "x": 77.47,
+        "y": 135.89,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "P102",
+        "value": "CONN_1",
+        "footprint": "MountingHole:MountingHole_4.3mm_M4",
+        "side": "top",
+        "x": 158.75,
+        "y": 135.89,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "P103",
+        "value": "CONN_1",
+        "footprint": "MountingHole:MountingHole_4.3mm_M4",
+        "side": "top",
+        "x": 229.87,
+        "y": 135.89,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "P104",
+        "value": "CONN_1",
+        "footprint": "MountingHole:MountingHole_4.3mm_M4",
+        "side": "top",
+        "x": 229.87,
+        "y": 44.45,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "P105",
+        "value": "CONN_1",
+        "footprint": "MountingHole:MountingHole_4.3mm_M4",
+        "side": "top",
+        "x": 158.75,
+        "y": 44.45,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "P106",
+        "value": "CONN_1",
+        "footprint": "MountingHole:MountingHole_4.3mm_M4",
+        "side": "top",
+        "x": 77.47,
+        "y": 44.45,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "Q1",
+        "value": "BC237",
+        "footprint": "footprints:TO-92",
+        "side": "top",
+        "x": 146.05,
+        "y": 69.85,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 7.3,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D11-K)",
+          "2": "Net-(Q1-B)",
+          "3": "GND"
+        }
+      },
+      {
+        "ref": "Q2",
+        "value": "BC307",
+        "footprint": "footprints:TO-92",
+        "side": "top",
+        "x": 148.082,
+        "y": 60.706,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 7.3,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(Q2-C)",
+          "2": "Net-(Q2-B)",
+          "3": "VPP"
+        }
+      },
+      {
+        "ref": "Q3",
+        "value": "BC307",
+        "footprint": "footprints:TO-92",
+        "side": "top",
+        "x": 142.24,
+        "y": 97.79,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 7.3,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/pic_sockets/VCC_PIC",
+          "2": "Net-(Q3-B)",
+          "3": "VCC"
+        }
+      },
+      {
+        "ref": "R1",
+        "value": "10K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 87.63,
+        "y": 118.11,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/VPP_ON",
+          "2": "Net-(D2-A)"
+        }
+      },
+      {
+        "ref": "R2",
+        "value": "10K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 87.63,
+        "y": 114.554,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/VPP_ON",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R3",
+        "value": "10K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 87.63,
+        "y": 111.125,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/PC-DATA-OUT",
+          "2": "Net-(D4-A)"
+        }
+      },
+      {
+        "ref": "R4",
+        "value": "10K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 87.63,
+        "y": 107.823,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/PC-DATA-OUT",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R5",
+        "value": "10K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 87.757,
+        "y": 125.476,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/PC-CLOCK-OUT",
+          "2": "Net-(D6-A)"
+        }
+      },
+      {
+        "ref": "R6",
+        "value": "10K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 87.757,
+        "y": 121.92,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/PC-CLOCK-OUT",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R7",
+        "value": "10K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 139.7,
+        "y": 54.61,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "VPP",
+          "2": "Net-(Q2-B)"
+        }
+      },
+      {
+        "ref": "R8",
+        "value": "1K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 139.065,
+        "y": 91.059,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(R8-Pad1)",
+          "2": "Net-(Q1-B)"
+        }
+      },
+      {
+        "ref": "R9",
+        "value": "2.2K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 139.065,
+        "y": 77.47,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(Q2-C)",
+          "2": "Net-(D8-A)"
+        }
+      },
+      {
+        "ref": "R10",
+        "value": "5,1K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 114.3,
+        "y": 48.26,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(U4-Vc)",
+          "2": "Net-(C5-Pad1)"
+        }
+      },
+      {
+        "ref": "R11",
+        "value": "22K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 140.081,
+        "y": 70.993,
+        "rotation": 90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D11-K)",
+          "2": "Net-(Q2-B)"
+        }
+      },
+      {
+        "ref": "R12",
+        "value": "470",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 135.255,
+        "y": 121.92,
+        "rotation": 90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(R12-Pad1)",
+          "2": "/DATA-RB7"
+        }
+      },
+      {
+        "ref": "R13",
+        "value": "470",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 140.335,
+        "y": 111.76,
+        "rotation": -90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(R13-Pad1)",
+          "2": "/CLOCK-RB6"
+        }
+      },
+      {
+        "ref": "R14",
+        "value": "470",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 139.065,
+        "y": 87.63,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "VCC",
+          "2": "Net-(D9-A)"
+        }
+      },
+      {
+        "ref": "R15",
+        "value": "6.2K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 118.11,
+        "y": 78.74,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(R15-Pad1)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R16",
+        "value": "62K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 118.11,
+        "y": 75.184,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(R16-Pad1)",
+          "2": "VPP"
+        }
+      },
+      {
+        "ref": "R17",
+        "value": "22K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 156.21,
+        "y": 68.58,
+        "rotation": 90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(Q2-C)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R18",
+        "value": "220",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 152.4,
+        "y": 68.58,
+        "rotation": 90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(Q2-C)",
+          "2": "/VPP{slash}MCLR"
+        }
+      },
+      {
+        "ref": "R19",
+        "value": "2.2K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 149.225,
+        "y": 83.82,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D11-A)",
+          "2": "Net-(Q3-B)"
+        }
+      },
+      {
+        "ref": "R20",
+        "value": "2.2K",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 144.78,
+        "y": 102.235,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "VCC",
+          "2": "Net-(Q3-B)"
+        }
+      },
+      {
+        "ref": "R21",
+        "value": "470",
+        "footprint": "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal",
+        "side": "top",
+        "x": 158.115,
+        "y": 102.235,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D12-A)",
+          "2": "/pic_sockets/VCC_PIC"
+        }
+      },
+      {
+        "ref": "RV1",
+        "value": "1K",
+        "footprint": "footprints:RV2X4",
+        "side": "top",
+        "x": 127.635,
+        "y": 90.805,
+        "rotation": 180.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 7.12,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(R15-Pad1)",
+          "2": "Net-(U4-FB+)",
+          "3": "Net-(R16-Pad1)"
+        }
+      },
+      {
+        "ref": "U1",
+        "value": "24Cxx",
+        "footprint": "Package_DIP:DIP-8_W7.62mm_Socket_LongPads",
+        "side": "top",
+        "x": 179.07,
+        "y": 109.22,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 4.01,
+        "height_source": "3D model",
+        "pins": {
+          "1": "GND",
+          "2": "GND",
+          "3": "GND",
+          "4": "GND",
+          "5": "/DATA-RB7",
+          "6": "/CLOCK-RB6",
+          "7": "unconnected-(U1-WP-Pad7)",
+          "8": "/pic_sockets/VCC_PIC"
+        }
+      },
+      {
+        "ref": "U2",
+        "value": "74HC125",
+        "footprint": "Package_DIP:DIP-14_W7.62mm_LongPads",
+        "side": "top",
+        "x": 115.57,
+        "y": 119.38,
+        "rotation": 90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 3.68,
+        "height_source": "3D model",
+        "pins": {
+          "1": "GND",
+          "2": "Net-(D2-A)",
+          "3": "Net-(R8-Pad1)",
+          "4": "GND",
+          "5": "Net-(D4-A)",
+          "6": "Net-(R12-Pad1)",
+          "7": "GND",
+          "8": "Net-(R13-Pad1)",
+          "9": "Net-(D6-A)",
+          "10": "GND",
+          "11": "/PC-DATA-IN",
+          "12": "/DATA-RB7",
+          "13": "GND",
+          "14": "VCC"
+        }
+      },
+      {
+        "ref": "U3",
+        "value": "7805",
+        "footprint": "Package_TO_SOT_THT:TO-220-3_Horizontal_TabDown",
+        "side": "top",
+        "x": 96.52,
+        "y": 71.12,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 4.45,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D1-K)",
+          "2": "GND",
+          "3": "VCC"
+        }
+      },
+      {
+        "ref": "U4",
+        "value": "LT1373",
+        "footprint": "Package_DIP:DIP-8_W7.62mm_LongPads",
+        "side": "top",
+        "x": 110.49,
+        "y": 57.15,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 3.68,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(U4-Vc)",
+          "2": "Net-(U4-FB+)",
+          "3": "unconnected-(U4-FB--Pad3)",
+          "4": "unconnected-(U4-S{slash}S-Pad4)",
+          "5": "VCC",
+          "6": "GND",
+          "7": "GND",
+          "8": "Net-(D10-A)"
+        }
+      },
+      {
+        "ref": "U5",
+        "value": "PIC_18_PINS",
+        "footprint": "Package_DIP:DIP-18_W7.62mm_Socket_LongPads",
+        "side": "top",
+        "x": 207.899,
+        "y": 107.95,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 4.01,
+        "height_source": "3D model",
+        "pins": {
+          "1": "unconnected-(U5-RA2-Pad1)",
+          "2": "unconnected-(U5-RA3-Pad2)",
+          "3": "unconnected-(U5-T0ckl-Pad3)",
+          "4": "/VPP{slash}MCLR",
+          "5": "GND",
+          "6": "unconnected-(U5-RB0-Pad6)",
+          "7": "unconnected-(U5-RB1-Pad7)",
+          "8": "unconnected-(U5-RB2-Pad8)",
+          "9": "unconnected-(U5-RB3-Pad9)",
+          "10": "unconnected-(U5-RB4-Pad10)",
+          "11": "unconnected-(U5-RB5-Pad11)",
+          "12": "/CLOCK-RB6",
+          "13": "/DATA-RB7",
+          "14": "/pic_sockets/VCC_PIC",
+          "15": "unconnected-(U5-OSC2{slash}CLKO-Pad15)",
+          "16": "unconnected-(U5-OSC1{slash}CLKI-Pad16)",
+          "17": "unconnected-(U5-RA0-Pad17)",
+          "18": "unconnected-(U5-RA1-Pad18)"
+        }
+      },
+      {
+        "ref": "U6",
+        "value": "PIC_8_PINS",
+        "footprint": "Package_DIP:DIP-8_W7.62mm_Socket_LongPads",
+        "side": "top",
+        "x": 179.07,
+        "y": 120.65,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 4.01,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/pic_sockets/VCC_PIC",
+          "2": "unconnected-(U6-GP5{slash}OSC1-Pad2)",
+          "3": "unconnected-(U6-GP4{slash}OSC2-Pad3)",
+          "4": "/VPP{slash}MCLR",
+          "5": "unconnected-(U6-GP2-Pad5)",
+          "6": "/CLOCK-RB6",
+          "7": "/DATA-RB7",
+          "8": "GND"
+        }
+      }
+    ]
+  },
+  "electrical": {
+    "supply": {
+      "net": "/pic_sockets/VCC_PIC",
+      "voltage": null,
+      "reason": "highest rail on connector P3, P2, JP1",
+      "current_limit_a": 0.5
+    },
+    "power_nets": [
+      "/pic_sockets/VCC_PIC",
+      "/VPP{slash}MCLR",
+      "VCC",
+      "VPP"
+    ],
+    "ground_nets": [
+      "GND"
+    ],
+    "nets": [
+      {
+        "name": "/CLOCK-RB6",
+        "kind": "signal",
+        "pad_count": 6,
+        "pads": [
+          "P2.27",
+          "P3.39",
+          "R13.2",
+          "U1.6",
+          "U5.12",
+          "U6.6"
+        ],
+        "probes": [
+          "PP13"
+        ]
+      },
+      {
+        "name": "/DATA-RB7",
+        "kind": "signal",
+        "pad_count": 7,
+        "pads": [
+          "P2.28",
+          "P3.40",
+          "R12.2",
+          "U1.5",
+          "U2.12",
+          "U5.13",
+          "U6.7"
+        ],
+        "probes": [
+          "PP14"
+        ]
+      },
+      {
+        "name": "/PC-CLOCK-OUT",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "J1.7",
+          "R5.1",
+          "R6.1"
+        ],
+        "probes": [
+          "PP10"
+        ]
+      },
+      {
+        "name": "/PC-DATA-IN",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J1.8",
+          "U2.11"
+        ],
+        "probes": [
+          "PP08"
+        ]
+      },
+      {
+        "name": "/PC-DATA-OUT",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "J1.4",
+          "R3.1",
+          "R4.1"
+        ],
+        "probes": [
+          "PP11"
+        ]
+      },
+      {
+        "name": "/VPP_ON",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "J1.3",
+          "R1.1",
+          "R2.1"
+        ],
+        "probes": [
+          "PP12"
+        ]
+      },
+      {
+        "name": "/VPP{slash}MCLR",
+        "kind": "power",
+        "pad_count": 5,
+        "pads": [
+          "P2.1",
+          "P3.1",
+          "R18.2",
+          "U5.4",
+          "U6.4"
+        ],
+        "probes": [
+          "PP05"
+        ]
+      },
+      {
+        "name": "/pic_sockets/VCC_PIC",
+        "kind": "power",
+        "pad_count": 11,
+        "pads": [
+          "C6.1",
+          "C7.1",
+          "JP1.2",
+          "P2.20",
+          "P3.11",
+          "P3.32",
+          "Q3.1",
+          "R21.2",
+          "U1.8",
+          "U5.14",
+          "U6.1"
+        ],
+        "probes": [
+          "PP01",
+          "PP02"
+        ]
+      },
+      {
+        "name": "GND",
+        "kind": "ground",
+        "pad_count": 40,
+        "pads": [
+          "C1.2",
+          "C2.2",
+          "C3.2",
+          "C4.2",
+          "C5.2",
+          "C6.2",
+          "C7.2",
+          "D3.2",
+          "D5.2",
+          "D7.2",
+          "D8.1",
+          "D9.1",
+          "D12.1",
+          "J1.5",
+          "P1.1",
+          "P2.8",
+          "P2.19",
+          "P3.8",
+          "P3.12",
+          "P3.31",
+          "Q1.3",
+          "R2.2",
+          "R4.2",
+          "R6.2",
+          "R15.2",
+          "R17.2",
+          "U1.1",
+          "U1.2",
+          "U1.3",
+          "U1.4",
+          "U2.1",
+          "U2.4",
+          "U2.7",
+          "U2.10",
+          "U2.13",
+          "U3.2",
+          "U4.6",
+          "U4.7",
+          "U5.5",
+          "U6.8"
+        ],
+        "expected_v": {
+          "nominal": 0.0,
+          "min": -0.05,
+          "max": 0.05,
+          "source": "net name"
+        },
+        "probes": [
+          "PP03",
+          "PP04"
+        ]
+      },
+      {
+        "name": "Net-(C5-Pad1)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "C5.1",
+          "R10.2"
+        ]
+      },
+      {
+        "name": "Net-(D1-A)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D1.2",
+          "P1.2"
+        ],
+        "probes": [
+          "PP09"
+        ]
+      },
+      {
+        "name": "Net-(D1-K)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "C2.1",
+          "D1.1",
+          "U3.1"
+        ]
+      },
+      {
+        "name": "Net-(D10-A)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D10.2",
+          "L1.1",
+          "U4.8"
+        ]
+      },
+      {
+        "name": "Net-(D11-A)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D11.2",
+          "R19.1"
+        ]
+      },
+      {
+        "name": "Net-(D11-K)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D11.1",
+          "Q1.1",
+          "R11.1"
+        ]
+      },
+      {
+        "name": "Net-(D12-A)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D12.2",
+          "R21.1"
+        ]
+      },
+      {
+        "name": "Net-(D2-A)",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D2.2",
+          "D3.1",
+          "R1.2",
+          "U2.2"
+        ]
+      },
+      {
+        "name": "Net-(D4-A)",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D4.2",
+          "D5.1",
+          "R3.2",
+          "U2.5"
+        ]
+      },
+      {
+        "name": "Net-(D6-A)",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D6.2",
+          "D7.1",
+          "R5.2",
+          "U2.9"
+        ]
+      },
+      {
+        "name": "Net-(D8-A)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D8.2",
+          "R9.2"
+        ]
+      },
+      {
+        "name": "Net-(D9-A)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D9.2",
+          "R14.2"
+        ]
+      },
+      {
+        "name": "Net-(Q1-B)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "Q1.2",
+          "R8.2"
+        ]
+      },
+      {
+        "name": "Net-(Q2-B)",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "C9.2",
+          "Q2.2",
+          "R7.2",
+          "R11.2"
+        ]
+      },
+      {
+        "name": "Net-(Q2-C)",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "Q2.1",
+          "R9.1",
+          "R17.1",
+          "R18.1"
+        ]
+      },
+      {
+        "name": "Net-(Q3-B)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "Q3.2",
+          "R19.2",
+          "R20.2"
+        ]
+      },
+      {
+        "name": "Net-(R12-Pad1)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R12.1",
+          "U2.6"
+        ]
+      },
+      {
+        "name": "Net-(R13-Pad1)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R13.1",
+          "U2.8"
+        ]
+      },
+      {
+        "name": "Net-(R15-Pad1)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R15.1",
+          "RV1.1"
+        ]
+      },
+      {
+        "name": "Net-(R16-Pad1)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R16.1",
+          "RV1.3"
+        ]
+      },
+      {
+        "name": "Net-(R8-Pad1)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R8.1",
+          "U2.3"
+        ]
+      },
+      {
+        "name": "Net-(U4-FB+)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "RV1.2",
+          "U4.2"
+        ]
+      },
+      {
+        "name": "Net-(U4-Vc)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "C4.1",
+          "R10.1",
+          "U4.1"
+        ]
+      },
+      {
+        "name": "VCC",
+        "kind": "power",
+        "pad_count": 12,
+        "pads": [
+          "C1.1",
+          "D2.1",
+          "D4.1",
+          "D6.1",
+          "JP1.1",
+          "L1.2",
+          "Q3.3",
+          "R14.1",
+          "R20.1",
+          "U2.14",
+          "U3.3",
+          "U4.5"
+        ],
+        "probes": [
+          "PP06"
+        ]
+      },
+      {
+        "name": "VPP",
+        "kind": "power",
+        "pad_count": 6,
+        "pads": [
+          "C3.1",
+          "C9.1",
+          "D10.1",
+          "Q2.3",
+          "R7.1",
+          "R16.2"
+        ],
+        "probes": [
+          "PP07"
+        ]
+      }
+    ]
+  },
+  "acceptance_criteria": [
+    {
+      "id": "DIM-OUTLINE",
+      "type": "dimensional",
+      "description": "Board outline 160.02 x 99.06 mm",
+      "limits": {
+        "width_mm": [
+          159.82,
+          160.22
+        ],
+        "height_mm": [
+          98.86,
+          99.26
+        ]
+      }
+    },
+    {
+      "id": "DIM-THICKNESS",
+      "type": "dimensional",
+      "description": "Board thickness 1.60 mm +/-10%",
+      "limits": {
+        "thickness_mm": [
+          1.44,
+          1.76
+        ]
+      }
+    },
+    {
+      "id": "WORKMANSHIP",
+      "type": "visual",
+      "description": "Soldering per IPC-A-610 Class 2"
+    },
+    {
+      "id": "VIS-POLARITY",
+      "type": "visual",
+      "step": "S1",
+      "description": "Polarity/orientation correct",
+      "refs": [
+        "C1",
+        "C2",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12"
+      ]
+    },
+    {
+      "id": "VIS-PIN1",
+      "type": "visual",
+      "step": "S1",
+      "description": "IC pin-1 orientation matches silkscreen",
+      "refs": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6"
+      ]
+    },
+    {
+      "id": "VIS-THT",
+      "type": "visual",
+      "step": "S1",
+      "description": "Through-hole joints filled, leads clipped <= 1.5 mm",
+      "refs": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "C7",
+        "C9",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "L1",
+        "P1",
+        "P2",
+        "P3",
+        "Q1",
+        "Q2",
+        "Q3",
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "R8",
+        "R9",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R17",
+        "R18",
+        "R19",
+        "R20",
+        "R21",
+        "RV1",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6"
+      ]
+    },
+    {
+      "id": "R_VCC_PIC",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on /pic_sockets/VCC_PIC",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "R_VPP{slash}MCLR",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on /VPP{slash}MCLR",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "R_VCC",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on VCC",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "R_VPP",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on VPP",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "V_SUPPLY",
+      "type": "electrical",
+      "step": "S3",
+      "description": "Apply power (/pic_sockets/VCC_PIC = None V) on /pic_sockets/VCC_PIC"
+    },
+    {
+      "id": "V_VPP{slash}MCLR",
+      "type": "electrical",
+      "step": "S4",
+      "description": "Rail voltages on /VPP{slash}MCLR",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_VCC",
+      "type": "electrical",
+      "step": "S4",
+      "description": "Rail voltages on VCC",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_VPP",
+      "type": "electrical",
+      "step": "S4",
+      "description": "Rail voltages on VPP",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_PC-DATA-IN",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on /PC-DATA-IN",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_Net-(D1-A)",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on Net-(D1-A)",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_PC-CLOCK-OUT",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on /PC-CLOCK-OUT",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_PC-DATA-OUT",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on /PC-DATA-OUT",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_VPP_ON",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on /VPP_ON",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_CLOCK-RB6",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on /CLOCK-RB6",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_DATA-RB7",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on /DATA-RB7",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    }
+  ],
+  "findings": [
+    {
+      "uid": "F001",
+      "id": "ASM-FIDUCIALS",
+      "severity": "major",
+      "category": "assembly",
+      "title": "No fiducials on the bottom side (1 SMD parts)",
+      "detail": "Pick-and-place machines need >= 2 global fiducials per populated side for accurate placement.",
+      "recommendation": "Add 2-3 fiducials in opposite corners of the bottom side, or confirm that the panel rails carry them.",
+      "count": 1,
+      "data": {
+        "side": "bottom",
+        "smd_parts": 1
+      }
+    },
+    {
+      "uid": "F002",
+      "id": "REL-ELCAP-HEAT",
+      "severity": "major",
+      "category": "reliability",
+      "title": "1 electrolytic capacitor(s) within 10 mm of a heat source",
+      "detail": "Electrolytic life roughly halves for every 10 C rise (Arrhenius); electrolyte dries out and ESR rises, a classic end-of-life failure of power supplies.",
+      "recommendation": "Move the capacitors away from regulators/MOSFETs/inductors, use 105 C long-life series or polymer capacitors.",
+      "refs": [
+        "C1",
+        "U3",
+        "U4"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "ref": "C1",
+          "heat_source": "U4",
+          "reason": "power device (LT1373)",
+          "distance_mm": 9.1
+        },
+        {
+          "ref": "C1",
+          "heat_source": "U3",
+          "reason": "power package (TO-220-3_Horizontal_TabDown)",
+          "distance_mm": 3.0
+        }
+      ]
+    },
+    {
+      "uid": "F003",
+      "id": "ELEC-DECOUPLING",
+      "severity": "major",
+      "category": "electrical",
+      "title": "5 IC power net(s) lack a nearby decoupling capacitor",
+      "detail": "Distant decoupling adds loop inductance: supply noise, brown-out resets and EMC failures that show up unit-to-unit and over temperature.",
+      "recommendation": "Place a 100 nF capacitor within 5 mm of every power pin (plus bulk capacitance per rail).",
+      "refs": [
+        "U1",
+        "U2",
+        "U4",
+        "U5",
+        "U6"
+      ],
+      "nets": [
+        "/pic_sockets/VCC_PIC",
+        "VCC"
+      ],
+      "count": 5,
+      "items": [
+        {
+          "ref": "U6",
+          "net": "/pic_sockets/VCC_PIC",
+          "nearest_cap_mm": 19.6,
+          "severity": "major"
+        },
+        {
+          "ref": "U1",
+          "net": "/pic_sockets/VCC_PIC",
+          "nearest_cap_mm": 10.6,
+          "severity": "major"
+        },
+        {
+          "ref": "U4",
+          "net": "VCC",
+          "nearest_cap_mm": 16.0,
+          "severity": "major"
+        },
+        {
+          "ref": "U5",
+          "net": "/pic_sockets/VCC_PIC",
+          "nearest_cap_mm": 19.5,
+          "severity": "major"
+        },
+        {
+          "ref": "U2",
+          "net": "VCC",
+          "nearest_cap_mm": 33.3,
+          "severity": "major"
+        }
+      ]
+    },
+    {
+      "uid": "F004",
+      "id": "ASM-PROCESS",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "Assembly process: SMT bottom (1 parts) + THT (55 parts: wave, selective or hand soldering)",
+      "detail": "Each extra process step adds cost and handling (handling = flex & ESD exposure). Bottom SMD + THT usually needs selective soldering or a wave pallet.",
+      "recommendation": "The generated solder jig holds the THT parts for hand soldering.",
+      "refs": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5",
+        "C6",
+        "C7",
+        "C9",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "L1",
+        "P1",
+        "P2",
+        "P3",
+        "Q1",
+        "Q2",
+        "Q3",
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "R8",
+        "R9",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "R15",
+        "R16",
+        "R17",
+        "R18",
+        "R19",
+        "R20",
+        "R21",
+        "RV1",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6"
+      ],
+      "count": 1,
+      "data": {
+        "smd_top": 0,
+        "smd_bottom": 1,
+        "tht": 55
+      }
+    },
+    {
+      "uid": "F005",
+      "id": "REL-SMD-CONNECTOR",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "1 connector(s) without through-hole anchors",
+      "detail": "Mating forces and cable strain go straight into SMD solder joints; pads rip off after repeated use.",
+      "recommendation": "Use connector variants with through-hole shell tabs/pegs, or add an enclosure strain relief.",
+      "refs": [
+        "JP1"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "JP1",
+          "footprint": "SolderJumper-2_P1.3mm_Open_TrianglePad1.0x1.5mm",
+          "external": false,
+          "severity": "minor"
+        }
+      ]
+    },
+    {
+      "uid": "F006",
+      "id": "REL-TALL-PARTS",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "2 tall/heavy part(s) may need staking",
+      "detail": "Under vibration and shock, tall parts lever on their solder joints and leads fatigue.",
+      "recommendation": "Glue/stake them to the board (RTV or hot melt), add clamps, or use lower-profile parts.",
+      "refs": [
+        "C1",
+        "C2"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "ref": "C1",
+          "height_mm": 7.0,
+          "height_source": "3D model"
+        },
+        {
+          "ref": "C2",
+          "height_mm": 7.0,
+          "height_source": "3D model"
+        }
+      ]
+    },
+    {
+      "uid": "F007",
+      "id": "ELEC-ESD",
+      "severity": "minor",
+      "category": "electrical",
+      "title": "2 external connector(s) with unprotected signal lines",
+      "detail": "ESD at user-accessible connectors is a top cause of field returns (latent damage, not caught by test).",
+      "recommendation": "Add TVS/ESD diodes close to the connector (e.g. USBLC6 for USB, low-capacitance arrays for data lines).",
+      "refs": [
+        "J1",
+        "P1"
+      ],
+      "nets": [
+        "/PC-CLOCK-OUT",
+        "/PC-DATA-IN",
+        "/PC-DATA-OUT",
+        "/VPP_ON",
+        "Net-(D1-A)"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "ref": "J1",
+          "nets": [
+            "/PC-CLOCK-OUT",
+            "/PC-DATA-IN",
+            "/PC-DATA-OUT",
+            "/VPP_ON"
+          ]
+        },
+        {
+          "ref": "P1",
+          "nets": [
+            "Net-(D1-A)"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "F008",
+      "id": "TEST-TESTPOINTS",
+      "severity": "minor",
+      "category": "testability",
+      "title": "No dedicated test points",
+      "detail": "The fixture has to probe component pads and THT leads; probes on solder joints wear tips and can hide cracked joints.",
+      "recommendation": "Add >= 1 mm test pads on the probe side for every rail and key signal (see the test plan coverage).",
+      "count": 1
+    },
+    {
+      "uid": "F009",
+      "id": "DOC-REVISION",
+      "severity": "minor",
+      "category": "documentation",
+      "title": "No revision in the board title block",
+      "detail": "Test results, fixtures and field returns cannot be traced to a board revision.",
+      "recommendation": "Set the revision in Board Setup > Title block and print it on silkscreen (${REVISION}).",
+      "count": 1
+    },
+    {
+      "uid": "F010",
+      "id": "MFG-TECH-CLASS",
+      "severity": "info",
+      "category": "manufacturing",
+      "title": "Board needs Eurocircuits class 3A (PCB proto, STANDARD pool, Defined impedance, RF pool, Semi-flex pool, IMS pool, BINDI pool)",
+      "detail": "The coarsest class of Eurocircuits pattern + drill classes fits.",
+      "recommendation": "Set the class you will order (tech.class) to check the board against its limits.",
+      "count": 1,
+      "data": {
+        "system": "eurocircuits-2024",
+        "required": "3A",
+        "measured": {
+          "aspect_ratio": 2.2857,
+          "drill_npth": 3.5,
+          "drill_pth": 0.75,
+          "drill_via": 0.6,
+          "gap_outer": 0.25,
+          "microvias": 0.0,
+          "ring_pth_outer": 0.225,
+          "ring_via_outer": 0.45,
+          "thickness_max": 1.6,
+          "track_outer": 0.35
+        },
+        "status": "verified"
+      }
+    },
+    {
+      "uid": "F011",
+      "id": "ASM-POLARITY",
+      "severity": "info",
+      "category": "assembly",
+      "title": "Diodes on the top side use 3 different orientations",
+      "detail": "Mixed orientations of polarized parts increase placement and visual-inspection errors.",
+      "recommendation": "Align polarized parts to one or two orientations and mark polarity clearly on silkscreen.",
+      "refs": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12"
+      ],
+      "count": 3,
+      "items": [
+        {
+          "rotation": 0,
+          "refs": [
+            "D11"
+          ]
+        },
+        {
+          "rotation": 90,
+          "refs": [
+            "D1"
+          ]
+        },
+        {
+          "rotation": 180,
+          "refs": [
+            "D2",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "D8",
+            "D9",
+            "D10",
+            "D12"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "F012",
+      "id": "DOC-MPN",
+      "severity": "info",
+      "category": "documentation",
+      "title": "No manufacturer part numbers in the schematic",
+      "detail": "The BOM relies on generic values; the assembler chooses parts.",
+      "recommendation": "Add an MPN field (or LCSC/Digikey numbers) to control what gets assembled.",
+      "count": 55
+    }
+  ],
+  "summary": {
+    "counts": {
+      "critical": 0,
+      "major": 3,
+      "minor": 6,
+      "info": 3
+    },
+    "score": 70,
+    "verdict": "needs review",
+    "total": 12,
+    "waived": 0
+  },
+  "decision_log": [],
+  "warnings": []
+}

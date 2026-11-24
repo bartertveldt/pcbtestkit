@@ -1,0 +1,22 @@
+{
+  "$schema": "https://go.kicad.org/api/schemas/v1",
+  "identifier": "org.pcbtestkit.plugin",
+  "name": "PCB TestKit",
+  "description": "Production weak-point analysis, good-unit spec, test scheme, pogo-pin fixture board and solder jig generation.",
+  "runtime": {
+    "type": "python",
+    "min_version": "3.9"
+  },
+  "actions": [
+    {
+      "identifier": "pcbtestkit.generate",
+      "name": "PCB TestKit: generate production test files",
+      "description": "Analyse the open board and export spec, test plan, fixture board, solder jig, report and runner.",
+      "show-button": true,
+      "scopes": ["pcb"],
+      "entrypoint": "ipc_main.py",
+      "icons-light": ["resources/icon.png"],
+      "icons-dark": ["resources/icon_dark.png"]
+    }
+  ]
+}

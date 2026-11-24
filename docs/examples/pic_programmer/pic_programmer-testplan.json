@@ -1,0 +1,725 @@
+{
+  "schema": "pcbtestkit/testplan@1",
+  "board": {
+    "name": "pic_programmer",
+    "revision": ""
+  },
+  "probe_side": "bottom",
+  "probe_side_reason": "auto: bottom side scored higher (bottom 37, top 0)",
+  "probe_side_eval": {
+    "bottom": {
+      "power_nets": 5,
+      "nets": 12,
+      "test_pads": 0,
+      "component_pads": 0,
+      "supply_reached": true,
+      "score": 37
+    },
+    "top": {
+      "power_nets": 0,
+      "nets": 0,
+      "test_pads": 0,
+      "component_pads": 0,
+      "supply_reached": false,
+      "score": 0
+    }
+  },
+  "pogo": {
+    "family": "P75",
+    "mount": "receptacle",
+    "pitch_mm": 1.91,
+    "drill_mm": 1.4,
+    "pad_mm": 1.9,
+    "min_spacing_mm": 2.4,
+    "min_target_mm": 0.9,
+    "probe_clearance_mm": 6.0
+  },
+  "adc": {
+    "max_input_v": 3.3
+  },
+  "supply": {
+    "net": "/pic_sockets/VCC_PIC",
+    "voltage": null,
+    "reason": "highest rail on connector P3, P2, JP1",
+    "current_limit_a": 0.5
+  },
+  "main_ground": "GND",
+  "probes": [
+    {
+      "id": "PP01",
+      "net": "/pic_sockets/VCC_PIC",
+      "role": "supply",
+      "x": 175.26,
+      "y": 76.2,
+      "source": "tht",
+      "label": "P3.11",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH01",
+      "header_pin": 2,
+      "divider": {
+        "r_top_ohm": 1200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP02",
+      "net": "/pic_sockets/VCC_PIC",
+      "role": "supply",
+      "x": 190.5,
+      "y": 71.12,
+      "source": "tht",
+      "label": "P3.32",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null
+    },
+    {
+      "id": "PP03",
+      "net": "GND",
+      "role": "ground",
+      "x": 81.8,
+      "y": 60.0,
+      "source": "tht",
+      "label": "P1.1",
+      "target_mm": 3.0,
+      "tip": "crown",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null
+    },
+    {
+      "id": "PP04",
+      "net": "GND",
+      "role": "ground",
+      "x": 175.26,
+      "y": 68.58,
+      "source": "tht",
+      "label": "P3.8",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null
+    },
+    {
+      "id": "PP05",
+      "net": "/VPP{slash}MCLR",
+      "role": "measure",
+      "x": 175.26,
+      "y": 50.8,
+      "source": "tht",
+      "label": "P3.1",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH02",
+      "header_pin": 3,
+      "divider": {
+        "r_top_ohm": 1200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP06",
+      "net": "VCC",
+      "role": "measure",
+      "x": 125.73,
+      "y": 67.23,
+      "source": "tht",
+      "label": "L1.2",
+      "target_mm": 2.6,
+      "tip": "crown",
+      "channel": "CH03",
+      "header_pin": 4,
+      "divider": {
+        "r_top_ohm": 1200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP07",
+      "net": "VPP",
+      "role": "measure",
+      "x": 139.7,
+      "y": 54.61,
+      "source": "tht",
+      "label": "R7.1",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH04",
+      "header_pin": 5,
+      "divider": {
+        "r_top_ohm": 1200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP08",
+      "net": "/PC-DATA-IN",
+      "role": "measure",
+      "x": 79.76,
+      "y": 113.275,
+      "source": "tht",
+      "label": "J1.8",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH05",
+      "header_pin": 6,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP09",
+      "net": "Net-(D1-A)",
+      "role": "measure",
+      "x": 81.8,
+      "y": 65.0,
+      "source": "tht",
+      "label": "P1.2",
+      "target_mm": 3.0,
+      "tip": "crown",
+      "channel": "CH06",
+      "header_pin": 7,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP10",
+      "net": "/PC-CLOCK-OUT",
+      "role": "measure",
+      "x": 79.76,
+      "y": 116.045,
+      "source": "tht",
+      "label": "J1.7",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH07",
+      "header_pin": 8,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP11",
+      "net": "/PC-DATA-OUT",
+      "role": "measure",
+      "x": 82.6,
+      "y": 111.89,
+      "source": "tht",
+      "label": "J1.4",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH08",
+      "header_pin": 9,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP12",
+      "net": "/VPP_ON",
+      "role": "measure",
+      "x": 82.6,
+      "y": 114.66,
+      "source": "tht",
+      "label": "J1.3",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH09",
+      "header_pin": 11,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP13",
+      "net": "/CLOCK-RB6",
+      "role": "measure",
+      "x": 190.5,
+      "y": 53.34,
+      "source": "tht",
+      "label": "P3.39",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH10",
+      "header_pin": 12,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    },
+    {
+      "id": "PP14",
+      "net": "/DATA-RB7",
+      "role": "measure",
+      "x": 190.5,
+      "y": 50.8,
+      "source": "tht",
+      "label": "P3.40",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH11",
+      "header_pin": 13,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      }
+    }
+  ],
+  "header": [
+    {
+      "pin": 1,
+      "signal": "GND"
+    },
+    {
+      "pin": 2,
+      "signal": "CH01",
+      "net": "/pic_sockets/VCC_PIC"
+    },
+    {
+      "pin": 3,
+      "signal": "CH02",
+      "net": "/VPP{slash}MCLR"
+    },
+    {
+      "pin": 4,
+      "signal": "CH03",
+      "net": "VCC"
+    },
+    {
+      "pin": 5,
+      "signal": "CH04",
+      "net": "VPP"
+    },
+    {
+      "pin": 6,
+      "signal": "CH05",
+      "net": "/PC-DATA-IN"
+    },
+    {
+      "pin": 7,
+      "signal": "CH06",
+      "net": "Net-(D1-A)"
+    },
+    {
+      "pin": 8,
+      "signal": "CH07",
+      "net": "/PC-CLOCK-OUT"
+    },
+    {
+      "pin": 9,
+      "signal": "CH08",
+      "net": "/PC-DATA-OUT"
+    },
+    {
+      "pin": 10,
+      "signal": "GND"
+    },
+    {
+      "pin": 11,
+      "signal": "CH09",
+      "net": "/VPP_ON"
+    },
+    {
+      "pin": 12,
+      "signal": "CH10",
+      "net": "/CLOCK-RB6"
+    },
+    {
+      "pin": 13,
+      "signal": "CH11",
+      "net": "/DATA-RB7"
+    },
+    {
+      "pin": 14,
+      "signal": "GND"
+    }
+  ],
+  "sequence": [
+    {
+      "id": "S1",
+      "name": "Visual inspection",
+      "type": "manual",
+      "power": "off",
+      "items": [
+        {
+          "id": "VIS-POLARITY",
+          "check": "Polarity/orientation correct",
+          "refs": [
+            "C1",
+            "C2",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "D8",
+            "D9",
+            "D10",
+            "D11",
+            "D12"
+          ]
+        },
+        {
+          "id": "VIS-PIN1",
+          "check": "IC pin-1 orientation matches silkscreen",
+          "refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6"
+          ]
+        },
+        {
+          "id": "VIS-THT",
+          "check": "Through-hole joints filled, leads clipped <= 1.5 mm",
+          "refs": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C9",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "D8",
+            "D9",
+            "D10",
+            "D11",
+            "D12",
+            "L1",
+            "P1",
+            "P2",
+            "P3",
+            "Q1",
+            "Q2",
+            "Q3",
+            "R1",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "R8",
+            "R9",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R14",
+            "R15",
+            "R16",
+            "R17",
+            "R18",
+            "R19",
+            "R20",
+            "R21",
+            "RV1",
+            "U1",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Unpowered short check (rails to GND)",
+      "type": "resistance",
+      "power": "off",
+      "optional": true,
+      "checks": [
+        {
+          "id": "R_VCC_PIC",
+          "channel": "CH01",
+          "net": "/pic_sockets/VCC_PIC",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_VPP{slash}MCLR",
+          "channel": "CH02",
+          "net": "/VPP{slash}MCLR",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_VCC",
+          "channel": "CH03",
+          "net": "VCC",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_VPP",
+          "channel": "CH04",
+          "net": "VPP",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        }
+      ],
+      "note": "Needs the source-resistor circuit described in runner/README; skipped otherwise."
+    },
+    {
+      "id": "S3",
+      "name": "Apply power (/pic_sockets/VCC_PIC = None V)",
+      "type": "power",
+      "action": "on",
+      "net": "/pic_sockets/VCC_PIC",
+      "voltage": null,
+      "settle_ms": 500,
+      "current": {
+        "limit_a": 0.5,
+        "max_idle_a": null,
+        "min_idle_a": null
+      },
+      "abort_on_fail": true,
+      "checks": [
+        {
+          "id": "V_SUPPLY",
+          "channel": "CH01",
+          "net": "/pic_sockets/VCC_PIC",
+          "min_v": null,
+          "max_v": null
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "name": "Rail voltages",
+      "type": "voltage",
+      "power": "on",
+      "checks": [
+        {
+          "id": "V_VPP{slash}MCLR",
+          "channel": "CH02",
+          "net": "/VPP{slash}MCLR",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        },
+        {
+          "id": "V_VCC",
+          "channel": "CH03",
+          "net": "VCC",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        },
+        {
+          "id": "V_VPP",
+          "channel": "CH04",
+          "net": "VPP",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "name": "Signal levels (idle)",
+      "type": "voltage",
+      "power": "on",
+      "checks": [
+        {
+          "id": "V_PC-DATA-IN",
+          "channel": "CH05",
+          "net": "/PC-DATA-IN",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_Net-(D1-A)",
+          "channel": "CH06",
+          "net": "Net-(D1-A)",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_PC-CLOCK-OUT",
+          "channel": "CH07",
+          "net": "/PC-CLOCK-OUT",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_PC-DATA-OUT",
+          "channel": "CH08",
+          "net": "/PC-DATA-OUT",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_VPP_ON",
+          "channel": "CH09",
+          "net": "/VPP_ON",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_CLOCK-RB6",
+          "channel": "CH10",
+          "net": "/CLOCK-RB6",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_DATA-RB7",
+          "channel": "CH11",
+          "net": "/DATA-RB7",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        }
+      ]
+    },
+    {
+      "id": "S9",
+      "name": "Remove power",
+      "type": "power",
+      "action": "off"
+    }
+  ],
+  "coverage": {
+    "nets_total": 34,
+    "nets_probed": 12,
+    "power_nets": 5,
+    "power_nets_probed": 5,
+    "untestable": [],
+    "percent": 35.3
+  },
+  "fixture_keepouts": [],
+  "warnings": []
+}

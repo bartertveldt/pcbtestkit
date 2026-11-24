@@ -1,0 +1,9 @@
+site,probe,dut_net,role,x_mm,y_mm,drill_mm,tip,channel,header_pin,divider_ratio
+1,PP01,"VIN_12V",supply,110.0000,89.0000,1.40,crown,CH01,2,4.3
+1,PP02,"VIN_12V",supply,122.0000,88.0000,1.40,crown,,,
+1,PP03,"GND",ground,120.0000,114.0000,1.40,spear,,,
+1,PP04,"GND",ground,115.0000,89.0000,1.40,crown,,,
+1,PP05,"+3V3",measure,120.0000,110.0000,1.40,spear,CH02,3,1.18
+1,PP06,"+5V",measure,124.0000,110.0000,1.40,spear,CH03,4,1.82
+1,PP07,"/SDA",measure,124.0000,114.0000,1.40,spear,CH04,5,1.82
+1,PP08,"/SCL",measure,110.0000,118.0800,1.40,crown,CH05,6,1.82
