@@ -58,16 +58,55 @@ Anyone can then install the zip with KiCad: *Plugin and Content Manager > Instal
 
 ## 5. KiCad Plugin and Content Manager (official repository)
 
-1. Create a GitLab account and fork https://gitlab.com/kicad/addons/metadata.
-2. Copy the release asset `metadata.json` (and `icon.png` from `dist/pcm-repository/packages/<identifier>/`
-   after `python3 tools/build_pcm.py`) to `packages/<identifier>/` in the fork.
-   The `download_url` must point at the public release asset; the SHA-256 must match it.
-3. Open a merge request. KiCad's maintainers review it; after merging, the plugin shows up in every KiCad's
-   Plugin and Content Manager.
-4. For updates, add a new entry to `versions` (keep the older ones) in a new merge request.
+### 5a. Test the release on other machines first
 
-Requirements met by this repository: OSI license (MIT, GPL-compatible), English metadata, public issue tracker,
-64x64 icon, description under 150 characters, no download fields inside the package's own `metadata.json`.
+Install the GitHub release zip the way users will, on as many setups as you can (Windows, Linux, macOS;
+KiCad 8, 9 and 10):
+
+1. Download `pcbtestkit-<version>-kicad-pcm.zip` from the release page.
+2. KiCad: **Plugin and Content Manager > Install from File...**, choose the zip, then in the PCB Editor
+   **Tools > External Plugins > Refresh Plugins**. The PCB TestKit button appears on the toolbar.
+3. Open a board (the KiCad demo `pic_programmer` is a good one), click the button, press **Generate** with the
+   defaults, and check that the report and the guide open and the files are in `production_test/`.
+4. Try each tab without AI: the three fixture modes, a rail voltage edit, a part height, accepting a weak point.
+5. Open the jig STLs in your slicer, and the fixture `.kicad_pcb` in KiCad.
+6. Installing the next version over the old one (Install from File again) must keep `pcbtestkit.json`.
+
+Note what you tested; it goes into the merge request. Problems go to the issue tracker.
+
+### 5b. Prepare the merge request (nothing is sent)
+
+```bash
+python3 tools/build_pcm.py --submission v1.0.0
+```
+
+It downloads the release's zip and `kicad-pcm-metadata.json` from GitHub and checks them against KiCad's rules:
+- the SHA-256 and size match the published zip;
+- the archive holds only `metadata.json`, `plugins/` and `resources/`;
+- the zip's own metadata has exactly this one version and no download fields;
+- the schema rules hold.
+
+It keeps any versions KiCad already lists, so for an update the new version is added on top. It writes:
+
+- `dist/kicad-submission/packages/com.github.<owner>.pcbtestkit/metadata.json` and `icon.png`
+- `dist/kicad-submission/MERGE_REQUEST.md`: title and description; fill in the "Tested on" line.
+
+### 5c. Submit
+
+1. Create a GitLab account, fork https://gitlab.com/kicad/addons/metadata, clone the fork and make a **new
+   branch** (KiCad's validation does not work as intended on `main`).
+2. Copy `dist/kicad-submission/packages/<identifier>/` into the fork's `packages/` and push the branch.
+3. The fork's pipeline validates the metadata and builds a temporary PCM repository (link in the build job's
+   log): add it in KiCad (**Plugin and Content Manager > Manage...**) to test the listing itself.
+4. Open the merge request with the text from `MERGE_REQUEST.md`. After review and merge, the plugin appears in
+   every KiCad's Plugin and Content Manager within about a day.
+5. Updates: release the new version on GitHub, run step 5b with its tag, and send a new merge request.
+
+Requirements met by this repository:
+- OSI licence (MIT, GPL-compatible), English metadata, a public issue tracker;
+- a 64x64 icon, a description under 150 characters;
+- identifier `com.github.<owner>.pcbtestkit` (permanent once listed);
+- no download fields inside the package's own `metadata.json`.
 
 ## 6. Claude Code plugin
 
@@ -95,9 +134,10 @@ points at the PyPI package. Check that the name `pcbtestkit` is still free on Py
 
 ## Checklist
 
-- [ ] `tools/set_owner.py` run, no `bartertveldt` left (`grep -r bartertveldt .`)
-- [ ] commit author set to your noreply address
-- [ ] CI green
-- [ ] tag pushed, release has the PCM zip, wheel and `metadata.json`
-- [ ] zip installed once through KiCad's *Install from File...* and the toolbar button works
-- [ ] merge request to gitlab.com/kicad/addons/metadata
+- [x] `tools/set_owner.py` run: `git grep YOUR-GITHUB` finds only the two tools that detect the placeholder
+- [x] commit author set to your noreply address
+- [x] CI green
+- [x] tag pushed, release has the PCM zip, wheel and `metadata.json`
+- [ ] release zip installed and used on other machines and KiCad versions (5a)
+- [ ] `tools/build_pcm.py --submission <tag>` passes (5b)
+- [ ] merge request to gitlab.com/kicad/addons/metadata (5c)

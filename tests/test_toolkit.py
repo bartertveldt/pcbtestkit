@@ -612,6 +612,20 @@ class TestPackagingAndAgents(Base):
         with open(res["repository_entry"]) as fh:
             entry = json.load(fh)
         self.assertEqual(entry["versions"][0]["download_sha256"], res["sha256"])
+        # the archive passes KiCad's layout rules; a stray top-level file or download fields inside do not
+        with open(res["zip"], "rb") as fh:
+            data = fh.read()
+        self.assertEqual(build_pcm.check_archive(data, __version__, meta["identifier"]), [])
+        import io
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as zz:
+            bad = json.loads(json.dumps(meta))
+            bad["versions"][0]["download_sha256"] = "0" * 64
+            zz.writestr("metadata.json", json.dumps(bad))
+            zz.writestr("plugins/__init__.py", "")
+            zz.writestr("README.txt", "stray")
+        errs = build_pcm.check_archive(buf.getvalue(), __version__, meta["identifier"])
+        self.assertTrue(any("top level" in e for e in errs) and any("download fields" in e for e in errs), errs)
 
     def test_owner_script_dry_run_changes_nothing(self):
         before = open(os.path.join(ROOT, "pcm", "metadata.template.json")).read()

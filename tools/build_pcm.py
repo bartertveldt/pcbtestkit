@@ -3,6 +3,9 @@
 
     python3 tools/build_pcm.py            build dist/pcbtestkit-<version>-kicad-pcm.zip (+ repository entry)
     python3 tools/build_pcm.py --check    only validate metadata and files, write nothing
+    python3 tools/build_pcm.py --submission v1.0.0
+                                          prepare the merge request for KiCad's official list from the
+                                          published GitHub release (writes dist/kicad-submission/, sends nothing)
 
 Outputs:
   dist/pcbtestkit-<v>-kicad-pcm.zip                       install with KiCad: Plugin and Content Manager >
@@ -121,6 +124,119 @@ def validate(meta: dict, icon: str) -> list:
     return errs
 
 
+RE_SHA = re.compile(r"^[a-f0-9]{64}$")
+DOWNLOAD_KEYS = ("download_url", "download_sha256", "download_size", "install_size")
+METADATA_REPO_RAW = "https://gitlab.com/kicad/addons/metadata/-/raw/main/packages/%s/metadata.json"
+
+
+def _fetch(url: str, missing_ok: bool = False):
+    import urllib.error
+    import urllib.request
+    req = urllib.request.Request(url, headers={"User-Agent": "pcbtestkit-build-pcm"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return r.read()
+    except urllib.error.HTTPError as e:
+        if missing_ok and e.code == 404:
+            return None
+        raise SystemExit("cannot download %s: HTTP %d" % (url, e.code))
+
+
+def check_archive(data: bytes, version_: str, ident: str) -> list:
+    """KiCad's archive rules: only metadata.json, plugins/ and resources/; the inner metadata has exactly one
+    version (this one) and no download fields."""
+    import io
+    errs = []
+    z = zipfile.ZipFile(io.BytesIO(data))
+    names = z.namelist()
+    extra = sorted({n.split("/")[0] for n in names} - {"metadata.json", "plugins", "resources"})
+    if extra:
+        errs.append("archive has entries KiCad does not allow at the top level: %s" % ", ".join(extra))
+    if "plugins/__init__.py" not in names:
+        errs.append("archive has no plugins/__init__.py")
+    inner = json.loads(z.read("metadata.json"))
+    if inner.get("identifier") != ident:
+        errs.append("archive metadata identifier %r != %r" % (inner.get("identifier"), ident))
+    vers = inner.get("versions") or []
+    if len(vers) != 1 or vers[0].get("version") != version_:
+        errs.append("archive metadata must hold exactly one version, %s" % version_)
+    if any(k in v for v in vers for k in DOWNLOAD_KEYS[:3]):
+        errs.append("archive metadata must not contain download fields")
+    return errs
+
+
+def submission(tag: str, out_dir: str) -> dict:
+    """Build packages/<identifier>/ for a merge request to https://gitlab.com/kicad/addons/metadata from the
+    published release: its zip and metadata are downloaded and verified, and versions KiCad already lists are
+    kept (an update adds the new version on top). Nothing is uploaded."""
+    ver = tag.lstrip("v")
+    local = load_metadata(ver)
+    ident = local["identifier"]
+    if PLACEHOLDER in json.dumps(local):
+        raise SystemExit("run tools/set_owner.py first")
+    owner = ident.split(".")[2]
+    base = "https://github.com/%s/pcbtestkit/releases/download/%s/" % (owner, tag)
+    entry = json.loads(_fetch(base + "kicad-pcm-metadata.json"))
+    new = entry["versions"][0]
+    errs = []
+    if new.get("version") != ver:
+        errs.append("release metadata is for version %s, not %s" % (new.get("version"), ver))
+    data = _fetch(new["download_url"])
+    sha = hashlib.sha256(data).hexdigest()
+    if not str(new["download_url"]).startswith(base):
+        errs.append("download_url is not this release's asset: %s" % new["download_url"])
+    if not RE_SHA.match(str(new.get("download_sha256", ""))) or sha != new["download_sha256"]:
+        errs.append("download_sha256 does not match the published zip (%s)" % sha)
+    if len(data) != new.get("download_size"):
+        errs.append("download_size %s != %d bytes" % (new.get("download_size"), len(data)))
+    if not isinstance(new.get("install_size"), int) or new["install_size"] <= 0:
+        errs.append("install_size missing")
+    errs += check_archive(data, ver, ident)
+    bare = json.loads(json.dumps(entry))
+    for v in bare["versions"]:
+        for k in DOWNLOAD_KEYS:
+            v.pop(k, None)
+    errs += validate(bare, os.path.join(ROOT, "pcm", "icon.png"))
+    old = _fetch(METADATA_REPO_RAW % ident, missing_ok=True)
+    listed = []
+    if old:
+        listed = [v for v in json.loads(old).get("versions") or [] if v.get("version") != ver]
+    entry["versions"] = [new] + listed
+    if errs:
+        raise SystemExit("not ready to submit:\n  " + "\n  ".join(errs))
+    pdir = os.path.join(out_dir, "packages", ident)
+    os.makedirs(pdir, exist_ok=True)
+    with open(os.path.join(pdir, "metadata.json"), "w", encoding="utf-8") as fh:
+        json.dump(entry, fh, indent=2)
+        fh.write("\n")
+    with open(os.path.join(ROOT, "pcm", "icon.png"), "rb") as src, open(os.path.join(pdir, "icon.png"), "wb") as dst:
+        dst.write(src.read())
+    kind = "Update" if listed else "Add"
+    mr = os.path.join(out_dir, "MERGE_REQUEST.md")
+    with open(mr, "w", encoding="utf-8") as fh:
+        fh.write(MR_TEXT.format(kind=kind, name=entry["name"], ident=ident, ver=ver, owner=owner, tag=tag,
+                                license=entry["license"], kicad=new["kicad_version"], sha=sha))
+    return {"dir": pdir, "merge_request": mr, "kind": kind, "versions": [v["version"] for v in entry["versions"]],
+            "sha256": sha, "download_size": len(data)}
+
+
+MR_TEXT = """Title: {kind} {name} {ver} ({ident})
+
+{name} turns a KiCad board into a production-test kit: weak-point (DFM) analysis, fab class checks, a test
+scheme, a pogo-pin fixture PCB (or a probe-point list for your own fixture), 3D-printable solder jigs and an
+HTML guide. It runs locally with the Python standard library and KiCad's own kicad-cli; it needs no network
+access and no AI service (an optional MCP server lets AI assistants drive it).
+
+- Source and issues: https://github.com/{owner}/pcbtestkit (issues: https://github.com/{owner}/pcbtestkit/issues)
+- License: {license}
+- Package: action plugin (SWIG runtime), KiCad {kicad} and later; release {tag},
+  sha256 {sha}
+- Writes only inside the project folder: the output folder, pcbtestkit.json and the .pcbtestkit/ undo log.
+
+Tested on: <fill in: KiCad versions and operating systems you installed the release zip on>
+"""
+
+
 def plugin_files():
     for top in PLUGIN_FILES:
         src = os.path.join(ROOT, top)
@@ -176,7 +292,15 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out", default=os.path.join(ROOT, "dist"))
     ap.add_argument("--check", action="store_true", help="validate only")
+    ap.add_argument("--submission", metavar="TAG", help="prepare the KiCad merge request from a published release")
     a = ap.parse_args()
+    if a.submission:
+        res = submission(a.submission, os.path.join(a.out, "kicad-submission"))
+        print("%s merge request ready (versions %s), nothing was sent:" % (res["kind"], ", ".join(res["versions"])))
+        print("  %s" % res["dir"])
+        print("  %s" % res["merge_request"])
+        print("release zip verified: %d bytes, sha256 %s" % (res["download_size"], res["sha256"]))
+        return 0
     if a.check:
         meta = load_metadata(version())
         errs = validate(meta, os.path.join(ROOT, "pcm", "icon.png"))
