@@ -1,21 +1,29 @@
 # Security Policy
 
-## Supported Versions
-
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+## Supported versions
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| 1.0.x   | :white_check_mark: |
 
-## Reporting a Vulnerability
+Only the latest release gets fixes.
 
-Use this section to tell people how to report a vulnerability.
+## Reporting a vulnerability
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Please report security problems privately: on GitHub, open the repository's **Security** tab and click
+**Report a vulnerability**. Do not open a public issue for them.
+
+Useful to include: the version, how to reproduce it (a minimal `.kicad_pcb` / `pcbtestkit.json` if a file
+triggers it), and what an attacker could do.
+
+You can expect a first answer within a week. If the report is accepted, a fix is released and the advisory is
+published with credit to you (unless you prefer otherwise); if it is declined, you get the reason.
+
+## Scope
+
+PCB TestKit runs locally and needs no network access. Relevant areas are:
+
+- parsing untrusted KiCad files (`.kicad_pcb`, `.kicad_sch`, 3D models);
+- the MCP server and the agent tools, which write `pcbtestkit.json` next to a project (guardrails: dry run,
+  confirmation, audit log, undo);
+- the Raspberry Pi / MCU test runner bundle.
