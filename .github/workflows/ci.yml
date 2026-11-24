@@ -15,6 +15,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python: ["3.9", "3.13"]
+        exclude:
+          - os: ubuntu-latest      # the current Ubuntu image has no Python 3.9 any more: see test-linux-py39
+            python: "3.9"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,9 +32,21 @@ jobs:
       - name: KiCad package metadata is valid
         run: python tools/build_pcm.py --check
 
+  test-linux-py39:
+    # KiCad's bundled Python is 3.9, so keep testing it on Linux too, in the official Python image
+    name: tests (ubuntu container, Python 3.9)
+    runs-on: ubuntu-latest
+    container: python:3.9-slim
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unit and end-to-end tests
+        run: python -m unittest discover -s tests -v
+      - name: Class systems validate
+        run: python -m pcbtestkit classes validate
+
   package:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, test-linux-py39]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
