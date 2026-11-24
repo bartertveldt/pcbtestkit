@@ -248,6 +248,9 @@ def cmd_classes(args) -> int:
             print("%s %s: %s (board needs %s)" % (r["name"], tg["class"], "OK" if tg["ok"] else "VIOLATIONS",
                                                  r["required"].get("class") or "a finer process"))
             for m, v in viol.items():
+                if m.startswith("_"):                       # e.g. a level's 'requires' (finish) not met
+                    print("  %-8s %s" % (v.get("severity", ""), v["label"]))
+                    continue
                 print("  %-8s %-34s %5d  worst %s  limit %s" % (v.get("severity", ""), v["label"], v["count"], v.get("worst"),
                                                              v.get("limit") if v.get("limit") is not None else v.get("limits")))
                 for i in (v.get("items") or [])[:3]:

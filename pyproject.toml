@@ -30,10 +30,10 @@ classifiers = [
 ipc = ["kicad-python>=0.3.0"]         # only for the KiCad 9+/11 IPC-API entry point (ipc_main.py)
 
 [project.urls]
-Homepage = "https://github.com/YOUR-GITHUB-USER/pcbtestkit"
-Documentation = "https://github.com/YOUR-GITHUB-USER/pcbtestkit#readme"
-Issues = "https://github.com/YOUR-GITHUB-USER/pcbtestkit/issues"
-Changelog = "https://github.com/YOUR-GITHUB-USER/pcbtestkit/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/bartertveldt/pcbtestkit"
+Documentation = "https://github.com/bartertveldt/pcbtestkit#readme"
+Issues = "https://github.com/bartertveldt/pcbtestkit/issues"
+Changelog = "https://github.com/bartertveldt/pcbtestkit/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pcbtestkit = "pcbtestkit.cli:main"

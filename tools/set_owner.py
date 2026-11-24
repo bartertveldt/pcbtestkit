@@ -24,7 +24,8 @@ def files():
         rel = os.path.relpath(dirpath, ROOT).replace(os.sep, "/")
         dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS and (rel + "/" + d).lstrip("./") not in SKIP_DIRS]
         for f in filenames:
-            if os.path.splitext(f)[1] in TEXT_EXT and f != "set_owner.py":
+            # the two tools hold the placeholder itself (to detect it), so they are never rewritten
+            if os.path.splitext(f)[1] in TEXT_EXT and f not in ("set_owner.py", "build_pcm.py"):
                 yield os.path.join(dirpath, f)
 
 

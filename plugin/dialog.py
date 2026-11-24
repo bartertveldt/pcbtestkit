@@ -8,6 +8,7 @@ import traceback
 import webbrowser
 
 import wx
+import wx.grid
 
 from ..pcbtestkit import __version__
 from ..pcbtestkit import classify as C
@@ -19,9 +20,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class MainDialog(wx.Dialog):
     def __init__(self, parent, board_path: str):
-        super().__init__(parent, title="PCB TestKit %s" % __version__, size=(800, 740),
+        super().__init__(parent, title="PCB TestKit %s" % __version__, size=(860, 760),
                          style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
         self.board_path = board_path
+        self.problems = []
         self.design = Design.load(board_path)
         self.user = dict(self.design.user_config)
         cfg = self.design.cfg
@@ -34,8 +36,10 @@ class MainDialog(wx.Dialog):
         nb = wx.Notebook(self)
         nb.AddPage(self._general(nb, cfg), "Outputs")
         nb.AddPage(self._testing(nb, cfg), "Test && fixture")
+        nb.AddPage(self._rails(nb), "Rails")
         nb.AddPage(self._jig(nb, cfg), "Solder jig")
-        nb.AddPage(self._ai(nb), "AI assistant")
+        nb.AddPage(self._weak(nb), "Weak points")
+        nb.AddPage(self._ai(nb), "AI assistant (optional)")
         root.Add(nb, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
         btns = wx.BoxSizer(wx.HORIZONTAL)
         save = wx.Button(self, label="Save settings")
@@ -115,6 +119,12 @@ class MainDialog(wx.Dialog):
         s = wx.BoxSizer(wx.VERTICAL)
         tp, fx = cfg["testplan"], cfg["fixture"]
         g = wx.FlexGridSizer(0, 2, 6, 8)
+        self.fix_modes = [("generate", "Generate a pogo-pin fixture board (.kicad_pcb)"),
+                          ("own", "I design my own fixture (probe-point list CSV)"),
+                          ("none", "No fixture - manual test with a multimeter")]
+        self.fix_mode = wx.Choice(p, choices=[lab for _, lab in self.fix_modes])
+        modes = [m for m, _ in self.fix_modes]
+        self.fix_mode.SetSelection(modes.index(fx.get("mode", "generate")) if fx.get("mode", "generate") in modes else 0)
         self.probe_side = wx.Choice(p, choices=["auto", "bottom", "top"])
         self.probe_side.SetStringSelection(tp["probe_side"])
         self.pogo = wx.Choice(p, choices=sorted(POGO_PROFILES))
@@ -133,15 +143,110 @@ class MainDialog(wx.Dialog):
         self.sup_net = wx.Choice(p, choices=[""] + self.design.nets_of_kind("power"))
         self.sup_net.SetStringSelection(sup.get("net") or "")
         self.sup_v = wx.TextCtrl(p, value="" if sup.get("voltage") is None else str(sup.get("voltage")))
-        for lab, ctl in [("Probe side", self.probe_side), ("Pogo pin family", self.pogo), ("Pogo mounting", self.mount),
+        sc = cfg.get("supply") or {}
+        fmt = lambda v: "" if v is None else str(v)
+        self.sup_i = wx.TextCtrl(p, value=fmt(sc.get("current_limit_a")))
+        self.idle_max = wx.TextCtrl(p, value=fmt(sc.get("max_idle_current_a")))
+        self.idle_min = wx.TextCtrl(p, value=fmt(sc.get("min_idle_current_a")))
+        for lab, ctl in [("Test fixture", self.fix_mode), ("Probe side", self.probe_side), ("Pogo pin family", self.pogo), ("Pogo mounting", self.mount),
                          ("Signal nets to probe", self.signals), ("Max ADC channels", self.max_ch),
                          ("ADC input range (V)", self.adc), ("Supply net", self.sup_net), ("Supply voltage (V)", self.sup_v),
+                         ("Supply current limit (A)", self.sup_i), ("Max idle current (A, empty = no check)", self.idle_max),
+                         ("Min idle current (A, empty = no check)", self.idle_min),
                          ("Fixture outline", self.outline), ("Panel columns", self.cols), ("Panel rows", self.rows)]:
             g.Add(wx.StaticText(p, label=lab), 0, wx.ALIGN_CENTER_VERTICAL)
             g.Add(ctl)
         s.Add(g, 0, wx.ALL, 10)
-        s.Add(wx.StaticText(p, label="Rail voltages, tolerances and functional steps live in pcbtestkit.json "
-                                     "(edit it, or let an AI model decide them via the AI assistant tab)."), 0, wx.ALL, 10)
+        s.Add(wx.StaticText(p, label="Rail voltages and tolerances: Rails tab. Signal limits are learned from a known-good "
+                                     "board by the test runner (learn mode).\nCustom functional steps can be added in "
+                                     "pcbtestkit.json (testplan.custom_steps). No AI is needed for any of it."), 0, wx.ALL, 10)
+        p.SetSizer(s)
+        return p
+
+    RAIL_COLS = [("test", "Test", 44), ("net", "Rail", 130), ("nominal_v", "Nominal V", 80), ("tolerance_pct", "Tol. %", 60),
+                 ("min_v", "Min V", 70), ("max_v", "Max V", 70), ("source", "From", 250)]
+
+    def _rails(self, nb):
+        from ..pcbtestkit.manual import rail_rows
+        p = wx.Panel(nb)
+        s = wx.BoxSizer(wx.VERTICAL)
+        s.Add(wx.StaticText(p, label="Expected voltage of every power rail. Edit nominal + tolerance, or min/max for a range "
+                                     "(e.g. a battery). Untick Test to leave a rail out.\nOnly rows you change are saved; "
+                                     "the others keep following the net names."), 0, wx.ALL, 8)
+        self.rail_before = rail_rows(self.design)
+        g = self.rail_grid = wx.grid.Grid(p)
+        g.CreateGrid(len(self.rail_before), len(self.RAIL_COLS))
+        g.HideRowLabels()
+        for c, (_, lab, w) in enumerate(self.RAIL_COLS):
+            g.SetColLabelValue(c, lab)
+            g.SetColSize(c, w)
+        fmt = lambda v: "" if v is None else ("%g" % v)
+        for r, row in enumerate(self.rail_before):
+            g.SetCellEditor(r, 0, wx.grid.GridCellBoolEditor())
+            g.SetCellRenderer(r, 0, wx.grid.GridCellBoolRenderer())
+            g.SetCellValue(r, 0, "1" if row["test"] else "")
+            g.SetCellValue(r, 1, row["net"])
+            g.SetReadOnly(r, 1)
+            for c, k in ((2, "nominal_v"), (3, "tolerance_pct"), (4, "min_v"), (5, "max_v")):
+                g.SetCellValue(r, c, fmt(row[k]))
+            src = row["source"] or ""
+            if row["hint"]:
+                src = "unknown - suggestion %g V (%s)" % (row["hint"]["v"], row["hint"]["why"])
+            g.SetCellValue(r, 6, src)
+            g.SetReadOnly(r, 6)
+        s.Add(g, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
+        b = wx.Button(p, label="Fill in the suggestions for unknown rails")
+
+        def fill(_e):
+            for r, row in enumerate(self.rail_before):
+                if row["hint"] and not g.GetCellValue(r, 2).strip():
+                    g.SetCellValue(r, 2, "%g" % row["hint"]["v"])
+        b.Bind(wx.EVT_BUTTON, fill)
+        s.Add(b, 0, wx.ALL, 8)
+        p.SetSizer(s)
+        return p
+
+    def _rail_after(self):
+        g = self.rail_grid
+        g.SaveEditControlValue()
+        out = []
+        for r, row in enumerate(self.rail_before):
+            out.append({"net": row["net"], "test": g.GetCellValue(r, 0) == "1", "nominal_v": g.GetCellValue(r, 2),
+                        "tolerance_pct": g.GetCellValue(r, 3), "min_v": g.GetCellValue(r, 4), "max_v": g.GetCellValue(r, 5)})
+        return out
+
+    def _weak(self, nb):
+        p = wx.Panel(nb)
+        s = wx.BoxSizer(wx.VERTICAL)
+        s.Add(wx.StaticText(p, label="Critical and major weak points. Fix them in KiCad, or tick the ones you accept for this "
+                                     "product (they are kept in the report, marked as waived)."), 0, wx.ALL, 8)
+        self.weak_rows = None
+        self.weak_list = wx.CheckListBox(p, choices=[])
+        s.Add(self.weak_list, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
+        row = wx.BoxSizer(wx.HORIZONTAL)
+        load = wx.Button(p, label="Check the board")
+        row.Add(load, 0, wx.RIGHT, 8)
+        row.Add(wx.StaticText(p, label="Reason for newly accepted items:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 6)
+        self.weak_reason = wx.TextCtrl(p, value="")
+        row.Add(self.weak_reason, 1)
+        s.Add(row, 0, wx.EXPAND | wx.ALL, 8)
+
+        def on_load(_e):
+            from ..pcbtestkit.analysis import run_analysis
+            from ..pcbtestkit.manual import waiver_rows
+            wx.BeginBusyCursor()
+            try:
+                rows = waiver_rows(run_analysis(Design.load(self.board_path), include_kicad=False))
+            finally:
+                wx.EndBusyCursor()
+            self.weak_rows = rows
+            self.weak_list.Set(["[%s] %s  %s%s" % (r["severity"], r["id"], r["title"],
+                                                   ("  (%s)" % ", ".join(r["refs"][:6])) if r["refs"] else "") for r in rows])
+            for i, r in enumerate(rows):
+                self.weak_list.Check(i, r["waived"])
+            if not rows:
+                self.weak_list.Set(["No critical or major weak points."])
+        load.Bind(wx.EVT_BUTTON, on_load)
         p.SetSizer(s)
         return p
 
@@ -152,11 +257,8 @@ class MainDialog(wx.Dialog):
                                      "part gets a clearance pocket.\nThe PCB goes top-side down into the jig."), 0, wx.ALL, 8)
         self.jig_parts = [fp for fp in sorted(self.design.components(), key=lambda f: C.natural_key(f.ref))
                           if fp.side == "top" and not C.is_mounting_hole(fp)]
-        labels = []
-        for fp in self.jig_parts:
-            h, src = self.design.height_of(fp)
-            labels.append("%-6s %-18s %-38s %s  h=%.1f mm (%s)" % (fp.ref, fp.value[:18], fp.name[:38], fp.mount.upper(), h, src[:28]))
-        self.jig_list = wx.CheckListBox(p, choices=labels)
+        self.jig_heights = dict((cfg["jig"].get("heights") or {}))
+        self.jig_list = wx.CheckListBox(p, choices=[self._jig_label(fp) for fp in self.jig_parts])
         self.jig_list.SetFont(wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         parts = cfg["jig"].get("parts")
         for i, fp in enumerate(self.jig_parts):
@@ -165,13 +267,48 @@ class MainDialog(wx.Dialog):
         s.Add(self.jig_list, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
         row = wx.BoxSizer(wx.HORIZONTAL)
         b1, b2 = wx.Button(p, label="Select all THT"), wx.Button(p, label="Clear")
+        b3 = wx.Button(p, label="Set height of selected part...")
+        b3.Bind(wx.EVT_BUTTON, self.on_height)
         b1.Bind(wx.EVT_BUTTON, lambda e: [self.jig_list.Check(i, fp.is_tht) for i, fp in enumerate(self.jig_parts)])
         b2.Bind(wx.EVT_BUTTON, lambda e: [self.jig_list.Check(i, False) for i in range(len(self.jig_parts))])
         row.Add(b1, 0, wx.RIGHT, 6)
-        row.Add(b2, 0)
+        row.Add(b2, 0, wx.RIGHT, 18)
+        row.Add(b3, 0)
         s.Add(row, 0, wx.ALL, 8)
+        s.Add(wx.StaticText(p, label="Heights come from the 3D models; set the datasheet body height where a model is generic. "
+                                     "The STL files are generated by the plugin itself (no AI, same file every time)."),
+              0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
         p.SetSizer(s)
         return p
+
+    def _jig_label(self, fp):
+        if fp.ref in self.jig_heights:
+            h, src = float(self.jig_heights[fp.ref]), "set by you"
+        else:
+            h, src = self.design.height_of(fp)
+        return "%-6s %-18s %-38s %s  h=%.1f mm (%s)" % (fp.ref, fp.value[:18], fp.name[:38], fp.mount.upper(), h, src[:28])
+
+    def on_height(self, _evt):
+        i = self.jig_list.GetSelection()
+        if i == wx.NOT_FOUND:
+            wx.MessageBox("Select a part in the list first.", "PCB TestKit")
+            return
+        fp = self.jig_parts[i]
+        cur = self.jig_heights.get(fp.ref, self.design.height_of(fp)[0])
+        dlg = wx.TextEntryDialog(self, "Body height of %s above the PCB (mm, from the datasheet):" % fp.ref, "Part height",
+                                 "%g" % float(cur))
+        if dlg.ShowModal() == wx.ID_OK:
+            try:
+                h = float(dlg.GetValue().replace(",", "."))
+                if not 0.1 <= h <= 80:
+                    raise ValueError
+                self.jig_heights[fp.ref] = round(h, 2)
+                checked = self.jig_list.IsChecked(i)
+                self.jig_list.SetString(i, self._jig_label(fp))
+                self.jig_list.Check(i, checked)
+            except ValueError:
+                wx.MessageBox("Enter a height between 0.1 and 80 mm.", "PCB TestKit")
+        dlg.Destroy()
 
     def _ai(self, nb):
         p = wx.Panel(nb)
@@ -184,7 +321,8 @@ class MainDialog(wx.Dialog):
         self.mcp_json = json.dumps({"mcpServers": {"pcbtestkit": {"command": py, "args": ["-m", "pcbtestkit", "mcp", "--project", proj,
                                                                                             "--profile", "core"],
                                                                  "env": {"PYTHONPATH": ROOT}}}}, indent=2)
-        s.Add(wx.StaticText(p, label="Let your own AI model make the judgement calls (rail limits, tolerances, functional "
+        s.Add(wx.StaticText(p, label="Optional. Every setting can be made in the other tabs without AI.\n"
+                                     "If you like, let your own AI model make the judgement calls (rail limits, tolerances, functional "
                                      "steps).\nIt works through validated tools; the plugin generates all files from its "
                                      "decisions. Connect any MCP client (core profile: about half the tokens of the full "
                                      "tool set).\nAgents with a shell (Claude Code, Codex, Cursor) are cheaper still: let them "
@@ -260,24 +398,44 @@ class MainDialog(wx.Dialog):
         except ValueError:
             pass
         fx = u.setdefault("fixture", {})
+        fx["mode"] = self.fix_modes[max(0, self.fix_mode.GetSelection())][0]
         fx["outline"] = self.outline.GetStringSelection()
         fx["panel"] = dict(fx.get("panel") or {}, cols=self.cols.GetValue(), rows=self.rows.GetValue())
+        sup = u.setdefault("supply", {})
         if self.sup_net.GetStringSelection():
-            sup = u.setdefault("supply", {})
             sup["net"] = self.sup_net.GetStringSelection()
             try:
                 sup["voltage"] = float(self.sup_v.GetValue())
             except ValueError:
                 pass
-        u.setdefault("jig", {})["parts"] = [fp.ref for i, fp in enumerate(self.jig_parts) if self.jig_list.IsChecked(i)]
+        for key, ctl in (("current_limit_a", self.sup_i), ("max_idle_current_a", self.idle_max), ("min_idle_current_a", self.idle_min)):
+            t = ctl.GetValue().strip().replace(",", ".")
+            try:
+                sup[key] = float(t) if t else (0.5 if key == "current_limit_a" else None)
+            except ValueError:
+                self.problems.append("%s: %r is not a number" % (key, t))
+        from ..pcbtestkit.manual import apply_rail_edits, apply_waivers
+        self.problems += apply_rail_edits(u, self.rail_before, self._rail_after())
+        if self.weak_rows:
+            apply_waivers(u, self.weak_rows, [self.weak_list.IsChecked(i) for i in range(len(self.weak_rows))],
+                          self.weak_reason.GetValue())
+        jg = u.setdefault("jig", {})
+        jg["parts"] = [fp.ref for i, fp in enumerate(self.jig_parts) if self.jig_list.IsChecked(i)]
+        if self.jig_heights:
+            jg["heights"] = dict(self.jig_heights)
         return u
 
     def save_settings(self, notify=False):
+        self.problems = []
         u = self.collect()
+        if self.problems:
+            wx.MessageBox("Not saved:\n\n" + "\n".join(self.problems), "PCB TestKit", wx.ICON_WARNING)
+            return False
         save_user_config(self.design.config_path, u)
         self.design.reload_config(u)
         if notify:
             wx.MessageBox("Saved to %s" % self.design.config_path, "PCB TestKit")
+        return True
 
     def on_decisions(self, _evt):
         from ..pcbtestkit.agent import Workspace
@@ -289,7 +447,8 @@ class MainDialog(wx.Dialog):
 
     def on_generate(self, _evt):
         from ..pcbtestkit.pipeline import run_pipeline
-        self.save_settings()
+        if not self.save_settings():
+            return
         prog = wx.ProgressDialog("PCB TestKit", "Starting...", 100, self, wx.PD_APP_MODAL | wx.PD_AUTO_HIDE)
         try:
             d = Design.load(self.board_path)
@@ -302,9 +461,14 @@ class MainDialog(wx.Dialog):
             return
         prog.Destroy()
         s = res["summary"]
-        msg = ("%s - score %d/100\n%s\n\nTest coverage: %s%% of nets\n\nFiles written to:\n%s\n\nFixture board: open %s in KiCad, "
-               "route it (or run Freerouting) and order it.\n\nOpen the HTML report now?") % (
+        if res["paths"].get("fixture"):
+            nxt = "Fixture board: open %s in KiCad, route it (or run Freerouting) and order it." % os.path.basename(res["paths"]["fixture"])
+        elif res["paths"].get("probe_points"):
+            nxt = "Your fixture: the probe points are in %s." % os.path.basename(res["paths"]["probe_points"])
+        else:
+            nxt = "No fixture: the guide lists the test points and limits for a manual test."
+        msg = ("%s - score %d/100\n%s\n\nTest coverage: %s%% of nets\n\nFiles written to:\n%s\n\n%s\n\nOpen the HTML report now?") % (
             s["verdict"].upper(), s["score"], ", ".join("%d %s" % (v, k) for k, v in s["counts"].items() if v),
-            res["coverage"]["percent"], res["out_dir"], os.path.basename(res["paths"].get("fixture", "")))
+            res["coverage"]["percent"], res["out_dir"], nxt)
         if wx.MessageBox(msg, "PCB TestKit", wx.YES_NO | wx.ICON_INFORMATION) == wx.YES and res["paths"].get("report"):
             webbrowser.open("file://" + res["paths"]["report"])

@@ -73,6 +73,7 @@ Most of these are a JSON file plus test vectors. Rows marked *metric* first need
 2. Pick the structure:
    * One `dimensions` entry per independent axis. Use `choose: "cheapest"` when levels run from cheap to fine, and `choose: "user"` when the level is a choice such as an environment or product class.
    * When the levels are alternatives in price order rather than a fineness ladder (stack-ups such as 2L HASL, 2L ENIG, 2L 70 µm, 4L), add `"monotonic": false`. The validator then stops warning that a later level is coarser, and a board that fits none is pointed at the level it misses by the least (the cheapest one on a tie).
+   * Use `requires` for a level that is only sold with an order option: `"requires": {"finish": ["ENIG", null]}` (`null` = finish not set in the stack-up). A board that fits no level is still pointed at such a level when it is the nearest one. A different finish or mask colour counts as nearer than a different layer count, and the report names it: "surface finish HASL-LF at stackup 4L-35um-ENIG (limit ENIG)".
    * Put limits that apply to every class in `always`.
    * Use conditions for limits that depend on the board: `{"when": {"layers": {"max": 2}, "copper_um": {"max": 40}}, "value": "4mil"}`.
    * Use item filters for limits that depend on the feature: `{"items": {"finished": {"max": 0.45}}, "value": 0.2}`.

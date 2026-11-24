@@ -1441,16 +1441,203 @@
     }
   ],
   "notes": [
-    "Place parts in the 'hold' pockets, lower the PCB top-side down onto the nest, solder from above.",
-    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud."
+    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud.",
+    "Two-jig workflow: put the PCB top side up in the placement jig, fit the parts, put this holding jig on top (pockets down), turn the stack over, lift off the placement jig and solder from above."
   ],
   "preview_png": "video-jig.png",
   "mesh": {
-    "triangles": 151814,
+    "triangles": 216364,
     "unmatched_edges": 0,
-    "volume_mm3": 831938.9,
+    "volume_mm3": 831661.4,
     "watertight": true
   },
   "stl": "video-jig.stl",
-  "scad": "video-jig.scad"
+  "scad": "video-jig.scad",
+  "workflow": "two_jig",
+  "placement": {
+    "jig_size_mm": [
+      324.25,
+      118.75,
+      13.4
+    ],
+    "pcb_rest_height_mm": 12.0,
+    "lead_clearance_mm": 10.0,
+    "floor_mm": 2.0,
+    "resolution_mm": 0.25,
+    "board_bbox_in_jig_mm": [
+      6.0,
+      6.0,
+      318.039,
+      112.68
+    ],
+    "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
+    "stops": [
+      {
+        "side": "left",
+        "at": [
+          53.59,
+          73.12
+        ]
+      },
+      {
+        "side": "right",
+        "at": [
+          365.63,
+          83.31
+        ]
+      },
+      {
+        "side": "right",
+        "at": [
+          204.85,
+          135.89
+        ]
+      },
+      {
+        "side": "top",
+        "at": [
+          132.35,
+          56.52
+        ]
+      },
+      {
+        "side": "top",
+        "at": [
+          287.87,
+          56.52
+        ]
+      },
+      {
+        "side": "bottom",
+        "at": [
+          132.38,
+          163.19
+        ]
+      },
+      {
+        "side": "bottom",
+        "at": [
+          287.41,
+          134.37
+        ]
+      }
+    ],
+    "lead_wells": 910,
+    "bottom_pockets": [
+      "C2",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8",
+      "C9",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C15",
+      "C16",
+      "C17",
+      "C18",
+      "C19",
+      "C20",
+      "C21",
+      "C22",
+      "C23",
+      "C24",
+      "C25",
+      "C26",
+      "C27",
+      "C28",
+      "C29",
+      "C30",
+      "C32",
+      "C33",
+      "C34",
+      "C35",
+      "C36",
+      "C37",
+      "C38",
+      "C42",
+      "C43",
+      "C44",
+      "C45",
+      "C46",
+      "C48",
+      "C51",
+      "C52",
+      "C53",
+      "C54",
+      "C55",
+      "C59",
+      "C62",
+      "C64",
+      "C65",
+      "C66",
+      "C67",
+      "C68",
+      "C69",
+      "C70",
+      "C71",
+      "C72",
+      "C73",
+      "Q1",
+      "Q2",
+      "Q3",
+      "R2",
+      "R3",
+      "R5",
+      "R6",
+      "R7",
+      "R9",
+      "R12",
+      "R13",
+      "R15",
+      "R16",
+      "R17",
+      "R18",
+      "R19",
+      "R20",
+      "R21",
+      "R25",
+      "R26",
+      "R27",
+      "R30",
+      "R31",
+      "R32",
+      "R33",
+      "R34",
+      "R36",
+      "R37",
+      "R38",
+      "R39",
+      "R40",
+      "R41",
+      "R42",
+      "R43",
+      "R44",
+      "R46",
+      "R47",
+      "R48",
+      "U3",
+      "U4",
+      "U5",
+      "W1",
+      "C57",
+      "C31",
+      "C56"
+    ],
+    "notes": [
+      "Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm."
+    ],
+    "preview_png": "video-jig-placement.png",
+    "mesh": {
+      "triangles": 398530,
+      "unmatched_edges": 0,
+      "volume_mm3": 375678.1,
+      "watertight": true
+    },
+    "stl": "video-jig-placement.stl"
+  }
 }

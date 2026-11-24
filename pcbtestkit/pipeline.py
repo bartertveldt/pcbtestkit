@@ -7,7 +7,7 @@ import shutil
 from typing import Any, Callable, Dict, List, Optional
 
 from .analysis import apply_waivers, run_analysis, sort_findings
-from .fixture import build_fixture, probes_csv, project_file
+from .fixture import build_fixture, probe_points_csv, probes_csv, project_file
 from .project import Design
 from .spec import build_spec
 from .testplan import build_testplan, testability_findings
@@ -48,7 +48,7 @@ def hardware_template(plan: Dict[str, Any], fixture: Optional[Dict[str, Any]]) -
 
 def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optional[Dict[str, bool]] = None,
                  progress: Optional[Callable[[str, float], None]] = None, include_kicad: Optional[bool] = None) -> Dict[str, Any]:
-    from .jig import build_jig
+    from .jig import build_jigs
     from .report import build_report
 
     def step(msg: str, frac: float):
@@ -74,7 +74,14 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
         _write_json(paths["testplan"], plan)
 
     fixture = None
-    if want.get("fixture", True):
+    # fixture.mode: generate = pogo-pin fixture board; own = the user designs it (probe-point list);
+    # none = no fixture (manual test with the test scheme, no runner bundle)
+    mode = (design.cfg.get("fixture") or {}).get("mode", "generate")
+    if mode == "own":
+        paths["probe_points"] = os.path.join(out_dir, "%s-probe-points.csv" % name)
+        with open(paths["probe_points"], "w", encoding="utf-8") as fh:
+            fh.write(probe_points_csv(plan))
+    if want.get("fixture", True) and mode == "generate":
         step("Generating fixture board", 0.5)
         fixture = build_fixture(design, plan)
         paths["fixture"] = os.path.join(out_dir, "%s-fixture.kicad_pcb" % name)
@@ -114,13 +121,22 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
         paths["jig_stl"] = os.path.join(out_dir, "%s-jig.stl" % name)
         paths["jig_scad"] = os.path.join(out_dir, "%s-jig.scad" % name)
         paths["jig_preview"] = os.path.join(out_dir, "%s-jig.png" % name)
-        jig = build_jig(design, paths["jig_stl"], paths["jig_scad"], paths["jig_preview"])
+        paths["jig_place_stl"] = os.path.join(out_dir, "%s-jig-placement.stl" % name)
+        paths["jig_place_preview"] = os.path.join(out_dir, "%s-jig-placement.png" % name)
+        jig = build_jigs(design, paths["jig_stl"], paths["jig_scad"], paths["jig_preview"],
+                         paths["jig_place_stl"], paths["jig_place_preview"])
+        if "placement" not in jig:                       # single-jig workflow
+            for k in ("jig_place_stl", "jig_place_preview"):
+                paths.pop(k, None)
         paths["jig_meta"] = os.path.join(out_dir, "%s-jig.json" % name)
-        # in the file, refer to the jig's own outputs by name (they sit next to it), never by absolute path
-        _write_json(paths["jig_meta"], {k: (os.path.basename(v) if k in ("stl", "scad", "preview_png") and isinstance(v, str) else v)
-                                        for k, v in jig.items()})
 
-    if want.get("runner", True):
+        def rel(d):
+            # in the file, refer to the jig's own outputs by name (they sit next to it), never by absolute path
+            return {k: (os.path.basename(v) if k in ("stl", "scad", "preview_png") and isinstance(v, str)
+                        else rel(v) if isinstance(v, dict) else v) for k, v in d.items()}
+        _write_json(paths["jig_meta"], rel(jig))
+
+    if want.get("runner", True) and mode != "none":
         step("Bundling test runner", 0.85)
         rdir = os.path.join(out_dir, "runner")
         src = os.path.join(HERE, "runner")
@@ -178,5 +194,5 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
             fh.write(build_report(design, spec, plan, jig, fixture, paths))
     step("Done", 1.0)
     return {"out_dir": out_dir, "paths": paths, "summary": spec["summary"], "coverage": plan["coverage"],
-            "fixture_warnings": fixture["warnings"] if fixture else [], "jig": {k: jig[k] for k in ("jig_size_mm", "parts_to_place", "mesh") if k in jig} if jig else None,
+            "fixture_warnings": fixture["warnings"] if fixture else [], "jig": {k: jig[k] for k in ("jig_size_mm", "parts_to_place", "mesh", "workflow") if k in jig} if jig else None,
             "warnings": design.warnings + plan["warnings"]}

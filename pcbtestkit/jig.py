@@ -233,6 +233,62 @@ def heightmap_mesh(H: List[List[int]], nx: int, ny: int, res: float) -> List[Tup
     return tris
 
 
+def render_mesh(H: List[List[int]], nx: int, ny: int, res: float):
+    """A light mesh of the heightmap for 3D renders (not for printing): two triangles per flat rectangle and
+    one quad per straight run of wall. It has T-junctions, so it is not watertight, but a raytracer doesn't
+    mind and renders it many times faster than the print mesh's long fan triangles.
+    Returns (vertices in mm, faces as vertex-index tuples), same coordinates as heightmap_mesh."""
+    idx: Dict[Tuple[int, int, int], int] = {}
+    verts: List[Tuple[float, float, float]] = []
+    faces: List[Tuple[int, ...]] = []
+
+    def v(i, j, z):
+        k = (i, j, z)
+        if k not in idx:
+            idx[k] = len(verts)
+            verts.append((i * res, j * res, z / Q))
+        return idx[k]
+
+    for (i0, j0, i1, j1, h) in _greedy(H, nx, ny):
+        faces.append((v(i0, j0, h), v(i1, j0, h), v(i1, j1, h), v(i0, j1, h)))
+
+    def cell(i, j):
+        return H[j][i] if 0 <= i < nx and 0 <= j < ny else 0
+
+    # walls along x boundaries (between columns i-1 and i), merged over runs of rows with the same span
+    for i in range(nx + 1):
+        run = None
+        for j in range(ny + 1):
+            span = None
+            if j < ny:
+                a, b = cell(i - 1, j), cell(i, j)
+                if a != b:
+                    span = (min(a, b), max(a, b))
+            if run and span == run[1]:
+                continue
+            if run:
+                lo, hi = run[1]
+                faces.append((v(i, run[0], lo), v(i, j, lo), v(i, j, hi), v(i, run[0], hi)))
+            run = (j, span) if span else None
+    # walls along y boundaries (between rows j-1 and j)
+    for j in range(ny + 1):
+        run = None
+        for i in range(nx + 1):
+            span = None
+            if i < nx:
+                a, b = cell(i, j - 1), cell(i, j)
+                if a != b:
+                    span = (min(a, b), max(a, b))
+            if run and span == run[1]:
+                continue
+            if run:
+                lo, hi = run[1]
+                faces.append((v(run[0], j, lo), v(i, j, lo), v(i, j, hi), v(run[0], j, hi)))
+            run = (i, span) if span else None
+    faces.append((v(0, 0, 0), v(0, ny, 0), v(nx, ny, 0), v(nx, 0, 0)))
+    return verts, faces
+
+
 def write_heightmap_png(path: str, H: List[List[int]], nx: int, ny: int, max_px: int = 900) -> None:
     """Shaded top view (Y up) of the heightmap; stdlib-only PNG writer."""
     import zlib
@@ -292,8 +348,100 @@ def mesh_check(tris: List[Tuple]) -> Dict[str, Any]:
 
 
 # =========================================================================== #
+# Shared geometry for the two-jig workflow
+# =========================================================================== #
+def outline_segments(design: Design) -> List[Tuple[float, float, float, float]]:
+    """Board outline as segments in board coordinates (the bounding box if Edge.Cuts is empty)."""
+    b = design.board
+    segs = [tuple(s[:4]) for s in b.edge_segs]
+    if not segs:
+        bb = b.outline_bbox()
+        segs = [(bb.x0, bb.y0, bb.x1, bb.y0), (bb.x1, bb.y0, bb.x1, bb.y1), (bb.x1, bb.y1, bb.x0, bb.y1),
+                (bb.x0, bb.y1, bb.x0, bb.y0)]
+    return segs
+
+
+def point_inside(x: float, y: float, segs) -> bool:
+    """Even-odd ray test against the outline segments."""
+    c = False
+    for ax, ay, bx, by in segs:
+        if (ay > y) != (by > y) and x < ax + (y - ay) * (bx - ax) / (by - ay):
+            c = not c
+    return c
+
+
+def mounting_holes(design: Design) -> List[Tuple[float, float, float, str]]:
+    """(x, y, drill radius, ref) of every mounting hole in board coordinates (where the jig posts go)."""
+    out = []
+    for fp in design.components():
+        for pd in fp.pads:
+            if pd.drill_w >= 2.0 and (pd.is_npth or C.is_mounting_hole(fp)):
+                out.append((pd.x, pd.y, pd.drill_w / 2, fp.ref))
+    return out
+
+
+def stop_anchors(design: Design, segs, length: float) -> List[Dict[str, float]]:
+    """Where the placement jig's locating stops touch the board edge: up to two per side (left, right, top,
+    bottom), away from parts that overhang the edge. Board coordinates, with the outward normal."""
+    bb = design.board.outline_bbox()
+    # parts that reach over the board edge (connectors): no stop next to them
+    over: List[BBox] = []
+    for fp in design.components():
+        c = fp.courtyard_local()
+        if not c.valid:
+            continue
+        g = BBox()
+        for lx, ly in ((c.x0, c.y0), (c.x1, c.y0), (c.x1, c.y1), (c.x0, c.y1)):
+            g.add(*fp.to_board(lx, ly))
+        if g.x0 < bb.x0 + 0.5 or g.y0 < bb.y0 + 0.5 or g.x1 > bb.x1 - 0.5 or g.y1 > bb.y1 - 0.5:
+            over.append(g.grow(1.5))
+    bins: Dict[str, List[Tuple[float, float, float, float]]] = {"left": [], "right": [], "top": [], "bottom": []}
+    for ax, ay, bx, by in segs:
+        n = max(1, int(math.hypot(bx - ax, by - ay) / 1.0))
+        dx, dy = (bx - ax), (by - ay)
+        ln = math.hypot(dx, dy) or 1.0
+        for k in range(n):
+            t = (k + 0.5) / n
+            x, y = ax + dx * t, ay + dy * t
+            nx_, ny_ = dy / ln, -dx / ln
+            if point_inside(x + nx_ * 0.2, y + ny_ * 0.2, segs):
+                nx_, ny_ = -nx_, -ny_
+            if abs(nx_) > 0.92:
+                bins["right" if nx_ > 0 else "left"].append((x, y, nx_, ny_))
+            elif abs(ny_) > 0.92:
+                bins["bottom" if ny_ > 0 else "top"].append((x, y, nx_, ny_))
+    anchors: List[Dict[str, float]] = []
+    for side, pts in bins.items():
+        if not pts:
+            continue
+        along = 1 if side in ("left", "right") else 0          # sort along the edge
+        pts.sort(key=lambda p: p[along])
+        span = pts[-1][along] - pts[0][along]
+        wants = (0.25, 0.75) if span > 3 * length else (0.5,)
+        for f in wants + (0.15, 0.85, 0.4, 0.6):
+            target = pts[0][along] + f * span
+            p = min(pts, key=lambda q: abs(q[along] - target))
+            if any(bx_.contains(p[0], p[1]) for bx_ in over):
+                continue
+            if any(math.hypot(p[0] - a["x"], p[1] - a["y"]) < 2 * length for a in anchors):
+                continue
+            anchors.append({"x": p[0], "y": p[1], "nx": p[2], "ny": p[3], "side": side})
+            if sum(1 for a in anchors if a["side"] == side) >= len(wants):
+                break
+    return anchors
+
+
+def _in_stop(px: float, py: float, a: Dict[str, float], length: float) -> bool:
+    """Is board point (px, py) within the along-edge reach of stop anchor a?"""
+    return math.hypot(px - a["x"], py - a["y"]) <= length / 2.0
+
+
+# =========================================================================== #
 def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optional[str] = None,
-              png_path: Optional[str] = None) -> Dict[str, Any]:
+              png_path: Optional[str] = None, stops: Optional[List[Dict[str, float]]] = None,
+              grid_out: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """The holding jig. With ``stops`` (two-jig workflow) its rim is notched where the placement jig's
+    locating stops sit, so the two jigs close over the PCB without touching."""
     jc = design.cfg["jig"]
     b = design.board
     bb = b.outline_bbox()
@@ -376,6 +524,15 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
         for i in range(nx):
             if not inside[j][i] and not near[j][i]:
                 H[j][i] = R
+    # two-jig workflow: notch the rim (down to the support plane) where the placement jig's stops sit
+    notch_len = float(jc.get("stop_length_mm", 8.0)) + 2.0
+    for a in stops or []:
+        ax_, ay_ = jx(a["x"]), jy(a["y"])
+        rr = notch_len / 2.0
+        for j in range(max(0, int((ay_ - rr) / res) - 1), min(ny, int((ay_ + rr) / res) + 2)):
+            for i in range(max(0, int((ax_ - rr) / res) - 1), min(nx, int((ax_ + rr) / res) + 2)):
+                if H[j][i] == R and math.hypot((i + 0.5) * res - ax_, (j + 0.5) * res - ay_) <= rr:
+                    H[j][i] = S
     # finger notches through the rim (left and right of the board)
     if jc.get("finger_notches", True):
         nd = int(round(max(floor, support - 4.0) * Q))
@@ -390,14 +547,12 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
     # alignment posts through the DUT's mounting holes
     posts = []
     if jc.get("posts", True):
-        for fp in design.components():
-            for pd in fp.pads:
-                if pd.drill_w >= 2.0 and (pd.is_npth or C.is_mounting_hole(fp)):
-                    r = pd.drill_w / 2 - float(jc["post_clearance_mm"])
-                    px, py = jx(pd.x), jy(pd.y)
-                    if any(pk.contains(px, py) for pk in pockets):
-                        continue
-                    posts.append((px, py, r, fp.ref))
+        for hx, hy, hr, ref in mounting_holes(design):
+            r = hr - float(jc["post_clearance_mm"])
+            px, py = jx(hx), jy(hy)
+            if any(pk.contains(px, py) for pk in pockets):
+                continue
+            posts.append((px, py, r, ref))
         P_ = int(round((support + design.board.thickness + 1.0) * Q))
         for px, py, r, _ in posts:
             for j in range(max(0, int((py - r) / res) - 1), min(ny, int((py + r) / res) + 2)):
@@ -415,6 +570,8 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
                     H[j][i] = min(H[j][i], d)
 
     top = support + max(rim_h, (design.board.thickness + 1.0) if posts else 0.0)
+    if grid_out is not None:                     # heightmap for checks (jig X = board x - ox, Y = board y - oy)
+        grid_out.update({"H": H, "nx": nx, "ny": ny, "res": res, "ox": ox, "oy": oy, "support": support})
     result: Dict[str, Any] = {
         "jig_size_mm": [round(nx * res, 2), round(ny * res, 2), round(top, 2)],
         "support_height_mm": round(support, 2), "floor_mm": floor, "resolution_mm": res,
@@ -440,6 +597,199 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
             fh.write(scad_source(design, pockets, posts, segs, nx * res, ny * res, support, rim_h, edge_clr, floor))
         result["scad"] = scad_path
     return result
+
+
+def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path: Optional[str] = None,
+                        png_path: Optional[str] = None, grid_out: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """The placement jig of the two-jig workflow: the PCB rests in it top side up while the parts are fitted.
+
+    Print orientation = use orientation (Z up, PCB top up). Jig X = board x, jig Y = -board y (the view from
+    above matches KiCad's editor). Heights:
+      floor .. pcb_rest   solid block; the PCB's underside rests on its top surface
+      wells               under every through-hole, down to the floor, for the leads (trim them to fit)
+      pockets             for parts on the PCB's bottom side
+      post holes          for the holding jig's posts through the mounting holes
+      stops               short walls around the edge that locate the PCB; they end 0.2 mm below its top
+                          surface so the holding jig can close over it (its rim is notched at the stops)
+    """
+    jc = design.cfg["jig"]
+    b = design.board
+    bb = b.outline_bbox()
+    t = float(b.thickness)
+    res = float(jc["resolution_mm"])
+    floor = float(jc["floor_mm"])
+    clearance = float(jc.get("placement_clearance_mm", 10.0))
+    margin = float(jc.get("lead_well_margin_mm", 1.0))
+    border = float(jc.get("placement_border_mm", 6.0))
+    stop_len = float(jc.get("stop_length_mm", 8.0))
+    stop_w = float(jc.get("stop_width_mm", 2.5))
+    stop_clr = float(jc.get("stop_clearance_mm", 0.15))
+    bot_clr = float(jc.get("bottom_part_clearance_mm", 0.8))
+    notes: List[str] = []
+
+    # parts on the bottom side need pockets; a tall one deepens the whole jig
+    bottom = []
+    for fp in design.components():
+        if fp.side != "bottom" or C.is_mounting_hole(fp) or not fp.pads:
+            continue
+        h, _src = design.height_of(fp)
+        c = fp.courtyard_local()
+        if not c.valid:
+            c = fp.pads_local_bbox()
+        g = BBox()
+        for lx, ly in ((c.x0, c.y0), (c.x1, c.y0), (c.x1, c.y1), (c.x0, c.y1)):
+            g.add(*fp.to_board(lx, ly))
+        bottom.append((fp.ref, g.grow(bot_clr), h + bot_clr))
+    deepest = max([d for _, _, d in bottom] + [0.0])
+    if deepest + 0.5 > clearance:
+        notes.append("lead clearance raised from %.1f to %.1f mm for the bottom-side parts" % (clearance, deepest + 0.5))
+        clearance = deepest + 0.5
+    rest = floor + clearance                                   # PCB underside
+    ax0, ay1 = bb.x0 - border, bb.y1 + border
+
+    def jx(x):
+        return x - ax0
+
+    def jy(y):
+        return ay1 - y
+
+    W_, L_ = bb.w + 2 * border, bb.h + 2 * border
+    if (W_ / res) * (L_ / res) > 6e6:
+        res = math.sqrt(W_ * L_ / 6e6)
+    nx, ny = int(math.ceil(W_ / res)), int(math.ceil(L_ / res))
+    REST, FLOOR = int(round(rest * Q)), int(round(floor * Q))
+    H = [[REST] * nx for _ in range(ny)]
+
+    def board_xy(i, j):
+        return ax0 + (i + 0.5) * res, ay1 - (j + 0.5) * res
+
+    def disk(bx_, by_, r, z):
+        cx_, cy_ = jx(bx_), jy(by_)
+        for j in range(max(0, int((cy_ - r) / res) - 1), min(ny, int((cy_ + r) / res) + 2)):
+            for i in range(max(0, int((cx_ - r) / res) - 1), min(nx, int((cx_ + r) / res) + 2)):
+                if math.hypot((i + 0.5) * res - cx_, (j + 0.5) * res - cy_) <= r:
+                    H[j][i] = min(H[j][i], z)
+
+    # lead wells under every component through-hole (any side), down to the floor
+    wells = 0
+    holes = {(round(x, 3), round(y, 3)) for x, y, _, _ in mounting_holes(design)}
+    for fp in design.components():
+        for pd in fp.pads:
+            if pd.drill_w <= 0 or (round(pd.x, 3), round(pd.y, 3)) in holes:
+                continue
+            r = max(pd.drill_w / 2.0 + 0.6, min(max(pd.w, pd.h) / 2.0, pd.drill_w / 2.0 + 1.5)) + margin
+            disk(pd.x, pd.y, r, FLOOR)
+            wells += 1
+    # holes for the holding jig's posts
+    post_depth = int(round(max(floor, rest - t - 2.0) * Q))
+    for x, y, r, _ in mounting_holes(design):
+        disk(x, y, r + 0.6, min(post_depth, REST - int(2.0 * Q)))
+    # bottom-side part pockets
+    for ref, g, d in bottom:
+        z = int(round(max(floor, rest - d) * Q))
+        for j in range(max(0, int(jy(g.y1) / res) - 1), min(ny, int(jy(g.y0) / res) + 2)):
+            for i in range(max(0, int(jx(g.x0) / res) - 1), min(nx, int(jx(g.x1) / res) + 2)):
+                bx_, by_ = board_xy(i, j)
+                if g.x0 <= bx_ <= g.x1 and g.y0 <= by_ <= g.y1:
+                    H[j][i] = min(H[j][i], z)
+    # locating stops: just outside the outline, ending 0.2 mm below the PCB's top surface
+    segs = outline_segments(design)
+    STOP = int(round((rest + max(0.4, t - 0.2)) * Q))
+    for a in stops:
+        reach = stop_len / 2.0 + stop_clr + stop_w
+        cx_, cy_ = jx(a["x"]), jy(a["y"])
+        for j in range(max(0, int((cy_ - reach) / res) - 1), min(ny, int((cy_ + reach) / res) + 2)):
+            for i in range(max(0, int((cx_ - reach) / res) - 1), min(nx, int((cx_ + reach) / res) + 2)):
+                bx_, by_ = board_xy(i, j)
+                if not _in_stop(bx_, by_, a, stop_len) or point_inside(bx_, by_, segs):
+                    continue
+                d = min(pt_seg_dist(bx_, by_, *s) for s in segs)
+                if stop_clr <= d <= stop_clr + stop_w:
+                    H[j][i] = STOP
+    # finger notches left and right, to lift the PCB out by its edges
+    if jc.get("finger_notches", True):
+        nd = int(round(max(floor, rest - 4.0) * Q))
+        ymid = jy(bb.cy)
+        for xa, xb in ((0.0, jx(bb.x0) + 2.0), (jx(bb.x1) - 2.0, W_)):
+            for j in range(ny):
+                if abs((j + 0.5) * res - ymid) > 7.5:
+                    continue
+                for i in range(nx):
+                    if xa <= (i + 0.5) * res <= xb and H[j][i] != STOP:     # never cut away a locating stop
+                        H[j][i] = min(H[j][i], nd)
+    if len(stops) < 3:
+        notes.append("only %d locating stop(s) fit around this outline; place the PCB carefully" % len(stops))
+    if grid_out is not None:                     # heightmap for checks (jig X = board x - ax0, Y = ay1 - board y)
+        grid_out.update({"H": H, "nx": nx, "ny": ny, "res": res, "ax0": ax0, "ay1": ay1, "rest": rest})
+    result: Dict[str, Any] = {
+        "jig_size_mm": [round(nx * res, 2), round(ny * res, 2), round(rest + max(0.4, t - 0.2), 2)],
+        "pcb_rest_height_mm": round(rest, 2), "lead_clearance_mm": round(clearance, 2), "floor_mm": floor,
+        "resolution_mm": res,
+        "board_bbox_in_jig_mm": [round(jx(bb.x0), 3), round(jy(bb.y1), 3), round(jx(bb.x1), 3), round(jy(bb.y0), 3)],
+        "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
+        "stops": [{"side": a["side"], "at": [round(a["x"], 2), round(a["y"], 2)]} for a in stops],
+        "lead_wells": wells, "bottom_pockets": [r for r, _, _ in bottom],
+        "notes": notes + ["Trim the leads to at most %.0f mm below the board, or raise jig.placement_clearance_mm."
+                          % max(1.0, clearance - 0.5)],
+    }
+    if png_path:
+        write_heightmap_png(png_path, H, nx, ny)
+        result["preview_png"] = png_path
+    if stl_path:
+        tris = heightmap_mesh(H, nx, ny, res)
+        write_stl(stl_path, tris, "PCB TestKit placement jig %s" % b.name)
+        result["mesh"] = mesh_check(tris) if len(tris) < 600000 else {"triangles": len(tris)}
+        result["stl"] = stl_path
+    return result
+
+
+def build_jigs(design: Design, stl_path: Optional[str] = None, scad_path: Optional[str] = None,
+               png_path: Optional[str] = None, place_stl: Optional[str] = None,
+               place_png: Optional[str] = None, grids: Optional[Dict[str, Dict[str, Any]]] = None) -> Dict[str, Any]:
+    """The holding jig and, in the two-jig workflow (default), the placement jig that pairs with it."""
+    jc = design.cfg["jig"]
+    two = str(jc.get("workflow", "two_jig")).lower().replace("-", "_") != "single"
+    stops = stop_anchors(design, outline_segments(design), float(jc.get("stop_length_mm", 8.0))) if two else []
+    grids = grids if grids is not None else {}
+    jig = build_jig(design, stl_path, scad_path, png_path, stops=stops, grid_out=grids.setdefault("holding", {}))
+    jig["workflow"] = "two_jig" if two else "single"
+    if two:
+        jig["placement"] = build_placement_jig(design, stops, place_stl, place_png, grid_out=grids.setdefault("placement", {}))
+        jig["notes"] = [n for n in jig["notes"] if not n.startswith("Place parts in the 'hold' pockets")] + [
+            "Two-jig workflow: put the PCB top side up in the placement jig, fit the parts, put this holding jig "
+            "on top (pockets down), turn the stack over, lift off the placement jig and solder from above."]
+    return jig
+
+
+def stack_collisions(design: Design, grids: Dict[str, Dict[str, Any]], gap: float = 0.1) -> List[Tuple[float, float, str]]:
+    """Where the holding jig, turned over onto the PCB in the placement jig, would touch the placement jig.
+
+    Both heightmaps are compared in board coordinates, in the placement jig's frame: the PCB lies on
+    pcb_rest .. pcb_rest + thickness; the holding jig's lowest point above board point p is
+    pcb_rest + thickness + (support - H_hold(p)). Returns (board x, board y, what) for every conflict.
+    """
+    A, B = grids["placement"], grids["holding"]
+    t = float(design.board.thickness)
+    rest, support = A["rest"], B["support"]
+    segs = outline_segments(design)
+    out = []
+    for j in range(A["ny"]):
+        for i in range(A["nx"]):
+            bx_ = A["ax0"] + (i + 0.5) * A["res"]
+            by_ = A["ay1"] - (j + 0.5) * A["res"]
+            ib, jb = int((bx_ - B["ox"]) / B["res"]), int((by_ - B["oy"]) / B["res"])
+            if not (0 <= ib < B["nx"] and 0 <= jb < B["ny"]):
+                continue
+            za = A["H"][j][i] / float(Q)
+            zb_low = rest + t + (support - B["H"][jb][ib] / float(Q))
+            on_board = point_inside(bx_, by_, segs)
+            if on_board and zb_low < rest + t - 1e-6 and za > zb_low - gap:
+                out.append((bx_, by_, "post"))          # a post through a hole must find a hole below
+            elif not on_board and za > zb_low - gap:
+                out.append((bx_, by_, "rim"))
+            elif on_board and za > rest + 1e-6:
+                out.append((bx_, by_, "under PCB"))
+    return out
 
 
 def scad_source(design, pockets, posts, segs, W_, L_, support, rim_h, edge_clr, floor) -> str:

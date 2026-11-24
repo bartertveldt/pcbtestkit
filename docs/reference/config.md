@@ -157,6 +157,7 @@ Fixture PCB outline, margins, N x M panel, mounting holes, dividers.
 ```json
 {
   "fixture": {
+    "mode": "generate",
     "outline": "rect",
     "margin_mm": 8.0,
     "panel": {
@@ -197,7 +198,15 @@ Solder-jig parts (auto = all THT), pocket clearances and depths, part heights by
     "posts": true,
     "post_clearance_mm": 0.2,
     "finger_notches": true,
-    "heights": {}
+    "heights": {},
+    "workflow": "two_jig",
+    "placement_clearance_mm": 10.0,
+    "placement_border_mm": 6.0,
+    "lead_well_margin_mm": 1.0,
+    "stop_length_mm": 8.0,
+    "stop_width_mm": 2.5,
+    "stop_clearance_mm": 0.15,
+    "bottom_part_clearance_mm": 0.8
   }
 }
 ```

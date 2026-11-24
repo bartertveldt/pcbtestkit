@@ -452,6 +452,7 @@ def _ohm(v: float) -> str:
 
 
 def build_fixture(design: Design, plan: Dict[str, Any]) -> Dict[str, Any]:
+    W.reset_uids("fixture:%s" % design.board.name)
     return FixtureBuilder(design, plan).build()
 
 
@@ -461,6 +462,22 @@ def project_file(name: str) -> str:
     return json.dumps({"board": {"design_settings": {"rule_severities": {"lib_footprint_issues": "ignore",
                                                                          "lib_footprint_mismatch": "ignore"}}},
                        "meta": {"filename": name + ".kicad_pro", "version": 3}}, indent=2) + "\n"
+
+
+def probe_points_csv(plan: Dict[str, Any]) -> str:
+    """Every probe point on the board under test, for a fixture the user designs (fixture.mode = "own").
+    x/y are KiCad board coordinates of the DUT (mm, y down), seen from the top; probing from the bottom mirrors x."""
+    lines = ["probe,dut_net,role,probe_side,x_mm,y_mm,target_mm,target,tip,channel,header_pin,divider_ratio,"
+             "nominal_v,min_v,max_v"]
+    for p in plan["probes"]:
+        e = p.get("expected") or {}
+        ratio = p["divider"]["ratio"] if p.get("divider") else (1.0 if p.get("channel") else "")
+        lines.append("%s,%s,%s,%s,%.4f,%.4f,%s,%s,%s,%s,%s,%s,%s,%s,%s" % (
+            p["id"], '"%s"' % p["net"], p["role"], plan["probe_side"], p["x"], p["y"], p.get("target_mm", ""),
+            '"%s"' % (p.get("label") or ""), p.get("tip", ""), p.get("channel") or "", p.get("header_pin") or "", ratio,
+            "" if e.get("nominal_v") is None else e["nominal_v"], "" if e.get("min_v") is None else e["min_v"],
+            "" if e.get("max_v") is None else e["max_v"]))
+    return "\n".join(lines) + "\n"
 
 
 def probes_csv(plan: Dict[str, Any], fixture: Dict[str, Any]) -> str:

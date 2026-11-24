@@ -120,7 +120,39 @@ def storyboard(design, spec, plan, fixture, jig, visuals, out_dir, work,
             cap = "First fit %s - the jig does not hold %s" % (_refs_text(refs, 4), "it" if n == 1 else "them")
         scenes.append(_anim(shots["place"], step=1, title="Assemble the board", caption=cap,
                             sub="Reflow or solder these before the hand-soldered parts go in the jig."))
-    if jig:
+    if jig and shots.get("place2"):
+        # two-jig workflow: fit the parts top side up in the placement jig, close the holding jig over them,
+        # turn the stack over, lift off the placement jig, solder
+        pj = jig.get("placement") or {}
+        parts = (shots["place2"].get("meta") or {}).get("parts") or jig.get("parts_to_place", [])
+        if shots.get("print2"):
+            scenes.append(_anim(shots["print2"], step=1, title="Print the two jigs",
+                                caption="Placement jig (%s x %s x %s mm) and holding jig (%s x %s x %s mm): print as they are, "
+                                        "no supports." % (tuple(pj.get("jig_size_mm", ["?"] * 3)) + tuple(jig["jig_size_mm"])),
+                                sub="The placement jig holds the PCB while you fit the parts; the holding jig keeps them in place "
+                                    "while you solder."))
+        scenes.append(_anim(shots["place2"], step=1, title="Fit the parts in the placement jig",
+                            caption="PCB top side up, then %s into their holes." % _refs_text(parts),
+                            sub="The leads go into the wells below the board; trim leads longer than %.0f mm."
+                                % max(1.0, float(pj.get("lead_clearance_mm", 10.0)) - 0.5)))
+        if shots.get("cover"):
+            scenes.append(_anim(shots["cover"], step=1, title="Put the holding jig on top",
+                                caption="Pockets down: every part sits in its pocket, the posts go through the mounting holes."))
+        if shots.get("flip"):
+            scenes.append(_anim(shots["flip"], step=1, title="Turn the stack over",
+                                caption="Hold both jigs together and turn them over as one."))
+        if shots.get("unload"):
+            scenes.append(_anim(shots["unload"], step=1, title="Lift off the placement jig",
+                                caption="Every lead now points up; the holding jig keeps each part flush and square."))
+        if shots.get("solder"):
+            n = (shots["solder"].get("meta") or {}).get("joints", 0)
+            scenes.append(_anim(shots["solder"], step=1, title="Solder from above",
+                                caption="Solder each lead, then clip it%s." % (" (%d joints)" % n if n else ""),
+                                sub="After the first joints the video runs faster."))
+        if shots.get("lift2"):
+            scenes.append(_anim(shots["lift2"], step=1, title="Lift out the finished board",
+                                caption="All %d hand-soldered parts sit flush and square." % len(jig.get("parts_to_place", []))))
+    elif jig:
         size = "%s x %s x %s mm" % tuple(jig["jig_size_mm"])
         parts = jig.get("parts_to_place", [])
         if shots.get("print"):

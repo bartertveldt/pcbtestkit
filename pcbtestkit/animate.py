@@ -4,15 +4,19 @@ Each frame is an ordinary .kicad_pcb scene, written just before it is rendered a
 so the board, parts, jig and fixture look exactly as they do in KiCad's 3D viewer. Motion comes from 3D-model
 offsets and rotations, and kicad-cli is the only tool needed. Frames render in parallel.
 
-Shots, in production order:
+Shots, in production order (two-jig workflow, the default):
   orbit   the finished board with the camera circling it (intro)
   place   bare PCB; the parts the jig does not hold drop onto their pads
-  print   the solder jig being 3D-printed layer by layer
-  load    the hand-soldered parts drop upside down into their jig pockets
-  slide   the PCB slides over the jig top-side down and lowers onto it
-  lift    the soldered board lifts out of the jig and turns over
+  print2  both jigs being 3D-printed layer by layer
+  place2  the PCB drops top side up into the placement jig, the hand-soldered parts drop into their holes
+  cover   the holding jig comes down over them, pockets first
+  flip    the whole stack turns over
+  unload  the placement jig lifts off: every lead points up
+  solder  a soldering iron works along the leads; solder joints appear
+  lift2   the finished board lifts out and turns over
   pogo    the pogo pins drop into the fixture PCB
   press   the finished board slides over the fixture and lowers onto the pins
+Single-jig workflow: print, load (parts into the jig), slide (PCB onto them) and lift instead of print2 .. lift2.
 
 Two stages hold still while things move over them: a thin plate under the jig (jig shots) and the fixture
 PCB (fixture shots). The moving PCB is the DUT exported once as VRML. The hand-soldered parts in the jig
@@ -110,6 +114,43 @@ def kicad_angles(m) -> Tuple[float, float, float]:
 
 
 FLIP_X = _rx(math.pi)
+
+
+class Xf:
+    """Rigid transform (rotation R, translation t) in KiCad's 3D frame (mm, y up, z up from the stage)."""
+
+    __slots__ = ("R", "t")
+
+    def __init__(self, R=None, t=(0.0, 0.0, 0.0)):
+        self.R = R or [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+        self.t = (float(t[0]), float(t[1]), float(t[2]))
+
+    def __mul__(self, o: "Xf") -> "Xf":                     # self after o
+        return Xf(_mul(self.R, o.R), tuple(sum(self.R[i][k] * o.t[k] for k in range(3)) + self.t[i] for i in range(3)))
+
+    def apply(self, p) -> Tuple[float, float, float]:
+        return tuple(sum(self.R[i][k] * p[k] for k in range(3)) + self.t[i] for i in range(3))  # type: ignore[return-value]
+
+    def inv(self) -> "Xf":
+        Rt = [[self.R[j][i] for j in range(3)] for i in range(3)]
+        return Xf(Rt, tuple(-sum(Rt[i][k] * self.t[k] for k in range(3)) for i in range(3)))
+
+    @staticmethod
+    def T(x: float, y: float, z: float) -> "Xf":
+        return Xf(None, (x, y, z))
+
+    @staticmethod
+    def Rx(a: float) -> "Xf":
+        return Xf(_rx(a))
+
+    @staticmethod
+    def Rz(a: float) -> "Xf":
+        return Xf(_rz(a))
+
+
+def place(ref: str, path: str, xf: Xf, scale=(1.0, 1.0, 1.0)) -> list:
+    """A scene footprint that puts a 3D model at world pose xf (KiCad applies scale, then rotation, then offset)."""
+    return model_footprint(ref, xf.t[0], -xf.t[1], path, offset=(0.0, 0.0, xf.t[2]), rotate=kicad_angles(xf.R), scale=scale)
 _ZVAL = 98765.4321          # placeholder z offset in cached footprint text
 _ZMARK = "@Z@"
 
@@ -198,6 +239,20 @@ class JigMesh:
 
     COLOR = (0.95, 0.55, 0.12)
 
+    @classmethod
+    def from_grid(cls, grid: Dict[str, Any]) -> "JigMesh":
+        """Light render mesh straight from a jig heightmap (see jig.render_mesh), much faster to raytrace."""
+        from .jig import render_mesh
+        verts, faces = render_mesh(grid["H"], grid["nx"], grid["ny"], grid["res"])
+        m = cls.__new__(cls)
+        m.verts = verts
+        m.faces = _faces_txt(faces)
+        m.zmax = max(v[2] for v in verts) if verts else 0.0
+        xs, ys = [v[0] for v in verts], [v[1] for v in verts]
+        m.bbox = (min(xs), min(ys), max(xs), max(ys)) if xs else (0, 0, 0, 0)
+        m._full = None
+        return m
+
     def __init__(self, stl_path: str):
         idx: Dict[Tuple[float, float, float], int] = {}
         self.verts: List[Tuple[float, float, float]] = []
@@ -251,6 +306,40 @@ def hotend(x: float, y: float, z: float) -> List[Tuple[list, list, tuple]]:
     v, f = _box(x - 8, y - 7, z + 14.0, x + 8, y + 9, z + 28.0)
     out.append((v, f, (0.42, 0.45, 0.5)))              # fan shroud
     return out
+
+
+SOLDER = (0.80, 0.81, 0.84)
+
+
+def joints_wrl(pads: Sequence[Tuple[float, float, float]], t: float) -> str:
+    """Solder joints on the PCB's bottom side, in the PCB frame D (bottom surface at z = -t): a shiny cone
+    around each lead, from the pad (radius r) to the lead."""
+    verts: List[Tuple[float, float, float]] = []
+    faces: List[Tuple[int, ...]] = []
+    for x, y, r in pads:
+        v, f = cylinder(x, y, -t, -t - 0.95, r, 0.38, 14)
+        b = len(verts)
+        verts += v
+        faces += [tuple(i + b for i in fc) for fc in f]
+    if not verts:
+        return "#VRML V2.0 utf8\n"
+    return "#VRML V2.0 utf8\n" + _shape_wrl(verts, _faces_txt(faces), SOLDER, 0.9)
+
+
+def iron_wrl(tilt_deg: float = 38.0, yaw_deg: float = 35.0) -> str:
+    """A soldering iron with its tip at the origin, leaning back from the vertical."""
+    tl, yw = math.radians(tilt_deg), math.radians(yaw_deg)
+    rot = _mul(_rz(yw), _ry(tl))
+    out = ["#VRML V2.0 utf8\n"]
+    for z0, z1, r0, r1, col, sh in ((0.0, 6.0, 0.28, 1.3, (0.75, 0.47, 0.22), 0.7),   # copper tip
+                                    (6.0, 32.0, 1.3, 1.3, (0.76, 0.77, 0.80), 0.8),   # steel shaft
+                                    (32.0, 37.0, 3.4, 3.4, (0.25, 0.26, 0.28), 0.3),  # collar
+                                    (37.0, 96.0, 5.0, 5.4, (0.13, 0.32, 0.62), 0.3),  # grip
+                                    (96.0, 118.0, 1.6, 1.6, (0.08, 0.08, 0.09), 0.2)):  # cable
+        v, f = cylinder(0.0, 0.0, z0, z1, r0, r1, 18)
+        v = [tuple(sum(rot[i][k] * p[k] for k in range(3)) for i in range(3)) for p in v]
+        out.append(_shape_wrl(v, _faces_txt(f), col, sh))
+    return "".join(out)
 
 
 # --------------------------------------------------------------------------- #
@@ -395,7 +484,7 @@ class Stage:
         if getattr(self, "_jig_stage", None) is not None:
             return self._jig_stage
         jig = self.jig
-        mesh = JigMesh(self.paths["jig_stl"])
+        mesh = self._render_meshes()[0]
         x0, y0, _, _ = jig["board_bbox_in_jig_mm"]
         ox, oy = self.bb.x0 - x0, self.bb.y0 - y0
         jx0, jy0, jx1, jy1 = mesh.bbox
@@ -579,6 +668,307 @@ class Stage:
                   make=lambda prefix, d=dut: self.jig_scene(prefix, dut=d))
         return s
 
+    # -- the two-jig workflow ---------------------------------------------------------
+    # Frames: D = the PCB (origin at the centre of its top surface, x right, y up, z out of the top side).
+    # World W = the holding jig's STL frame as it lies on the bench at the end (soldering). The placement jig
+    # (A) holds the PCB top side up; the holding jig (B) closes over it upside down; the stack is turned over.
+    def two_ok(self) -> bool:
+        pj = (self.jig or {}).get("placement")
+        return bool(pj and self._jig_ok() and self.paths.get("jig_place_stl") and os.path.exists(self.paths["jig_place_stl"]))
+
+    def two(self) -> Dict[str, Any]:
+        if getattr(self, "_two", None) is not None:
+            return self._two
+        jig, pj = self.jig, self.jig["placement"]
+        bb, t = self.bb, self.t
+        cx, cy = bb.cx, bb.cy
+        x0b, y0b = jig["board_bbox_in_jig_mm"][0], jig["board_bbox_in_jig_mm"][1]
+        oxb, oyb = bb.x0 - x0b, bb.y0 - y0b                          # holding jig: X = bx - oxb, Y = by - oyb
+        axa, aya = bb.x0 - pj["board_bbox_in_jig_mm"][0], bb.y1 + pj["board_bbox_in_jig_mm"][1]   # X = bx - axa, Y = aya - by
+        support, rest = float(jig["support_height_mm"]), float(pj["pcb_rest_height_mm"])
+        B_D = Xf.T(cx - oxb, cy - oyb, support) * Xf.Rx(math.pi)     # D -> holding jig frame (PCB top down)
+        A_D = Xf.T(cx - axa, aya - cy, rest + t)                    # D -> placement jig frame (PCB top up)
+        final = B_D                                                 # world == holding jig frame
+        up = Xf.T(final.t[0], final.t[1], rest + t)                  # PCB top up, placement jig on the bench
+        mesh_b, mesh_a = self._render_meshes()
+        sd = self.rd.scene_dir
+        wa, wb = os.path.join(sd, "anim_jig_place.wrl"), os.path.join(sd, "anim_jig_hold.wrl")
+        for path, m in ((wa, mesh_a), (wb, mesh_b)):
+            with open(path, "w", encoding="ascii") as fh:
+                fh.write(m.wrl())
+        # bench plate: hidden under whichever jig lies on it (the overlap of both footprints)
+        a_w = (up * A_D.inv()).t
+        bx0, by0, bx1, by1 = mesh_b.bbox
+        ax0_, ay0_, ax1_, ay1_ = mesh_a.bbox
+        px0, py0 = max(bx0, a_w[0] + ax0_) + 1.0, max(by0, a_w[1] + ay0_) + 1.0
+        px1, py1 = min(bx1, a_w[0] + ax1_) - 1.0, min(by1, a_w[1] + ay1_) - 1.0
+        plate = W.board([], [W.gr_rect(px0, -py1, px1, -py0)], thickness=0.2)
+        end = plate.rstrip().rfind(")")
+        # parts in D, solder joints, iron
+        parts = []
+        for ref in self.jig_parts:
+            fp = self.b.by_ref[ref]
+            for k, m in enumerate(self._models(fp)):
+                xf = Xf.T(fp.x - cx, -(fp.y - cy), 0.0) * Xf.Rz(math.radians(fp.angle)) * \
+                    Xf.T(*m.offset) * Xf(kicad_rotation(m.rotate))
+                parts.append(("P_%s_%d" % (ref, k), m.path.replace("${KIPRJMOD}", self.proj), xf, tuple(m.scale), ref))
+        pads = []
+        for ref in self.jig_parts:
+            for pd in self.b.by_ref[ref].pads:
+                if pd.drill_w > 0 and pd.has_copper:
+                    r = max(0.5, min(1.6, 0.85 * max(pd.w, pd.h) / 2.0))
+                    pads.append((pd.x - cx, -(pd.y - cy), r))
+        pads.sort(key=lambda p: (round(-p[1] / 6.0), p[0] if int(round(-p[1] / 6.0)) % 2 == 0 else -p[0]))
+        iron = os.path.join(sd, "anim_iron.wrl")
+        with open(iron, "w", encoding="ascii") as fh:
+            fh.write(iron_wrl())
+        joints_all = os.path.join(sd, "anim_joints.wrl")
+        with open(joints_all, "w", encoding="ascii") as fh:
+            fh.write(joints_wrl(pads, t))
+        self._two = {"B_D": B_D, "A_D": A_D, "final": final, "up": up, "wa": wa, "wb": wb, "mesh_a": mesh_a, "mesh_b": mesh_b,
+                     "plate": (plate[:end], plate[end:]), "parts": parts, "pads": pads, "iron": iron, "joints": joints_all,
+                     "support": support, "rest": rest, "stack": (max(by1 - by0, ay1_ - ay0_), support + rest + t)}
+        return self._two
+
+    def _render_meshes(self):
+        """Both jigs as light render meshes, rebuilt from the same design at 0.5 mm (invisible at video size);
+        falls back to the printed STLs."""
+        from .jig import build_jigs
+        jc = self.design.cfg["jig"]
+        old = jc.get("resolution_mm")
+        try:
+            jc["resolution_mm"] = max(0.5, float(old or 0.25))
+            grids: Dict[str, Dict[str, Any]] = {}
+            build_jigs(self.design, grids=grids)
+            hold = JigMesh.from_grid(grids["holding"])
+            place_ = JigMesh.from_grid(grids["placement"]) if grids.get("placement", {}).get("H") else None
+        except Exception as exc:  # pragma: no cover - the STLs always work
+            self.log.append("animation: render meshes failed (%r); using the STLs" % exc)
+            hold, place_ = JigMesh(self.paths["jig_stl"]), None
+        finally:
+            jc["resolution_mm"] = old
+        if place_ is None and self.paths.get("jig_place_stl") and os.path.exists(self.paths["jig_place_stl"]):
+            place_ = JigMesh(self.paths["jig_place_stl"])
+        return hold, place_
+
+    def scene2(self, items: List[list], plate=None) -> str:
+        head, close = plate or self.two()["plate"]
+        return head + "".join("\t" + dumps(it, 1).lstrip() + "\n" for it in items) + close
+
+    def stack_items(self, pose: Xf, a: Optional[Xf] = None, b: Optional[Xf] = None, parts_lift: Optional[Dict[str, float]] = None,
+                    pcb_lift: float = 0.0, pcb: bool = True, parts: bool = True, seated: bool = False) -> List[list]:
+        """Everything that rides with the PCB at pose (world <- D); a/b = extra world motion of each jig
+        (None = jig not shown). seated=True: the parts sit on the PCB, so the whole assembled board is one
+        exported model (one file for KiCad to load instead of the bare board plus every part model)."""
+        tw = self.two()
+        items = []
+        if a is not None:
+            items.append(place("JIG_A", tw["wa"], a * pose * tw["A_D"].inv()))
+        if b is not None:
+            items.append(place("JIG_B", tw["wb"], b * pose * tw["B_D"].inv()))
+        if seated and self.dut_wrl():
+            items.append(place("DUT", self.dut_wrl() or "", pose * Xf.T(0, 0, -self.t / 2)))
+            return items
+        if pcb:
+            items.append(place("DUT", self.dut_wrl(self.jig_parts) or "", Xf.T(0, 0, pcb_lift) * pose * Xf.T(0, 0, -self.t / 2)))
+        if parts:
+            for name, path, xf, scale, ref in tw["parts"]:
+                lift = (parts_lift or {}).get(ref, 0.0)
+                if lift is None:
+                    continue
+                items.append(place(name, path, Xf.T(0, 0, lift) * pose * xf, scale))
+        return items
+
+    def shot_print2(self, seconds: float = 3.0) -> Optional[Shot]:
+        if not self.two_ok():
+            return None
+        tw = self.two()
+        ma, mb = tw["mesh_a"], tw["mesh_b"]
+        gap = 14.0
+        wa_w = ma.bbox[2] - ma.bbox[0]
+        dy = ((ma.bbox[3] - ma.bbox[1]) - (mb.bbox[3] - mb.bbox[1])) / 2.0
+        pos_a, pos_b = Xf.T(-ma.bbox[0], -ma.bbox[1], 0), Xf.T(wa_w + gap - mb.bbox[0], dy - mb.bbox[1], 0)
+        rects = []
+        for pos, m in ((pos_a, ma), (pos_b, mb)):
+            x0, y0 = pos.apply((m.bbox[0], m.bbox[1], 0))[:2]
+            x1, y1 = pos.apply((m.bbox[2], m.bbox[3], 0))[:2]
+            rects.append(W.gr_rect(x0 + 1, -(y1 - 1), x1 - 1, -(y0 + 1)))
+        plate = W.board([], rects, thickness=0.2)
+        end = plate.rstrip().rfind(")")
+        plate = (plate[:end], plate[end:])
+        s = Shot("print2", self.fps, hold=0.6)
+        n = self.n(seconds)
+        for i in range(n):
+            t = i / float(n - 1)
+            pt = phase(t, 0.0, 0.88)
+
+            def make(prefix, pt=pt, t=t):
+                files, items = {}, []
+                for tag, pos, m in (("a", pos_a, ma), ("b", pos_b, mb)):
+                    z = max(0.25, m.zmax * pt)
+                    u = (pt * 7.0) % 1.0
+                    fx = u if int(pt * 7.0) % 2 == 0 else 1.0 - u
+                    fy = 0.5 + 0.42 * math.sin(2 * math.pi * pt * 3.0 + (1.3 if tag == "b" else 0.0))
+                    x0, y0, x1, y1 = m.bbox
+                    noz = None if t > 0.9 else (x0 + (x1 - x0) * (0.08 + 0.84 * fx), y0 + (y1 - y0) * fy)
+                    path = "%s_%s.wrl" % (prefix, tag)
+                    files[path] = m.wrl(None if pt >= 1.0 else z, hotend(noz[0], noz[1], z) if noz else ())
+                    items.append(place("JIG_" + tag, path, pos))
+                return self.scene2(items, plate), files
+            s.add(self.png("print2", i), self.cam(20 + 10 * smooth(t), zoom=0.85), make=make)
+        return s
+
+    def shot_place2(self) -> Optional[Shot]:
+        if not self.two_ok() or not self.dut_wrl(self.jig_parts):
+            return None
+        tw = self.two()
+        parts = sorted(self.jig_parts, key=lambda r: (self.b.by_ref[r].x, self.b.by_ref[r].y))
+        s = Shot("place2", self.fps, hold=0.6)
+        s.meta = {"parts": parts}
+        n = self.n(min(4.5, 3.0 + 0.025 * len(parts)))
+        hmax = max(25.0, min(60.0, 0.3 * self.big))
+        span = min(0.45, max(0.1, 6.0 / max(1, len(parts))))
+        for i in range(n):
+            t = i / float(n - 1)
+            pcb_lift = hmax * drop(phase(t, 0.0, 0.3))
+            lifts: Dict[str, Optional[float]] = {}
+            for k, r in enumerate(parts):
+                p = stagger(k, len(parts), phase(t, 0.32, 0.95), span)
+                lifts[r] = None if p <= 0 else hmax * drop(p)
+            s.add(self.png("place2", i), self.cam(24 + 10 * smooth(t), zoom=0.85),
+                  make=lambda prefix, pl=pcb_lift, lf=lifts: (self.scene2(self.stack_items(tw["up"], a=Xf(), parts_lift=lf,
+                                                                                          pcb_lift=pl)), {}))
+        return s
+
+    def shot_cover(self, seconds: float = 2.4) -> Optional[Shot]:
+        if not self.two_ok():
+            return None
+        tw = self.two()
+        s = Shot("cover", self.fps, hold=0.5)
+        n = self.n(seconds)
+        h0 = max(35.0, 0.25 * self.big)
+        for i in range(n):
+            t = i / float(n - 1)
+            h = h0 * (1.0 - smooth(phase(t, 0.0, 0.85)))
+            s.add(self.png("cover", i), self.cam(32 + 4 * smooth(t), zoom=0.78, rise=0.35 * h + 8.0),
+                  make=lambda prefix, h=h: (self.scene2(self.stack_items(tw["up"], a=Xf(), b=Xf.T(0, 0, h), seated=True)), {}))
+        return s
+
+    def shot_flip(self, seconds: float = 3.0) -> Optional[Shot]:
+        if not self.two_ok():
+            return None
+        tw = self.two()
+        u, f = tw["up"].t, tw["final"].t
+        # bounding corners of the whole stack in D, to keep it off the bench while it turns
+        half = tw["stack"][0] / 2.0 + 2.0
+        zlo, zhi = -(tw["rest"] + self.t), tw["support"] + 2.0
+        corners = [(0.0, y, z) for y in (-half, half) for z in (zlo, zhi)]
+        s = Shot("flip", self.fps, hold=0.4)
+        n = self.n(seconds)
+        for i in range(n):
+            t = i / float(n - 1)
+            a = smooth(phase(t, 0.05, 0.95))
+            base = (u[0] + a * (f[0] - u[0]), u[1] + a * (f[1] - u[1]), u[2] + a * (f[2] - u[2]))
+            rot = Xf.Rx(math.pi * a)
+            low = min(rot.apply(c)[2] for c in corners) + base[2]
+            lift = max(0.0, -low + 4.0 * math.sin(math.pi * a)) + 12.0 * math.sin(math.pi * a)
+            G = Xf.T(base[0], base[1], base[2] + lift) * rot * Xf.T(-u[0], -u[1], -u[2])
+            pose = G * tw["up"]
+            s.add(self.png("flip", i), self.cam(32, zoom=0.6 - 0.12 * math.sin(math.pi * a), rise=lift + 10.0),
+                  make=lambda prefix, pose=pose: (self.scene2(self.stack_items(pose, a=Xf(), b=Xf(), seated=True)), {}))
+        return s
+
+    def shot_unload(self, seconds: float = 2.2) -> Optional[Shot]:
+        if not self.two_ok():
+            return None
+        tw = self.two()
+        s = Shot("unload", self.fps, hold=0.5)
+        n = self.n(seconds)
+        for i in range(n):
+            t = i / float(n - 1)
+            up_, away = smooth(phase(t, 0.0, 0.55)), smooth(phase(t, 0.45, 1.0))
+            a = Xf.T(-away * (self.bb.w + 80.0), 0.0, 45.0 * up_ + 20.0 * away)
+            s.add(self.png("unload", i), self.cam(32, zoom=0.72, rise=18.0 * (1 - away) + 6.0),
+                  make=lambda prefix, a=a: (self.scene2(self.stack_items(tw["final"], a=a, b=Xf(), seated=True)), {}))
+        return s
+
+    def shot_solder(self, seconds: float = 4.4) -> Optional[Shot]:
+        if not self.two_ok():
+            return None
+        tw = self.two()
+        pads = tw["pads"]
+        if not pads:
+            return None
+        world = [tw["final"].apply((x, y, -self.t)) for x, y, _ in pads]   # joints on the (now upward) bottom side
+        s = Shot("solder", self.fps, hold=0.8)
+        s.meta = {"joints": len(pads)}
+        n = self.n(seconds)
+        detail = min(6, len(pads))
+        t_detail, t_rest = 0.5, 0.9                       # first joints at working pace, the rest sped up
+        jz = 1.1                                          # iron tip height above the board at a joint
+        for i in range(n):
+            t = i / float(n - 1)
+            if t < t_detail:
+                q = t / t_detail * detail
+                k = min(detail - 1, int(q))
+                f = q - k
+                done = k + (1 if f > 0.55 else 0)
+                nxt = world[min(k + 1, len(world) - 1)]
+                if f < 0.7:                                # dwell on joint k
+                    tip = (world[k][0], world[k][1], world[k][2] + jz)
+                else:                                      # hop to the next joint
+                    g = (f - 0.7) / 0.3
+                    tip = (world[k][0] + (nxt[0] - world[k][0]) * g, world[k][1] + (nxt[1] - world[k][1]) * g,
+                           world[k][2] + jz + 4.0 * math.sin(math.pi * g))
+            elif t < t_rest:
+                g = (t - t_detail) / (t_rest - t_detail)
+                done = detail + int(round(g * (len(pads) - detail)))
+                k = min(len(world) - 1, max(0, done - 1))
+                tip = (world[k][0], world[k][1], world[k][2] + jz + 1.5)
+            else:
+                done = len(pads)
+                g = (t - t_rest) / (1 - t_rest)
+                last = world[-1]
+                tip = (last[0] + 30 * g, last[1] + 20 * g, last[2] + jz + 40 * g)
+            sub = pads[:done]
+
+            def make(prefix, sub=sub, tip=tip):
+                files = {}
+                items = self.stack_items(tw["final"], b=Xf(), seated=True)
+                if sub:
+                    path = prefix + "_joints.wrl"
+                    files[path] = joints_wrl(sub, self.t)
+                    items.append(place("JOINTS", path, tw["final"]))
+                items.append(place("IRON", tw["iron"], Xf.T(*tip)))
+                return self.scene2(items), files
+            s.add(self.png("solder", i), self.cam(30 + 6 * smooth(t), zoom=0.95), make=make)
+        return s
+
+    def shot_lift2(self, seconds: float = 3.2) -> Optional[Shot]:
+        if not self.two_ok():
+            return None
+        wrl = self.dut_wrl()
+        if not wrl:
+            return None
+        tw = self.two()
+        s = Shot("lift2", self.fps, hold=1.0)
+        n = self.n(seconds)
+        top = self.bb.h / 2 + 8.0
+        mid = tw["final"].apply((0.0, 0.0, -self.t / 2))
+        mb = tw["mesh_b"].bbox
+        reach = tw["support"] + top + self.bb.h / 2
+        zoom = 0.72 * min(1.0, 0.7 * max(mb[2] - mb[0], mb[3] - mb[1]) / max(1.0, reach))
+        for i in range(n):
+            t = i / float(n - 1)
+            up_, turn = smooth(phase(t, 0.0, 0.45)), smooth(phase(t, 0.35, 0.95))
+            pose = Xf.T(mid[0], mid[1], mid[2] + top * up_) * Xf.Rx(math.pi * (1 - turn)) * Xf.T(0, 0, self.t / 2)
+            follow = 0.5 * reach * smooth(phase(t, 0.05, 0.6))
+            items = [place("JIG_B", tw["wb"], Xf()), place("DUT", wrl, pose * Xf.T(0, 0, -self.t / 2)),
+                     place("JOINTS", tw["joints"], pose)]
+            s.add(self.png("lift2", i), self.cam(32 + 10 * smooth(t), zoom=zoom, rise=follow),
+                  make=lambda prefix, it=items: (self.scene2(it), {}))
+        return s
+
     # -- the fixture stage ---------------------------------------------------------
     def _fixture_ok(self) -> bool:
         return bool(self.fixture and self.paths.get("fixture") and os.path.exists(self.paths["fixture"]))
@@ -644,7 +1034,8 @@ class Stage:
         return s
 
 
-SHOTS = ("orbit", "place", "print", "load", "slide", "lift", "pogo", "press")
+SHOTS = ("orbit", "place", "print", "load", "slide", "lift", "pogo", "press")              # single-jig workflow
+SHOTS_TWO_JIG = ("orbit", "place", "print2", "place2", "cover", "flip", "unload", "solder", "lift2", "pogo", "press")
 
 
 def build_shots(design, plan, fixture, jig, paths, visuals_dir: str, fps: float = 30.0, size=(1280, 720),
@@ -661,7 +1052,8 @@ def build_shots(design, plan, fixture, jig, paths, visuals_dir: str, fps: float 
         return res
     st = Stage(design, plan, fixture, jig, paths, rd, os.path.join(rd.scene_dir, "anim"), fps, size, quality)
     shots: List[Shot] = []
-    for name in (only or SHOTS):
+    two = str((jig or {}).get("workflow", "")) == "two_jig" and st.two_ok()
+    for name in (only or (SHOTS_TWO_JIG if two else SHOTS)):
         try:
             sh = getattr(st, "shot_" + name)()
         except Exception as exc:  # one broken shot must not cost the whole video

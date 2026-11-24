@@ -22,8 +22,18 @@ LAYERS_2 = [
 ]
 
 
+_UID = {"seed": "pcbtestkit", "n": 0}
+
+
+def reset_uids(seed: str) -> None:
+    """Restart the UUID sequence. The same seed and build order give the same file, run after run (no random UUIDs:
+    a regenerated fixture board diffs cleanly against the previous one)."""
+    _UID["seed"], _UID["n"] = seed, 0
+
+
 def uid() -> str:
-    return str(_uuid.uuid4())
+    _UID["n"] += 1
+    return str(_uuid.uuid5(_uuid.NAMESPACE_URL, "pcbtestkit:%s:%d" % (_UID["seed"], _UID["n"])))
 
 
 def effects(size: float = 1.0, thickness: Optional[float] = None, justify: Optional[str] = None, mirror: bool = False) -> list:

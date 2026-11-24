@@ -139,6 +139,15 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
             h.append("<div class='small' style='color:%s'>&#9888; %s</div>" % (SEV_COLOR["major"], _e(w)))
         if fixture.get("drc"):
             h.append("<div class='small muted'>KiCad DRC on the fixture: %s</div>" % _e(fixture["drc"]))
+    elif plan:
+        mode = (design.cfg.get("fixture") or {}).get("mode", "generate")
+        if mode == "own":
+            h.append("<h2>Fixture</h2><div class='muted small'>You design the fixture: %d probe point(s) with coordinates, "
+                     "nets, tips and expected values are in <code>%s</code>.</div>" % (
+                         len(plan["probes"]), _e(os.path.basename(outputs.get("probe_points", "probe-points.csv")))))
+        elif mode == "none":
+            h.append("<h2>Fixture</h2><div class='muted small'>No fixture (manual test): measure the %d test point(s) with a "
+                     "bench supply and a multimeter, following the test scheme.</div>" % len(plan["probes"]))
     if jig:
         h.append("<h2>Solder jig</h2><div class='muted small'>%s x %s x %s mm, support plane at %s mm. Parts to place: %s.</div>" %
                  (jig["jig_size_mm"][0], jig["jig_size_mm"][1], jig["jig_size_mm"][2], jig["support_height_mm"],
@@ -157,6 +166,16 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
         h.append("</table></div>")
         if jig.get("mesh"):
             h.append("<div class='small muted'>Mesh: %s triangles, watertight: %s</div>" % (jig["mesh"].get("triangles"), jig["mesh"].get("watertight")))
+        pj = jig.get("placement")
+        if pj:
+            h.append("<h3>Placement jig (two-jig workflow)</h3><div class='muted small'>%s x %s x %s mm. The PCB rests top side up "
+                     "%.1f mm above the bed; %d lead wells, %d locating stops. %s</div>" %
+                     (pj["jig_size_mm"][0], pj["jig_size_mm"][1], pj["jig_size_mm"][2], pj["pcb_rest_height_mm"],
+                      pj["lead_wells"], len(pj["stops"]), _e(" ".join(pj.get("notes", [])))))
+            if pj.get("preview_png") and os.path.exists(pj["preview_png"]):
+                with open(pj["preview_png"], "rb") as fh:
+                    h.append("<p><img class='jig' alt='Placement jig top view' src='data:image/png;base64,%s'></p>" %
+                             base64.b64encode(fh.read()).decode())
     h.append("<h2>Files</h2><ul>")
     for k, v in outputs.items():
         h.append("<li>%s: <code>%s</code></li>" % (_e(k), _e(os.path.basename(v))))

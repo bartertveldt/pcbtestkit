@@ -3,9 +3,9 @@
   "displayName": "PCB TestKit",
   "version": "1.0.0",
   "description": "KiCad production-test toolkit for AI agents: DFM/weak-point review, fab class checks (Eurocircuits, JLCPCB, PCBWay, OSH Park, AISLER, Würth, IPC), test plan, pogo-pin fixture PCB, solder jig, Pi test runner, 3D-animated explainer. Skill + MCP server, standard-library Python.",
-  "author": { "name": "Bart Ertveldt", "url": "https://github.com/YOUR-GITHUB-USER" },
-  "homepage": "https://github.com/YOUR-GITHUB-USER/pcbtestkit",
-  "repository": "https://github.com/YOUR-GITHUB-USER/pcbtestkit",
+  "author": { "name": "Bart Ertveldt", "url": "https://github.com/bartertveldt" },
+  "homepage": "https://github.com/bartertveldt/pcbtestkit",
+  "repository": "https://github.com/bartertveldt/pcbtestkit",
   "license": "MIT",
   "keywords": ["kicad", "pcb", "dfm", "manufacturing", "production-test", "test-fixture", "solder-jig", "mcp"],
   "mcpServers": {

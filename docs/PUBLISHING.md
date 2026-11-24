@@ -1,6 +1,6 @@
 # Publishing
 
-Everything is prepared; the steps below need your accounts. Placeholders use `YOUR-GITHUB-USER`.
+Everything is prepared; the steps below need your accounts. Placeholders use `bartertveldt`.
 
 ## 1. Fill in the GitHub owner (once)
 
@@ -16,7 +16,7 @@ stay under (a personal account or an organisation).
 
 ## 2. Commit author
 
-The first commit was made as `Bart Ertveldt <YOUR-GITHUB-USER@users.noreply.github.com>` so no real email
+The first commit was made as `Bart Ertveldt <bartertveldt@users.noreply.github.com>` so no real email
 address is published. Before pushing, set your own (GitHub's private address is under
 *Settings > Emails*, e.g. `12345678+user@users.noreply.github.com`) and rewrite the author:
 
@@ -95,7 +95,7 @@ points at the PyPI package. Check that the name `pcbtestkit` is still free on Py
 
 ## Checklist
 
-- [ ] `tools/set_owner.py` run, no `YOUR-GITHUB-USER` left (`grep -r YOUR-GITHUB-USER .`)
+- [ ] `tools/set_owner.py` run, no `bartertveldt` left (`grep -r bartertveldt .`)
 - [ ] commit author set to your noreply address
 - [ ] CI green
 - [ ] tag pushed, release has the PCM zip, wheel and `metadata.json`

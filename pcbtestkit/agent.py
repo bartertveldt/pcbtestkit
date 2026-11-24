@@ -878,6 +878,9 @@ _RANGES = {"pogo_drill_mm": (0.4, 3.0), "max_channels": (1, 512), "edge_keepout_
            "resolution_mm": (0.1, 1.0), "hold_clearance_mm": (0, 2), "relief_clearance_mm": (0, 5),
            "relief_extra_depth_mm": (0, 10), "hold_depth_offset_mm": (-1, 2), "floor_mm": (0.6, 10), "rim_mm": (1, 15),
            "rim_height_mm": (0, 10), "edge_clearance_mm": (0, 2), "post_clearance_mm": (0, 1),
+           "placement_clearance_mm": (2, 40), "placement_border_mm": (3, 30), "lead_well_margin_mm": (0, 5),
+           "stop_length_mm": (3, 30), "stop_width_mm": (1, 10), "stop_clearance_mm": (0, 1),
+           "bottom_part_clearance_mm": (0, 5),
            "divider_r_bottom_rail": (100, 1e6), "divider_r_bottom_signal": (1e3, 1e7)}
 
 
@@ -942,10 +945,18 @@ JIG_OPTS = {
     "hold_depth_offset_mm": {"type": "number"}, "floor_mm": {"type": "number"}, "rim_mm": {"type": "number"},
     "rim_height_mm": {"type": "number"}, "edge_clearance_mm": {"type": "number"}, "posts": {"type": "boolean"},
     "post_clearance_mm": {"type": "number"}, "finger_notches": {"type": "boolean"},
+    "workflow": {"type": "string", "enum": ["two_jig", "single"],
+                 "description": "two_jig (default): placement jig + holding jig, parts fitted top side up. single: parts "
+                                "dropped into the holding jig, PCB lowered onto them."},
+    "placement_clearance_mm": {"type": "number", "description": "Room under the PCB for the leads in the placement jig."},
+    "placement_border_mm": {"type": "number"}, "lead_well_margin_mm": {"type": "number"},
+    "stop_length_mm": {"type": "number"}, "stop_width_mm": {"type": "number"}, "stop_clearance_mm": {"type": "number"},
+    "bottom_part_clearance_mm": {"type": "number"},
 }
 
 
-@tool("set_jig_options", "Solder-jig options: which parts it holds, part heights, clearances. See get_schema('jig_options').",
+@tool("set_jig_options", "Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances. "
+      "See get_schema('jig_options').",
       {"properties": dict(JIG_OPTS, **WRITE_COMMON)}, read_only=False, writes=True)
 def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False, confirm: bool = False, **opts):
     d = ws._d()
@@ -980,6 +991,8 @@ def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False,
 
 
 FIXTURE_OPTS = {
+    "mode": {"type": "string", "enum": ["generate", "own", "none"],
+             "description": "generate the fixture board, own = the user designs it (probe-point CSV), none = no fixture"},
     "outline": {"type": "string", "enum": ["rect", "outline"]}, "margin_mm": {"type": "number"},
     "panel_cols": {"type": "integer"}, "panel_rows": {"type": "integer"}, "panel_spacing_mm": {"type": "number"},
     "mounting_holes": {"type": "boolean"}, "mounting_hole_d_mm": {"type": "number"}, "dividers": {"type": "boolean"},
@@ -988,7 +1001,7 @@ FIXTURE_OPTS = {
 }
 
 
-@tool("set_fixture_options", "Fixture-board options: outline (rect|outline), margin, panel of N x M sites, dividers, holes.",
+@tool("set_fixture_options", "Fixture options: mode (generate|own|none), outline, margin, panel of N x M sites, dividers, holes.",
       {"properties": dict(FIXTURE_OPTS, **WRITE_COMMON)}, read_only=False, writes=True)
 def t_set_fixture_options(ws: Workspace, rationale: str = "", dry_run: bool = False, confirm: bool = False, **opts):
     panel = {}

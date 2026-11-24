@@ -1016,16 +1016,101 @@
     }
   ],
   "notes": [
-    "Place parts in the 'hold' pockets, lower the PCB top-side down onto the nest, solder from above.",
-    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud."
+    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud.",
+    "Two-jig workflow: put the PCB top side up in the placement jig, fit the parts, put this holding jig on top (pockets down), turn the stack over, lift off the placement jig and solder from above."
   ],
   "preview_png": "pic_programmer-jig.png",
   "mesh": {
-    "triangles": 89192,
+    "triangles": 105656,
     "unmatched_edges": 0,
-    "volume_mm3": 278050.0,
+    "volume_mm3": 277796.7,
     "watertight": true
   },
   "stl": "pic_programmer-jig.stl",
-  "scad": "pic_programmer-jig.scad"
+  "scad": "pic_programmer-jig.scad",
+  "workflow": "two_jig",
+  "placement": {
+    "jig_size_mm": [
+      172.25,
+      111.25,
+      13.4
+    ],
+    "pcb_rest_height_mm": 12.0,
+    "lead_clearance_mm": 10.0,
+    "floor_mm": 2.0,
+    "resolution_mm": 0.25,
+    "board_bbox_in_jig_mm": [
+      6.0,
+      6.0,
+      166.02,
+      105.06
+    ],
+    "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
+    "stops": [
+      {
+        "side": "left",
+        "at": [
+          73.66,
+          65.15
+        ]
+      },
+      {
+        "side": "right",
+        "at": [
+          233.68,
+          65.15
+        ]
+      },
+      {
+        "side": "right",
+        "at": [
+          233.68,
+          114.18
+        ]
+      },
+      {
+        "side": "top",
+        "at": [
+          114.29,
+          40.64
+        ]
+      },
+      {
+        "side": "top",
+        "at": [
+          98.24,
+          40.64
+        ]
+      },
+      {
+        "side": "bottom",
+        "at": [
+          114.17,
+          139.7
+        ]
+      },
+      {
+        "side": "bottom",
+        "at": [
+          193.17,
+          139.7
+        ]
+      }
+    ],
+    "lead_wells": 236,
+    "bottom_pockets": [
+      "JP1"
+    ],
+    "notes": [
+      "Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm."
+    ],
+    "preview_png": "pic_programmer-jig-placement.png",
+    "mesh": {
+      "triangles": 262534,
+      "unmatched_edges": 0,
+      "volume_mm3": 200775.8,
+      "watertight": true
+    },
+    "stl": "pic_programmer-jig-placement.stl"
+  }
 }

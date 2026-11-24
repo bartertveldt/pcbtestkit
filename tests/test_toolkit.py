@@ -230,6 +230,30 @@ class TestClassSystems(Base):
         r = ev({"ring_pth_outer": [{"value": 0.25, "finished": 0.8}]})["required"]
         self.assertEqual({d["level"] for d in r["drivers"]}, {"cheap"})
 
+    def test_requires_mismatch_is_reported(self):
+        """A level ruled out by 'requires' (4 layers only with ENIG) is the nearest option for a 4-layer HASL board:
+        an order option beats a redesign of the layer count, and the finish is named as the blocker."""
+        from pcbtestkit.classsys import System, evaluate, validate
+        raw = {"id": "fin", "name": "fin", "status": "user", "dimensions": [{"id": "s", "monotonic": False, "levels": [
+            {"id": "2L-HASL", "requires": {"finish": ["HASL", None]}, "limits": {"layers_allowed": [2], "ring": 0.3}},
+            {"id": "4L-ENIG", "requires": {"finish": ["ENIG", None]}, "limits": {"layers_allowed": [4], "ring": 0.3}},
+            {"id": "6L", "requires": {"layers": {"min": 6}}, "limits": {"ring": 0.2}}]}]}
+        self.assertTrue(validate(raw, run_tests=False)["ok"])
+        s = System(raw)
+        meas = {"layers_allowed": 4, "ring_pth_outer": [{"value": 0.25, "finished": 0.8}]}
+        r = evaluate(s, None, {"layers": 4, "finish": "HASL"}, synthetic=meas)
+        req = r["required"]
+        self.assertIsNone(req["class"])
+        self.assertEqual({d["level"] for d in req["drivers"]}, {"4L-ENIG"})      # not 2L-HASL (layer count) or 6L
+        fin = [d for d in req["drivers"] if d["metric"] == "_requires"]
+        self.assertEqual([(d["label"], d["measured"], d["limit"]) for d in fin], [("surface finish", "HASL", "ENIG")])
+        # the same board with ENIG: no requires driver, the ring is what blocks 4L-ENIG
+        req = evaluate(s, None, {"layers": 4, "finish": "ENIG"}, synthetic=meas)["required"]
+        self.assertEqual([(d["level"], d["metric"]) for d in req["drivers"]], [("4L-ENIG", "ring_pth_outer")])
+        # ordering 4L-ENIG for the HASL board names the finish in plain words
+        tg = evaluate(s, None, {"layers": 4, "finish": "HASL"}, target="4L-ENIG", synthetic=meas)["target"]
+        self.assertEqual(tg["violations"]["_requires_s"]["label"], "s 4L-ENIG needs surface finish ENIG (board: HASL)")
+
     def test_validator_catches_mistakes(self):
         from pcbtestkit.classsys import validate
         bad = {"id": "Bad Id", "name": "x", "status": "verified",
@@ -399,6 +423,91 @@ class TestAnimation(Base):
         self.assertFalse([s for s in still if s["kind"] == "anim"])
 
 
+class TestTwoJigWorkflow(Base):
+    """Placement jig + holding jig: geometry that must fit together, and the animation that shows it."""
+
+    def test_jigs_fit_together(self):
+        from pcbtestkit.jig import build_jig, build_jigs, build_placement_jig, outline_segments, stack_collisions, stop_anchors
+        d = self.design()
+        out = os.path.join(self.tmp, "two_jig")
+        os.makedirs(out, exist_ok=True)
+        grids = {}
+        jig = build_jigs(d, os.path.join(out, "j.stl"), None, None, os.path.join(out, "p.stl"), None, grids=grids)
+        self.assertEqual(jig["workflow"], "two_jig")
+        pj = jig["placement"]
+        self.assertTrue(jig["mesh"]["watertight"])
+        self.assertTrue(pj["mesh"]["watertight"])
+        self.assertGreaterEqual(len(pj["stops"]), 3)
+        self.assertGreater(pj["lead_wells"], 0)
+        self.assertEqual(stack_collisions(d, grids), [])
+        # the check is real: a holding jig without rim notches collides with the placement jig's stops
+        stops = stop_anchors(d, outline_segments(d), 8.0)
+        g2 = {"holding": {}, "placement": {}}
+        build_jig(d, stops=None, grid_out=g2["holding"])
+        build_placement_jig(d, stops, grid_out=g2["placement"])
+        self.assertTrue([c for c in stack_collisions(d, g2) if c[2] == "rim"])
+        # every lead well reaches the floor under each through-hole of a part the jig holds
+        A = grids["placement"]
+        floor = int(round(float(d.cfg["jig"]["floor_mm"]) * 100))
+        for ref in jig["parts_to_place"]:
+            for pd in d.board.by_ref[ref].pads:
+                if pd.drill_w > 0:
+                    i, j = int((pd.x - A["ax0"]) / A["res"]), int((A["ay1"] - pd.y) / A["res"])
+                    self.assertEqual(A["H"][j][i], floor, "%s pad %s" % (ref, pd.number))
+        single = build_jigs(self.design(jig={"workflow": "single"}))
+        self.assertNotIn("placement", single)
+
+    def test_transforms_and_render_mesh(self):
+        import math
+        import random
+        from pcbtestkit import animate as A
+        from pcbtestkit.jig import build_jigs, render_mesh
+        rnd = random.Random(3)
+        for _ in range(50):
+            a = A.Xf(A.kicad_rotation([rnd.uniform(-180, 180) for _ in range(3)]), [rnd.uniform(-50, 50) for _ in range(3)])
+            b = A.Xf(A.kicad_rotation([rnd.uniform(-180, 180) for _ in range(3)]), [rnd.uniform(-50, 50) for _ in range(3)])
+            p = [rnd.uniform(-10, 10) for _ in range(3)]
+            for u, w in zip((a * b).inv().apply(p), (b.inv() * a.inv()).apply(p)):
+                self.assertAlmostEqual(u, w, places=6)
+            back = A.kicad_rotation(A.kicad_angles(a.R))
+            for i in range(3):
+                for k in range(3):
+                    self.assertAlmostEqual(back[i][k], a.R[i][k], places=6)
+        # the stack turned over lands exactly in the soldering pose (the same composition shot_flip uses)
+        up = A.Xf.T(10, -20, 12)
+        final = A.Xf.T(30, 5, 15) * A.Xf.Rx(math.pi)
+        u, f = up.t, final.t
+        G = A.Xf.T(*f) * A.Xf.Rx(math.pi) * A.Xf.T(-u[0], -u[1], -u[2])
+        for q in ((0, 0, 0), (5, 7, -3)):
+            for x, y in zip((G * up).apply(q), final.apply(q)):
+                self.assertAlmostEqual(x, y, places=9)
+        grids = {}
+        build_jigs(self.design(), grids=grids)
+        g = grids["placement"]
+        verts, faces = render_mesh(g["H"], g["nx"], g["ny"], g["res"])
+        self.assertAlmostEqual(max(v[2] for v in verts), max(max(r) for r in g["H"]) / 100.0, places=6)
+        self.assertAlmostEqual(max(v[0] for v in verts), g["nx"] * g["res"], places=6)
+        self.assertLess(len(faces), 20000)
+
+    def test_two_jig_storyboard(self):
+        from pcbtestkit.pipeline import analyze
+        from pcbtestkit.spec import build_spec
+        from pcbtestkit.jig import build_jigs
+        from pcbtestkit.video import storyboard
+        d = self.design()
+        findings, plan = analyze(d, include_kicad=False)
+        spec = build_spec(d, findings, plan)
+        jig = build_jigs(d)
+        shot = {"images": ["a.png", "b.png"], "fps": 24, "hold": 1.0, "meta": {"parts": ["C1"], "smd": 1, "joints": 12}}
+        names = ("orbit", "place", "print2", "place2", "cover", "flip", "unload", "solder", "lift2", "pogo", "press")
+        scenes = storyboard(d, spec, plan, build_fixture(d, plan), jig, {"images": {}}, self.tmp, self.tmp,
+                            {k: dict(shot) for k in names})
+        titles = [s.get("title", "") for s in scenes if s["kind"] == "anim"]
+        self.assertEqual(titles[2:9], ["Print the two jigs", "Fit the parts in the placement jig", "Put the holding jig on top",
+                                       "Turn the stack over", "Lift off the placement jig", "Solder from above",
+                                       "Lift out the finished board"])
+
+
 def load_board_text(text):
     fd, path = tempfile.mkstemp(suffix=".kicad_pcb")
     with os.fdopen(fd, "w") as fh:
@@ -552,6 +661,93 @@ class TestPipelineAndRunner(Base):
                             "--non-interactive", "--serial", "T2", "--sim-fail", "CH03"], capture_output=True, text=True)
         self.assertEqual(r.returncode, 1)
         self.assertIn("FAIL", r.stdout)
+
+
+class TestWithoutAI(Base):
+    """Everything an AI can decide is possible by hand, and every generated file is deterministic."""
+
+    def _run(self, out, **cfg):
+        old = os.environ.get("SOURCE_DATE_EPOCH")
+        os.environ["SOURCE_DATE_EPOCH"] = "1764000000"
+        try:
+            return run_pipeline(self.design(**cfg), out_dir=out, include_kicad=False,
+                                outputs={"visuals": False, "video": False, "guide": True})
+        finally:
+            if old is None:
+                os.environ.pop("SOURCE_DATE_EPOCH", None)
+            else:
+                os.environ["SOURCE_DATE_EPOCH"] = old
+
+    def test_outputs_are_identical_run_after_run(self):
+        def read_all(d):
+            out = {}
+            for root, _, files in os.walk(d):
+                for f in files:
+                    with open(os.path.join(root, f), "rb") as fh:
+                        out[os.path.relpath(os.path.join(root, f), d)] = fh.read()
+            return out
+        a, b = os.path.join(self.tmp, "det_a"), os.path.join(self.tmp, "det_b")
+        self._run(a)
+        self._run(b)
+        fa, fb = read_all(a), read_all(b)
+        self.assertEqual(sorted(fa), sorted(fb))
+        for k in ("sample_sensor-jig.stl", "sample_sensor-jig-placement.stl", "sample_sensor-fixture.kicad_pcb"):
+            self.assertIn(k, fa)
+        self.assertEqual([k for k in fa if fa[k] != fb[k]], [])
+
+    def test_fixture_modes(self):
+        own = self._run(os.path.join(self.tmp, "own"), fixture={"mode": "own"})
+        self.assertNotIn("fixture", own["paths"])
+        self.assertIn("runner", own["paths"])
+        with open(own["paths"]["probe_points"], encoding="utf-8") as fh:
+            rows = fh.read().splitlines()
+        self.assertTrue(rows[0].startswith("probe,dut_net,role,probe_side,x_mm,y_mm"))
+        self.assertGreater(len(rows), 5)
+        with open(own["paths"]["guide"], encoding="utf-8") as fh:
+            self.assertIn("Your test fixture", fh.read())
+        none = self._run(os.path.join(self.tmp, "none"), fixture={"mode": "none"})
+        for k in ("fixture", "probe_points", "runner"):
+            self.assertNotIn(k, none["paths"])
+        self.assertIn("jig_stl", none["paths"])
+        with open(none["paths"]["guide"], encoding="utf-8") as fh:
+            self.assertIn("No fixture is made", fh.read())
+        ws = Workspace(self.pcb, persist=False)
+        self.assertTrue(ws.call("set_fixture_options", {"mode": "own", "rationale": "own fixture"})["ok"])
+        self.assertFalse(ws.call("set_fixture_options", {"mode": "printed"})["ok"])
+
+    def test_rail_and_waiver_edits(self):
+        from pcbtestkit.manual import apply_rail_edits, apply_waivers, rail_rows, waiver_rows
+        d = self.design()
+        before = rail_rows(d)
+        nets = [r["net"] for r in before]
+        self.assertIn("+3V3", nets)
+        after = [dict(r) for r in before]
+        i3, i5 = nets.index("+3V3"), nets.index("+5V")
+        after[i3]["nominal_v"], after[i3]["tolerance_pct"] = "3,25", "3"     # comma decimals are accepted
+        after[i5]["test"] = False
+        u = {}
+        self.assertEqual(apply_rail_edits(u, before, after), [])
+        self.assertEqual(u["nets"], {"+3V3": {"nominal": 3.25, "tolerance_pct": 3.0}})   # unchanged rails are not stored
+        self.assertEqual(u["testplan"]["exclude_nets"], ["+5V"])
+        spec = Design.load(self.pcb, overrides=u).net_spec("+3V3")
+        self.assertAlmostEqual(spec["min_v"], 3.1525)
+        rng = [dict(r) for r in before]
+        rng[i3]["min_v"], rng[i3]["max_v"] = "3.0", "3.6"
+        u2 = {}
+        apply_rail_edits(u2, before, rng)
+        self.assertEqual(u2["nets"]["+3V3"]["min"], 3.0)
+        bad = [dict(r) for r in before]
+        bad[i3]["min_v"], bad[i3]["max_v"] = "3.6", "3.0"
+        self.assertTrue(apply_rail_edits({}, before, bad))
+        rows = waiver_rows(run_analysis(d, include_kicad=False))
+        self.assertTrue(rows)
+        u3 = {"analysis": {"waivers": [{"id": "OTHER-CHECK", "refs": [], "reason": "kept"}]}}
+        apply_waivers(u3, rows, [True] + [False] * (len(rows) - 1), "prototype only")
+        ws = u3["analysis"]["waivers"]
+        self.assertEqual([w["id"] for w in ws], ["OTHER-CHECK", rows[0]["id"]])
+        self.assertEqual(ws[1]["reason"], "prototype only")
+        waived = [f for f in run_analysis(Design.load(self.pcb, overrides=u3), include_kicad=False) if f.waived]
+        self.assertIn(rows[0]["id"], [f.id for f in waived])
 
 
 if __name__ == "__main__":

@@ -30,7 +30,7 @@ Replace `/path/to/project` with the KiCad project. If you didn't `pip install`, 
 **Claude Code: plugin (skill + server)**
 
 ```text
-/plugin marketplace add YOUR-GITHUB-USER/pcbtestkit
+/plugin marketplace add bartertveldt/pcbtestkit
 /plugin install pcbtestkit@pcbtestkit
 ```
 

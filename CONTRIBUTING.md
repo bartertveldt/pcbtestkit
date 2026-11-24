@@ -6,7 +6,7 @@ which a check is wrong.
 ## Set up
 
 ```bash
-git clone https://github.com/YOUR-GITHUB-USER/pcbtestkit && cd pcbtestkit
+git clone https://github.com/bartertveldt/pcbtestkit && cd pcbtestkit
 python3 -m unittest discover -s tests        # no dependencies to install
 python3 -m pcbtestkit --help
 ```

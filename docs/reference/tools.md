@@ -24,8 +24,8 @@ R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo
 | [`set_net_specs`](#set_net_specs) | W | yes | Set expected voltage limits / kind / test inclusion for one or more nets (batch up to 200) |
 | [`set_supply`](#set_supply) | W | yes | Set how the tester powers the DUT: net, voltage, current limit, idle current window |
 | [`set_test_options`](#set_test_options) | W | yes | Test-plan options (probe side, pogo family, signal policy, include/exclude nets, channels, ADC range...) |
-| [`set_jig_options`](#set_jig_options) | W |  | Solder-jig options: which parts it holds, part heights, clearances |
-| [`set_fixture_options`](#set_fixture_options) | W |  | Fixture-board options: outline (rect\|outline), margin, panel of N x M sites, dividers, holes |
+| [`set_jig_options`](#set_jig_options) | W |  | Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances |
+| [`set_fixture_options`](#set_fixture_options) | W |  | Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes |
 | [`set_analysis_options`](#set_analysis_options) | W | yes | Analysis settings: class system + class you will order (class_system e.g |
 | [`list_class_systems`](#list_class_systems) | R |  | Technology-class systems available (fab class tables, fab capability tiers, IPC standards), with their dimensions and levels |
 | [`describe_class_system`](#describe_class_system) | R |  | Limits of a class system: per level, or resolved for this board (resolved=true with a class) |
@@ -217,7 +217,7 @@ Test-plan options (probe side, pogo family, signal policy, include/exclude nets,
 
 ### set_jig_options
 
-Solder-jig options: which parts it holds, part heights, clearances. See get_schema('jig_options').
+Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances. See get_schema('jig_options').
 
 | Argument | Type | Description |
 |---|---|---|
@@ -237,13 +237,22 @@ Solder-jig options: which parts it holds, part heights, clearances. See get_sche
 | `posts` | boolean |  |
 | `post_clearance_mm` | number |  |
 | `finger_notches` | boolean |  |
+| `workflow` | two_jig \| single | two_jig (default): placement jig + holding jig, parts fitted top side up. single: parts dropped into the holding jig, PCB lowered onto them. |
+| `placement_clearance_mm` | number | Room under the PCB for the leads in the placement jig. |
+| `placement_border_mm` | number |  |
+| `lead_well_margin_mm` | number |  |
+| `stop_length_mm` | number |  |
+| `stop_width_mm` | number |  |
+| `stop_clearance_mm` | number |  |
+| `bottom_part_clearance_mm` | number |  |
 
 ### set_fixture_options
 
-Fixture-board options: outline (rect\|outline), margin, panel of N x M sites, dividers, holes.
+Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes.
 
 | Argument | Type | Description |
 |---|---|---|
+| `mode` | generate \| own \| none | generate the fixture board, own = the user designs it (probe-point CSV), none = no fixture |
 | `outline` | rect \| outline |  |
 | `margin_mm` | number |  |
 | `panel_cols` | integer |  |

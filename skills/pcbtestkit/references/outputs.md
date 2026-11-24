@@ -9,7 +9,8 @@
 | `<board>-testplan.json` | Probes, channels, dividers, header pinout, ordered test sequence, coverage | `read_output file=testplan`, or `api get_testplan --args '{"section":"summary"}'` |
 | `<board>-fixture.kicad_pcb` (+ `.kicad_pro`) | Pogo-pin fixture PCB, placed but not routed | Don't read. Open in KiCad. |
 | `<board>-fixture.json`, `-fixture-probes.csv` | Fixture sites, channel map, every pogo position | `read_output file=fixture` |
-| `<board>-jig.stl`, `.scad`, `.png`, `.json` | 3D-printable solder jig, editable OpenSCAD, pocket map, metadata | `read_output file=jig` |
+| `<board>-jig.stl`, `.scad`, `.png`, `.json` | Holding jig (3D print), editable OpenSCAD, pocket map, metadata of both jigs | `read_output file=jig` |
+| `<board>-jig-placement.stl`, `.png` | Placement jig of the two-jig workflow (PCB top side up while fitting parts) | `read_output file=jig pointer=/placement` |
 | `<board>-report.html` | All findings with a board map | Don't read (large). Use `list_findings`. |
 | `<board>-guide.html` | Visual step-by-step guide with KiCad renders | Don't read (large, embedded images). |
 | `<board>-explainer.mp4` | 3D-animated explainer (only with `--video`) | Binary. |
@@ -27,7 +28,7 @@ pcbtestkit api read_output --project P --args '{"file":"spec","pointer":"/electr
 | spec | `/board`, `/summary`, `/technology/required`, `/technology/ordered`, `/manufacturing/fab_limits`, `/electrical/supply`, `/electrical/power_nets`, `/acceptance_criteria` | `/assembly/components`, `/electrical/nets`, `/findings`, `/manufacturing/measured`, `/decision_log` |
 | testplan | `/probe_side`, `/probe_side_reason`, `/pogo`, `/adc`, `/supply`, `/coverage`, `/header`, `/warnings` | `/probes`, `/sequence` (use `/probes/0`, `/sequence/2`, ...) |
 | fixture | `/pogo_count`, `/outline_mode`, `/warnings`, `/sites` | `/channel_map`, `/nets` |
-| jig | `/jig_size_mm`, `/support_height_mm`, `/parts_to_place`, `/notes`, `/mesh` | `/pockets`, `/posts` |
+| jig | `/workflow`, `/jig_size_mm`, `/support_height_mm`, `/parts_to_place`, `/notes`, `/mesh`, `/placement/lead_clearance_mm`, `/placement/stops` | `/pockets`, `/posts` |
 
 Pointers follow RFC 6901: `/a/b/0`. A missing pointer returns `BAD_POINTER` with the keys that exist.
 Prefer the live tools over files when possible: `get_overview`, `list_findings`, `get_testplan`, `check_classes`

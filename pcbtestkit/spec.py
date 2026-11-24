@@ -74,6 +74,14 @@ def component_entry(design: Design, fp) -> Dict[str, Any]:
     return e
 
 
+def _generated_at() -> str:
+    """Generation time; SOURCE_DATE_EPOCH (reproducible-builds convention) pins it, making every output byte-identical."""
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    if epoch and epoch.strip().isdigit():
+        return datetime.datetime.fromtimestamp(int(epoch), datetime.timezone.utc).replace(tzinfo=None).isoformat()
+    return datetime.datetime.now().replace(microsecond=0).isoformat()
+
+
 def _compact_viol(viol: Dict[str, Any]) -> Dict[str, Any]:
     return {m: {k: v[k] for k in ("label", "count", "worst", "limit", "limits", "severity", "note") if v.get(k) is not None}
             for m, v in (viol or {}).items()}
@@ -161,7 +169,7 @@ def build_spec(design: Design, findings, plan: Optional[Dict[str, Any]] = None) 
     return {
         "schema": SPEC_SCHEMA,
         "generator": "PCB TestKit %s" % __version__,
-        "generated": datetime.datetime.now().replace(microsecond=0).isoformat(),
+        "generated": _generated_at(),
         # file names only: the spec is shared, and absolute paths would leak the author's folder layout
         "source": {"board": os.path.basename(b.path),
                    "schematic": os.path.basename(design.sch.root_path) if design.sch else None,

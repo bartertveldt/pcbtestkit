@@ -386,16 +386,112 @@
     }
   ],
   "notes": [
-    "Place parts in the 'hold' pockets, lower the PCB top-side down onto the nest, solder from above.",
-    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud."
+    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud.",
+    "Two-jig workflow: put the PCB top side up in the placement jig, fit the parts, put this holding jig on top (pockets down), turn the stack over, lift off the placement jig and solder from above."
   ],
   "preview_png": "sample_sensor-jig.png",
   "mesh": {
-    "triangles": 32778,
+    "triangles": 37602,
     "unmatched_edges": 0,
-    "volume_mm3": 68976.0,
+    "volume_mm3": 68718.5,
     "watertight": true
   },
   "stl": "sample_sensor-jig.stl",
-  "scad": "sample_sensor-jig.scad"
+  "scad": "sample_sensor-jig.scad",
+  "workflow": "two_jig",
+  "placement": {
+    "jig_size_mm": [
+      72.25,
+      57.25,
+      13.4
+    ],
+    "pcb_rest_height_mm": 12.0,
+    "lead_clearance_mm": 10.0,
+    "floor_mm": 2.0,
+    "resolution_mm": 0.25,
+    "board_bbox_in_jig_mm": [
+      6.0,
+      6.0,
+      66.0,
+      51.0
+    ],
+    "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
+    "stops": [
+      {
+        "side": "left",
+        "at": [
+          100.0,
+          92.5
+        ]
+      },
+      {
+        "side": "left",
+        "at": [
+          100.0,
+          112.5
+        ]
+      },
+      {
+        "side": "right",
+        "at": [
+          160.0,
+          92.5
+        ]
+      },
+      {
+        "side": "right",
+        "at": [
+          160.0,
+          112.5
+        ]
+      },
+      {
+        "side": "top",
+        "at": [
+          116.5,
+          80.0
+        ]
+      },
+      {
+        "side": "top",
+        "at": [
+          143.5,
+          80.0
+        ]
+      },
+      {
+        "side": "bottom",
+        "at": [
+          116.5,
+          125.0
+        ]
+      },
+      {
+        "side": "bottom",
+        "at": [
+          143.5,
+          125.0
+        ]
+      }
+    ],
+    "lead_wells": 13,
+    "bottom_pockets": [
+      "TP1",
+      "TP2",
+      "TP3",
+      "TP4",
+      "C9"
+    ],
+    "notes": [
+      "Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm."
+    ],
+    "preview_png": "sample_sensor-jig-placement.png",
+    "mesh": {
+      "triangles": 42604,
+      "unmatched_edges": 0,
+      "volume_mm3": 47025.9,
+      "watertight": true
+    },
+    "stl": "sample_sensor-jig-placement.stl"
+  }
 }

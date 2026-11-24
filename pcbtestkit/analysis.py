@@ -380,10 +380,16 @@ def _class_findings(x: Ctx, r: Dict[str, Any], primary: bool):
     data = {"system": r["system"], "required": req.get("class"), "measured": r["measured"], "status": r["status"]}
     if cheapest:
         if req.get("beyond"):
-            yield Finding(fid, "major", cat, "Board is finer than %s supports (%s)" % (name, ", ".join(req["beyond"])),
+            # a level ruled out by an order option (e.g. 4 layers only with ENIG) is named with that option
+            opts = ["%s %s" % (d["label"], d["limit"]) for d in req.get("drivers", []) if d["metric"] == "_requires"]
+            title = ("Board fits no %s option as drawn (%s)" if opts else "Board is finer than %s supports (%s)") % (
+                name, ", ".join(req["beyond"]))
+            fix = ("Set %s in the board stack-up and on the order, widen the other listed features, or choose another "
+                   "class system." % " and ".join(opts)) if opts else \
+                "Widen the listed features, or choose a finer process or another class system."
+            yield Finding(fid, "major", cat, title,
                           "No level of %s accepts these features: %s." % (r["name"], drv or "see items"),
-                          "Widen the listed features, or choose a finer process or another class system.",
-                          data=data)
+                          fix, data=data)
         elif not tg:
             svc = (" (%s)" % ", ".join(req["services"])) if req.get("services") else ""
             yield Finding(fid, "info", cat, "Board needs %s class %s%s" % (name, req["class"], svc),

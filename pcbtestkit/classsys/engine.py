@@ -427,6 +427,38 @@ def _shortfall(kind: str, bad: List[Tuple[float, Dict[str, Any], Any, Clause]]) 
     return round(worst, 6)
 
 
+_BOARD_KEYS = ("layers", "thickness_mm", "copper_um", "inner_copper_um", "board_w_mm", "board_h_mm")
+_KEY_LABELS = {"finish": "surface finish", "mask_color": "solder mask colour", "edge_process": "edge process",
+               "layers": "copper layer count", "thickness_mm": "board thickness", "copper_um": "outer base copper",
+               "inner_copper_um": "inner base copper", "board_w_mm": "board width", "board_h_mm": "board height"}
+
+
+def _cond_text(c: Any) -> str:
+    if isinstance(c, list):
+        return " or ".join(str(x) for x in c if x is not None) or "not set"
+    if isinstance(c, dict):
+        ops = {"min": ">= %s", "max": "<= %s", "gt": "> %s", "lt": "< %s", "eq": "%s", "in": "%s", "not": "not %s"}
+        return ", ".join(ops.get(k, k + " %s") % _cond_text(v) for k, v in c.items())
+    return "not set" if c is None else str(c)
+
+
+def requires_miss(conds: Any, ctx: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Why a level's ``requires`` rules it out: one entry per unmet context key ([] when it matches).
+    ``board`` marks keys that need a redesign (layer count, thickness, copper); the rest are order options."""
+    if conds is None or V.matches(conds, ctx):
+        return []
+    if isinstance(conds, list):
+        options = [requires_miss(c, ctx) for c in conds]
+        return min(options, key=len) if options else []
+    out = []
+    for k, c in conds.items():
+        if not V.test(c, ctx.get(k), k):
+            v = ctx.get(k)
+            out.append({"key": k, "label": _KEY_LABELS.get(k, k.replace("_", " ")), "limit": _cond_text(c),
+                        "measured": "not set" if v is None else v, "board": k in _BOARD_KEYS})
+    return out
+
+
 def _fmt_lim(l: Any) -> Any:
     if isinstance(l, float):
         return round(l, 4)
@@ -519,15 +551,32 @@ def evaluate(system: System, meas: Optional[Dict[str, Any]], ctx: Dict[str, Any]
             req_levels[d.id] = None
             beyond.append(d.id)
             # report the closest level: board-level mismatches (layer count, thickness, copper) count as far,
-            # then fewest failing metrics, then the smallest total shortfall - i.e. what the
-            # designer can change to reach it. On a fineness ladder the shortfall step changes nothing (finer
-            # levels never have larger limits); on alternatives (stack-ups) it skips levels with coarser limits.
-            def distance(lf):
-                return (sum(1 for m in lf[1] if system.metrics[m].get("stream") == "board"), len(lf[1]),
-                        round(sum(r.get("shortfall", 1.0) for r in lf[1].values()), 6))
+            # then unmet order options (a level's 'requires', e.g. "4 layers only with ENIG"), then fewest
+            # failing metrics, then the smallest total shortfall - i.e. what the designer can change to reach
+            # it. On a fineness ladder the shortfall step changes nothing (finer levels never have larger
+            # limits); on alternatives (stack-ups) it skips levels with coarser limits.
+            done = {l.id: f for l, f in fails_by_level}
+            cands = []
+            for l in d.levels:
+                if l.id in done:
+                    cands.append((l, done[l.id], []))
+                else:
+                    res = _run_rules(system, l.rules, vals, count_only=True)
+                    cands.append((l, {m: r for m, r in res.items() if r["count"] and r.get("severity") in DRIVING},
+                                  requires_miss(l.requires, ctx)))
+
+            def distance(c):
+                f, miss = c[1], c[2]
+                return (sum(1 for m in f if system.metrics[m].get("stream") == "board") + sum(1 for x in miss if x["board"]),
+                        sum(1 for x in miss if not x["board"]), len(f),
+                        round(sum(r.get("shortfall", 1.0) for r in f.values()), 6))
             # ties: the finest level on a ladder, the cheapest of equal alternatives (monotonic: false)
-            order = fails_by_level if d.raw.get("monotonic") is False else list(reversed(fails_by_level))
-            prev = min(order, key=distance) if order else None
+            order = cands if d.raw.get("monotonic") is False else list(reversed(cands))
+            best = min(order, key=distance) if order else None
+            prev = (best[0], best[1]) if best else None
+            for x in (best[2] if best else []):
+                drivers.append({"dimension": d.id, "level": best[0].id, "metric": "_requires", "label": x["label"],
+                                "measured": x["measured"], "limit": x["limit"], "count": 1})
         else:
             req_levels[d.id] = fails_by_level[idx][0].id
             chosen.append(fails_by_level[idx][0])
@@ -560,8 +609,10 @@ def evaluate(system: System, meas: Optional[Dict[str, Any]], ctx: Dict[str, Any]
         bad: Dict[str, Any] = {}
         limits: Dict[str, Any] = {}
         for d, l in zip(system.dims, levels):
-            if not V.matches(l.requires, ctx):
-                bad["_requires_" + d.id] = {"metric": "_requires", "label": "%s %s needs %s" % (d.label, l.id, l.requires),
+            miss = requires_miss(l.requires, ctx)
+            if miss:
+                bad["_requires_" + d.id] = {"metric": "_requires", "label": "%s %s needs %s" % (d.label, l.id, "; ".join(
+                                                "%s %s (board: %s)" % (x["label"], x["limit"], x["measured"]) for x in miss)),
                                             "count": 1, "severity": "major", "items": []}
             res = _run_rules(system, l.rules, vals, keep=keep)
             for m, r in res.items():

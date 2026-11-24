@@ -3,19 +3,19 @@
   "name": "PCB TestKit",
   "description": "Production test & assembly: weak-point analysis, fab class checks, test plan, pogo-pin fixture PCB, solder jig, explainer.",
   "description_full": "PCB TestKit reads the open board and schematic and prepares everything needed to build and test it in production.\n\n- Weak-point analysis: manufacturability, assembly, test access and life-cycle risks, with locations.\n- Technology classes: checks the board against fab class systems (Eurocircuits, JLCPCB, PCBWay, OSH Park, AISLER, Wurth) and IPC-2221 voltage spacing / IPC-6012 rings, and tells you the cheapest class to order.\n- Good-unit specification (JSON) and a test scheme with limits per net.\n- Pogo-pin fixture board generated as a KiCad PCB, with probes placed under real test points.\n- 3D-printable solder jig (STL + OpenSCAD) for the hand-soldered parts.\n- Raspberry Pi / MCU test runner, an HTML report and a visual step-by-step guide with KiCad 3D renders.\n- Optional explainer video: real 3D animation rendered with KiCad (assembly, jig, fixture, test).\n\nEverything runs locally with the Python standard library and KiCad's own kicad-cli. The same engine has a command line, a JSON tool API and an MCP server so AI assistants can drive it.",
-  "identifier": "com.github.YOUR-GITHUB-USER.pcbtestkit",
+  "identifier": "com.github.bartertveldt.pcbtestkit",
   "type": "plugin",
   "author": {
     "name": "Bart Ertveldt",
     "contact": {
-      "web": "https://github.com/YOUR-GITHUB-USER/pcbtestkit"
+      "web": "https://github.com/bartertveldt/pcbtestkit"
     }
   },
   "license": "MIT",
   "resources": {
-    "homepage": "https://github.com/YOUR-GITHUB-USER/pcbtestkit",
-    "documentation": "https://github.com/YOUR-GITHUB-USER/pcbtestkit#readme",
-    "issues": "https://github.com/YOUR-GITHUB-USER/pcbtestkit/issues"
+    "homepage": "https://github.com/bartertveldt/pcbtestkit",
+    "documentation": "https://github.com/bartertveldt/pcbtestkit#readme",
+    "issues": "https://github.com/bartertveldt/pcbtestkit/issues"
   },
   "tags": ["fabrication", "manufacturing", "testing", "dfm", "test-fixture", "pogo-pin", "solder-jig", "stl", "automation", "ai"],
   "versions": [

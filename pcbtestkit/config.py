@@ -98,6 +98,7 @@ DEFAULTS: Dict[str, Any] = {
         "manual_checks": [],
     },
     "fixture": {
+        "mode": "generate",         # generate (pogo-pin fixture board) | own (you design it: probe-point CSV) | none
         "outline": "rect",          # rect | outline
         "margin_mm": 8.0,
         "panel": {"cols": 1, "rows": 1, "spacing_mm": 10.0},
@@ -126,6 +127,16 @@ DEFAULTS: Dict[str, Any] = {
         "post_clearance_mm": 0.2,
         "finger_notches": True,
         "heights": {},
+        # two-jig workflow (default): a placement jig holds the PCB top side up while the parts are fitted,
+        # the holding jig closes over them, the stack is turned over and the placement jig lifted off
+        "workflow": "two_jig",          # two_jig | single (parts into the holding jig, PCB lowered onto them)
+        "placement_clearance_mm": 10.0,  # room under the PCB for the leads (trim them to fit)
+        "placement_border_mm": 6.0,
+        "lead_well_margin_mm": 1.0,
+        "stop_length_mm": 8.0,
+        "stop_width_mm": 2.5,
+        "stop_clearance_mm": 0.15,
+        "bottom_part_clearance_mm": 0.8,
     },
     "video": {
         "animate": True,            # real 3D motion shots rendered with kicad-cli; false = quick stills-only video
