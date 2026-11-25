@@ -84,34 +84,50 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
     if want.get("fixture", True) and mode == "generate":
         step("Generating fixture board", 0.5)
         fixture = build_fixture(design, plan)
-        paths["fixture"] = os.path.join(out_dir, "%s-fixture.kicad_pcb" % name)
         from .fixture import write_pogo_models
         write_pogo_models(out_dir, plan)
-        with open(paths["fixture"], "w", encoding="utf-8") as fh:
-            fh.write(fixture["kicad_pcb"])
-        pro = os.path.join(out_dir, "%s-fixture.kicad_pro" % name)
-        if not os.path.exists(pro):            # never overwrite settings the user made in KiCad
-            with open(pro, "w", encoding="utf-8") as fh:
-                fh.write(project_file("%s-fixture" % name))
-        paths["fixture_project"] = pro
-        paths["fixture_probes"] = os.path.join(out_dir, "%s-fixture-probes.csv" % name)
-        with open(paths["fixture_probes"], "w", encoding="utf-8") as fh:
-            fh.write(probes_csv(plan, fixture))
-        meta = {k: v for k, v in fixture.items() if k != "kicad_pcb"}
-        try:
-            from .kicad_cli import drc_file, find_kicad_cli
-            cli = find_kicad_cli()
-            if cli and (include_kicad is not False):
-                rep = drc_file(cli, paths["fixture"])
-                if rep is not None:
-                    kinds: Dict[str, int] = {}
-                    for v in rep.get("violations", []):
-                        kinds[v.get("type", "?")] = kinds.get(v.get("type", "?"), 0) + 1
-                    meta["drc"] = {"violations": kinds, "unconnected": len(rep.get("unconnected_items", []))}
-                    fixture["drc"] = "%d violation type(s) %s, %d unrouted connection(s) (route them before ordering)" % (
-                        len(kinds), kinds, meta["drc"]["unconnected"])
-        except Exception:  # validation is best-effort
-            pass
+        # one board per fixture plate: "<name>-fixture" (one side) or "<name>-fixture-top" / "-bottom" (both sides)
+        plates = fixture.get("plates") or {"": fixture}
+        metas: Dict[str, Any] = {}
+        for side, fx in plates.items():
+            base = "%s-fixture%s" % (name, "-" + side if side else "")
+            key = "fixture" + ("_" + side if side else "")
+            paths[key] = os.path.join(out_dir, base + ".kicad_pcb")
+            with open(paths[key], "w", encoding="utf-8") as fh:
+                fh.write(fx["kicad_pcb"])
+            pro = os.path.join(out_dir, base + ".kicad_pro")
+            if not os.path.exists(pro):            # never overwrite settings the user made in KiCad
+                with open(pro, "w", encoding="utf-8") as fh:
+                    fh.write(project_file(base))
+            paths[key + "_project"] = pro
+            paths[key + "_probes"] = os.path.join(out_dir, base + "-probes.csv")
+            with open(paths[key + "_probes"], "w", encoding="utf-8") as fh:
+                fh.write(probes_csv(plan, fx))
+            meta = {k: v for k, v in fx.items() if k not in ("kicad_pcb", "plates")}
+            try:
+                from .kicad_cli import drc_file, find_kicad_cli
+                cli = find_kicad_cli()
+                if cli and (include_kicad is not False):
+                    rep = drc_file(cli, paths[key])
+                    if rep is not None:
+                        kinds: Dict[str, int] = {}
+                        for v in rep.get("violations", []):
+                            kinds[v.get("type", "?")] = kinds.get(v.get("type", "?"), 0) + 1
+                        meta["drc"] = {"violations": kinds, "unconnected": len(rep.get("unconnected_items", []))}
+                        left = meta["drc"]["unconnected"]
+                        fx["drc"] = "%d violation type(s) %s, %d unrouted connection(s)%s" % (
+                            len(kinds), kinds, left, " (route them before ordering)" if left else "")
+            except Exception:  # validation is best-effort
+                pass
+            metas[side] = meta
+        if "plates" in fixture:
+            first = (plan.get("plates") or ["bottom"])[0]
+            for k in ("", "_project", "_probes"):
+                paths["fixture" + k] = paths["fixture_%s%s" % (first, k)]
+            fixture["drc"] = fixture["plates"][first].get("drc")
+            meta = dict(metas[first], plates=metas)
+        else:
+            meta = metas[""]
         paths["fixture_meta"] = os.path.join(out_dir, "%s-fixture.json" % name)
         _write_json(paths["fixture_meta"], meta)
 
@@ -124,10 +140,19 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
         paths["jig_place_stl"] = os.path.join(out_dir, "%s-jig-placement.stl" % name)
         paths["jig_place_preview"] = os.path.join(out_dir, "%s-jig-placement.png" % name)
         jig = build_jigs(design, paths["jig_stl"], paths["jig_scad"], paths["jig_preview"],
-                         paths["jig_place_stl"], paths["jig_place_preview"])
+                         paths["jig_place_stl"], paths["jig_place_preview"],
+                         file_for=lambda tag, ext: os.path.join(out_dir, "%s-%s.%s" % (name, tag, ext)))
         if "placement" not in jig:                       # single-jig workflow
             for k in ("jig_place_stl", "jig_place_preview"):
                 paths.pop(k, None)
+        # the other passes' jigs: jig_<key>_stl / _scad / _preview (+ _place_stl / _place_preview)
+        for key, ej in sorted((jig.get("extra") or {}).items()):
+            for k, pk in (("stl", "stl"), ("scad", "scad"), ("preview_png", "preview")):
+                if ej.get(k):
+                    paths["jig_%s_%s" % (key, pk)] = ej[k]
+            for k, pk in (("stl", "place_stl"), ("preview_png", "place_preview")):
+                if (ej.get("placement") or {}).get(k):
+                    paths["jig_%s_%s" % (key, pk)] = ej["placement"][k]
         paths["jig_meta"] = os.path.join(out_dir, "%s-jig.json" % name)
 
         def rel(d):
@@ -194,5 +219,7 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
             fh.write(build_report(design, spec, plan, jig, fixture, paths))
     step("Done", 1.0)
     return {"out_dir": out_dir, "paths": paths, "summary": spec["summary"], "coverage": plan["coverage"],
-            "fixture_warnings": fixture["warnings"] if fixture else [], "jig": {k: jig[k] for k in ("jig_size_mm", "parts_to_place", "mesh", "workflow") if k in jig} if jig else None,
+            "fixture_warnings": fixture["warnings"] if fixture else [],
+            "fixture_routing": fixture.get("routing") if fixture else None,
+            "jig": {k: jig[k] for k in ("jig_size_mm", "parts_to_place", "mesh", "workflow", "passes") if k in jig} if jig else None,
             "warnings": design.warnings + plan["warnings"]}

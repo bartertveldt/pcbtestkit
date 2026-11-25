@@ -779,9 +779,8 @@ class Stage:
                 items.append(place(name, path, Xf.T(0, 0, lift) * pose * xf, scale))
         return items
 
-    def shot_print2(self, seconds: float = 3.0) -> Optional[Shot]:
-        if not self.two_ok():
-            return None
+    def _print2_layout(self):
+        """Both jigs side by side as printed: (pose of the placement jig, pose of the holding jig, bench plate)."""
         tw = self.two()
         ma, mb = tw["mesh_a"], tw["mesh_b"]
         gap = 14.0
@@ -795,7 +794,61 @@ class Stage:
             rects.append(W.gr_rect(x0 + 1, -(y1 - 1), x1 - 1, -(y0 + 1)))
         plate = W.board([], rects, thickness=0.2)
         end = plate.rstrip().rfind(")")
-        plate = (plate[:end], plate[end:])
+        return pos_a, pos_b, (plate[:end], plate[end:])
+
+    def step_stills(self) -> Optional[Shot]:
+        """One still per step of the two-jig workflow for the production guide, from the same scenes as the video:
+        jig2_print, jig2_fit, jig2_cover, jig2_unload and jig2_solder (PNG names in ``self.out``)."""
+        if not self.two_ok() or not self.dut_wrl(self.jig_parts):
+            return None
+        tw = self.two()
+        s = Shot("steps", self.fps)
+
+        def png(name: str) -> str:
+            return os.path.join(self.out, name + ".png")
+
+        def still(name: str, cam: Dict[str, Any], items: List[list], plate=None) -> None:
+            s.add(png(name), cam, make=lambda prefix: (self.scene2(items, plate), {}))
+
+        # 1  both jigs, printed
+        pos_a, pos_b, plate = self._print2_layout()
+        still("jig2_print", self.cam(25, zoom=0.85), [place("JIG_A", tw["wa"], pos_a), place("JIG_B", tw["wb"], pos_b)], plate)
+        # 2  the PCB top side up in the placement jig, the hand-soldered parts just above their holes
+        h = max(25.0, min(60.0, 0.3 * self.big))
+        still("jig2_fit", self.cam(30, zoom=0.62, rise=0.3 * h),
+              self.stack_items(tw["up"], a=Xf(), parts_lift={r: 0.55 * h for r in self.jig_parts}))
+        # 3  the holding jig comes down over the parts, pockets first (low camera: the gap shows)
+        h0 = max(45.0, 0.4 * self.big)
+        still("jig2_cover", self.cam(30, zoom=0.48, tilt=-58.0, rise=0.55 * h0),
+              self.stack_items(tw["up"], a=Xf(), b=Xf.T(0, 0, h0), seated=True))
+        # 4  the stack turned over, the placement jig lifted off and moved back: every lead points up
+        back = 0.9 * (tw["mesh_a"].bbox[3] - tw["mesh_a"].bbox[1])
+        still("jig2_unload", self.cam(32, zoom=0.5, tilt=-50.0, rise=18.5),
+              self.stack_items(tw["final"], a=Xf.T(0.0, back, 25.0), b=Xf(), seated=True))
+        # 5  soldering from above: half the joints done, the iron on the next one
+        pads = tw["pads"]
+        if pads:
+            world = [tw["final"].apply((x, y, -self.t)) for x, y, _ in pads]
+            k = len(pads) // 2
+            tip = (world[k][0], world[k][1], world[k][2] + 1.1)
+
+            def make(prefix, done=pads[:k], tip=tip):
+                files = {}
+                items = self.stack_items(tw["final"], b=Xf(), seated=True)
+                if done:
+                    path = prefix + "_joints.wrl"
+                    files[path] = joints_wrl(done, self.t)
+                    items.append(place("JOINTS", path, tw["final"]))
+                items.append(place("IRON", tw["iron"], Xf.T(*tip)))
+                return self.scene2(items), files
+            s.add(png("jig2_solder"), self.cam(32, zoom=0.95), make=make)
+        return s
+
+    def shot_print2(self, seconds: float = 3.0) -> Optional[Shot]:
+        if not self.two_ok():
+            return None
+        ma, mb = self.two()["mesh_a"], self.two()["mesh_b"]
+        pos_a, pos_b, plate = self._print2_layout()
         s = Shot("print2", self.fps, hold=0.6)
         n = self.n(seconds)
         for i in range(n):
@@ -984,7 +1037,8 @@ class Stage:
 
     def fixture_duts(self, wrl: str, lift: float, dx: float = 0.0) -> List[list]:
         clear = float(self.plan["pogo"].get("probe_clearance_mm", 6.0))
-        rotate = (0.0, 180.0, 0.0) if self.plan.get("probe_side") == "top" else (0.0, 0.0, 0.0)
+        from .testplan import fixture_side
+        rotate = (0.0, 180.0, 0.0) if fixture_side(self.plan) == "top" else (0.0, 0.0, 0.0)
         out = []
         for st in self.fixture.get("sites", []) or [{"site": 1, "offset": [0.0, 0.0]}]:
             ddx, ddy = st["offset"]

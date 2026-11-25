@@ -1,9 +1,9 @@
 """Test point selection and test scheme generation.
 
-Picks one or more probe locations per net on the probe side, respecting the
-pogo pin pitch, board-edge keep-out and tall components, assigns measurement
-channels (with voltage dividers where the ADC range requires it) and writes
-an ordered test sequence that the Raspberry Pi / MCU runner executes.
+Picks one or more probe locations per net on the probe side (or on both sides: a two-plate fixture),
+respecting the pogo pin pitch, board-edge keep-out, tall components and stacked boards, assigns measurement
+channels (with voltage dividers where the ADC range requires it) and writes an ordered test sequence that the
+Raspberry Pi / MCU runner executes.
 """
 from __future__ import annotations
 
@@ -31,6 +31,7 @@ class Candidate:
     label: str           # e.g. "TP3.1", "R5.2", "via"
     ref: str
     score: float
+    side: str = ""
 
 
 @dataclass
@@ -48,6 +49,7 @@ class ProbePoint:
     header_pin: Optional[int] = None
     divider: Optional[Dict[str, float]] = None
     expected: Optional[Dict[str, Any]] = None
+    side: str = ""            # bottom | top: the fixture plate this probe is on
 
 
 def e24_at_least(v: float) -> float:
@@ -78,80 +80,111 @@ class Planner:
         self.tp = design.cfg["testplan"]
         self.pogo = design.cfg["pogo"]
         self.side = side or self.tp["probe_side"]
-        if self.side not in ("top", "bottom"):
+        if self.side not in ("top", "bottom", "both"):
             self.side = "bottom"
+        self.sides = ["bottom", "top"] if self.side == "both" else [self.side]
         self.min_target = float(self.tp.get("min_target_mm") or self.pogo["min_target"])
         from .config import pogo_geometry
         self.drill, self.pad_d, self.pitch = pogo_geometry(design.cfg)
         self.warnings: List[str] = []
-        self.keepouts: List[Tuple[BBox, str]] = []
+        self.keepouts: List[Tuple[BBox, str, str]] = []      # (box, ref or "stack:<name>", side)
         self.tall: List[Dict[str, Any]] = []
+        self.covered: Dict[str, set] = {}                    # net -> stacked boards hiding a candidate
+        from .stack import resolve
+        self.stacks = resolve(design)
         self._find_tall_parts()
+        self._stack_keepouts()
 
     # ------------------------------------------------------------------ #
     def _find_tall_parts(self) -> None:
         clear = float(self.tp["probe_clearance_mm"])
         for fp in self.d.components():
-            if fp.side != self.side or fp.dnp:
+            if fp.side not in self.sides or fp.dnp:
                 continue
             h, src = self.d.height_of(fp)
             if h >= clear - 0.5:
                 bb = fp.courtyard_bbox().grow(1.0)          # fixture cut-out
-                self.keepouts.append((bb.grow(self.pad_d / 2 + 0.6), fp.ref))   # probes stay clear of the cut-out
+                self.keepouts.append((bb.grow(self.pad_d / 2 + 0.6), fp.ref, fp.side))   # probes stay clear of the cut-out
                 self.tall.append({"ref": fp.ref, "height_mm": round(h, 2), "height_source": src,
-                                  "bbox": bb.as_dict(2)})
+                                  "bbox": bb.as_dict(2), "side": fp.side})
 
-    def _in_keepout(self, x: float, y: float, own_ref: str = "") -> Optional[str]:
-        for bb, ref in self.keepouts:
-            if ref != own_ref and bb.contains(x, y):
-                return ref
-            if ref == own_ref and bb.contains(x, y):
+    def _stack_keepouts(self) -> None:
+        """A stacked board fitted during the test: no probes under it; a window in the fixture plate if it is taller
+        than the probe clearance."""
+        clear = float(self.tp["probe_clearance_mm"])
+        gap = float(self.tp.get("stack_clearance_mm", 1.0))
+        for st in self.stacks:
+            if not st["valid"] or not st["fitted_at_test"] or st["side"] not in self.sides:
+                continue
+            bb = st["bbox"]
+            self.keepouts.append((bb.grow(gap + self.pad_d / 2), "stack:" + st["name"], st["side"]))
+            if st["height_mm"] >= clear - 0.5:
+                self.tall.append({"ref": st["name"], "kind": "stack", "height_mm": st["height_mm"],
+                                  "height_source": st["height_source"], "bbox": bb.grow(gap).as_dict(2),
+                                  "side": st["side"], "refs": st["refs"]})
+
+    def _in_keepout(self, x: float, y: float, side: Optional[str] = None) -> Optional[str]:
+        side = side or self.sides[0]
+        for bb, ref, s_ in self.keepouts:
+            if s_ == side and bb.contains(x, y):
                 return ref
         return None
+
+    def _hidden(self, net: str, ref: Optional[str], side: str) -> bool:
+        """Is a candidate behind keep-out ``ref``? Remembers which stacked boards hide which nets."""
+        if ref is None:
+            return False
+        if ref.startswith("stack:"):
+            self.covered.setdefault(net, set()).add("%s (%s side)" % (ref[6:], side))
+        return True
 
     def candidates(self) -> Dict[str, List[Candidate]]:
         out: Dict[str, List[Candidate]] = {}
         edge_keep = float(self.tp["edge_keepout_mm"])
         fine = float(self.tp["fine_pitch_exclude_mm"])
-        for fp in self.d.components():
-            if fp.dnp:
-                continue
-            is_tp = C.is_testpoint(fp)
-            pitch = fp.min_pitch() if len(fp.pads) > 1 else math.inf
-            for p in fp.pads:
-                if not p.net or C.is_unconnected(p.net) or not p.has_copper:
+        for side in self.sides:
+            for fp in self.d.components():
+                if fp.dnp:
                     continue
-                c = self._pad_candidate(fp, p, is_tp, pitch, fine)
-                if c is None:
-                    continue
-                if self.b.edge_segs and (self.b.edge_distance(c.x, c.y) < edge_keep or not self.b.inside(c.x, c.y)):
-                    continue
-                if self._in_keepout(c.x, c.y):
-                    continue
-                out.setdefault(p.net, []).append(c)
-        if self.tp.get("allow_vias"):
-            for v in self.b.vias:
-                if not v.net or v.size < self.min_target or v.tented:
-                    continue
-                if self.b.edge_segs and self.b.edge_distance(v.x, v.y) < edge_keep:
-                    continue
-                if self._in_keepout(v.x, v.y):
-                    continue
-                out.setdefault(v.net, []).append(Candidate(v.net, v.x, v.y, v.size, "via", "via@%.2f,%.2f" % (v.x, v.y), "", 15 + v.size * 5))
+                is_tp = C.is_testpoint(fp)
+                pitch = fp.min_pitch() if len(fp.pads) > 1 else math.inf
+                for p in fp.pads:
+                    if not p.net or C.is_unconnected(p.net) or not p.has_copper:
+                        continue
+                    c = self._pad_candidate(fp, p, is_tp, pitch, fine, side)
+                    if c is None:
+                        continue
+                    if self.b.edge_segs and (self.b.edge_distance(c.x, c.y) < edge_keep or not self.b.inside(c.x, c.y)):
+                        continue
+                    if self._hidden(p.net, self._in_keepout(c.x, c.y, side), side):
+                        continue
+                    out.setdefault(p.net, []).append(c)
+            if self.tp.get("allow_vias"):
+                for v in self.b.vias:
+                    if not v.net or v.size < self.min_target or v.tented:
+                        continue
+                    if self.b.edge_segs and self.b.edge_distance(v.x, v.y) < edge_keep:
+                        continue
+                    if self._hidden(v.net, self._in_keepout(v.x, v.y, side), side):
+                        continue
+                    out.setdefault(v.net, []).append(Candidate(v.net, v.x, v.y, v.size, "via", "via@%.2f,%.2f" % (v.x, v.y), "",
+                                                               15 + v.size * 5, side))
         for lst in out.values():
             lst.sort(key=lambda c: -c.score)
         return out
 
-    def _pad_candidate(self, fp: Footprint, p: Pad, is_tp: bool, pitch: float, fine: float) -> Optional[Candidate]:
+    def _pad_candidate(self, fp: Footprint, p: Pad, is_tp: bool, pitch: float, fine: float,
+                       side: Optional[str] = None) -> Optional[Candidate]:
+        side = side or self.sides[0]
         size = p.min_size if p.shape != "circle" else p.w
         if p.is_tht:
             # THT leads are reachable from the opposite side of the body only
-            if fp.side == self.side and not is_tp:
+            if fp.side == side and not is_tp:
                 return None
             score = 60 + min(size, 2.5) * 6 + (10 if C.is_connector(fp) else 0)
             src, tip = "tht", "crown"
         elif p.kind == "smd":
-            if not (p.on_copper(self.side) and p.mask_open(self.side)):
+            if not (p.on_copper(side) and p.mask_open(side)):
                 return None
             if size < self.min_target:
                 return None
@@ -176,7 +209,7 @@ class Planner:
         elif "pad_prop_testpoint" in p.props:
             src = "pad_testpoint"
             score = max(score, 95 + size * 5)
-        return Candidate(p.net, p.x, p.y, size, src, p.name, fp.ref, score)
+        return Candidate(p.net, p.x, p.y, size, src, p.name, fp.ref, score, side)
 
     # ------------------------------------------------------------------ #
     def select_nets(self, cands: Dict[str, List[Candidate]]):
@@ -259,13 +292,13 @@ class Planner:
             for c in cands.get(net, []):
                 if got >= count:
                     break
-                if any(math.hypot(c.x - q.x, c.y - q.y) < self.pitch for q in chosen):
+                if any(q.side == c.side and math.hypot(c.x - q.x, c.y - q.y) < self.pitch for q in chosen):
                     continue
-                if got and any(q.net == net and math.hypot(c.x - q.x, c.y - q.y) < 5.0 for q in chosen):
+                if got and any(q.net == net and q.side == c.side and math.hypot(c.x - q.x, c.y - q.y) < 5.0 for q in chosen):
                     continue  # spread redundant ground/supply pins
                 pp = ProbePoint(id="PP%02d" % (len(chosen) + 1), net=net, role=role if got == 0 or role != "supply" else "supply",
                                 x=round(c.x, 4), y=round(c.y, 4), source=c.source, label=c.label,
-                                target_mm=round(c.size, 3), tip="crown" if c.source == "tht" else "spear")
+                                target_mm=round(c.size, 3), tip="crown" if c.source == "tht" else "spear", side=c.side)
                 if needs_ch and got == 0:
                     nch += 1
                     pp.channel = "CH%02d" % nch
@@ -285,30 +318,52 @@ class Planner:
                 chosen.append(pp)
                 got += 1
             if got == 0:
-                if not cands.get(net):
-                    untestable[net] = "no accessible pad on the %s side" % self.side
+                if not cands.get(net) and net in self.covered:
+                    untestable[net] = "only reachable under stacked board %s" % ", ".join(sorted(self.covered[net]))
+                elif not cands.get(net):
+                    untestable[net] = "no accessible pad on %s" % ("either side" if self.side == "both" else
+                                                                     "the %s side" % self.side)
                 else:
                     untestable[net] = "all candidate pads conflict with other probes (pitch %.2f mm)" % self.pitch
             elif got < count:
                 self.warnings.append("only %d of %d %s probes placed for %s" % (got, count, role, net))
-        # header pins: 1 = GND, then channels, then supply sense; GND every 10 pins for shielding
-        pin = 1
-        header: List[Dict[str, Any]] = [{"pin": 1, "signal": "GND"}]
-        for pp in chosen:
-            if pp.channel:
-                pin += 1
-                if pin % 10 == 0:
-                    header.append({"pin": pin, "signal": "GND"})
-                    pin += 1
-                pp.header_pin = pin
-                header.append({"pin": pin, "signal": pp.channel, "net": pp.net})
-        pin += 1
-        header.append({"pin": pin, "signal": "GND"})
-        if pin % 2:
-            pin += 1
-            header.append({"pin": pin, "signal": "NC"})
+        headers: Dict[str, List[Dict[str, Any]]] = {}
+        if self.side == "both":
+            # one fixture plate per side that has probes, each with a header for the channels of its own probes
+            count = {s_: sum(1 for pp in chosen if pp.side == s_) for s_ in self.sides}
+            plates = [s_ for s_ in sorted(self.sides, key=lambda s_: -count[s_]) if count[s_]] or self.sides[:1]
+            for s_ in plates:
+                headers[s_] = _header([pp for pp in chosen if pp.side == s_])
+            header = headers[plates[0]]
+            for s_ in self.sides:
+                if s_ not in plates:
+                    self.warnings.append("probe_side both: every probe fits on the %s side; no %s fixture plate is "
+                                         "made" % (plates[0], s_))
+        else:
+            plates = list(self.sides)
+            header = _header(chosen)
         return {"points": chosen, "untestable": untestable, "skipped": skipped, "supply": supply,
-                "main_ground": main_gnd, "header": header, "candidates": cands}
+                "main_ground": main_gnd, "header": header, "headers": headers, "plates": plates, "candidates": cands}
+
+
+def _header(points: List[ProbePoint]) -> List[Dict[str, Any]]:
+    """Header pins: 1 = GND, then the channels; GND every 10 pins for shielding; even pin count. Sets header_pin."""
+    pin = 1
+    header: List[Dict[str, Any]] = [{"pin": 1, "signal": "GND"}]
+    for pp in points:
+        if pp.channel:
+            pin += 1
+            if pin % 10 == 0:
+                header.append({"pin": pin, "signal": "GND"})
+                pin += 1
+            pp.header_pin = pin
+            header.append({"pin": pin, "signal": pp.channel, "net": pp.net})
+    pin += 1
+    header.append({"pin": pin, "signal": "GND"})
+    if pin % 2:
+        pin += 1
+        header.append({"pin": pin, "signal": "NC"})
+    return header
 
 
 # --------------------------------------------------------------------------- #
@@ -335,6 +390,11 @@ def _visual_items(design: Design, findings) -> List[Dict[str, Any]]:
     for f in findings or []:
         if f.id == "ASM-MLCC-EDGE":
             items.append({"id": "VIS-MLCC-CRACK", "check": "No cracked MLCCs near the board edge", "refs": sorted(set(f.refs))})
+    from .stack import resolve
+    for st in resolve(design):
+        if st["valid"] and st["fitted_at_test"]:
+            items.append({"id": "VIS-STACK-%s" % st["name"].upper().replace(" ", "_"),
+                          "check": "Stacked board %s fully seated, nothing trapped under it" % st["name"], "refs": st["refs"]})
     for mc in design.cfg["testplan"].get("manual_checks") or []:
         if isinstance(mc, dict) and mc.get("check"):
             items.append({"id": mc.get("id") or "VIS-USER-%d" % (len(items) + 1), "check": mc["check"],
@@ -369,9 +429,13 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
         pl, r = evals[chosen]
         side_note = "auto: %s side scored higher (bottom %d, top %d)" % (
             chosen, side_eval["bottom"]["score"], side_eval["top"]["score"])
+        power_ = set(design.nets_of_kind("power") + design.nets_of_kind("ground"))
+        there = {p_.net for p_ in evals["top" if chosen == "bottom" else "bottom"][1]["points"]}
+        both_reaches = sorted((n for n in r["untestable"] if n in power_ and n in there), key=C.natural_key)
     else:
         pl = Planner(design)
         r = pl.build()
+        both_reaches = []
     points: List[ProbePoint] = r["points"]
     tp = design.cfg["testplan"]
     sup = r["supply"]
@@ -452,6 +516,7 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
     cov["percent"] = round(100.0 * cov["nets_probed"] / cov["nets_total"], 1) if cov["nets_total"] else 0.0
     pogo = design.cfg["pogo"]
     mount = tp.get("pogo_mount", "receptacle")
+    from .stack import brief
     return {
         "schema": TESTPLAN_SCHEMA,
         "board": {"name": design.board.name, "revision": design.board.title_block.get("rev", "")},
@@ -469,8 +534,21 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
         "sequence": steps,
         "coverage": cov,
         "fixture_keepouts": pl.tall,
-        "warnings": pl.warnings,
+        "plates": r["plates"],
+        "headers": r["headers"] or None,
+        "probe_side_hint": {"both_sides_reach": both_reaches} if both_reaches else None,
+        "stack": [brief(st) for st in pl.stacks],
+        "after_test": [{"fit": st["name"], "refs": st["refs"], "side": st["side"]} for st in pl.stacks
+                       if st["valid"] and not st["fitted_at_test"]],
+        "warnings": pl.warnings + ["stacked board %s: %s" % (st["name"], pr) for st in pl.stacks for pr in st["problems"]],
     }
+
+
+def fixture_side(plan: Dict[str, Any]) -> str:
+    """The side the (primary) fixture plate probes: probe_side, or the first plate when probing both sides."""
+    if plan.get("probe_side") == "both":
+        return (plan.get("plates") or ["bottom"])[0]
+    return plan.get("probe_side") or "bottom"
 
 
 def testability_findings(design: Design, plan: Dict[str, Any]):
@@ -478,13 +556,30 @@ def testability_findings(design: Design, plan: Dict[str, Any]):
     out = []
     power = set(design.nets_of_kind("power") + design.nets_of_kind("ground"))
     unt = plan["coverage"]["untestable"]
+    under = [u for u in unt if u["reason"].startswith("only reachable under stacked board")]
+    unt = [u for u in unt if u not in under]
     pw = [u for u in unt if u["net"] in power]
     sg = [u for u in unt if u["net"] not in power]
+    hint = (plan.get("probe_side_hint") or {}).get("both_sides_reach") or []
     if pw:
+        where = "on either side" if plan["probe_side"] == "both" else "on the %s side" % plan["probe_side"]
+        fix = "Add a >= %.1f mm test pad %s for each listed rail." % (plan["pogo"]["min_target_mm"], where)
+        if hint:
+            fix += " The other side reaches %s: probe both sides (testplan.probe_side = \"both\", two fixture plates)." % (
+                ", ".join(hint[:6]))
         out.append(Finding("TEST-POWER-ACCESS", "major", "testability", "%d power net(s) cannot be probed" % len(pw),
-                           "Rails without probe access cannot be verified on the production tester.",
-                           "Add a >= %.1f mm test pad on the %s side for each listed rail." % (plan["pogo"]["min_target_mm"], plan["probe_side"]),
+                           "Rails without probe access cannot be verified on the production tester.", fix,
                            nets=[u["net"] for u in pw], items=pw))
+    if under:
+        names = sorted({n for st in plan.get("stack") or [] for n in [st["name"]]
+                        if any(st["name"] in u["reason"] for u in under)})
+        sev = "major" if any(u["net"] in power for u in under) else "info"
+        out.append(Finding("TEST-STACK-ACCESS", sev, "testability",
+                           "%d net(s) only reachable under stacked board %s" % (len(under), ", ".join(names)),
+                           "A stacked board fitted during the test covers the only probe targets of these nets.",
+                           "Probe from both sides (testplan.probe_side = \"both\"), test before fitting the stacked board "
+                           "(stack[].fitted_at_test = false), or add test pads outside its outline.",
+                           nets=[u["net"] for u in under], items=under))
     if sg:
         out.append(Finding("TEST-SIGNAL-ACCESS", "info", "testability", "%d signal net(s) not probed" % len(sg),
                            "These nets are not covered by the bed-of-nails test.",
@@ -492,10 +587,23 @@ def testability_findings(design: Design, plan: Dict[str, Any]):
     if not plan.get("supply", {}).get("net"):
         out.append(Finding("TEST-SUPPLY", "major", "testability", "No supply net identified for powered tests",
                            plan.get("supply", {}).get("reason", ""), "Set supply.net (and supply.voltage) in pcbtestkit.json."))
-    if plan["fixture_keepouts"]:
-        refs = [k["ref"] for k in plan["fixture_keepouts"]]
+    tall = [k for k in plan["fixture_keepouts"] if k.get("kind") != "stack"]
+    if tall:
+        refs = [k["ref"] for k in tall]
         out.append(Finding("TEST-FIXTURE-CLEARANCE", "info", "testability",
                            "%d probe-side part(s) taller than the fixture clearance" % len(refs),
                            "The fixture board gets cut-outs for these parts and no probes are placed under them.",
-                           "Check the cut-outs in the generated fixture board.", refs=refs, items=plan["fixture_keepouts"]))
+                           "Check the cut-outs in the generated fixture board.", refs=refs, items=tall))
+    for st in plan.get("stack") or []:
+        if not st.get("valid"):
+            continue
+        est = [k for k in ("outline_source", "height_source") if str(st.get(k, "")).startswith("estimate")]
+        if est:
+            out.append(Finding("TEST-STACK-ESTIMATE", "info", "testability",
+                               "Stacked board %s: %s estimated" % (st["name"], " and ".join(
+                                   "outline" if k == "outline_source" else "height" for k in est)),
+                               "The fixture window and the probe keep-out use %s." % "; ".join(
+                                   "%s = %s" % (k.split("_")[0], st[k]) for k in est),
+                               "Set stack[].outline (board mm) and height_mm for %s (dialog: Stacked boards tab)." % st["name"],
+                               refs=st.get("refs") or []))
     return out

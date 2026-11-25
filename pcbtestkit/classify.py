@@ -245,6 +245,28 @@ def is_external_connector(fp: Footprint) -> bool:
                                                       "terminalblock", "barrel", "microsd", "sd_", "m12", "phoenix"))
 
 
+_STACK_BOARD = {"arduino", "shield", "hat", "feather", "featherwing", "pololu", "teensy", "nucleo", "xiao", "mezzanine",
+                "daughterboard", "raspberrypi", "rpi"}
+_STACK_BTB = re.compile(r"\b(board to board|btb|slimstack|stacking|df40\w*|df12\w*|df17\w*|fx8\w*|fx10\w*|fx18\w*|"
+                        r"fx23\w*|qsh|qth|qse|qte|erf8|erm8|bse|bte)\b")
+
+
+def stacking_hint(fp: Footprint) -> Optional[str]:
+    """Why this footprint may carry a stacked board (daughter board, shield, display), or None.
+
+    Board footprints (a Raspberry Pi, Arduino shield or module drawn as one part), board-to-board / mezzanine
+    connectors, and pin sockets (female headers) are candidates; the user confirms them."""
+    words = " ".join(re.findall(r"[a-z0-9]+", ("%s %s %s" % (fp.lib_id, fp.value, fp.descr)).lower()))
+    toks = set(words.split())
+    if toks & _STACK_BOARD or "raspberry pi" in words:
+        return "footprint of a board (%s)" % fp.name
+    if _STACK_BTB.search(words):
+        return "board-to-board connector (%s)" % fp.name
+    if "pinsocket" in toks or "pin socket" in words or "female header" in words or "socket strip" in words:
+        return "pin socket (%s): a board may plug into it" % fp.name
+    return None
+
+
 def is_testpoint(fp: Footprint) -> bool:
     return has_prefix(fp, "TP") or "testpoint" in fp.lib_id.lower() or "test_point" in fp.lib_id.lower()
 

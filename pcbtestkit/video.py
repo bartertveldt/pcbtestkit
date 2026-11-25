@@ -195,7 +195,7 @@ def storyboard(design, spec, plan, fixture, jig, visuals, out_dir, work,
         for pd in pads:
             for q in pd:
                 q[0] = round(2 * bb.cx - q[0], 3)
-    scenes.append({"kind": "map", "duration": 6.0, "step": 2, "title": "Test points (%s side)" % plan["probe_side"],
+    scenes.append({"kind": "map", "duration": 6.0, "step": 2, "title": "Test points (%s)" % ("both sides" if plan["probe_side"] == "both" else "%s side" % plan["probe_side"]),
                    "map": {"bbox": [bb.x0, bb.y0, bb.x1, bb.y1], "edges": edges, "pads": pads, "probes": probes},
                    "caption": "%d pogo pins: supply, ground and %d measurement channels" % (
                        len(plan["probes"]), sum(1 for p in plan["probes"] if p.get("channel"))),

@@ -38,7 +38,7 @@ def pocket_map_svg(jig: Dict[str, Any]) -> str:
     for post in jig.get("posts", []):
         cx, cy = post["center"]
         out.append("<circle cx='%.2f' cy='%.2f' r='%.2f' fill='var(--post)'/>" % (cx, L_ - cy, post["diameter_mm"] / 2))
-    for kind in ("relief", "hold"):
+    for kind in ("relief", "lead", "hold"):
         for p in jig["pockets"]:
             if p["type"] != kind:
                 continue
@@ -129,6 +129,62 @@ nav a{margin-right:14px;font-size:13px}section{margin-top:28px}video{width:100%;
 """
 
 
+def _png(path: Optional[str], cap: str) -> str:
+    if not path or not os.path.exists(path):
+        return ""
+    import base64
+    with open(path, "rb") as fh:
+        return ("<div class='grid2'><div><img alt='%s' style='max-width:100%%;border-radius:8px' src='data:image/png;base64,%s'>"
+                "<div class='cap'>%s</div></div></div>" % (_e(cap), base64.b64encode(fh.read()).decode(), _e(cap)))
+
+
+def _step_html(n: int, text: str, img: Optional[str] = None, cap: str = "") -> str:
+    pic = _img(img, cap) if img else ""
+    if pic:
+        pic = "<div style='margin-top:8px;max-width:760px'>%s<div class='cap'>%s</div></div>" % (pic, _e(cap))
+    return "<div class='step'><div class='num'>%d</div><div style='flex:1'>%s%s</div></div>" % (n, text, pic)
+
+
+def _hand_steps(design, jig: Dict[str, Any], side: str, stl: str, place_stl: str, im: Optional[Dict[str, str]] = None) -> str:
+    """Numbered steps for one hand-solder pass (two-jig or single-jig workflow) on ``side``. ``im``: the step
+    renders (jig2_*) of this jig, shown under the step they illustrate."""
+    im = im or {}
+    holds = [p for p in jig["pockets"] if p["type"] == "hold"]
+    refs = ", ".join("%s (%s)" % (p["ref"], _e(design.board.by_ref[p["ref"]].value) if p["ref"] in design.board.by_ref else "")
+                     for p in holds)
+    leads = any(p["type"] == "lead" for p in jig["pockets"])
+    pj = jig.get("placement")
+    out = []
+    if pj:
+        steps = [("Print both jigs as they are (no supports): <code>%s</code> (placement jig) and <code>%s</code> "
+                  "(holding jig)." % (_e(os.path.basename(place_stl)), _e(os.path.basename(stl))),
+                  im.get("jig2_print"), "The two printed jigs: placement jig (left) and holding jig (right)"),
+                 ("Put the PCB <b>%s side up</b> into the placement jig; the stops around the edge locate it%s." % (
+                     _e(side), "; the parts already on the other side sit in its pockets" if pj.get("bottom_pockets") and side != "top" else ""),
+                  None, ""),
+                 ("Fit the hand-soldered parts from above, the normal way: %s. Mind polarity marks. The leads go through "
+                  "their holes into the wells under the board; trim leads longer than %.0f mm." % (
+                      refs or "none", max(1.0, pj["lead_clearance_mm"] - 0.5)),
+                  im.get("jig2_fit"), "PCB top side up in the placement jig; each part goes straight down into its holes"),
+                 ("Put the holding jig on top, <b>pockets down</b>: its posts go through the mounting holes and every "
+                  "part sits in its pocket.", im.get("jig2_cover"), "The holding jig comes down over the parts, pockets first"),
+                 ("Hold both jigs together and turn the stack over. Lift off the placement jig: every lead now points up.",
+                  im.get("jig2_unload"), "Stack turned over, placement jig lifted off: the board lies in the holding jig, leads up"),
+                 ("Solder all leads from above, clip them, lift the board out with the finger notches.",
+                  im.get("jig2_solder") or im.get("jig_assembled"), "Solder from above; the jig holds every part flush and square")]
+        if leads:
+            steps.insert(0, ("Clip the soldered leads of the earlier pass short (the holding jig has shallow reliefs for them).", None, ""))
+        out.append("".join(_step_html(i + 1, t, p, c) for i, (t, p, c) in enumerate(steps)))
+        out.append(_png(pj.get("preview_png"), "Placement jig (%s x %s x %s mm): lead wells, post holes and locating stops" %
+                        tuple(pj["jig_size_mm"])))
+    else:
+        steps = ["Drop the parts upside down into their orange pockets: %s. Mind polarity marks." % (refs or "none"),
+                 "Lower the PCB %s-side down onto the alignment posts; the leads slide through their holes." % _e(side),
+                 "Solder all leads from above, clip them, lift the board out with the finger notches."]
+        out.append("".join("<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, t) for i, t in enumerate(steps)))
+    return "".join(out)
+
+
 def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Optional[Dict[str, Any]],
                 jig: Optional[Dict[str, Any]], visuals: Dict[str, Any], paths: Dict[str, str]) -> str:
     b = spec["board"]
@@ -211,21 +267,47 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
                 divs["%g" % p["divider"]["r_bottom_ohm"]] += 1
         if divs:
             bom.append("0805 resistors: " + ", ".join("%d x %s ohm" % (v, k) for k, v in sorted(divs.items(), key=lambda kv: float(kv[0]))))
-        bom.append("1 x 2 x %d pin header 2.54 mm, 1 x 2-pin 5.08 mm terminal block" % (len(plan["header"]) // 2))
+        plates = list((fixture or {}).get("plates") or {})
+        if plates:
+            for sd in plates:
+                bom.append("%s plate: 1 x 2 x %d pin header 2.54 mm" % (sd, len((plan.get("headers") or {}).get(sd, plan["header"])) // 2))
+            bom.append("1 x 2-pin 5.08 mm terminal block (on the plate with the supply probes)")
+        else:
+            bom.append("1 x 2 x %d pin header 2.54 mm, 1 x 2-pin 5.08 mm terminal block" % (len(plan["header"]) // 2))
         bom.append("guide pins matching the board's mounting holes; 4 x M3 standoffs")
         h.append("<h3>Parts</h3><ul>%s</ul>" % "".join("<li>%s</li>" % _e(x) for x in bom))
-        steps = ["Open <code>%s</code> in KiCad, route the ratsnest (or run Freerouting), run DRC and order the PCB." % _e(os.path.basename(paths.get("fixture", "fixture"))),
+        files_ = ", ".join("<code>%s</code>" % _e(os.path.basename(paths.get("fixture_" + sd, sd))) for sd in plates) if plates else \
+            "<code>%s</code>" % _e(os.path.basename(paths.get("fixture", "fixture")))
+        from .report import routing_note
+        steps = ["%s: %s" % (files_, _e(routing_note((fixture or {}).get("routing")))),
                  "Press the receptacles into the plated holes and solder them; insert the pogo pins (crown tips on through-hole leads, spear tips on flat pads - see the probes CSV).",
                  "Fit the guide pins in the GUIDE holes; they locate the board through its mounting holes. Mount the fixture on M3 standoffs.",
                  "Solder the divider resistors, header and power terminal. Wire the header to the measurement hardware as shown below."]
+        if plates:
+            steps.append("Two plates (clamshell): the board lies on the bottom plate's guide pins; the top plate is mirrored, "
+                         "comes down from above on the same guide pins and presses its probes onto the top side. Wire both "
+                         "headers to the measurement hardware (channel numbers are shared).")
         h.append("".join("<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, t) for i, t in enumerate(steps)))
         h.append("<h3>Wiring</h3><div class='svgbox'>%s</div>" % wiring_svg(plan))
         h.append("</section>")
 
+    stacks = [st for st in plan.get("stack") or [] if st.get("valid")]
+    if stacks:
+        rows = []
+        for st in stacks:
+            how = ("fitted during the test: no probe under it%s" % (
+                       ", the fixture plate has a window for it" if any(k.get("kind") == "stack" and k["ref"] == st["name"]
+                                                                       for k in plan.get("fixture_keepouts") or []) else "")
+                   if st["fitted_at_test"] else "fitted after the test: the board is tested without it")
+            rows.append("<li><b>%s</b> on %s (%s side, %.0f mm high): %s.</li>" % (
+                _e(st["name"]), _e(", ".join(st["refs"]) or "-"), _e(st["side"]), st["height_mm"], _e(how)))
+        h.append("<section><h3>Stacked boards</h3><ul>%s</ul></section>" % "".join(rows))
+
     # ---- test ----------------------------------------------------------------------------------------
     h.append("<section id='test'><h2>2 &middot; Run a production test</h2>")
     if mode == "generate":
-        h.append("<div class='grid2'><div>%s<div class='cap'>Lower the board onto the guide pins...</div></div><div>%s<div class='cap'>"
+        h.append("<div class='grid2'><div>%s<div class='cap'>Lower the board onto the guide pins: a pogo pin stands under "
+                 "every test point...</div></div><div>%s<div class='cap'>"
                  "...and press it down: every pogo pin touches its test point</div></div></div>" %
                  (_img(im.get("fixture_dut_exploded"), "Board above the fixture"), _img(im.get("fixture_dut_seated"), "Board on the fixture")))
     sup = plan["supply"]
@@ -237,6 +319,8 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
              "Once, with known-good boards: <code>python3 pcbtest_runner.py learn --units 3</code> to fill in signal limits.",
              "For every board: place it, press down, run <code>python3 pcbtest_runner.py test --loop</code> and enter the serial number.",
              "Green PASS: next board. Red FAIL: the failed checks are listed and stored in <code>results/results.csv</code>."]
+    for a in plan.get("after_test") or []:
+        steps.append("After a PASS, fit the stacked board <b>%s</b>%s." % (_e(a["fit"]), (" on " + _e(", ".join(a["refs"]))) if a["refs"] else ""))
     h.append("".join("<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, t) for i, t in enumerate(steps)))
     h.append("<table><tr><th>Step</th><th>What is checked</th></tr>")
     for st in plan["sequence"]:
@@ -248,8 +332,33 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
 
     # ---- jig ---------------------------------------------------------------------------------------
     if jig:
-        holds = [p for p in jig["pockets"] if p["type"] == "hold"]
-        h.append("<section id='jig'><h2>3 &middot; Hand-solder with the %s</h2>" % ("jigs" if jig.get("placement") else "jig"))
+        from .jig import jig_of
+        passes = jig.get("passes") or []
+        sides_ = [p["side"] for p in passes if p["process"] == "hand"]
+        h.append("<section id='jig'><h2>3 &middot; Hand-solder with the %s</h2>" % ("jigs" if jig.get("placement") or len(sides_) > 1 else "jig"))
+        if len(passes) > 1:
+            rows = []
+            for p in passes:
+                what = ("reflow the %d SMD part(s) on the %s side" % (p["parts"], p["side"]) if p["process"] == "smt" else
+                        "hand-solder %s (%s side)" % (", ".join(p["parts"]), p["side"]))
+                tool = {"nest": "paste-print nest", "hand": "jig set"}.get((p.get("jig") or "").split("_")[0], "")
+                rows.append("<tr><td><b>%d</b></td><td>%s</td><td class='small'>%s</td></tr>" % (p["pass"], _e(what), _e(tool)))
+            h.append("<h3>Build order</h3><table><tr><th>Pass</th><th>What</th><th>Jig</th></tr>%s</table>" % "".join(rows))
+        for p in passes:
+            ej = jig_of(jig, p.get("jig"))
+            if ej is None or not p["jig"].startswith("nest_"):
+                continue
+            key = p["jig"]
+            h.append("<h3>Paste-print nest for the %s side (pass %d)</h3>" % (_e(p["side"]), p["pass"]))
+            h.append("<p>The %s side is printed after the other side has been reflowed. Print <code>%s</code>, put the PCB in "
+                     "it %s side up: its parts on the underside sit in pockets, the board lies flat and the frame around it "
+                     "is flush with the board, so the stencil lies flat for printing the paste. PLA or PETG: the nest does "
+                     "not go into the reflow oven.</p>" % (_e(p["side"]), _e(os.path.basename(paths.get("jig_%s_stl" % key, "paste-nest.stl"))),
+                                                           _e(p["side"])))
+            h.append(_png(ej.get("preview_png"), "Paste-print nest (%s x %s x %s mm)" % tuple(ej["jig_size_mm"])))
+        side0 = jig.get("side", "top")
+        if len(sides_) > 1 or any((p.get("jig") or "").startswith("nest_") for p in passes):
+            h.append("<h3>%s-side parts</h3>" % _e(side0.capitalize()))
         h.append("<div class='grid2'><div>%s<div class='cap'>3D-printed jig (%s x %s x %s mm)</div></div><div class='svgbox'>%s"
                  "<div class='legend small'><span style='background:var(--hold)'></span>place part here"
                  "<span style='background:var(--relief)'></span>clearance for assembled parts"
@@ -258,35 +367,24 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
                      pocket_map_svg(jig)))
         h.append("<p class='small muted'>Print <code>%s</code> as it is (pockets face up, no supports): PLA or PETG, 0.2 mm layers, "
                  "3 walls. The pocket map is the jig as it lies on your desk.</p>" % _e(os.path.basename(paths.get("jig_stl", "jig.stl"))))
-        refs = ", ".join("%s (%s)" % (p["ref"], _e(design.board.by_ref[p["ref"]].value) if p["ref"] in design.board.by_ref else "")
-                         for p in holds)
-        pj = jig.get("placement")
-        if pj:
-            steps = ["Print both jigs as they are (no supports): <code>%s</code> (placement jig) and <code>%s</code> "
-                     "(holding jig)." % (_e(os.path.basename(paths.get("jig_place_stl", "jig-placement.stl"))),
-                                         _e(os.path.basename(paths.get("jig_stl", "jig.stl")))),
-                     "Put the PCB <b>top side up</b> into the placement jig; the stops around the edge locate it.",
-                     "Fit the hand-soldered parts: %s. Mind polarity marks. The leads go into the wells under the board; "
-                     "trim leads longer than %.0f mm." % (refs or "none", max(1.0, pj["lead_clearance_mm"] - 0.5)),
-                     "Put the holding jig on top, <b>pockets down</b>: its posts go through the mounting holes and every "
-                     "part sits in its pocket.",
-                     "Hold both jigs together and turn the stack over. Lift off the placement jig: every lead now points up.",
-                     "Solder all leads from above, clip them, lift the board out with the finger notches."]
-            if pj.get("preview_png") and os.path.exists(pj["preview_png"]):
-                import base64
-                with open(pj["preview_png"], "rb") as fh:
-                    h.append("<div class='grid2'><div><img alt='Placement jig' style='max-width:100%%;border-radius:8px' "
-                             "src='data:image/png;base64,%s'><div class='cap'>Placement jig (%s x %s x %s mm): lead wells, "
-                             "post holes and locating stops</div></div></div>" % (
-                                 base64.b64encode(fh.read()).decode(), pj["jig_size_mm"][0], pj["jig_size_mm"][1], pj["jig_size_mm"][2]))
-        else:
-            steps = ["Drop the parts upside down into their orange pockets: %s. Mind polarity marks." % (refs or "none"),
-                     "Lower the PCB top-side down onto the alignment posts; the leads slide through their holes.",
-                     "Solder all leads from above, clip them, lift the board out with the finger notches."]
-        h.append("".join("<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, t) for i, t in enumerate(steps)))
-        h.append("<div class='grid2'><div>%s<div class='cap'>Parts in their pockets, PCB coming down (top side facing the jig)</div></div>"
-                 "<div>%s<div class='cap'>PCB seated: solder from above</div></div></div>" %
-                 (_img(im.get("jig_exploded"), "Exploded jig"), _img(im.get("jig_assembled"), "Assembled jig")))
+        h.append(_hand_steps(design, jig, side0, paths.get("jig_stl", "jig.stl"), paths.get("jig_place_stl", "jig-placement.stl"), im))
+        if not jig.get("placement"):        # single-jig workflow: parts in the pockets, PCB lowered onto them
+            h.append("<div class='grid2'><div>%s<div class='cap'>Parts in their pockets, PCB coming down (top side facing the jig)</div></div>"
+                     "<div>%s<div class='cap'>PCB seated: solder from above</div></div></div>" %
+                     (_img(im.get("jig_exploded"), "Exploded jig"), _img(im.get("jig_assembled"), "Assembled jig")))
+        for p in passes:
+            ej = jig_of(jig, p.get("jig"))
+            if ej is None or ej is jig:
+                continue
+            key = p["jig"]
+            if key.startswith("hand_"):
+                h.append("<h3>%s-side parts (pass %d)</h3>" % (_e(p["side"].capitalize()), p["pass"]))
+                h.append("<div class='grid2'><div class='svgbox'>%s<div class='cap'>Holding jig for the %s-side parts (%s x %s x %s mm), "
+                         "as it lies on your desk. Small circles: reliefs for the soldered leads of pass %s.</div></div></div>" % (
+                             pocket_map_svg(ej), _e(p["side"]), ej["jig_size_mm"][0], ej["jig_size_mm"][1], ej["jig_size_mm"][2],
+                             ", ".join(str(q["pass"]) for q in passes if q["process"] == "hand" and q["pass"] < p["pass"]) or "-"))
+                h.append(_hand_steps(design, ej, p["side"], paths.get("jig_%s_stl" % key, "jig-%s.stl" % p["side"]),
+                                     paths.get("jig_%s_place_stl" % key, "jig-%s-placement.stl" % p["side"])))
         h.append("</section>")
     h.append("<section id='files'><h2>Files</h2><ul>%s</ul></section>" % "".join(
         "<li>%s: <code>%s</code></li>" % (_e(k), _e(os.path.basename(v))) for k, v in paths.items()))

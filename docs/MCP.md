@@ -19,7 +19,7 @@ the model is told to call `open_project`.
 | Claude Code | The plugin (skill + MCP `core`), or only the skill | The skill drives the CLI: no tool definitions in context until used. |
 | Any agent with a shell (Codex, Cursor agent, Gemini CLI, Aider, ...) | `AGENTS.md` + `pcbtestkit guide` | Same: zero standing token cost. |
 | Chat apps without a shell (Claude Desktop, ...) | MCP with `--profile core` | 16 tools, about 3k tokens of definitions per request. |
-| Full control / tool authoring | MCP `--profile full` | All 31 tools, about 6k tokens. |
+| Full control / tool authoring | MCP `--profile full` | All 32 tools, about 6k tokens. |
 | Review only | MCP `--profile readonly` or `--read-only` | No writes possible. |
 
 ## Client setup

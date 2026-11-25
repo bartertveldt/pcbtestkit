@@ -489,6 +489,63 @@ class TestTwoJigWorkflow(Base):
         self.assertAlmostEqual(max(v[0] for v in verts), g["nx"] * g["res"], places=6)
         self.assertLess(len(faces), 20000)
 
+    def test_render_mesh_faces_point_out(self):
+        """Every face of the render mesh is wound outwards (KiCad shades by winding: a wall wound inwards renders
+        black once the jig is shown turned over)."""
+        import math
+        from pcbtestkit.jig import render_mesh
+        H = [[300, 300, 300, 300, 300], [300, 50, 50, 300, 300], [300, 50, 50, 120, 300], [300, 300, 300, 300, 300]]
+        nx, ny = 5, 4
+        verts, faces = render_mesh(H, nx, ny, 1.0)
+        for f in faces:
+            p = [verts[i] for i in f]
+            n = [0.0, 0.0, 0.0]
+            for k in range(len(p)):                          # Newell normal: points to the side the face is seen from
+                a, b = p[k], p[(k + 1) % len(p)]
+                n[0] += (a[1] - b[1]) * (a[2] + b[2])
+                n[1] += (a[2] - b[2]) * (a[0] + b[0])
+                n[2] += (a[0] - b[0]) * (a[1] + b[1])
+            ln = math.sqrt(sum(x * x for x in n))
+            c = [sum(q[i] for q in p) / len(p) for i in range(3)]
+            o = [c[i] + 0.01 * n[i] / ln for i in range(3)]
+            i_, j_ = int(math.floor(o[0])), int(math.floor(o[1]))
+            h = H[j_][i_] / 100.0 if 0 <= i_ < nx and 0 <= j_ < ny else 0.0
+            self.assertTrue(o[2] < 0 or o[2] > h, "face %r points into the material" % (p,))
+
+    def test_two_jig_step_stills_and_guide(self):
+        """The guide shows one render per step of the two-jig workflow (made from the video's scenes)."""
+        from pcbtestkit.animate import Stage
+        from pcbtestkit.guide import build_guide
+        from pcbtestkit.jig import build_jigs
+        from pcbtestkit.pipeline import analyze
+        from pcbtestkit.spec import build_spec
+        from pcbtestkit.visuals import Renderer
+        d = self.design()
+        out = os.path.join(self.tmp, "steps")
+        os.makedirs(out, exist_ok=True)
+        paths = {"jig_stl": os.path.join(out, "j.stl"), "jig_place_stl": os.path.join(out, "p.stl")}
+        jig = build_jigs(d, paths["jig_stl"], None, None, paths["jig_place_stl"], None)
+        findings, plan = analyze(d, include_kicad=False)
+        st = Stage(d, plan, None, jig, paths, Renderer(out), out)
+        st.dut_wrl = lambda without=(): os.path.join(out, "dut.wrl")     # no kicad-cli needed: scenes only
+        shot = st.step_stills()
+        names = [os.path.basename(j["png"]) for j in shot.jobs]
+        self.assertEqual(names, ["jig2_print.png", "jig2_fit.png", "jig2_cover.png", "jig2_unload.png", "jig2_solder.png"])
+        for job in shot.jobs:
+            text, _files = job["make"](os.path.join(out, "scene"))
+            self.assertIn("JIG_", text)
+        # the guide puts each render under its step
+        imgs = {}
+        for n in ("jig2_print", "jig2_fit", "jig2_cover", "jig2_unload", "jig2_solder"):
+            imgs[n] = os.path.join(out, n + ".png")
+            with open(imgs[n], "wb") as fh:
+                fh.write(b"\x89PNG\r\n\x1a\n" + n.encode())
+        html = build_guide(d, build_spec(d, findings, plan), plan, None, jig, {"images": imgs}, paths)
+        for cap in ("The two printed jigs", "PCB top side up in the placement jig", "The holding jig comes down",
+                    "placement jig lifted off", "Solder from above"):
+            self.assertIn(cap, html)
+        self.assertNotIn("Parts in their pockets, PCB coming down", html)     # the single-jig pictures
+
     def test_two_jig_storyboard(self):
         from pcbtestkit.pipeline import analyze
         from pcbtestkit.spec import build_spec
@@ -766,3 +823,347 @@ class TestWithoutAI(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestStackedAndTwoSided(unittest.TestCase):
+    """Stacked boards (daughter board on J6 over the MCU area) and parts on both sides (J7 on the bottom)."""
+
+    DISPLAY = {"name": "display", "refs": ["J6"], "outline": [126.5, 100, 148, 121.5], "height_mm": 14}
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="pcbtk_stack_")
+        cls.proj = os.path.join(cls.tmp, "sample_sensor")
+        make_sample.main(cls.proj, variant="stacked")
+        cls.pcb = os.path.join(cls.proj, "sample_sensor.kicad_pcb")
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def design(self, **over):
+        return Design.load(self.pcb, overrides=over or None)
+
+    def test_turned_over_view(self):
+        from pcbtestkit.sides import other, view
+        d = self.design()
+        v = view(d, "bottom")
+        self.assertIs(view(d, "top"), d)
+        for fp in d.components():
+            fv = v.board.by_ref[fp.ref]
+            self.assertEqual(fv.side, other(fp.side))
+            a, b = fp.courtyard_bbox(), fv.courtyard_bbox()
+            for p, q in ((a.x0, b.x0), (a.x1, b.x1), (-a.y1, b.y0), (-a.y0, b.y1)):
+                self.assertAlmostEqual(p, q, places=6)
+            for pa, pb in zip(fp.pads, fv.pads):
+                self.assertEqual((pa.x, -pa.y), (pb.x, pb.y))
+                self.assertEqual(pa.on_copper("top"), pb.on_copper("bottom"))
+            self.assertEqual(v.height_of(fv), d.height_of(fp))
+        bb, bv = d.board.outline_bbox(), v.board.outline_bbox()
+        self.assertAlmostEqual(bv.y0, -bb.y1)
+        self.assertEqual(len(v.components()), len(d.components()))
+
+    def test_jig_set_per_side(self):
+        from pcbtestkit.jig import assembly_passes, build_jigs, jig_of, stack_collisions
+        from pcbtestkit.sides import view
+        d = self.design()
+        passes, notes = assembly_passes(d)
+        self.assertEqual([(p["process"], p["side"]) for p in passes],
+                         [("smt", "bottom"), ("smt", "top"), ("hand", "top"), ("hand", "bottom")])
+        self.assertEqual(passes[3]["parts"], ["J7"])
+        out = os.path.join(self.tmp, "jigs")
+        os.makedirs(out, exist_ok=True)
+        grids = {}
+        jig = build_jigs(d, os.path.join(out, "j.stl"), None, None, os.path.join(out, "p.stl"), None, grids=grids,
+                         file_for=lambda tag, ext: os.path.join(out, "%s.%s" % (tag, ext)))
+        self.assertEqual(jig["side"], "top")
+        self.assertNotIn("J7", jig["parts_to_place"])
+        self.assertNotIn("J7", jig["placement"]["bottom_pockets"])      # fitted later: not on the board yet
+        bot = jig_of(jig, "hand_bottom")
+        self.assertEqual(bot["parts_to_place"], ["J7"])
+        self.assertEqual(bot["side"], "bottom")
+        for j in (jig, jig["placement"], bot, bot["placement"]):
+            self.assertTrue(j["mesh"]["watertight"])
+        self.assertEqual(stack_collisions(d, grids), [])
+        self.assertEqual(stack_collisions(view(d, "bottom"), grids["bottom"]), [])
+        # the top-side parts are soldered by now: pockets for their bodies, reliefs for their leads
+        self.assertTrue({"J3", "U1", "C1", "J2", "J6"} <= set(bot["placement"]["bottom_pockets"]))
+        self.assertEqual({p["ref"] for p in bot["pockets"] if p["type"] == "lead"}, {"J3", "U1", "C1", "C2", "J2", "J6"})
+        # J7's hold pocket sits over its body (bottom-side footprints are stored mirrored by KiCad)
+        hold = [p for p in bot["pockets"] if p["type"] == "hold"][0]
+        y_board = -(hold["center"][1] + grids["bottom"]["holding"]["oy"])
+        self.assertAlmostEqual(y_board, (113 + 110.46) / 2, delta=0.4)
+        # every lead well of the bottom pass reaches the floor under J7's holes
+        A = grids["bottom"]["placement"]
+        floor = int(round(float(d.cfg["jig"]["floor_mm"]) * 100))
+        for pd in d.board.by_ref["J7"].pads:
+            i, j = int((pd.x - A["ax0"]) / A["res"]), int((A["ay1"] + pd.y) / A["res"])
+            self.assertEqual(A["H"][j][i], floor)
+        self.assertTrue(os.path.exists(os.path.join(out, "jig-bottom.stl")))
+        self.assertTrue(os.path.exists(os.path.join(out, "jig-bottom-placement.stl")))
+        # paste-print nest for the second SMD side: flat frame flush with the PCB surface
+        nest = jig_of(jig, "nest_top")
+        self.assertEqual(nest["kind"], "paste_nest")
+        self.assertEqual(nest["down_side_pockets"], ["C9"])
+        g = grids["nest_top"]
+        self.assertAlmostEqual(max(max(r) for r in g["H"]) / 100.0, g["rest"] + d.board.thickness, places=2)
+        only_top = build_jigs(self.design(jig={"sides": ["top"], "paste_nest": "none"}))
+        self.assertEqual(only_top["extra"], {})
+        self.assertTrue(any("get no jig" in n for n in only_top["notes"]))
+        self.assertEqual(build_jigs(self.design(jig={"sides": ["bottom", "top"]}))["side"], "bottom")
+
+    def test_stacked_board_blocks_probes(self):
+        import math
+        st = dict(self.DISPLAY, outline=[125, 99.5, 148, 121.5])
+        d = self.design(stack=[st], testplan={"probe_side": "top"})
+        plan = build_testplan(d)
+        x0, y0, x1, y1 = st["outline"]
+        self.assertTrue(plan["probes"])
+        for p in plan["probes"]:
+            self.assertFalse(x0 - 1 <= p["x"] <= x1 + 1 and y0 - 1 <= p["y"] <= y1 + 1, p)
+        win = [k for k in plan["fixture_keepouts"] if k.get("kind") == "stack"]
+        self.assertEqual([k["ref"] for k in win], ["display"])
+        self.assertIn("only reachable under stacked board display (top side)",
+                      [u["reason"] for u in plan["coverage"]["untestable"]])
+        from pcbtestkit.testplan import testability_findings
+        ids = {f.id for f in testability_findings(d, plan)}
+        self.assertIn("TEST-STACK-ACCESS", ids)
+        fx = build_fixture(d, plan)
+        self.assertIn("CUT display", fx["kicad_pcb"])
+        # fitted after the test: the board is tested bare, the guide says when to fit it
+        d2 = self.design(stack=[dict(st, fitted_at_test=False)], testplan={"probe_side": "top"})
+        p2 = build_testplan(d2)
+        self.assertEqual(p2["after_test"], [{"fit": "display", "refs": ["J6"], "side": "top"}])
+        self.assertFalse([k for k in p2["fixture_keepouts"] if k.get("kind") == "stack"])
+        self.assertGreaterEqual(len(p2["probes"]), len(plan["probes"]))
+        # without outline/height they are estimated from J6 and flagged
+        d3 = self.design(stack=[{"name": "display", "refs": ["J6"]}])
+        p3 = build_testplan(d3)
+        self.assertTrue(p3["stack"][0]["outline_source"].startswith("estimate"))
+        self.assertIn("TEST-STACK-ESTIMATE", {f.id for f in testability_findings(d3, p3)})
+        self.assertTrue(math.isclose(p3["stack"][0]["height_mm"], d3.height_of(d3.board.by_ref["J6"])[0] + 4.6, abs_tol=0.01))
+
+    def test_two_plate_fixture(self):
+        d = self.design(stack=[self.DISPLAY], testplan={"probe_side": "both"})
+        plan = build_testplan(d)
+        self.assertEqual(plan["plates"], ["bottom", "top"])
+        sides = {p["side"] for p in plan["probes"]}
+        self.assertEqual(sides, {"bottom", "top"})
+        for s_ in plan["plates"]:
+            chans = [h["signal"] for h in plan["headers"][s_] if h["signal"].startswith("CH")]
+            self.assertEqual(sorted(chans), sorted(p["channel"] for p in plan["probes"] if p["side"] == s_ and p.get("channel")))
+        fx = build_fixture(d, plan)
+        self.assertEqual({k: v["pogo_count"] for k, v in fx["plates"].items()},
+                         {s_: sum(1 for p in plan["probes"] if p["side"] == s_) for s_ in plan["plates"]})
+        self.assertIn("CUT display", fx["plates"]["top"]["kicad_pcb"])
+        out = os.path.join(self.tmp, "both")
+        old = os.environ.get("SOURCE_DATE_EPOCH")
+        os.environ["SOURCE_DATE_EPOCH"] = "1764000000"
+        try:
+            runs = []
+            for k in ("a", "b"):
+                runs.append(run_pipeline(self.design(stack=[self.DISPLAY], testplan={"probe_side": "both"}),
+                                         out_dir=os.path.join(out, k), include_kicad=False,
+                                         outputs={"visuals": False, "video": False}))
+        finally:
+            if old is None:
+                os.environ.pop("SOURCE_DATE_EPOCH", None)
+            else:
+                os.environ["SOURCE_DATE_EPOCH"] = old
+        names = sorted(os.listdir(os.path.join(out, "a")))
+        for f in ("sample_sensor-fixture-top.kicad_pcb", "sample_sensor-fixture-bottom.kicad_pcb",
+                  "sample_sensor-fixture-top-probes.csv", "sample_sensor-jig-bottom.stl",
+                  "sample_sensor-jig-bottom-placement.stl", "sample_sensor-paste-nest-top.stl"):
+            self.assertIn(f, names)
+        for f in names:
+            pa, pb = os.path.join(out, "a", f), os.path.join(out, "b", f)
+            if os.path.isfile(pa):
+                with open(pa, "rb") as fa, open(pb, "rb") as fb:
+                    self.assertEqual(fa.read(), fb.read(), f)
+        with open(runs[0]["paths"]["guide"], encoding="utf-8") as fh:
+            g = fh.read()
+        for txt in ("Two plates (clamshell)", "Stacked boards", "Bottom-side parts (pass 4)", "Paste-print nest for the top side"):
+            self.assertIn(txt, g)
+        with open(runs[0]["paths"]["fixture_meta"], encoding="utf-8") as fh:
+            self.assertEqual(sorted(json.load(fh)["plates"]), ["bottom", "top"])
+
+    def test_decisions_tools_and_dialog_rows(self):
+        from pcbtestkit.manual import apply_stack_edits, stack_rows
+        ws = Workspace(self.pcb, persist=False)
+        dec = {x["topic"]: x for x in ws.call("get_open_decisions")["decisions"]}
+        self.assertIn("J6", [c["ref"] for c in dec["stacked_boards"]["items"]])
+        self.assertIn("J7", [i["ref"] for i in dec["part_heights"]["items"]])
+        self.assertEqual(ws.call("set_stacked_boards", {"boards": [{"name": "x", "refs": ["J99"]}]})["error"]["code"], "UNKNOWN_REF")
+        self.assertEqual(ws.call("set_stacked_boards", {"boards": [{"name": "x", "refs": ["J6"], "outline": [1, 2, 3]}]})["error"]["code"],
+                         "BAD_VALUE")
+        r = ws.call("set_stacked_boards", {"boards": [dict(self.DISPLAY)], "rationale": "display board on J6"})
+        self.assertTrue(r["ok"], r)
+        topics = {x["topic"] for x in ws.call("get_open_decisions")["decisions"]}
+        self.assertNotIn("stacked_boards", topics)
+        self.assertEqual(ws.call("get_testplan")["stacked_boards"][0]["name"], "display")
+        self.assertTrue(ws.call("set_test_options", {"probe_side": "both"})["ok"])
+        self.assertEqual(ws.call("get_testplan")["plates"], ["bottom", "top"])
+        self.assertFalse(ws.call("set_jig_options", {"sides": ["top", "top"]})["ok"])
+        self.assertTrue(ws.call("set_jig_options", {"sides": ["bottom", "top"], "paste_nest": "none"})["ok"])
+        # the dialog's Stacked boards tab, without wx
+        d = self.design()
+        rows = stack_rows(d)
+        self.assertEqual([(r["refs"], r["use"]) for r in rows], [("J6", False)])
+        rows[0].update(use=True, name="display", outline="126.5, 100, 148, 121.5", height_mm="14")
+        u = {}
+        self.assertEqual(apply_stack_edits(u, rows, set(d.board.by_ref)), [])
+        self.assertEqual(u["stack"], [{"name": "display", "refs": ["J6"], "side": "top", "outline": [126.5, 100.0, 148.0, 121.5],
+                                       "height_mm": 14.0, "fitted_at_test": True}])
+        self.assertEqual(stack_rows(self.design(**u))[0]["use"], True)
+        bad = [dict(rows[0], outline="1, 2")]
+        u2 = {"stack": ["keep"]}
+        self.assertTrue(apply_stack_edits(u2, bad, set(d.board.by_ref)))
+        self.assertEqual(u2["stack"], ["keep"])                # nothing written when there are problems
+
+
+class TestFixtureRouting(Base):
+    """The fixture board comes out routed: every connection made, clearances kept, same file every run."""
+
+    def _board(self, fx, name="routed"):
+        path = os.path.join(self.tmp, name + ".kicad_pcb")
+        with open(path, "w") as fh:
+            fh.write(fx["kicad_pcb"])
+        return load_board(path, pro_path="")
+
+    def _check(self, b, clearance=0.2, edge=0.5):
+        """Independent of the router: union-find connectivity per net and pairwise copper clearance."""
+        from pcbtestkit.geometry import pt_seg_dist, seg_seg_dist
+        from pcbtestkit.router import pad_shape, point_dist, seg_dist
+        pads = [p for p in b.all_pads() if p.net and p.has_copper]
+        segs = [(t.layer, t.x1, t.y1, t.x2, t.y2, t.width, t.net) for t in b.tracks]
+        vias = [(v.x, v.y, v.size, v.net) for v in b.vias]
+        self.assertTrue(segs)
+        lay = {"F.Cu": "top", "B.Cu": "bottom"}
+        # ---- connectivity ----
+        items = [("pad", p) for p in pads] + [("seg", s) for s in segs] + [("via", v) for v in vias]
+        parent = list(range(len(items)))
+
+        def find(i):
+            while parent[i] != i:
+                parent[i] = parent[parent[i]]
+                i = parent[i]
+            return i
+
+        def touch(a, b_):
+            order = {"seg": 0, "via": 1, "pad": 2}
+            if order[a[0]] > order[b_[0]]:
+                a, b_ = b_, a
+            (ka, A), (kb, B) = a, b_
+            if ka == "seg":
+                ends = [(A[1], A[2]), (A[3], A[4])]
+                if kb == "pad":
+                    return B.on_copper(lay[A[0]]) and any(point_dist(pad_shape(B), x, y) <= 1e-6 for x, y in ends)
+                if kb == "via":
+                    return any(abs(x - B[0]) < 1e-6 and abs(y - B[1]) < 1e-6 for x, y in ends)
+                return B[0] == A[0] and (any(pt_seg_dist(x, y, B[1], B[2], B[3], B[4]) < 1e-6 for x, y in ends) or
+                                         any(pt_seg_dist(x, y, A[1], A[2], A[3], A[4]) < 1e-6
+                                             for x, y in [(B[1], B[2]), (B[3], B[4])]))
+            if ka == "via" and kb == "pad":
+                return point_dist(pad_shape(B), A[0], A[1]) <= 1e-6
+            return False
+
+        for i in range(len(items)):
+            for j in range(i + 1, len(items)):
+                ni = items[i][1].net if items[i][0] == "pad" else items[i][1][-1]
+                nj = items[j][1].net if items[j][0] == "pad" else items[j][1][-1]
+                if ni == nj and touch(items[i], items[j]):
+                    parent[find(i)] = find(j)
+        groups = {}
+        for i, (k, it) in enumerate(items):
+            if k == "pad":
+                groups.setdefault(it.net, set()).add(find(i))
+        split = {n: len(g) for n, g in groups.items() if len(g) > 1}
+        self.assertEqual(split, {}, "nets not fully connected")
+        # ---- clearance (copper of different nets on the same layer, and to the board edge) ----
+        for s in segs:
+            half = s[5] / 2
+            for p in pads:
+                if p.net != s[6] and p.on_copper(lay[s[0]]):
+                    self.assertGreaterEqual(seg_dist(pad_shape(p), s[1], s[2], s[3], s[4]) - half, clearance - 1e-6)
+            for t in segs:
+                if t[6] != s[6] and t[0] == s[0]:
+                    self.assertGreaterEqual(seg_seg_dist(s[1:5], t[1:5]) - half - t[5] / 2, clearance - 1e-6)
+            for v in vias:
+                if v[3] != s[6]:
+                    self.assertGreaterEqual(pt_seg_dist(v[0], v[1], *s[1:5]) - half - v[2] / 2, clearance - 1e-6)
+            for e in b.edge_segs:
+                self.assertGreaterEqual(seg_seg_dist(s[1:5], e) - half, edge - 1e-6)
+
+    def test_sample_fixture_is_routed_and_clean(self):
+        d = self.design()
+        plan = build_testplan(d, [])
+        fx = build_fixture(d, plan)
+        st = fx["routing"]
+        self.assertEqual(st["unrouted_connections"], 0, st)
+        self.assertGreater(st["connections"], 10)
+        self.assertFalse([w for w in fx["warnings"] if "router" in w])
+        b = self._board(fx)
+        self._check(b)
+        self.assertTrue(any(t.width >= 0.5 for t in b.tracks if t.net == "GND"))      # power width where it fits
+        # each divider pair sits above its own header pin, so the channel nets run straight down
+        hdr = next(f for f in b.footprints if f.lib_id.startswith("Connector_PinHeader"))
+        for p in hdr.pads:
+            if p.net.startswith("CH"):
+                rs = [q for q in b.all_pads() if q.net == p.net and q.ref.startswith("R")]
+                for q in rs:
+                    self.assertLess(abs(q.x - p.x), 1.3 + 1e-6)
+                    self.assertLess(q.y, p.y)
+
+    def test_routing_is_deterministic_and_optional(self):
+        d = self.design()
+        plan = build_testplan(d, [])
+        self.assertEqual(build_fixture(d, plan)["kicad_pcb"], build_fixture(d, plan)["kicad_pcb"])
+        off = self.design(fixture={"route": False})
+        fx = build_fixture(off, build_testplan(off, []))
+        self.assertIsNone(fx["routing"])
+        self.assertNotIn("(segment", fx["kicad_pcb"])
+
+    def test_panel_and_two_plates_are_routed(self):
+        d = self.design(fixture={"panel": {"cols": 2, "rows": 2}})
+        fx = build_fixture(d, build_testplan(d, []))
+        self.assertEqual(fx["routing"]["unrouted_connections"], 0)
+        self._check(self._board(fx, "panel"))
+        d2 = self.design(testplan={"probe_side": "both"})
+        fx2 = build_fixture(d2, build_testplan(d2, []))
+        self.assertEqual(set(fx2["routing"]["plates"]), set(fx2["plates"]))
+        self.assertEqual(fx2["routing"]["unrouted_connections"], 0)
+        for side, f in fx2["plates"].items():
+            self._check(self._board(f, "plate_" + side))
+
+    def test_unroutable_connections_are_reported_not_forced(self):
+        # a clearance so large that most connections cannot be made: the router reports them and never writes a
+        # track that breaks the rule
+        d = self.design(fixture={"clearance_mm": 2.0, "power_track_mm": 0.25})
+        fx = build_fixture(d, build_testplan(d, []))
+        st = fx["routing"]
+        self.assertGreater(st["unrouted_connections"], 0)
+        self.assertTrue(any("router left" in w for w in fx["warnings"]))
+        b = self._board(fx, "tight")
+        if b.tracks:
+            self._check_clearance_only(b, 2.0)
+
+    def _check_clearance_only(self, b, clearance):
+        from pcbtestkit.geometry import seg_seg_dist
+        from pcbtestkit.router import pad_shape, seg_dist
+        lay = {"F.Cu": "top", "B.Cu": "bottom"}
+        for t in b.tracks:
+            for p in b.all_pads():
+                if p.net and p.net != t.net and p.has_copper and p.on_copper(lay[t.layer]):
+                    self.assertGreaterEqual(seg_dist(pad_shape(p), t.x1, t.y1, t.x2, t.y2) - t.width / 2, clearance - 1e-6)
+            for u in b.tracks:
+                if u.net != t.net and u.layer == t.layer:
+                    self.assertGreaterEqual(seg_seg_dist((t.x1, t.y1, t.x2, t.y2), (u.x1, u.y1, u.x2, u.y2)) - (t.width + u.width) / 2,
+                                            clearance - 1e-6)
+
+    def test_cli_no_route(self):
+        out = os.path.join(self.tmp, "noroute")
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "run", self.pcb, "--out", out, "-q", "--no-visuals",
+                            "--no-jig", "--no-route"], cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr[-2000:])
+        with open(os.path.join(out, "sample_sensor-fixture.kicad_pcb")) as fh:
+            self.assertNotIn("(segment", fh.read())

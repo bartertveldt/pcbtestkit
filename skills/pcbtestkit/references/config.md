@@ -115,6 +115,16 @@ How the tester powers the board: net, voltage, current limit and the expected id
 }
 ```
 
+## `stack`
+
+
+
+```json
+{
+  "stack": []
+}
+```
+
 ## `testplan`
 
 Probe side, pogo family and mounting, signal policy, channel budget, ADC range, timing.
@@ -141,6 +151,7 @@ Probe side, pogo family and mounting, signal policy, channel budget, ADC range, 
     "adc_max_v": 3.3,
     "max_signal_voltage": null,
     "probe_clearance_mm": 6.0,
+    "stack_clearance_mm": 1.0,
     "short_test_min_ohm": 100.0,
     "settle_ms": 500,
     "fine_pitch_exclude_mm": 0.8,
@@ -152,7 +163,7 @@ Probe side, pogo family and mounting, signal policy, channel budget, ADC range, 
 
 ## `fixture`
 
-Fixture PCB outline, margins, N x M panel, mounting holes, dividers.
+Fixture PCB outline, margins, N x M panel, mounting holes, dividers, routing (tracks, vias, clearance).
 
 ```json
 {
@@ -171,7 +182,13 @@ Fixture PCB outline, margins, N x M panel, mounting holes, dividers.
     "divider_r_bottom_rail": 10000.0,
     "divider_r_bottom_signal": 100000.0,
     "draw_dut_components": true,
-    "cut_tall_components": true
+    "cut_tall_components": true,
+    "route": true,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5,
+    "clearance_mm": 0.2,
+    "via_mm": 0.6,
+    "via_drill_mm": 0.3
   }
 }
 ```
@@ -206,7 +223,12 @@ Solder-jig parts (auto = all THT), pocket clearances and depths, part heights by
     "stop_length_mm": 8.0,
     "stop_width_mm": 2.5,
     "stop_clearance_mm": 0.15,
-    "bottom_part_clearance_mm": 0.8
+    "bottom_part_clearance_mm": 0.8,
+    "sides": "auto",
+    "smt_first": "auto",
+    "paste_nest": "auto",
+    "lead_relief_mm": 2.5,
+    "nest_border_mm": 15.0
   }
 }
 ```

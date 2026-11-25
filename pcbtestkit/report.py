@@ -67,6 +67,17 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 """
 
 
+def routing_note(st: Optional[Dict[str, Any]]) -> str:
+    """One sentence on the fixture board's routing, for the report and the guide."""
+    if not st:
+        return "Route the ratsnest in KiCad before ordering."
+    if not st.get("unrouted_connections"):
+        return ("Routed by PCB TestKit (%d connections, %d vias, KiCad's default rules): open it in KiCad, run DRC "
+                "and order it." % (st["connections"], st["vias"]))
+    return ("The router left %d of %d connection(s) unrouted (%s): route them in KiCad, run DRC and order it."
+            % (st["unrouted_connections"], st["connections"], ", ".join(st["unrouted_nets"][:6])))
+
+
 def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, Any]], jig: Optional[Dict[str, Any]],
                  fixture: Optional[Dict[str, Any]], outputs: Dict[str, str]) -> str:
     s = spec["summary"]
@@ -112,13 +123,21 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
         h.append("<h2>Test scheme</h2><div class='muted small'>Probe side: <b>%s</b> &middot; pogo %s (%s), drill %.2f mm, min pitch %.2f mm &middot; supply: %s</div>" %
                  (_e(plan["probe_side"]), _e(plan["pogo"]["family"]), _e(plan["pogo"]["mount"]), plan["pogo"]["drill_mm"],
                   plan["pogo"]["pitch_mm"], _e("%s @ %s V" % (plan["supply"].get("net"), plan["supply"].get("voltage")))))
-        h.append("<div class='wrap'><table><tr><th>Probe</th><th>Net</th><th>Role</th><th>Location (mm)</th><th>Target</th><th>Channel / header pin</th><th>Divider</th><th>Expected</th></tr>")
+        for st in plan.get("stack") or []:
+            if st.get("valid"):
+                h.append("<div class='muted small'>Stacked board <b>%s</b> (%s, %s side, %.0f mm, outline %s): %s.</div>" % (
+                    _e(st["name"]), _e(", ".join(st["refs"]) or "-"), _e(st["side"]), st["height_mm"], _e(st["outline_source"]),
+                    "fitted during the test - no probes under it" if st["fitted_at_test"] else "fitted after the test"))
+        both = plan["probe_side"] == "both"
+        h.append("<div class='wrap'><table><tr><th>Probe</th>%s<th>Net</th><th>Role</th><th>Location (mm)</th><th>Target</th><th>Channel / header pin</th><th>Divider</th><th>Expected</th></tr>"
+                 % ("<th>Side</th>" if both else ""))
         for p in plan["probes"]:
             e = p.get("expected") or {}
             exp = ("%s .. %s V" % (e.get("min_v"), e.get("max_v"))) if e.get("min_v") is not None else ("learn" if p.get("channel") else "")
             div = p.get("divider")
-            h.append("<tr><td>%s</td><td>%s</td><td>%s</td><td>%.2f, %.2f</td><td>%s (%s)</td><td>%s</td><td>%s</td><td>%s</td></tr>" %
-                     (_e(p["id"]), _e(p["net"]), _e(p["role"]), p["x"], p["y"], _e(p["label"]), _e(p["source"]),
+            h.append("<tr><td>%s</td>%s<td>%s</td><td>%s</td><td>%.2f, %.2f</td><td>%s (%s)</td><td>%s</td><td>%s</td><td>%s</td></tr>" %
+                     (_e(p["id"]), ("<td>%s</td>" % _e(p.get("side", ""))) if both else "", _e(p["net"]), _e(p["role"]), p["x"], p["y"],
+                      _e(p["label"]), _e(p["source"]),
                       _e("%s / %s" % (p.get("channel"), p.get("header_pin")) if p.get("channel") else "-"),
                       _e("%g / %g (x%.3f)" % (div["r_top_ohm"], div["r_bottom_ohm"], div["ratio"]) if div else "-"), _e(exp)))
         h.append("</table></div>")
@@ -132,9 +151,18 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
             h.append("<details><summary>%d net(s) without probe access</summary><ul>%s</ul></details>" % (
                 len(plan["coverage"]["untestable"]),
                 "".join("<li><code>%s</code> - %s</li>" % (_e(u["net"]), _e(u["reason"])) for u in plan["coverage"]["untestable"])))
-    if fixture:
-        h.append("<h2>Fixture board</h2><div class='muted small'>%d pogo pin(s), %d site(s), outline %s. Route the ratsnest in KiCad (or run Freerouting) before ordering.</div>" %
-                 (fixture["pogo_count"], len(fixture["sites"]), _e(fixture.get("outline_mode"))))
+    if fixture and fixture.get("plates"):
+        h.append("<h2>Fixture boards</h2><div class='muted small'>Two plates (probes from both sides): %s. %s</div>" % (
+            _e(", ".join("%s %d pogo pin(s)" % (sd, r_["pogo_count"]) for sd, r_ in fixture["plates"].items())),
+            _e(routing_note(fixture.get("routing")))))
+        for w in fixture.get("warnings", []):
+            h.append("<div class='small' style='color:%s'>&#9888; %s</div>" % (SEV_COLOR["major"], _e(w)))
+        if fixture.get("drc"):
+            h.append("<div class='small muted'>KiCad DRC on the fixture: %s</div>" % _e(fixture["drc"]))
+    elif fixture:
+        h.append("<h2>Fixture board</h2><div class='muted small'>%d pogo pin(s), %d site(s), outline %s. %s</div>" %
+                 (fixture["pogo_count"], len(fixture["sites"]), _e(fixture.get("outline_mode")),
+                  _e(routing_note(fixture.get("routing")))))
         for w in fixture.get("warnings", []):
             h.append("<div class='small' style='color:%s'>&#9888; %s</div>" % (SEV_COLOR["major"], _e(w)))
         if fixture.get("drc"):
@@ -176,6 +204,22 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
                 with open(pj["preview_png"], "rb") as fh:
                     h.append("<p><img class='jig' alt='Placement jig top view' src='data:image/png;base64,%s'></p>" %
                              base64.b64encode(fh.read()).decode())
+    if jig and len(jig.get("passes") or []) > 1:
+        from .jig import jig_of
+        h.append("<h3>Build order</h3><ol>")
+        for p in jig["passes"]:
+            ej = jig_of(jig, p.get("jig"))
+            what = ("SMD %s side (%d parts)" % (p["side"], p["parts"]) if p["process"] == "smt" else
+                    "hand-solder %s side: %s" % (p["side"], ", ".join(p["parts"])))
+            if ej is not None and ej is not jig:
+                what += " - %s %s x %s x %s mm%s" % ("paste-print nest" if ej.get("kind") == "paste_nest" else "holding jig",
+                                                     ej["jig_size_mm"][0], ej["jig_size_mm"][1], ej["jig_size_mm"][2],
+                                                     (", placement jig %s x %s x %s mm" % tuple(ej["placement"]["jig_size_mm"]))
+                                                     if ej.get("placement") else "")
+            elif ej is jig:
+                what += " - the jig above"
+            h.append("<li>%s</li>" % _e(what))
+        h.append("</ol>")
     h.append("<h2>Files</h2><ul>")
     for k, v in outputs.items():
         h.append("<li>%s: <code>%s</code></li>" % (_e(k), _e(os.path.basename(v))))

@@ -149,6 +149,12 @@ class Footprint:
         return "bottom" if self.layer.startswith("B.") else "top"
 
     @property
+    def local_flipped(self) -> bool:
+        """True when the file stores this footprint's local geometry mirrored: KiCad does that for B.* parts
+        (pads, graphics and, when rendering, the 3D model are turned 180 degrees about the X axis)."""
+        return self.layer.startswith("B.")
+
+    @property
     def prefix(self) -> str:
         p = ""
         for ch in self.ref:
@@ -708,8 +714,9 @@ def load_project_rules(pro_path: str) -> Tuple[Dict[str, float], List[Dict[str, 
     return rules, classes
 
 
-def load_board(path: str, pro_path: Optional[str] = None) -> Board:
-    root = S.load(path)
+def load_board(path: str, pro_path: Optional[str] = None, text: Optional[str] = None) -> Board:
+    """Parse a .kicad_pcb file, or ``text`` (the file's content; ``path`` then only names it)."""
+    root = S.parse(text) if text is not None else S.load(path)
     if not S.is_node(root, "kicad_pcb"):
         raise ValueError("%s is not a KiCad board file" % path)
     b = Board(path=os.path.abspath(path))

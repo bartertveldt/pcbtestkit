@@ -53,7 +53,7 @@ def chip(lib, size, ref, value, x, y, n1, n2, angle=0, side="F", props=None, pin
                        extra_props=props, models=[M3D + "%s.3dshapes/%s.wrl" % (libname, name)])
 
 
-def build_board():
+def build_board(variant=None):
     items = []
     # ---- outline 60 x 45 mm with 3 mm corner radius --------------------------------
     x0, y0, x1, y1, r = 100.0, 80.0, 160.0, 125.0, 3.0
@@ -186,6 +186,9 @@ def build_board():
                                  layer="B.Cu", attr=("exclude_from_pos_files", "exclude_from_bom")))
     items.append(chip("C", "0402", "C9", "100nF", 140, 104, "+3V3", "GND", side="B"))
 
+    if variant == "stacked":
+        items += stacked_extras()
+
     # ---- tracks ----------------------------------------------------------------------------------
     n = {k: v[0] for k, v in NET.items()}
     items += [W.segment(110, 89, 122, 88, 1.0, "F.Cu", n["VIN_12V"]),
@@ -207,6 +210,28 @@ def build_board():
     items.append(W.zone(n["GND"], "GND", "B.Cu", [(100.5, 80.5), (159.5, 80.5), (159.5, 124.5), (100.5, 124.5)], connect="yes"))
     items.append(W.zone(n["GND"], "GND", "F.Cu", [(129, 102), (134, 102), (134, 105), (129, 105)], connect="yes"))
     return W.board(NETS, items, thickness=1.6, title="Sensor Node", company="Example Co", date="2026-11-19")
+
+
+def stacked_extras():
+    """Test variant: a daughter board plugs into pin socket J6 (over the MCU area) and a power header J7 sits on
+    the bottom side (through-hole, soldered from the top), so stacked-board probing and two-sided jigs apply."""
+    out = []
+    sock = [courtyard(-1.8, -1.8, 1.8, 9.4), fab(-1.27, -1.27, 1.27, 8.89)]
+    for i, net in enumerate(["+3V3", "/SDA", "/SCL", "GND"], 1):
+        sock.append(W.pad(str(i), "thru_hole", "rect" if i == 1 else "oval", 0, 2.54 * (i - 1), 1.7, 1.7, THT, drill=1.0,
+                          net=NET[net], pinfunction="Pin_%d" % i, pintype="passive"))
+    out.append(W.footprint("Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical", 144, 103, "J6", "DISPLAY", sock,
+                           attr=("through_hole",),
+                           models=[M3D + "Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x04_P2.54mm_Vertical.wrl"]))
+    # bottom side: KiCad stores a flipped footprint's local geometry mirrored (local y changes sign)
+    hdr = [courtyard(-1.8, -4.35, 1.8, 1.8, side="B"), fab(-1.27, -3.81, 1.27, 1.27, side="B")]
+    for i, net in enumerate(["+5V", "GND"], 1):
+        hdr.append(W.pad(str(i), "thru_hole", "rect" if i == 1 else "oval", 0, -2.54 * (i - 1), 1.7, 1.7, THT, drill=1.0,
+                         net=NET[net], pinfunction="Pin_%d" % i, pintype="passive"))
+    out.append(W.footprint("Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical", 153, 113, "J7", "5V AUX", hdr,
+                           layer="B.Cu", attr=("through_hole",),
+                           models=[M3D + "Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.wrl"]))
+    return out
 
 
 # =========================================================================== #
@@ -340,10 +365,10 @@ def build_project():
                                           "via_drill": 0.3}]}}
 
 
-def main(out=OUT):
+def main(out=OUT, variant=None):
     os.makedirs(out, exist_ok=True)
     with open(os.path.join(out, NAME + ".kicad_pcb"), "w") as fh:
-        fh.write(build_board())
+        fh.write(build_board(variant))
     root, sub = build_schematics()
     with open(os.path.join(out, NAME + ".kicad_sch"), "w") as fh:
         fh.write(root)

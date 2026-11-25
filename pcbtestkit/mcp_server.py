@@ -7,7 +7,7 @@ drive PCB TestKit with its own model:
     python3 -m pcbtestkit mcp ...            (when the repo/plugin folder is on PYTHONPATH)
 
 What it offers:
-  tools      the agent API (pcbtestkit.agent): 31 tools, or 16 with --profile core (about half the tokens)
+  tools      the agent API (pcbtestkit.agent): 32 tools, or 16 with --profile core (about half the tokens)
   resources  agent guide, CLI quick reference, config defaults, class-system list/catalog/definitions,
              the open project's overview
   prompts    ready-made workflows with arguments (plan the test, review weak points, pick a fab class,

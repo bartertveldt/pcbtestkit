@@ -2,6 +2,53 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 
+## 1.1.0 (unreleased)
+
+### Routed fixture boards
+- The fixture board comes out routed: a built-in two-layer router (standard library only, the same tracks on every
+  run) with 45-degree tracks, vias, wider GND/VIN tracks and KiCad's default rules. Every track and via is checked
+  with exact geometry before it is written; a connection it cannot make is listed in the warnings, the report and
+  the guide and stays as ratsnest. KiCad 10's DRC finds no violations or unconnected items on the sample,
+  pic_programmer and video fixtures, panels and two-plate fixtures.
+- Divider pairs now sit above their own header pin (staggered over a few rows) with the probe on top and GND at the
+  bottom, so channel nets run straight down to the header.
+- Options `fixture.route`, `track_mm`, `power_track_mm`, `clearance_mm`, `via_mm`, `via_drill_mm` (dialog: *Route the
+  fixture board*; CLI: `run --no-route`; tool: `set_fixture_options`). Routing stats are in `<board>-fixture.json`.
+
+### Stacked boards
+- Boards stacked on the board under test (daughter board, shield, display on headers or board-to-board
+  connectors) are declared in `stack`, the new *Stacked boards* dialog tab or the `set_stacked_boards` tool:
+  parts, outline, height, fitted during the test or after it. Missing outline/height are estimated and flagged.
+- Fitted during the test: no probes under it, a window in the fixture plate when it is taller than the probe
+  clearance, a visual check that it is seated, and `TEST-STACK-ACCESS` for nets it hides. Fitted after the test:
+  the board is tested bare and the guide says when to fit it.
+- Pin sockets, board-to-board/mezzanine connectors and board footprints (Arduino shield, Raspberry Pi HAT, ...)
+  are offered as candidates in the open decisions and the dialog.
+
+### Probing both sides
+- `testplan.probe_side: "both"`: a two-plate (clamshell) fixture; each net is probed on the side with the best
+  target, each plate is its own `.kicad_pcb` with its own header and probes CSV, channel numbers are shared.
+  `auto` suggests it when rails can only be reached from the other side.
+
+### Solder jigs for both sides
+- Assembly passes: SMD side 1, SMD side 2, then one hand-solder pass per side. Hand-soldered parts on the bottom
+  get their own placement and holding jig (`-jig-bottom*.stl`), made from the board turned over; a later pass has
+  pockets for every part already fitted and reliefs for the soldered leads of the earlier one.
+- Paste-print nest for the second SMD side (`-paste-nest-<side>.stl`): pockets for the first side's parts and a
+  frame flush with the board for the stencil.
+- New jig options `sides`, `smt_first`, `paste_nest`, `lead_relief_mm`, `nest_border_mm`; the dialog's jig tab
+  lists parts on both sides. Bottom-side 3D model bodies are now mirrored like KiCad does.
+
+### Guide renders
+- The two-jig workflow in the guide has a KiCad render under each step: both jigs printed, the PCB top side up in
+  the placement jig with the parts above their holes, the holding jig coming down, the stack turned over with the
+  placement jig lifted off, and soldering from above. They come from the same scenes as the explainer video. The
+  single-jig pictures (parts in pockets, PCB lowered onto them) are only shown for `jig.workflow: "single"`.
+- "Board above the fixture" is rendered from a lower camera with the board higher up, so the pogo pins show under
+  their test points instead of hiding behind the board.
+- Jig render meshes have every wall facing outwards: a jig shown turned over (holding jig on top, the stack after
+  turning, the placement jig lifted off) no longer renders with black walls, in the guide and in the video.
+
 ## 1.0.0 (2026-11-24)
 
 First public release.

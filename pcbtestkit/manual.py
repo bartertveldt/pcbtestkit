@@ -1,7 +1,7 @@
-"""Decisions without AI: the data behind the KiCad dialog's Rails and Weak points tabs.
+"""Decisions without AI: the data behind the KiCad dialog's Rails, Stacked boards and Weak points tabs.
 
 Everything an AI model can decide through the tools can also be decided here, by hand: rail voltages and
-tolerances, which rails are tested, and which weak points are accepted. The dialog shows these rows and
+tolerances, which rails are tested, boards stacked on this one, and which weak points are accepted. The dialog shows these rows and
 writes the user's edits back to pcbtestkit.json with the functions below (no wx here, so it is testable).
 """
 from __future__ import annotations
@@ -111,3 +111,74 @@ def apply_waivers(user: Dict[str, Any], rows: List[Dict[str, Any]], checked: Lis
             why = (r.get("reason") if r.get("waived") and r.get("reason") else (reason or "").strip()) or "accepted by the designer"
             keep.append({"id": r["id"], "refs": r["refs"], "reason": why[:300], "by": "dialog", "date": today})
     a["waivers"] = keep
+
+
+STACK_COLS = ("use", "name", "refs", "side", "outline", "height_mm", "fitted_at_test", "note")
+
+
+def stack_rows(design: Design) -> List[Dict[str, Any]]:
+    """The stacked boards in the config (ticked), then parts that may carry one (not ticked) with the reason."""
+    from .stack import candidates, resolve
+    fmt = lambda v: "" if v is None else ("%g" % v)
+    rows = []
+    resolved = {st["name"]: st for st in resolve(design)}
+    for i, e in enumerate(design.cfg.get("stack") or []):
+        if not isinstance(e, dict):
+            continue
+        r = resolved.get(str(e.get("name") or "stack%d" % (i + 1))) or {}
+        o = e.get("outline")
+        note = "; ".join(x for x in (r.get("outline_source", "") if str(r.get("outline_source", "")).startswith("estimate") else "",
+                                     r.get("height_source", "") if str(r.get("height_source", "")).startswith("estimate") else "")
+                         if x)
+        rows.append({"use": True, "name": str(e.get("name") or ""), "refs": ", ".join(e.get("refs") or []),
+                     "side": e.get("side") or r.get("side") or "",
+                     "outline": ", ".join(fmt(v) for v in o) if isinstance(o, list) else "",
+                     "height_mm": fmt(e.get("height_mm")), "fitted_at_test": e.get("fitted_at_test", True) is not False,
+                     "note": note})
+    for c in candidates(design):
+        rows.append({"use": False, "name": "", "refs": c["ref"], "side": c["side"], "outline": "", "height_mm": "",
+                     "fitted_at_test": True, "note": "%s; part outline %s, %g mm high" % (
+                         c["why"], ", ".join("%g" % v for v in c["outline"]), c["height_mm"])})
+    return rows
+
+
+def apply_stack_edits(user: Dict[str, Any], rows: List[Dict[str, Any]], refs_known) -> List[str]:
+    """Write the ticked rows to ``user['stack']`` (replacing it). Empty outline/height = estimated from the parts.
+    Returns problems (bad numbers, unknown parts) to show the user; nothing is written when there are any."""
+    from .stack import validate_entry
+    problems: List[str] = []
+    out, names = [], set()
+    for i, r in enumerate(rows):
+        if not r.get("use"):
+            continue
+        refs = [x for x in str(r.get("refs") or "").replace(";", ",").replace(" ", ",").split(",") if x]
+        name = str(r.get("name") or "").strip() or (refs[0] + "-board" if refs else "stack%d" % (i + 1))
+        e: Dict[str, Any] = {"name": name, "refs": refs}
+        side = str(r.get("side") or "").strip().lower()
+        if side:
+            e["side"] = side
+        try:
+            txt = str(r.get("outline") or "").replace(";", ",").strip()
+            if txt:
+                e["outline"] = [float(v.strip().replace(" ", "")) for v in txt.split(",") if v.strip()]
+                if len(e["outline"]) != 4:
+                    raise ValueError
+            h = _num(r.get("height_mm"))
+            if h is not None:
+                e["height_mm"] = h
+        except ValueError:
+            problems.append("%s: outline must be four numbers x0, y0, x1, y1 (mm) and height a number" % name)
+            continue
+        e["fitted_at_test"] = bool(r.get("fitted_at_test", True))
+        if name in names:
+            problems.append("two stacked boards are called %s" % name)
+            continue
+        names.add(name)
+        bad = validate_entry(e, refs_known)
+        if bad:
+            problems.append(bad)
+            continue
+        out.append(e)
+    if not problems:
+        user["stack"] = out
+    return problems

@@ -348,7 +348,9 @@ def t_overview(ws: Workspace):
             "layers": len(b.copper_layers), "thickness_mm": b.thickness,
             "parts": {"total": len(comps), "smd_top": sum(1 for f in comps if f.is_smd and f.side == "top"),
                       "smd_bottom": sum(1 for f in comps if f.is_smd and f.side == "bottom"),
-                      "tht": sum(1 for f in comps if f.is_tht)},
+                      "tht": sum(1 for f in comps if f.is_tht),
+                      "tht_bottom": sum(1 for f in comps if f.is_tht and f.side == "bottom")},
+            "stacked_boards": [st["name"] for st in plan.get("stack") or []],
             "nets": len(b.net_names()), "ground": d.nets_of_kind("ground"), "rails": rails,
             "supply": {k: plan["supply"].get(k) for k in ("net", "voltage", "reason")},
             "readiness": summarize(findings), "coverage_pct": plan["coverage"]["percent"],
@@ -474,6 +476,32 @@ def _decisions(ws: Workspace) -> List[Dict[str, Any]]:
             "missing/reversed parts. Needs a current sensor on the tester; skip if none.", [], "set_supply",
             {"net": sup.get("net"), "max_idle_current_a": 0.05, "min_idle_current_a": 0.002,
              "rationale": "MCU idle + LDO quiescent current"})
+    from .stack import candidates as stack_candidates
+    if not d.cfg.get("stack"):
+        cands = stack_candidates(d)
+        if cands:
+            strong = [c for c in cands if not c["why"].startswith("pin socket")]
+            c0 = (strong or cands)[0]
+            add("stacked_boards", "medium" if strong else "low",
+                "Is a board stacked on any of these parts (daughter board, shield, display)? If so, give its outline, "
+                "height above this board and whether it is fitted during the test: probes then stay clear of it and the "
+                "fixture gets a window. Answer with an empty list if not.", cands, "set_stacked_boards",
+                {"boards": [{"name": "daughter", "refs": [c0["ref"]], "outline": c0["outline"],
+                             "height_mm": round(c0["height_mm"] + 4.6, 1), "fitted_at_test": True}],
+                 "rationale": "display board plugs into %s" % c0["ref"]})
+    est = [st for st in plan.get("stack") or [] if st.get("valid") and
+           (str(st.get("outline_source", "")).startswith("estimate") or str(st.get("height_source", "")).startswith("estimate"))]
+    if est:
+        add("confirm_stack", "medium", "Outline and height of these stacked boards are estimates. Give the real outline "
+            "(board mm, KiCad coordinates) and height of the top of the stack above this board.",
+            est, "set_stacked_boards", {"boards": [{"name": st["name"], "refs": st["refs"], "outline": st["outline"],
+                                                    "height_mm": st["height_mm"], "fitted_at_test": st["fitted_at_test"]}
+                                                   for st in est]})
+    hint = (plan.get("probe_side_hint") or {}).get("both_sides_reach")
+    if hint:
+        add("probe_both_sides", "medium", "These power nets can only be reached from the other side. Probe from both "
+            "sides (two fixture plates, the board between them) or add test pads?",
+            [{"net": n} for n in hint], "set_test_options", {"probe_side": "both", "rationale": "rails only reachable on the other side"})
     ev = plan.get("probe_side_eval") or {}
     if ev:
         other = "top" if plan["probe_side"] == "bottom" else "bottom"
@@ -492,7 +520,7 @@ def _decisions(ws: Workspace) -> List[Dict[str, Any]]:
             [u for u in plan["coverage"]["untestable"] if "channel limit" in u["reason"]][:20], "set_test_options",
             {"max_channels": d.cfg["testplan"]["max_channels"] + 16})
     from .jig import select_parts
-    sel, _ = select_parts(d)
+    sel = select_parts(d, "top")[0] + select_parts(d, "bottom")[0]
     weak_h = []
     confirmed = set(((d.cfg.get("jig") or {}).get("heights") or {}).keys())
     for fp in sel:
@@ -500,7 +528,7 @@ def _decisions(ws: Workspace) -> List[Dict[str, Any]]:
             continue
         h, src = d.height_of(fp)
         weak_h.append({"ref": fp.ref, "value": fp.value, "mpn": C.mpn_of(fp) or None, "footprint": fp.name,
-                       "height_mm": round(h, 2), "source": src})
+                       "side": fp.side, "height_mm": round(h, 2), "source": src})
     if weak_h:
         add("part_heights", "medium", "Confirm the body height above the PCB (mm) of each hand-placed part: the jig "
             "pocket depth equals it. Library 3D models are often generic (e.g. all radial caps as tall as wide) - use "
@@ -685,8 +713,8 @@ def t_get_finding(ws: Workspace, uid: str, max_items: int = 10):
 def t_get_testplan(ws: Workspace, section: str = "summary"):
     plan = ws.plan()
     if section == "probes":
-        return {"columns": ["id", "net", "role", "x", "y", "label", "channel", "header_pin", "divider_ratio", "min_v", "max_v"],
-                "rows": [[p["id"], p["net"], p["role"], p["x"], p["y"], p["label"], p.get("channel"), p.get("header_pin"),
+        return {"columns": ["id", "net", "role", "side", "x", "y", "label", "channel", "header_pin", "divider_ratio", "min_v", "max_v"],
+                "rows": [[p["id"], p["net"], p["role"], p.get("side"), p["x"], p["y"], p["label"], p.get("channel"), p.get("header_pin"),
                           (p.get("divider") or {}).get("ratio"), (p.get("expected") or {}).get("min_v"),
                           (p.get("expected") or {}).get("max_v")] for p in plan["probes"]]}
     if section == "sequence":
@@ -694,8 +722,9 @@ def t_get_testplan(ws: Workspace, section: str = "summary"):
     if section == "coverage":
         return {"coverage": plan["coverage"]}
     if section == "header":
-        return {"header": plan["header"]}
-    return {"probe_side": plan["probe_side"], "pogo": plan["pogo"], "supply": plan["supply"], "probes": len(plan["probes"]),
+        return {"header": plan["header"], "headers": plan.get("headers")} if plan.get("headers") else {"header": plan["header"]}
+    return {"probe_side": plan["probe_side"], "plates": plan.get("plates"), "pogo": plan["pogo"], "supply": plan["supply"],
+            "probes": len(plan["probes"]), "stacked_boards": plan.get("stack") or [],
             "channels": sum(1 for p in plan["probes"] if p.get("channel")),
             "steps": [[s["id"], s["name"], s["type"], len(s.get("checks", []) or s.get("items", []) or [])] for s in plan["sequence"]],
             "coverage_pct": plan["coverage"]["percent"], "untestable": len(plan["coverage"]["untestable"]),
@@ -716,9 +745,10 @@ def t_get_config(ws: Workspace, scope: str = "overrides", section: Optional[str]
 
 
 @tool("get_schema", "JSON schema/allowed values for: test_step | net_spec | testplan_options | jig_options | fixture_options | "
-      "profiles | tech_classes (the ordered class system) | class_system (format, metric names and a template for add_class_system).",
+      "stacked_boards | profiles | tech_classes (the ordered class system) | class_system (format, metric names, template).",
       {"properties": {"name": {"type": "string", "enum": ["test_step", "net_spec", "testplan_options", "jig_options",
-                                                          "fixture_options", "profiles", "tech_classes", "class_system"]}}, "required": ["name"]})
+                                                          "fixture_options", "stacked_boards", "profiles", "tech_classes",
+                                                          "class_system"]}}, "required": ["name"]})
 def t_schema(ws: Workspace, name: str):
     if name == "profiles":
         return {"fab_profiles": FAB_PROFILES, "pogo_profiles": POGO_PROFILES}
@@ -733,7 +763,7 @@ def t_schema(ws: Workspace, name: str):
                             for k, v in METRICS.items()},
                 "aliases": ALIASES, "context_keys": CONTEXT_KEYS, "streams": STREAMS}
     m = {"test_step": STEP_SCHEMA, "net_spec": NET_UPDATE_SCHEMA, "testplan_options": TESTPLAN_OPTS,
-         "jig_options": JIG_OPTS, "fixture_options": FIXTURE_OPTS}
+         "jig_options": JIG_OPTS, "fixture_options": FIXTURE_OPTS, "stacked_boards": STACK_SCHEMA}
     return {"schema": m[name]}
 
 
@@ -858,7 +888,9 @@ def t_set_supply(ws: Workspace, net: Optional[str] = None, voltage=None, current
 
 
 TESTPLAN_OPTS = {
-    "probe_side": {"type": "string", "enum": ["auto", "bottom", "top"]},
+    "probe_side": {"type": "string", "enum": ["auto", "bottom", "top", "both"],
+                   "description": "both = two fixture plates, the board between them (nets covered on one side are probed "
+                                  "from the other)."},
     "pogo": {"type": "string", "enum": sorted(POGO_PROFILES)},
     "pogo_mount": {"type": "string", "enum": ["receptacle", "direct"]},
     "pogo_drill_mm": {"type": "number", "description": "Override the fixture drill for the pogo pins/receptacles."},
@@ -870,6 +902,7 @@ TESTPLAN_OPTS = {
     "supply_points": {"type": "integer"}, "default_tolerance_pct": {"type": "number"},
     "signal_tolerance_v": {"type": "number"}, "adc_max_v": {"type": "number"}, "max_signal_voltage": {"type": "number"},
     "probe_clearance_mm": {"type": "number"}, "short_test_min_ohm": {"type": "number"}, "settle_ms": {"type": "integer"},
+    "stack_clearance_mm": {"type": "number", "description": "Probes stay this far outside a fitted stacked board."},
 }
 _RANGES = {"pogo_drill_mm": (0.4, 3.0), "max_channels": (1, 512), "edge_keepout_mm": (0, 20), "min_target_mm": (0.3, 5), "gnd_points": (1, 8),
            "supply_points": (1, 8), "default_tolerance_pct": (0.1, 50), "signal_tolerance_v": (0.01, 5),
@@ -880,8 +913,11 @@ _RANGES = {"pogo_drill_mm": (0.4, 3.0), "max_channels": (1, 512), "edge_keepout_
            "rim_height_mm": (0, 10), "edge_clearance_mm": (0, 2), "post_clearance_mm": (0, 1),
            "placement_clearance_mm": (2, 40), "placement_border_mm": (3, 30), "lead_well_margin_mm": (0, 5),
            "stop_length_mm": (3, 30), "stop_width_mm": (1, 10), "stop_clearance_mm": (0, 1),
-           "bottom_part_clearance_mm": (0, 5),
-           "divider_r_bottom_rail": (100, 1e6), "divider_r_bottom_signal": (1e3, 1e7)}
+           "bottom_part_clearance_mm": (0, 5), "stack_clearance_mm": (0, 10), "lead_relief_mm": (0, 10),
+           "nest_border_mm": (5, 50),
+           "divider_r_bottom_rail": (100, 1e6), "divider_r_bottom_signal": (1e3, 1e7),
+           "track_mm": (0.1, 2.0), "power_track_mm": (0.1, 5.0), "clearance_mm": (0.1, 2.0), "via_mm": (0.3, 2.0),
+           "via_drill_mm": (0.15, 1.2)}
 
 
 def _set_section(ws: Workspace, section: str, opts: Dict[str, Any], schema: Dict[str, Any], rationale, dry_run, confirm):
@@ -952,6 +988,14 @@ JIG_OPTS = {
     "placement_border_mm": {"type": "number"}, "lead_well_margin_mm": {"type": "number"},
     "stop_length_mm": {"type": "number"}, "stop_width_mm": {"type": "number"}, "stop_clearance_mm": {"type": "number"},
     "bottom_part_clearance_mm": {"type": "number"},
+    "sides": {"type": ["array", "string"], "items": {"type": "string", "enum": ["top", "bottom"]},
+              "description": "Hand-solder passes, in order: 'auto' (every side with hand-soldered parts, top first) or e.g. "
+                             "['bottom', 'top']. Each side gets its own jig set."},
+    "smt_first": {"type": "string", "enum": ["auto", "top", "bottom"], "description": "SMD side reflowed first."},
+    "paste_nest": {"type": "string", "enum": ["auto", "both", "none"],
+                   "description": "Paste-print nest: auto = for the second SMD side (rests on the first side's parts)."},
+    "lead_relief_mm": {"type": "number", "description": "Relief depth for the soldered leads of the other side's parts."},
+    "nest_border_mm": {"type": "number"},
 }
 
 
@@ -966,6 +1010,12 @@ def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False,
         opts["parts"] = [ws.resolve_ref(r).ref for r in opts["parts"]]
     if "exclude" in opts:
         opts["exclude"] = [ws.resolve_ref(r).ref for r in opts["exclude"]]
+    if "sides" in opts and opts["sides"] is not None:
+        sd = opts["sides"]
+        sd = [sd] if isinstance(sd, str) and sd != "auto" else sd
+        if sd != "auto" and (not isinstance(sd, list) or not sd or any(x not in ("top", "bottom") for x in sd) or len(set(sd)) != len(sd)):
+            raise ToolError("BAD_VALUE", "sides must be 'auto' or a list of distinct 'top'/'bottom'")
+        opts["sides"] = sd
     if "heights" in opts:
         hs = {}
         for r, h in (opts["heights"] or {}).items():
@@ -976,7 +1026,7 @@ def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False,
     for k in [k for k in opts if k in ("parts", "exclude", "heights")]:
         pass
     clean = {k: v for k, v in opts.items() if v is not None}
-    special = {k: clean.pop(k) for k in ("parts", "exclude", "heights") if k in clean}
+    special = {k: clean.pop(k) for k in ("parts", "exclude", "heights", "sides") if k in clean}
     res = None
     if clean:
         res = _set_section(ws, "jig", clean, JIG_OPTS, rationale, dry_run, confirm)
@@ -998,10 +1048,14 @@ FIXTURE_OPTS = {
     "mounting_holes": {"type": "boolean"}, "mounting_hole_d_mm": {"type": "number"}, "dividers": {"type": "boolean"},
     "divider_r_bottom_rail": {"type": "number"}, "divider_r_bottom_signal": {"type": "number"},
     "draw_dut_components": {"type": "boolean"}, "cut_tall_components": {"type": "boolean"},
+    "route": {"type": "boolean", "description": "Route the fixture board with the built-in router (default true)."},
+    "track_mm": {"type": "number"}, "power_track_mm": {"type": "number", "description": "GND and VIN tracks."},
+    "clearance_mm": {"type": "number"}, "via_mm": {"type": "number"}, "via_drill_mm": {"type": "number"},
 }
 
 
-@tool("set_fixture_options", "Fixture options: mode (generate|own|none), outline, margin, panel of N x M sites, dividers, holes.",
+@tool("set_fixture_options", "Fixture options: mode (generate|own|none), outline, margin, panel of N x M sites, dividers, "
+      "holes, routing (route, track and via sizes).",
       {"properties": dict(FIXTURE_OPTS, **WRITE_COMMON)}, read_only=False, writes=True)
 def t_set_fixture_options(ws: Workspace, rationale: str = "", dry_run: bool = False, confirm: bool = False, **opts):
     panel = {}
@@ -1030,6 +1084,58 @@ def t_set_fixture_options(ws: Workspace, rationale: str = "", dry_run: bool = Fa
                 _num(v, k, *_RANGES[k])
         return ws.apply(mutate, rationale, dry_run, confirm, what="set fixture options")
     return _set_section(ws, "fixture", clean, FIXTURE_OPTS, rationale, dry_run, confirm)
+
+
+STACK_SCHEMA = {
+    "type": "object", "additionalProperties": False,
+    "properties": {
+        "name": {"type": "string"},
+        "refs": {"type": "array", "items": {"type": "string"}, "description": "Connectors it plugs into, or the footprint "
+                 "that draws the stacked board."},
+        "side": {"type": "string", "enum": ["top", "bottom"]},
+        "outline": {"type": "array", "items": {"type": "number"}, "description": "[x0, y0, x1, y1]: its shadow on this "
+                    "board, KiCad board coordinates in mm. Default: outline of refs (an estimate for connectors)."},
+        "height_mm": {"type": "number", "description": "Top of the stack above this board's surface."},
+        "fitted_at_test": {"type": "boolean", "description": "true (default): on the board during the test; false: "
+                           "fitted after it."},
+    },
+}
+
+
+@tool("set_stacked_boards", "Declare boards stacked on this one (daughter board, shield, display): parts, outline, height, "
+      "fitted during the test or after. Replaces the whole list; [] clears it.",
+      {"properties": dict({"boards": {"type": "array", "items": STACK_SCHEMA}}, **WRITE_COMMON), "required": ["boards"]},
+      read_only=False, writes=True)
+def t_set_stacked_boards(ws: Workspace, boards: List[Dict[str, Any]], rationale: str = "", dry_run: bool = False,
+                         confirm: bool = False):
+    from .stack import validate_entry
+    d = ws._d()
+    clean, names = [], set()
+    for i, e in enumerate(boards or []):
+        if not isinstance(e, dict):
+            raise ToolError("BAD_VALUE", "boards[%d] must be an object" % i)
+        e = dict(e)
+        e["refs"] = [ws.resolve_ref(r).ref for r in e.get("refs") or []]
+        if e.get("outline") is not None:
+            if not isinstance(e["outline"], list) or len(e["outline"]) != 4:
+                raise ToolError("BAD_VALUE", "outline must be [x0, y0, x1, y1] in mm")
+            e["outline"] = [round(_num(v, "outline", -5000, 5000), 3) for v in e["outline"]]
+        if e.get("height_mm") is not None:
+            e["height_mm"] = _num(e["height_mm"], "height_mm", 0.5, 150)
+        e["name"] = str(e.get("name") or "stack%d" % (i + 1))
+        if e["name"] in names:
+            raise ToolError("BAD_VALUE", "two stacked boards are called %r" % e["name"])
+        names.add(e["name"])
+        problem = validate_entry(e, set(d.board.by_ref))
+        if problem:
+            raise ToolError("BAD_VALUE", problem)
+        clean.append({k: e[k] for k in ("name", "refs", "side", "outline", "height_mm", "fitted_at_test") if e.get(k) is not None})
+
+    def mutate(cfg):
+        cfg["stack"] = clean
+        return ["%s: no outline given; the outline of %s is used (likely smaller than the board)" % (e["name"], ", ".join(e["refs"]))
+                for e in clean if "outline" not in e and e.get("refs")]
+    return ws.apply(mutate, rationale, dry_run, confirm, what="set stacked boards %s" % sorted(names))
 
 
 _UNSET = object()
@@ -1457,6 +1563,11 @@ def t_validate(ws: Workspace):
     for u in plan["coverage"]["untestable"]:
         if d.net_kind(u["net"]) in ("power", "ground"):
             warnings.append({"code": "UNTESTABLE_RAIL", "message": "%s: %s" % (u["net"], u["reason"]), "fix": "add a test pad or exclude"})
+    for st in plan.get("stack") or []:
+        for k in ("outline_source", "height_source"):
+            if str(st.get(k, "")).startswith("estimate"):
+                warnings.append({"code": "STACK_ESTIMATE", "message": "stacked board %s: %s" % (st["name"], st[k]),
+                                 "fix": "set_stacked_boards"})
     crit = [f.uid for f in findings if f.severity == "critical"]
     if crit:
         warnings.append({"code": "CRITICAL_FINDINGS", "message": "%d critical weak point(s) open: %s" % (len(crit), ", ".join(crit))})
@@ -1534,6 +1645,7 @@ PROFILES: Dict[str, Optional[List[str]]] = {
 DESTRUCTIVE = {"generate_outputs", "add_class_system"}
 # Writes that give the same result when repeated with the same arguments.
 IDEMPOTENT_WRITES = {"set_net_specs", "set_supply", "set_test_options", "set_jig_options", "set_fixture_options",
+                     "set_stacked_boards",
                      "set_analysis_options", "waive_finding", "generate_outputs", "add_class_system"}
 
 

@@ -24,7 +24,7 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
                       [--fab {standard,advanced,conservative}] [--class-system CLASS_SYSTEM]
                       [--tech-class TECH_CLASS] [--check-class SYSTEM[:CLASS]] [--no-kicad]
                       [--json] [--out OUT] [--panel PANEL] [--outline {rect,outline}]
-                      [--jig-parts JIG_PARTS] [--no-fixture] [--no-jig] [--no-runner]
+                      [--jig-parts JIG_PARTS] [--no-fixture] [--no-route] [--no-jig] [--no-runner]
                       [--no-visuals] [--video] [--video-fps VIDEO_FPS] [--video-stills] [-q]
                       project
 ```
@@ -45,6 +45,7 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
 | `--outline` | (one of: rect, outline) |
 | `--jig-parts` | comma separated refs (default: all THT) |
 | `--no-fixture` |  |
+| `--no-route` | leave the fixture board unrouted (ratsnest only) |
 | `--no-jig` |  |
 | `--no-runner` |  |
 | `--no-visuals` | skip the KiCad 3D renders in the guide |

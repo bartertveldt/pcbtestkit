@@ -177,9 +177,9 @@ def model_body(fp: Footprint, project_dir: str) -> Optional[Tuple[BBox, float, s
                 zmax = z
             if z > 0.2:            # body above the board surface (ignore leads through the PCB)
                 bb.add(x, -y)      # 3D Y up -> board Y down
-        if fp.side == "bottom":
-            # bottom-side models are mirrored by KiCad; we only need extents for top parts
-            pass
+        if fp.local_flipped and bb.valid:
+            # KiCad turns a bottom-side model 180 degrees about X: local y changes sign
+            bb = BBox(bb.x0, -bb.y1, bb.x1, -bb.y0)
         if zmax <= 0 or not bb.valid:
             continue
         # sanity: the body must roughly match the footprint, otherwise the model is mis-scaled/mis-placed

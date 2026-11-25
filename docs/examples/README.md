@@ -22,7 +22,7 @@ Each folder holds:
   3. Running a test.
   4. Hand-soldering with the two jigs: the six steps, the placement jig, the pocket map and exploded views.
 * **`<board>-explainer.mp4`** — the same story as a short video for operators, with 3D animation rendered by KiCad: assembly, printing both jigs, fitting the parts in the placement jig, closing the holding jig, turning the stack over, soldering, building the fixture, and pressing the board onto the pins.
-* **`<board>-fixture.kicad_pcb`** (+ `.kicad_pro`) — open it in KiCad, route it, and order it. The pogo pins have 3D models, so press Alt+3 to see them.
+* **`<board>-fixture.kicad_pcb`** (+ `.kicad_pro`) — open it in KiCad, run DRC and order it (since 1.1.0 it comes out routed; route anything the warnings list). The pogo pins have 3D models, so press Alt+3 to see them.
 * **`<board>-jig-placement.stl`** and **`<board>-jig.stl`** — the two solder jigs; print them as they are. Fit the parts with the PCB top side up in the placement jig, put the holding jig on top, turn the stack over, lift off the placement jig and solder. The holding jig also comes as `.scad` for OpenSCAD.
 * **`runner/`** — copy it to the Raspberry Pi. `testplan.json` is already inside; describe your wiring in `hardware.json`.
 * **`<board>-spec.json`, `<board>-testplan.json`, `<board>-report.html`** — the machine-readable specification and test plan, and the full findings report.

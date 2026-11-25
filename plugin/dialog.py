@@ -37,6 +37,7 @@ class MainDialog(wx.Dialog):
         nb.AddPage(self._general(nb, cfg), "Outputs")
         nb.AddPage(self._testing(nb, cfg), "Test && fixture")
         nb.AddPage(self._rails(nb), "Rails")
+        nb.AddPage(self._stacks(nb), "Stacked boards")
         nb.AddPage(self._jig(nb, cfg), "Solder jig")
         nb.AddPage(self._weak(nb), "Weak points")
         nb.AddPage(self._ai(nb), "AI assistant (optional)")
@@ -125,7 +126,7 @@ class MainDialog(wx.Dialog):
         self.fix_mode = wx.Choice(p, choices=[lab for _, lab in self.fix_modes])
         modes = [m for m, _ in self.fix_modes]
         self.fix_mode.SetSelection(modes.index(fx.get("mode", "generate")) if fx.get("mode", "generate") in modes else 0)
-        self.probe_side = wx.Choice(p, choices=["auto", "bottom", "top"])
+        self.probe_side = wx.Choice(p, choices=["auto", "bottom", "top", "both"])
         self.probe_side.SetStringSelection(tp["probe_side"])
         self.pogo = wx.Choice(p, choices=sorted(POGO_PROFILES))
         self.pogo.SetStringSelection(tp["pogo"])
@@ -139,6 +140,8 @@ class MainDialog(wx.Dialog):
         self.outline.SetStringSelection(fx.get("outline", "rect"))
         self.cols = wx.SpinCtrl(p, min=1, max=10, initial=int((fx.get("panel") or {}).get("cols", 1)))
         self.rows = wx.SpinCtrl(p, min=1, max=10, initial=int((fx.get("panel") or {}).get("rows", 1)))
+        self.route_fx = wx.CheckBox(p, label="tracks and vias, KiCad's default rules")
+        self.route_fx.SetValue(bool(fx.get("route", True)))
         sup = self.design.supply()
         self.sup_net = wx.Choice(p, choices=[""] + self.design.nets_of_kind("power"))
         self.sup_net.SetStringSelection(sup.get("net") or "")
@@ -153,13 +156,16 @@ class MainDialog(wx.Dialog):
                          ("ADC input range (V)", self.adc), ("Supply net", self.sup_net), ("Supply voltage (V)", self.sup_v),
                          ("Supply current limit (A)", self.sup_i), ("Max idle current (A, empty = no check)", self.idle_max),
                          ("Min idle current (A, empty = no check)", self.idle_min),
-                         ("Fixture outline", self.outline), ("Panel columns", self.cols), ("Panel rows", self.rows)]:
+                         ("Fixture outline", self.outline), ("Panel columns", self.cols), ("Panel rows", self.rows),
+                         ("Route the fixture board", self.route_fx)]:
             g.Add(wx.StaticText(p, label=lab), 0, wx.ALIGN_CENTER_VERTICAL)
             g.Add(ctl)
         s.Add(g, 0, wx.ALL, 10)
         s.Add(wx.StaticText(p, label="Rail voltages and tolerances: Rails tab. Signal limits are learned from a known-good "
                                      "board by the test runner (learn mode).\nCustom functional steps can be added in "
-                                     "pcbtestkit.json (testplan.custom_steps). No AI is needed for any of it."), 0, wx.ALL, 10)
+                                     "pcbtestkit.json (testplan.custom_steps). No AI is needed for any of it.\n"
+                                     "Probe side 'both' makes two fixture plates (the board between them), e.g. when a stacked "
+                                     "board covers test points on one side."), 0, wx.ALL, 10)
         p.SetSizer(s)
         return p
 
@@ -205,6 +211,61 @@ class MainDialog(wx.Dialog):
         s.Add(b, 0, wx.ALL, 8)
         p.SetSizer(s)
         return p
+
+    STACK_COLS = [("use", "Use", 40), ("name", "Name", 90), ("refs", "On parts", 80), ("side", "Side", 60),
+                  ("outline", "Outline x0, y0, x1, y1 (mm)", 180), ("height_mm", "Height mm", 70),
+                  ("fitted_at_test", "Fitted at test", 85), ("note", "Note", 260)]
+
+    def _stacks(self, nb):
+        from ..pcbtestkit.manual import stack_rows
+        p = wx.Panel(nb)
+        s = wx.BoxSizer(wx.VERTICAL)
+        s.Add(wx.StaticText(p, label="Boards stacked on this one (daughter board, shield, display on headers or board-to-board "
+                                     "connectors). Tick a row to use it.\nOutline = the stacked board's shadow on this board in "
+                                     "KiCad coordinates (mm); height = top of the stack above this board. Empty = estimated "
+                                     "from the parts.\nFitted at test: probes stay clear of it and the fixture gets a window; "
+                                     "unticked: the board is tested first and the stacked board fitted after a pass."), 0, wx.ALL, 8)
+        rows = stack_rows(self.design)
+        g = self.stack_grid = wx.grid.Grid(p)
+        g.CreateGrid(0, len(self.STACK_COLS))
+        g.HideRowLabels()
+        for c, (_, lab, w) in enumerate(self.STACK_COLS):
+            g.SetColLabelValue(c, lab)
+            g.SetColSize(c, w)
+        for row in rows + [{}]:
+            self._stack_add(row)
+        s.Add(g, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
+        b = wx.Button(p, label="Add a row")
+        b.Bind(wx.EVT_BUTTON, lambda e: self._stack_add({}))
+        s.Add(b, 0, wx.ALL, 8)
+        p.SetSizer(s)
+        return p
+
+    def _stack_add(self, row):
+        g = self.stack_grid
+        g.AppendRows(1)
+        r = g.GetNumberRows() - 1
+        for c, (k, _, _) in enumerate(self.STACK_COLS):
+            if k in ("use", "fitted_at_test"):
+                g.SetCellEditor(r, c, wx.grid.GridCellBoolEditor())
+                g.SetCellRenderer(r, c, wx.grid.GridCellBoolRenderer())
+                g.SetCellValue(r, c, "1" if row.get(k, k == "fitted_at_test") else "")
+            elif k == "side":
+                g.SetCellEditor(r, c, wx.grid.GridCellChoiceEditor(["top", "bottom"]))
+                g.SetCellValue(r, c, row.get(k) or "top")
+            else:
+                g.SetCellValue(r, c, str(row.get(k) or ""))
+        g.SetReadOnly(r, len(self.STACK_COLS) - 1)
+
+    def _stack_after(self):
+        g = self.stack_grid
+        g.SaveEditControlValue()
+        out = []
+        for r in range(g.GetNumberRows()):
+            row = {k: g.GetCellValue(r, c) for c, (k, _, _) in enumerate(self.STACK_COLS)}
+            row["use"], row["fitted_at_test"] = row["use"] == "1", row["fitted_at_test"] == "1"
+            out.append(row)
+        return out
 
     def _rail_after(self):
         g = self.rail_grid
@@ -253,10 +314,11 @@ class MainDialog(wx.Dialog):
     def _jig(self, nb, cfg):
         p = wx.Panel(nb)
         s = wx.BoxSizer(wx.VERTICAL)
-        s.Add(wx.StaticText(p, label="Tick the parts that are hand-soldered. They get snug pockets; every other top-side "
-                                     "part gets a clearance pocket.\nThe PCB goes top-side down into the jig."), 0, wx.ALL, 8)
-        self.jig_parts = [fp for fp in sorted(self.design.components(), key=lambda f: C.natural_key(f.ref))
-                          if fp.side == "top" and not C.is_mounting_hole(fp)]
+        s.Add(wx.StaticText(p, label="Tick the parts that are hand-soldered. They get snug pockets; every other part on "
+                                     "the same side gets a clearance pocket.\nParts on both sides: each side gets its own jig set "
+                                     "(the second one has pockets for the parts already soldered)."), 0, wx.ALL, 8)
+        self.jig_parts = [fp for fp in sorted(self.design.components(), key=lambda f: (f.side != "top", C.natural_key(f.ref)))
+                          if not C.is_mounting_hole(fp)]
         self.jig_heights = dict((cfg["jig"].get("heights") or {}))
         self.jig_list = wx.CheckListBox(p, choices=[self._jig_label(fp) for fp in self.jig_parts])
         self.jig_list.SetFont(wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
@@ -275,6 +337,21 @@ class MainDialog(wx.Dialog):
         row.Add(b2, 0, wx.RIGHT, 18)
         row.Add(b3, 0)
         s.Add(row, 0, wx.ALL, 8)
+        g2 = wx.FlexGridSizer(0, 2, 6, 8)
+        self.jig_side_opts = [("auto", "auto (top, then bottom)"), (["top"], "top side only"), (["bottom"], "bottom side only"),
+                              (["top", "bottom"], "top, then bottom"), (["bottom", "top"], "bottom, then top")]
+        self.jig_sides = wx.Choice(p, choices=[lab for _, lab in self.jig_side_opts])
+        cur = cfg["jig"].get("sides", "auto")
+        vals = [v for v, _ in self.jig_side_opts]
+        self.jig_sides.SetSelection(vals.index(cur) if cur in vals else 0)
+        self.nest_opts = [("auto", "auto (second SMD side)"), ("both", "both SMD sides"), ("none", "none")]
+        self.nest = wx.Choice(p, choices=[lab for _, lab in self.nest_opts])
+        nv = [v for v, _ in self.nest_opts]
+        self.nest.SetSelection(nv.index(cfg["jig"].get("paste_nest", "auto")) if cfg["jig"].get("paste_nest", "auto") in nv else 0)
+        for lab, ctl in (("Hand-solder sides (jig sets)", self.jig_sides), ("Paste-print nest", self.nest)):
+            g2.Add(wx.StaticText(p, label=lab), 0, wx.ALIGN_CENTER_VERTICAL)
+            g2.Add(ctl)
+        s.Add(g2, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
         s.Add(wx.StaticText(p, label="Heights come from the 3D models; set the datasheet body height where a model is generic. "
                                      "The STL files are generated by the plugin itself (no AI, same file every time)."),
               0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
@@ -286,7 +363,7 @@ class MainDialog(wx.Dialog):
             h, src = float(self.jig_heights[fp.ref]), "set by you"
         else:
             h, src = self.design.height_of(fp)
-        return "%-6s %-18s %-38s %s  h=%.1f mm (%s)" % (fp.ref, fp.value[:18], fp.name[:38], fp.mount.upper(), h, src[:28])
+        return "%-6s %-6s %-18s %-34s %s  h=%.1f mm (%s)" % (fp.ref, fp.side, fp.value[:18], fp.name[:34], fp.mount.upper(), h, src[:28])
 
     def on_height(self, _evt):
         i = self.jig_list.GetSelection()
@@ -401,6 +478,7 @@ class MainDialog(wx.Dialog):
         fx["mode"] = self.fix_modes[max(0, self.fix_mode.GetSelection())][0]
         fx["outline"] = self.outline.GetStringSelection()
         fx["panel"] = dict(fx.get("panel") or {}, cols=self.cols.GetValue(), rows=self.rows.GetValue())
+        fx["route"] = self.route_fx.GetValue()
         sup = u.setdefault("supply", {})
         if self.sup_net.GetStringSelection():
             sup["net"] = self.sup_net.GetStringSelection()
@@ -414,13 +492,16 @@ class MainDialog(wx.Dialog):
                 sup[key] = float(t) if t else (0.5 if key == "current_limit_a" else None)
             except ValueError:
                 self.problems.append("%s: %r is not a number" % (key, t))
-        from ..pcbtestkit.manual import apply_rail_edits, apply_waivers
+        from ..pcbtestkit.manual import apply_rail_edits, apply_stack_edits, apply_waivers
         self.problems += apply_rail_edits(u, self.rail_before, self._rail_after())
         if self.weak_rows:
             apply_waivers(u, self.weak_rows, [self.weak_list.IsChecked(i) for i in range(len(self.weak_rows))],
                           self.weak_reason.GetValue())
+        self.problems += apply_stack_edits(u, self._stack_after(), set(self.design.board.by_ref))
         jg = u.setdefault("jig", {})
         jg["parts"] = [fp.ref for i, fp in enumerate(self.jig_parts) if self.jig_list.IsChecked(i)]
+        jg["sides"] = self.jig_side_opts[max(0, self.jig_sides.GetSelection())][0]
+        jg["paste_nest"] = self.nest_opts[max(0, self.nest.GetSelection())][0]
         if self.jig_heights:
             jg["heights"] = dict(self.jig_heights)
         return u
@@ -462,7 +543,15 @@ class MainDialog(wx.Dialog):
         prog.Destroy()
         s = res["summary"]
         if res["paths"].get("fixture"):
-            nxt = "Fixture board: open %s in KiCad, route it (or run Freerouting) and order it." % os.path.basename(res["paths"]["fixture"])
+            rt = res.get("fixture_routing") or {}
+            left = rt.get("unrouted_connections")
+            if rt and not left:
+                nxt = "Fixture board: %s is routed. Open it in KiCad, run DRC and order it." % os.path.basename(res["paths"]["fixture"])
+            elif rt:
+                nxt = ("Fixture board: the router left %d of %d connection(s) unrouted in %s. Route them in KiCad, run DRC "
+                       "and order it." % (left, rt.get("connections", 0), os.path.basename(res["paths"]["fixture"])))
+            else:
+                nxt = "Fixture board: open %s in KiCad, route it and order it." % os.path.basename(res["paths"]["fixture"])
         elif res["paths"].get("probe_points"):
             nxt = "Your fixture: the probe points are in %s." % os.path.basename(res["paths"]["probe_points"])
         else:

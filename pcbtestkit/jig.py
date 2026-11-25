@@ -1,10 +1,15 @@
-"""3D-printable solder jig for hand-soldered (typically through-hole) parts.
+"""3D-printable solder jigs for hand-soldered (typically through-hole) parts, one set per board side.
 
 Workflow it is designed for:
   1. Drop the selected parts upside-down into their snug "hold" pockets.
   2. Lower the PCB, top side down, into the nest; the leads slide through
      their holes. Already-assembled SMD parts sit in clearance pockets.
   3. Solder from the (now upward-facing) bottom side; every part is held flush.
+
+Boards with parts on both sides are built in assembly passes (:func:`assembly_passes`): SMD side 1, SMD side 2
+(with a paste-print nest that carries side 1), then one hand-solder pass per side with its own jig set. Each
+jig of a bottom-side pass is made from the board turned over (:mod:`pcbtestkit.sides`), with pockets for every
+part already on the board and reliefs for the soldered leads of the earlier pass.
 
 Jig coordinates: X = board x, Y = board y (KiCad), Z up. Because the PCB is
 flipped about the X axis this is a proper rotation, so the jig is not
@@ -15,13 +20,14 @@ from __future__ import annotations
 
 import math
 import struct
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from . import classify as C
 from .geometry import BBox, chain_segments, point_in_rect, pt_seg_dist
 from .models3d import model_body
 from .pcb import Footprint
 from .project import Design
+from .sides import other, real_side, view
 
 Q = 100  # height quantum: 0.01 mm
 
@@ -53,7 +59,9 @@ class Pocket:
         return d
 
 
-def select_parts(design: Design) -> Tuple[List[Footprint], List[str]]:
+def select_parts(design: Design, side: str = "top") -> Tuple[List[Footprint], List[str]]:
+    """Hand-soldered parts on ``side`` of the design (or of its turned-over view): jig.parts, or every
+    through-hole part plus parts marked Assembly=Manual when jig.parts is "auto"."""
     jc = design.cfg["jig"]
     notes: List[str] = []
     comps = design.components()
@@ -70,15 +78,60 @@ def select_parts(design: Design) -> Tuple[List[Footprint], List[str]]:
             manual = fp.get_field("Assembly", "Manual", "HandSolder", "Mount").lower() in ("manual", "hand", "yes", "true", "1", "tht")
             if (fp.is_tht or manual) and not fp.dnp and not C.is_mounting_hole(fp) and not C.is_testpoint(fp) and not fp.board_only:
                 sel.append(fp)
-    out = []
-    for fp in sel:
-        if fp.ref in excl:
-            continue
-        if fp.side == "bottom":
-            notes.append("%s is on the bottom side; it needs a second jig (not generated)" % fp.ref)
-            continue
-        out.append(fp)
-    return out, notes
+    return [fp for fp in sel if fp.ref not in excl and fp.side == side], notes
+
+
+def hand_parts(design: Design) -> Dict[str, List[Footprint]]:
+    """Hand-soldered parts of the real board per side."""
+    return {s: select_parts(design, s)[0] for s in ("top", "bottom")}
+
+
+def _placed(fp: Footprint) -> bool:
+    return bool(fp.pads) and not fp.dnp and not fp.board_only and not fp.exclude_from_bom and \
+        not C.is_mounting_hole(fp) and not C.is_testpoint(fp)
+
+
+def assembly_passes(design: Design) -> Tuple[List[Dict[str, Any]], List[str]]:
+    """The order the board is built in: SMD sides first (reflow), then one hand-solder pass per side.
+
+    jig.smt_first: auto (the side with fewer SMD parts goes through reflow first, the heavier side last) |
+    top | bottom. jig.sides: auto (every side with hand-soldered parts, top first) or a list such as
+    ["bottom", "top"]. jig.paste_nest: auto (a paste-print nest for the second SMD side, which rests on the
+    parts of the first) | both | none. Returns (passes, notes)."""
+    jc = design.cfg["jig"]
+    notes: List[str] = []
+    smd = {s: [fp.ref for fp in design.components() if _placed(fp) and fp.is_smd and fp.side == s] for s in ("top", "bottom")}
+    hand = {s: [fp.ref for fp in fps] for s, fps in hand_parts(design).items()}
+    smt_sides = [s for s in ("bottom", "top") if smd[s]]
+    if len(smt_sides) == 2:
+        first = str(jc.get("smt_first", "auto"))
+        if first not in ("top", "bottom"):
+            first = "bottom" if len(smd["bottom"]) <= len(smd["top"]) else "top"
+        smt_sides = [first, other(first)]
+    nest = str(jc.get("paste_nest", "auto"))
+    passes: List[Dict[str, Any]] = []
+    for k, s in enumerate(smt_sides):
+        passes.append({"process": "smt", "side": s, "parts": smd[s],
+                       "nest": nest == "both" or (nest == "auto" and k == 1)})
+    order = jc.get("sides", "auto")
+    if isinstance(order, str):
+        order = [s for s in ("top", "bottom") if hand[s]] if order == "auto" else [order]
+    seen: List[str] = []
+    for s in order:
+        if s in ("top", "bottom") and s not in seen:
+            seen.append(s)
+    for s in seen:
+        if hand[s]:
+            passes.append({"process": "hand", "side": s, "parts": hand[s]})
+        else:
+            notes.append("jig.sides lists the %s side, but no hand-soldered part is on it" % s)
+    for s in ("top", "bottom"):
+        if hand[s] and s not in seen:
+            notes.append("%d hand-soldered part(s) on the %s side get no jig (jig.sides): %s"
+                         % (len(hand[s]), s, ", ".join(hand[s][:8])))
+    for i, p in enumerate(passes, 1):
+        p["pass"] = i
+    return passes, notes
 
 
 def _rect_pocket(fp: Footprint, lb: BBox, grow: float, kind: str, depth: float, height: float, src: str,
@@ -88,15 +141,27 @@ def _rect_pocket(fp: Footprint, lb: BBox, grow: float, kind: str, depth: float, 
                   height=height, src=src)
 
 
-def build_pockets(design: Design, selected: List[Footprint], jx, jy) -> List[Pocket]:
+def build_pockets(design: Design, selected: List[Footprint], jx, jy, mounted: Optional[set] = None) -> List[Pocket]:
+    """Pockets of the holding jig: "hold" for the parts of this pass, "relief" for every other part already on
+    this side, "lead" for the soldered leads of through-hole parts on the other side (an earlier pass).
+    ``mounted`` = refs on the board before this pass (None: every part)."""
     jc = design.cfg["jig"]
     sel = {fp.ref for fp in selected}
     pockets: List[Pocket] = []
+    lead = float(jc.get("lead_relief_mm", 2.5))
     for fp in design.components():
+        if fp.side != "top" and mounted is not None and fp.ref in mounted and not fp.dnp and lead > 0:
+            for pd in fp.pads:
+                if pd.is_tht and pd.drill_w > 0:
+                    pockets.append(Pocket(fp.ref, "lead", jx(pd.x), jy(pd.y), lead, "circle",
+                                          r=max(pd.w, pd.h, pd.drill_w) / 2.0 + 0.5, src="soldered leads"))
+            continue
         if fp.side != "top" or C.is_mounting_hole(fp) or not fp.pads and not fp.graphics:
             continue
         if fp.dnp and fp.ref not in sel:
             continue
+        if fp.ref not in sel and mounted is not None and fp.ref not in mounted:
+            continue                  # fitted in a later pass: not on the board yet
         height, src = design.height_of(fp)
         if fp.ref in sel:
             clr = float(jc["hold_clearance_mm"])
@@ -237,6 +302,8 @@ def render_mesh(H: List[List[int]], nx: int, ny: int, res: float):
     """A light mesh of the heightmap for 3D renders (not for printing): two triangles per flat rectangle and
     one quad per straight run of wall. It has T-junctions, so it is not watertight, but a raytracer doesn't
     mind and renders it many times faster than the print mesh's long fan triangles.
+    Every face is wound so its normal points out of the material (walls face the lower side): KiCad's
+    raytracer shades by the winding, so a wall wound the wrong way renders black once the jig is turned over.
     Returns (vertices in mm, faces as vertex-index tuples), same coordinates as heightmap_mesh."""
     idx: Dict[Tuple[int, int, int], int] = {}
     verts: List[Tuple[float, float, float]] = []
@@ -263,12 +330,13 @@ def render_mesh(H: List[List[int]], nx: int, ny: int, res: float):
             if j < ny:
                 a, b = cell(i - 1, j), cell(i, j)
                 if a != b:
-                    span = (min(a, b), max(a, b))
+                    span = (min(a, b), max(a, b), a > b)
             if run and span == run[1]:
                 continue
             if run:
-                lo, hi = run[1]
-                faces.append((v(i, run[0], lo), v(i, j, lo), v(i, j, hi), v(i, run[0], hi)))
+                lo, hi, pos = run[1]
+                f = (v(i, run[0], lo), v(i, j, lo), v(i, j, hi), v(i, run[0], hi))     # normal +x
+                faces.append(f if pos else f[::-1])
             run = (j, span) if span else None
     # walls along y boundaries (between rows j-1 and j)
     for j in range(ny + 1):
@@ -278,12 +346,13 @@ def render_mesh(H: List[List[int]], nx: int, ny: int, res: float):
             if i < nx:
                 a, b = cell(i, j - 1), cell(i, j)
                 if a != b:
-                    span = (min(a, b), max(a, b))
+                    span = (min(a, b), max(a, b), a > b)
             if run and span == run[1]:
                 continue
             if run:
-                lo, hi = run[1]
-                faces.append((v(run[0], j, lo), v(i, j, lo), v(i, j, hi), v(run[0], j, hi)))
+                lo, hi, pos = run[1]
+                f = (v(run[0], j, lo), v(i, j, lo), v(i, j, hi), v(run[0], j, hi))     # normal -y
+                faces.append(f[::-1] if pos else f)
             run = (i, span) if span else None
     faces.append((v(0, 0, 0), v(0, ny, 0), v(nx, ny, 0), v(nx, 0, 0)))
     return verts, faces
@@ -436,12 +505,47 @@ def _in_stop(px: float, py: float, a: Dict[str, float], length: float) -> bool:
     return math.hypot(px - a["x"], py - a["y"]) <= length / 2.0
 
 
+def _inside_grid(segs, nx: int, ny: int, res: float) -> List[bytearray]:
+    """Cells (centres) inside the outline, by scanline; segs in grid coordinates."""
+    inside = [bytearray(nx) for _ in range(ny)]
+    for j in range(ny):
+        yc = (j + 0.5) * res
+        xs = []
+        for ax, ay, bx_, by_ in segs:
+            if (ay > yc) != (by_ > yc):
+                xs.append(ax + (yc - ay) * (bx_ - ax) / (by_ - ay))
+        xs.sort()
+        for k in range(0, len(xs) - 1, 2):
+            i0 = max(0, int(math.ceil(xs[k] / res - 0.5)))
+            i1 = min(nx - 1, int(math.floor(xs[k + 1] / res - 0.5)))
+            for i in range(i0, i1 + 1):
+                inside[j][i] = 1
+    return inside
+
+
+def _near_grid(segs, nx: int, ny: int, res: float, dist: float) -> List[bytearray]:
+    """Cells (centres) within ``dist`` of the outline; segs in grid coordinates."""
+    near = [bytearray(nx) for _ in range(ny)]
+    for ax, ay, bx_, by_ in segs:
+        i0 = max(0, int((min(ax, bx_) - dist) / res) - 1)
+        i1 = min(nx - 1, int((max(ax, bx_) + dist) / res) + 1)
+        j0 = max(0, int((min(ay, by_) - dist) / res) - 1)
+        j1 = min(ny - 1, int((max(ay, by_) + dist) / res) + 1)
+        for j in range(j0, j1 + 1):
+            yc = (j + 0.5) * res
+            for i in range(i0, i1 + 1):
+                if not near[j][i] and pt_seg_dist((i + 0.5) * res, yc, ax, ay, bx_, by_) <= dist:
+                    near[j][i] = 1
+    return near
+
+
 # =========================================================================== #
 def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optional[str] = None,
               png_path: Optional[str] = None, stops: Optional[List[Dict[str, float]]] = None,
-              grid_out: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+              grid_out: Optional[Dict[str, Any]] = None, mounted: Optional[set] = None) -> Dict[str, Any]:
     """The holding jig. With ``stops`` (two-jig workflow) its rim is notched where the placement jig's
-    locating stops sit, so the two jigs close over the PCB without touching."""
+    locating stops sit, so the two jigs close over the PCB without touching. ``design`` may be the board
+    turned over (bottom-side pass); ``mounted`` = refs already on the board (None: all)."""
     jc = design.cfg["jig"]
     b = design.board
     bb = b.outline_bbox()
@@ -458,7 +562,8 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
         return y - oy
 
     selected, notes = select_parts(design)
-    pockets = build_pockets(design, selected, jx, jy)
+    pockets = build_pockets(design, selected, jx, jy, mounted)
+    up, down = real_side(design, "top"), real_side(design, "bottom")
     # pockets may overhang the board (connectors); grow the jig to include them
     ext = BBox(0, 0, bb.w + 2 * border, bb.h + 2 * border)
     for p in pockets:
@@ -495,30 +600,8 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
     if not segs:
         x0, y0, x1, y1 = jx(bb.x0), jy(bb.y0), jx(bb.x1), jy(bb.y1)
         segs = [(x0, y0, x1, y0), (x1, y0, x1, y1), (x1, y1, x0, y1), (x0, y1, x0, y0)]
-    inside = [bytearray(nx) for _ in range(ny)]
-    for j in range(ny):
-        yc = (j + 0.5) * res
-        xs = []
-        for ax, ay, bx_, by_ in segs:
-            if (ay > yc) != (by_ > yc):
-                xs.append(ax + (yc - ay) * (bx_ - ax) / (by_ - ay))
-        xs.sort()
-        for k in range(0, len(xs) - 1, 2):
-            i0 = max(0, int(math.ceil(xs[k] / res - 0.5)))
-            i1 = min(nx - 1, int(math.floor(xs[k + 1] / res - 0.5)))
-            for i in range(i0, i1 + 1):
-                inside[j][i] = 1
-    near = [bytearray(nx) for _ in range(ny)]
-    for ax, ay, bx_, by_ in segs:
-        i0 = max(0, int((min(ax, bx_) - edge_clr) / res) - 1)
-        i1 = min(nx - 1, int((max(ax, bx_) + edge_clr) / res) + 1)
-        j0 = max(0, int((min(ay, by_) - edge_clr) / res) - 1)
-        j1 = min(ny - 1, int((max(ay, by_) + edge_clr) / res) + 1)
-        for j in range(j0, j1 + 1):
-            yc = (j + 0.5) * res
-            for i in range(i0, i1 + 1):
-                if not near[j][i] and pt_seg_dist((i + 0.5) * res, yc, ax, ay, bx_, by_) <= edge_clr:
-                    near[j][i] = 1
+    inside = _inside_grid(segs, nx, ny, res)
+    near = _near_grid(segs, nx, ny, res, edge_clr)
     R = int(round((support + rim_h) * Q))
     for j in range(ny):
         for i in range(nx):
@@ -576,32 +659,44 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
         "jig_size_mm": [round(nx * res, 2), round(ny * res, 2), round(top, 2)],
         "support_height_mm": round(support, 2), "floor_mm": floor, "resolution_mm": res,
         "board_bbox_in_jig_mm": [round(jx(bb.x0), 3), round(jy(bb.y0), 3), round(jx(bb.x1), 3), round(jy(bb.y1), 3)],
-        "orientation": "PCB top side faces down into the jig; jig X = board X, jig Y = board Y (view from above "
-                       "shows the board's bottom side)",
+        "side": up,
+        "orientation": ("PCB top side faces down into the jig; jig X = board X, jig Y = board Y (view from above "
+                        "shows the board's bottom side)") if up == "top" else
+                       ("PCB bottom side faces down into the jig; jig X = board X, jig Y = -board Y (view from above "
+                        "shows the board's top side)"),
         "parts_to_place": [fp.ref for fp in selected],
         "pockets": [p.to_dict() for p in sorted(pockets, key=lambda p: (p.kind != "hold", C.natural_key(p.ref)))],
         "posts": [{"hole": ref, "center": [round(px, 2), round(py, 2)], "diameter_mm": round(2 * r, 2)} for px, py, r, ref in posts],
-        "notes": notes + ["Place parts in the 'hold' pockets, lower the PCB top-side down onto the nest, solder from above.",
+        "notes": notes + ["Place parts in the 'hold' pockets, lower the PCB %s side down onto the nest, solder from above." % up,
                           "Hold pocket depth = part height + %.2f mm; adjust jig.heights.<REF> if a part sits proud." % float(jc["hold_depth_offset_mm"])],
     }
     if png_path:
         write_heightmap_png(png_path, H, nx, ny)
         result["preview_png"] = png_path
+    if any(p.kind == "lead" for p in pockets):
+        result["notes"].append("Trim the soldered leads of the %s-side parts to at most %.1f mm before this pass "
+                               "(lead reliefs %.1f mm deep)." % (down, max(0.5, float(jc.get("lead_relief_mm", 2.5)) - 1.0),
+                                                                 float(jc.get("lead_relief_mm", 2.5))))
     if stl_path:
         tris = heightmap_mesh(H, nx, ny, res)
-        write_stl(stl_path, tris, "PCB TestKit solder jig %s" % b.name)
+        write_stl(stl_path, tris, "PCB TestKit solder jig %s%s" % (b.name, "" if up == "top" else " (bottom side)"))
         result["mesh"] = mesh_check(tris) if len(tris) < 600000 else {"triangles": len(tris)}
         result["stl"] = stl_path
     if scad_path:
         with open(scad_path, "w", encoding="utf-8") as fh:
-            fh.write(scad_source(design, pockets, posts, segs, nx * res, ny * res, support, rim_h, edge_clr, floor))
+            fh.write(scad_source(design, pockets, posts, segs, nx * res, ny * res, support, rim_h, edge_clr, floor, up))
         result["scad"] = scad_path
     return result
 
 
 def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path: Optional[str] = None,
-                        png_path: Optional[str] = None, grid_out: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+                        png_path: Optional[str] = None, grid_out: Optional[Dict[str, Any]] = None,
+                        mounted: Optional[set] = None, nest: bool = False) -> Dict[str, Any]:
     """The placement jig of the two-jig workflow: the PCB rests in it top side up while the parts are fitted.
+
+    ``nest=True`` makes the paste-print nest of an SMD pass instead: the same support with pockets for the
+    parts already on the down side, no lead wells, and a frame flush with the PCB's top surface all round so
+    the stencil lies flat. ``mounted`` = refs already on the board (None: all).
 
     Print orientation = use orientation (Z up, PCB top up). Jig X = board x, jig Y = -board y (the view from
     above matches KiCad's editor). Heights:
@@ -620,7 +715,7 @@ def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path:
     floor = float(jc["floor_mm"])
     clearance = float(jc.get("placement_clearance_mm", 10.0))
     margin = float(jc.get("lead_well_margin_mm", 1.0))
-    border = float(jc.get("placement_border_mm", 6.0))
+    border = float(jc.get("nest_border_mm", 15.0) if nest else jc.get("placement_border_mm", 6.0))
     stop_len = float(jc.get("stop_length_mm", 8.0))
     stop_w = float(jc.get("stop_width_mm", 2.5))
     stop_clr = float(jc.get("stop_clearance_mm", 0.15))
@@ -630,8 +725,10 @@ def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path:
     # parts on the bottom side need pockets; a tall one deepens the whole jig
     bottom = []
     for fp in design.components():
-        if fp.side != "bottom" or C.is_mounting_hole(fp) or not fp.pads:
+        if fp.side != "bottom" or C.is_mounting_hole(fp) or not fp.pads or fp.dnp and fp.ref not in (mounted or ()):
             continue
+        if mounted is not None and fp.ref not in mounted:
+            continue                  # fitted in a later pass
         h, _src = design.height_of(fp)
         c = fp.courtyard_local()
         if not c.valid:
@@ -641,7 +738,9 @@ def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path:
             g.add(*fp.to_board(lx, ly))
         bottom.append((fp.ref, g.grow(bot_clr), h + bot_clr))
     deepest = max([d for _, _, d in bottom] + [0.0])
-    if deepest + 0.5 > clearance:
+    if nest:
+        clearance = max(1.0, deepest + 0.5)               # no leads under the board in an SMD pass
+    elif deepest + 0.5 > clearance:
         notes.append("lead clearance raised from %.1f to %.1f mm for the bottom-side parts" % (clearance, deepest + 0.5))
         clearance = deepest + 0.5
     rest = floor + clearance                                   # PCB underside
@@ -674,6 +773,8 @@ def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path:
     wells = 0
     holes = {(round(x, 3), round(y, 3)) for x, y, _, _ in mounting_holes(design)}
     for fp in design.components():
+        if nest:
+            break
         for pd in fp.pads:
             if pd.drill_w <= 0 or (round(pd.x, 3), round(pd.y, 3)) in holes:
                 continue
@@ -682,7 +783,7 @@ def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path:
             wells += 1
     # holes for the holding jig's posts
     post_depth = int(round(max(floor, rest - t - 2.0) * Q))
-    for x, y, r, _ in mounting_holes(design):
+    for x, y, r, _ in ([] if nest else mounting_holes(design)):
         disk(x, y, r + 0.6, min(post_depth, REST - int(2.0 * Q)))
     # bottom-side part pockets
     for ref, g, d in bottom:
@@ -695,7 +796,16 @@ def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path:
     # locating stops: just outside the outline, ending 0.2 mm below the PCB's top surface
     segs = outline_segments(design)
     STOP = int(round((rest + max(0.4, t - 0.2)) * Q))
-    for a in stops:
+    if nest:
+        # a frame flush with the PCB's top surface all round, so the stencil lies flat over board and frame
+        STOP = int(round((rest + t) * Q))
+        gsegs = [(jx(a_), jy(b_), jx(c_), jy(d_)) for a_, b_, c_, d_ in segs]
+        ins, nr = _inside_grid(gsegs, nx, ny, res), _near_grid(gsegs, nx, ny, res, stop_clr)
+        for j in range(ny):
+            for i in range(nx):
+                if not ins[j][i] and not nr[j][i]:
+                    H[j][i] = STOP
+    for a in ([] if nest else stops):
         reach = stop_len / 2.0 + stop_clr + stop_w
         cx_, cy_ = jx(a["x"]), jy(a["y"])
         for j in range(max(0, int((cy_ - reach) / res) - 1), min(ny, int((cy_ + reach) / res) + 2)):
@@ -715,29 +825,40 @@ def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path:
                 if abs((j + 0.5) * res - ymid) > 7.5:
                     continue
                 for i in range(nx):
-                    if xa <= (i + 0.5) * res <= xb and H[j][i] != STOP:     # never cut away a locating stop
+                    if xa <= (i + 0.5) * res <= xb and (nest or H[j][i] != STOP):   # never cut away a locating stop
                         H[j][i] = min(H[j][i], nd)
-    if len(stops) < 3:
+    if len(stops) < 3 and not nest:
         notes.append("only %d locating stop(s) fit around this outline; place the PCB carefully" % len(stops))
     if grid_out is not None:                     # heightmap for checks (jig X = board x - ax0, Y = ay1 - board y)
         grid_out.update({"H": H, "nx": nx, "ny": ny, "res": res, "ax0": ax0, "ay1": ay1, "rest": rest})
+    up = real_side(design, "top")
     result: Dict[str, Any] = {
-        "jig_size_mm": [round(nx * res, 2), round(ny * res, 2), round(rest + max(0.4, t - 0.2), 2)],
+        "jig_size_mm": [round(nx * res, 2), round(ny * res, 2), round(STOP / float(Q) if nest else rest + max(0.4, t - 0.2), 2)],
         "pcb_rest_height_mm": round(rest, 2), "lead_clearance_mm": round(clearance, 2), "floor_mm": floor,
         "resolution_mm": res,
         "board_bbox_in_jig_mm": [round(jx(bb.x0), 3), round(jy(bb.y1), 3), round(jx(bb.x1), 3), round(jy(bb.y0), 3)],
-        "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
-        "stops": [{"side": a["side"], "at": [round(a["x"], 2), round(a["y"], 2)]} for a in stops],
+        "orientation": ("PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)"
+                        if up == "top" else
+                        "PCB bottom side up; jig X = board X, jig Y = board Y (the board turned over about its X axis)"),
+        "stops": [{"side": a["side"], "at": [round(a["x"], 2), round(a["y"], 2)]} for a in ([] if nest else stops)],
         "lead_wells": wells, "bottom_pockets": [r for r, _, _ in bottom],
-        "notes": notes + ["Trim the leads to at most %.0f mm below the board, or raise jig.placement_clearance_mm."
-                          % max(1.0, clearance - 0.5)],
+        "notes": notes + (["Rest the PCB %s side up in the nest; the frame is flush with the board, so the stencil lies "
+                           "flat. Print it in PLA or PETG: it does not go into the reflow oven." % up] if nest else
+                          ["Trim the leads to at most %.0f mm below the board, or raise jig.placement_clearance_mm."
+                           % max(1.0, clearance - 0.5)]),
     }
+    if nest:
+        result["kind"] = "paste_nest"
+        result["side"] = up
+        result["down_side_pockets"] = result.pop("bottom_pockets")
+        result.pop("lead_wells")
     if png_path:
         write_heightmap_png(png_path, H, nx, ny)
         result["preview_png"] = png_path
     if stl_path:
         tris = heightmap_mesh(H, nx, ny, res)
-        write_stl(stl_path, tris, "PCB TestKit placement jig %s" % b.name)
+        write_stl(stl_path, tris, "PCB TestKit %s %s%s" % ("paste-print nest" if nest else "placement jig", b.name,
+                                                             "" if up == "top" else " (bottom side up)"))
         result["mesh"] = mesh_check(tris) if len(tris) < 600000 else {"triangles": len(tris)}
         result["stl"] = stl_path
     return result
@@ -745,20 +866,93 @@ def build_placement_jig(design: Design, stops: List[Dict[str, float]], stl_path:
 
 def build_jigs(design: Design, stl_path: Optional[str] = None, scad_path: Optional[str] = None,
                png_path: Optional[str] = None, place_stl: Optional[str] = None,
-               place_png: Optional[str] = None, grids: Optional[Dict[str, Dict[str, Any]]] = None) -> Dict[str, Any]:
-    """The holding jig and, in the two-jig workflow (default), the placement jig that pairs with it."""
+               place_png: Optional[str] = None, grids: Optional[Dict[str, Dict[str, Any]]] = None,
+               file_for: Optional[Callable[[str, str], str]] = None) -> Dict[str, Any]:
+    """Every solder jig of the board, in assembly order (:func:`assembly_passes`).
+
+    Per hand-solder pass: the holding jig and, in the two-jig workflow (default), the placement jig that pairs
+    with it; per SMD pass that needs one: a paste-print nest. Returns the first hand pass's jig (written to the
+    given paths) with ``passes`` (the build order) and ``extra`` (the other jigs by key, e.g. "hand_bottom",
+    "nest_top"). ``file_for(tag, ext)`` names their files; None computes the geometry only. ``grids`` receives
+    the heightmaps per side ({"top": {"holding", "placement"}, ...}; "holding"/"placement" = the first pass)."""
     jc = design.cfg["jig"]
     two = str(jc.get("workflow", "two_jig")).lower().replace("-", "_") != "single"
-    stops = stop_anchors(design, outline_segments(design), float(jc.get("stop_length_mm", 8.0))) if two else []
+    stop_len = float(jc.get("stop_length_mm", 8.0))
     grids = grids if grids is not None else {}
-    jig = build_jig(design, stl_path, scad_path, png_path, stops=stops, grid_out=grids.setdefault("holding", {}))
-    jig["workflow"] = "two_jig" if two else "single"
-    if two:
-        jig["placement"] = build_placement_jig(design, stops, place_stl, place_png, grid_out=grids.setdefault("placement", {}))
-        jig["notes"] = [n for n in jig["notes"] if not n.startswith("Place parts in the 'hold' pockets")] + [
-            "Two-jig workflow: put the PCB top side up in the placement jig, fit the parts, put this holding jig "
-            "on top (pockets down), turn the stack over, lift off the placement jig and solder from above."]
+    passes, pass_notes = assembly_passes(design)
+    hand = [p for p in passes if p["process"] == "hand"]
+    refs = {fp.ref for fp in design.components()}
+    later: Dict[int, set] = {}
+    acc: set = set()
+    for p in reversed(hand):
+        acc |= set(p["parts"])
+        later[p["pass"]] = set(acc)
+
+    def name(tag: str, ext: str) -> Optional[str]:
+        return file_for(tag, ext) if file_for else None
+
+    def hand_jig(side: str, mounted: set, files: Dict[str, Optional[str]]) -> Dict[str, Any]:
+        v = view(design, side)
+        stops = stop_anchors(v, outline_segments(v), stop_len) if two else []
+        g = grids.setdefault(side, {})
+        jig = build_jig(v, files.get("stl"), files.get("scad"), files.get("png"), stops=stops,
+                        grid_out=g.setdefault("holding", {}), mounted=mounted)
+        jig["workflow"] = "two_jig" if two else "single"
+        if two:
+            jig["placement"] = build_placement_jig(v, stops, files.get("place_stl"), files.get("place_png"),
+                                                   grid_out=g.setdefault("placement", {}), mounted=mounted)
+            jig["notes"] = [n for n in jig["notes"] if not n.startswith("Place parts in the 'hold' pockets")] + [
+                "Two-jig workflow: put the PCB %s side up in the placement jig, fit the parts, put this holding jig "
+                "on top (pockets down), turn the stack over, lift off the placement jig and solder from above." % side]
+        return jig
+
+    primary = hand[0] if hand else None
+    p_side = primary["side"] if primary else "top"
+    p_mounted = refs - (later[primary["pass"]] if primary else set())
+    jig = hand_jig(p_side, p_mounted, {"stl": stl_path, "scad": scad_path, "png": png_path, "place_stl": place_stl,
+                                       "place_png": place_png})
+    grids["holding"], grids["placement"] = grids[p_side]["holding"], grids[p_side].get("placement", {})
+    jig["key"] = "hand_%s" % p_side if primary else None
+    extra: Dict[str, Any] = {}
+    summary: List[Dict[str, Any]] = []
+    smd_done: set = set()
+    for p in passes:
+        key = None
+        if p["process"] == "hand":
+            key = "hand_%s" % p["side"]
+            if p is not primary:
+                tag = "jig-%s" % p["side"]
+                extra[key] = hand_jig(p["side"], refs - later[p["pass"]],
+                                      {"stl": name(tag, "stl"), "scad": name(tag, "scad"), "png": name(tag, "png"),
+                                       "place_stl": name(tag + "-placement", "stl"),
+                                       "place_png": name(tag + "-placement", "png")})
+        elif p.get("nest"):
+            key = "nest_%s" % p["side"]
+            tag = "paste-nest-%s" % p["side"]
+            g = grids.setdefault("nest_%s" % p["side"], {})
+            extra[key] = build_placement_jig(view(design, p["side"]), [], name(tag, "stl"), name(tag, "png"),
+                                             grid_out=g, mounted=set(smd_done), nest=True)
+        if p["process"] == "smt":
+            smd_done |= set(p["parts"])
+        summary.append({"pass": p["pass"], "process": p["process"], "side": p["side"],
+                        "parts": list(p["parts"]) if p["process"] == "hand" else len(p["parts"]), "jig": key})
+    jig["passes"] = summary
+    jig["extra"] = extra
+    jig["notes"] = jig["notes"] + pass_notes
+    if len(hand) > 1:
+        jig["notes"].append("Parts on both sides: %s. Each side has its own jig set; the later set has pockets for "
+                            "the parts already soldered." % " then ".join("%s side (pass %d)" % (p["side"], p["pass"])
+                                                                          for p in hand))
     return jig
+
+
+def jig_of(jig: Dict[str, Any], key: Optional[str]) -> Optional[Dict[str, Any]]:
+    """The jig of a pass by key ("hand_top", "nest_bottom", ...): the top-level jig or one of ``extra``."""
+    if not key or not jig:
+        return None
+    if jig.get("key") == key:
+        return jig
+    return (jig.get("extra") or {}).get(key)
 
 
 def stack_collisions(design: Design, grids: Dict[str, Dict[str, Any]], gap: float = 0.1) -> List[Tuple[float, float, str]]:
@@ -792,15 +986,16 @@ def stack_collisions(design: Design, grids: Dict[str, Dict[str, Any]], gap: floa
     return out
 
 
-def scad_source(design, pockets, posts, segs, W_, L_, support, rim_h, edge_clr, floor) -> str:
+def scad_source(design, pockets, posts, segs, W_, L_, support, rim_h, edge_clr, floor, up="top") -> str:
     loops = chain_segments(segs)
     pts, paths = [], []
     for lp in loops:
         start = len(pts)
         pts += [(round(x, 3), round(y, 3)) for x, y in lp]
         paths.append(list(range(start, len(pts))))
-    out = ["// Solder jig for %s - generated by PCB TestKit" % design.board.name,
-           "// Parts go upside-down into the pockets; the PCB goes top-side down into the nest.",
+    out = ["// Solder jig for %s - generated by PCB TestKit" % design.board.name if up == "top" else
+           "// Solder jig for %s, bottom-side parts - generated by PCB TestKit" % design.board.name,
+           "// Parts go upside-down into the pockets; the PCB goes %s-side down into the nest." % up,
            "$fn = 64;", "W = %.3f; L = %.3f; support = %.3f; rim_h = %.3f; edge_clearance = %.3f; floor_t = %.3f;" %
            (W_, L_, support, rim_h, edge_clr, floor), "",
            "module board_outline() {", "  polygon(points=%s, paths=%s);" % (pts, paths), "}", "",

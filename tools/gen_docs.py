@@ -29,7 +29,7 @@ CONFIG_NOTES = {
     "supply": "How the tester powers the board: net, voltage, current limit and the expected idle-current window.",
     "nets": "Per-net expectations: nominal + tolerance_pct or min/max (volts), kind, test: false to skip.",
     "testplan": "Probe side, pogo family and mounting, signal policy, channel budget, ADC range, timing.",
-    "fixture": "Fixture PCB outline, margins, N x M panel, mounting holes, dividers.",
+    "fixture": "Fixture PCB outline, margins, N x M panel, mounting holes, dividers, routing (tracks, vias, clearance).",
     "jig": "Solder-jig parts (auto = all THT), pocket clearances and depths, part heights by ref.",
     "analysis": "Waivers, ignored checks and thresholds for the weak-point analysis.",
     "video": "Explainer video: real 3D animation on/off, frame rate, size, parallel renders, render quality.",

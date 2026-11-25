@@ -9,6 +9,7 @@ DUT exported as VRML, pogo pins). Rendering them with kicad-cli gives:
   fixture_dut_exploded / _seated       DUT above / on the pins
   jig_iso                              the printed jig on its own
   jig_exploded / jig_assembled         parts in the jig, PCB above / seated
+  jig2_print .. jig2_solder            two-jig workflow, one still per step (from the video's scenes)
 
 The explainer video's motion shots are rendered by :mod:`pcbtestkit.animate` from the same scenes.
 """
@@ -250,6 +251,7 @@ class Renderer:
 
 
 ISO_TOP = "-40,0,25"         # tilt towards the viewer, then turn
+ISO_SIDE = "-62,0,25"         # lower, closer to the side: shows what stands between two boards
 ISO_BOTTOM = "-40,0,155"      # seen from the board's bottom side: the jig lies underneath
 
 
@@ -284,7 +286,8 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
             with open(paths["fixture"], "r", encoding="utf-8") as fh:
                 fx_text = fh.read().replace("${KIPRJMOD}", os.path.dirname(os.path.abspath(paths["fixture"])))
             clear = float(plan["pogo"].get("probe_clearance_mm", 6.0))
-            mirror = plan.get("probe_side") == "top"
+            from .testplan import fixture_side
+            mirror = fixture_side(plan) == "top"
             rotate = (0.0, 180.0, 0.0) if mirror else (0.0, 0.0, 0.0)
 
             def fixture_scene(lift: float, tag: str) -> str:
@@ -298,8 +301,10 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
                     fh.write(append_items(fx_text, items))
                 return path
 
-            for name, lift in (("fixture_dut_exploded", 18.0), ("fixture_dut_seated", 0.0)):
-                if rd.render(fixture_scene(lift, name), P(name), rotate=ISO_TOP, zoom=0.8):
+            # exploded: the board well above the pins and a lower camera, so the pogo pins show between the boards
+            high = max(30.0, min(60.0, 0.3 * max(bb.w, bb.h)))
+            for name, lift, rot, zoom in (("fixture_dut_exploded", high, ISO_SIDE, 0.72), ("fixture_dut_seated", 0.0, ISO_TOP, 0.8)):
+                if rd.render(fixture_scene(lift, name), P(name), rotate=rot, zoom=zoom):
                     img[name] = P(name)
 
     # ---- solder jig -----------------------------------------------------------------------------
@@ -346,6 +351,19 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
         for name, g, inj in (("jig_exploded", gap, True), ("jig_assembled", 0.0, False)):
             if rd.render(jig_scene(g, inj, name), P(name), side="bottom", rotate=ISO_BOTTOM, zoom=0.75):
                 img[name] = P(name)
+        # two-jig workflow: one still per step (print, fit the parts, holding jig on top, turned over, solder)
+        if str(jig.get("workflow", "")) == "two_jig" and jig.get("placement"):
+            try:
+                from .animate import Stage, render_shots
+                st = Stage(design, plan, fixture, jig, paths, rd, out_dir, size=size, quality=rd.quality)
+                shot = st.step_stills()
+                if shot is not None:
+                    render_shots([shot], rd)
+                    for f in shot.files:
+                        img[os.path.splitext(os.path.basename(f))[0]] = f
+                rd.log.extend(st.log)
+            except Exception as exc:  # the step stills are optional
+                rd.log.append("jig step renders failed: %r" % exc)
     return res
 
 

@@ -28,7 +28,7 @@ the placement jig comes off and every lead is soldered.*
 - [Command line](#command-line)
 - [Technology classes: which fab and class to order](#technology-classes-which-fab-and-class-to-order)
 - [The test fixture](#the-test-fixture)
-- [The solder jig](#the-solder-jig)
+- [The solder jigs](#the-solder-jigs)
 - [The test runner (Raspberry Pi / MCU)](#the-test-runner-raspberry-pi--mcu)
 - [Visual guide and explainer video](#visual-guide-and-explainer-video)
 - [AI assistants and automation](#ai-assistants-and-automation)
@@ -49,13 +49,13 @@ the placement jig comes off and every lead is soldered.*
 | **Technology class** | Which class each fab's system needs (Eurocircuits `6C`, JLCPCB `standard`, OSH Park `4-layer`, ...), what drives it, whether the board fits at all, and every feature that breaks the class you order, with coordinates. |
 | **`<board>-spec.json`** | A "good unit" specification: geometry, fab limits and measured stats, BOM with placement, connectivity, expected rail voltages, acceptance criteria, findings, decision log. |
 | **`<board>-testplan.json`** | The test scheme: probe points, measurement channels, voltage dividers, header pinout and an ordered sequence (visual → short check → power-up/current → rails → signals → custom steps → power-off). |
-| **`<board>-fixture.kicad_pcb`** | A bed-of-nails fixture PCB: pogo pins at the probe points, a header for the Pi/MCU, dividers, a power terminal, guide-pin holes from the board's mounting holes, cut-outs for tall parts. Single board or N×M panel. |
-| **`<board>-jig-placement.stl`, `<board>-jig.stl` / `.scad`** | Two 3D-printable solder jigs that work as a pair: fit the hand-soldered parts with the PCB top side up in the placement jig, close the holding jig over them, turn the stack over, lift off the placement jig and solder. Every part stays flush and square. |
+| **`<board>-fixture.kicad_pcb`** | A bed-of-nails fixture PCB: pogo pins at the probe points, a header for the Pi/MCU, dividers, a power terminal, guide-pin holes from the board's mounting holes, cut-outs for tall parts and stacked boards, routed on two layers by the built-in router. Single board or N×M panel; two plates (`-fixture-top` / `-fixture-bottom`) when probing both sides. |
+| **`<board>-jig-placement.stl`, `<board>-jig.stl` / `.scad`** | Two 3D-printable solder jigs that work as a pair: fit the hand-soldered parts with the PCB top side up in the placement jig, close the holding jig over them, turn the stack over, lift off the placement jig and solder. Every part stays flush and square. Parts on both sides: a jig set per side (`-jig-bottom*.stl`) and a paste-print nest for the second SMD side. |
 | **`runner/`** | A Raspberry Pi / microcontroller test runner that executes the plan, with MicroPython firmware for RP2040/ESP32 front-ends. |
 | **`<board>-report.html`** | Everything above on one page, with a board map. |
 | **`<board>-guide.html`** | A step-by-step visual guide with KiCad 3D renders: what to fix, how to build the fixture, how to test, how to use the jig. |
 | **`<board>-explainer.mp4`** | Optional ~50 s video with real 3D animation rendered by KiCad: assembly, jig, fixture, test. |
-| **AI interface** | 31 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
+| **AI interface** | 32 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
 
 Everything runs locally. The core uses only the Python standard library and reads KiCad 6-10 files directly, so
 it also works on the command line, in CI and on the Pi. No AI service or account is needed for any of it: every
@@ -131,12 +131,13 @@ server (chat apps). See [AI assistants and automation](#ai-assistants-and-automa
 
 1. Save the board, then click the toolbar button.
 2. **Outputs:** output folder, fab profile, class system and class to order (it shows the class the board needs), extra checks such as IPC, and which files to generate (including the video).
-3. **Test & fixture:** whether you want a fixture (generate a pogo-pin fixture board / I design my own, from a probe-point list / no fixture, manual test), probe side, pogo family (P50/P75/P100) and mounting, signal policy, ADC range, supply voltage and current limits, fixture outline, panel size.
+3. **Test & fixture:** whether you want a fixture (generate a pogo-pin fixture board / I design my own, from a probe-point list / no fixture, manual test), probe side (auto, bottom, top or both), pogo family (P50/P75/P100) and mounting, signal policy, ADC range, supply voltage and current limits, fixture outline, panel size.
 4. **Rails:** the expected voltage and tolerance (or min/max range) of every power rail, and which rails to test. Rails whose voltage is not in the net name show a suggestion from the regulator part number.
-5. **Solder jig:** tick the parts you hand-solder (all THT parts by default) and correct a part's height where its 3D model is generic.
-6. **Weak points:** check the board, then fix the listed problems in KiCad or tick the ones you accept, with a reason.
-7. **AI assistant (optional):** ready-to-copy commands to connect an AI model to this project.
-8. **Generate.**
+5. **Stacked boards:** boards that sit on this one (daughter board, shield, display). Pin sockets and board-to-board connectors are listed as candidates; tick one and give its outline, height and whether it is fitted during the test.
+6. **Solder jig:** tick the parts you hand-solder on either side (all THT parts by default), correct a part's height where its 3D model is generic, and choose the side order and the paste-print nest.
+7. **Weak points:** check the board, then fix the listed problems in KiCad or tick the ones you accept, with a reason.
+8. **AI assistant (optional):** ready-to-copy commands to connect an AI model to this project.
+9. **Generate.**
 
 Settings are stored in `pcbtestkit.json` next to the project. Commit it with the design.
 
@@ -212,12 +213,38 @@ the framework, the source and check date of every built-in number, and the roadm
 
 For `generate`:
 
-- Open `<board>-fixture.kicad_pcb` in KiCad. Pogo pins, header, dividers and holes are placed and connected as a ratsnest. Route it (by hand or with Freerouting), run DRC, order it.
-- **Probe side.** `auto` plans both sides and picks the better one (rails reached first, dedicated test pads preferred, component solder joints avoided). `bottom`: the board lies on the fixture as is. `top`: mirrored for a board placed face down.
+- Open `<board>-fixture.kicad_pcb` in KiCad: pogo pins, header, dividers and holes are placed and **routed** by the built-in
+  router (two layers, 0.25 mm signal and 0.5 mm GND/VIN tracks, KiCad's default clearances, vias where needed). Each
+  divider pair sits above its own header pin. Run DRC and order it. A connection the router cannot make is listed in
+  the warnings and stays as ratsnest for you to route; `--no-route` (or `"route": false`) leaves the whole board unrouted.
+  Track and via sizes: `fixture.track_mm`, `power_track_mm`, `clearance_mm`, `via_mm`, `via_drill_mm`.
+- **Probe side.** `auto` plans both sides and picks the better one (rails reached first, dedicated test pads preferred, component solder joints avoided). `bottom`: the board lies on the fixture as is. `top`: mirrored for a board placed face down. `both`: two fixture plates with the board between them (a clamshell); each net is probed on whichever side has the best target, each plate gets its own header, and channel numbers are shared. A plate that would carry no probe is not made. When `auto` leaves rails that only the other side reaches, the report and the open decisions suggest `both`.
 - **Pogo drills** are typical values for receptacle-mounted pins (P50 0.9 mm, P75 1.4 mm, P100 1.7 mm) or direct-solder pins; check your pin's datasheet and set `testplan.pogo_drill_mm` if needed. Probe spacing is the larger of the family pitch and pad diameter + 0.5 mm. Tips: `crown` for THT leads, `spear` for flat pads.
 - **Guide pins** go through the board's mounting holes (a warning if there are fewer than two).
 - **Dividers** are inserted where a channel's maximum exceeds 90 % of the ADC range; the runner multiplies readings by the exact ratio.
 - `*-fixture-probes.csv` lists every pogo position (handy for drilling a plain plate instead).
+
+### Stacked boards
+
+A daughter board, shield or display on headers or board-to-board connectors covers part of the board, and a
+pogo plate cannot press through it. Declare it in the dialog's **Stacked boards** tab or in `stack`:
+
+```json
+"stack": [{"name": "display", "refs": ["J6"], "side": "top", "outline": [126.5, 100, 148, 121.5],
+           "height_mm": 14, "fitted_at_test": true}]
+```
+
+- `outline` is its shadow on this board in KiCad coordinates (mm), `height_mm` the top of the stack above this
+  board. Without them the outline and height of the parts in `refs` are used and flagged as estimates (right for a
+  board drawn as one footprint, too small for a board on connectors).
+- **Fitted during the test** (default): no probe is placed under it (plus `testplan.stack_clearance_mm`), the
+  fixture plate gets a window for it when it is taller than the probe clearance, and visual inspection checks it
+  is seated. Nets that could only be reached under it are listed (`TEST-STACK-ACCESS`) with three ways out:
+  probe both sides, test before stacking, or add test pads outside its outline.
+- **Fitted after the test** (`"fitted_at_test": false`): the board is tested bare; the guide ends the test with
+  "fit the stacked board after a PASS".
+- Candidates are detected from the footprints (pin sockets, board-to-board/mezzanine connectors, Arduino shield,
+  Raspberry Pi HAT and similar board footprints) and offered as an open decision; nothing is assumed.
 
 ## The solder jigs
 
@@ -242,6 +269,23 @@ Details:
 - Leads must fit in the wells: trim them to the length printed in the guide (10 mm by default) or raise `jig.placement_clearance_mm`.
 - Holding-jig pocket depth is the part height + 0.1 mm. Heights come from, in order: config, a `Height` field, the 3D model (VRML/STEP from your KiCad library), footprint-name rules, defaults. `*-jig.json` lists the source of each height; fix wrong ones with `jig.heights`.
 - Prefer the old single-jig method (parts dropped into the holding jig, PCB lowered onto them)? Set `"jig": {"workflow": "single"}`.
+
+### Parts on both sides
+
+The board is built in passes, and each pass that needs one gets its own jig:
+
+| Pass | What | Jig |
+|---|---|---|
+| 1 | Reflow the SMD side with fewer parts (`jig.smt_first`) | none |
+| 2 | Reflow the other SMD side | `<board>-paste-nest-<side>.stl`: a nest that carries the first side's parts in pockets, with a frame flush with the board so the stencil lies flat (`jig.paste_nest`) |
+| 3 | Hand-solder the top-side parts | `<board>-jig-placement.stl` + `<board>-jig.stl` |
+| 4 | Hand-solder the bottom-side parts | `<board>-jig-bottom-placement.stl` + `<board>-jig-bottom.stl` |
+
+- The bottom-side jigs are made from the board turned over, so they are the right way round (not mirrored). The
+  placement jig of a later pass has pockets for every part already on the board; its holding jig has shallow
+  reliefs for the soldered, clipped leads of the earlier pass (`jig.lead_relief_mm`).
+- Order and sides: `jig.sides` (`auto` = top then bottom, or e.g. `["bottom", "top"]`; leaving a side out leaves
+  its parts without a jig). Passes, parts and files are in `*-jig.json` (`passes`, `extra`) and in the guide.
 
 ## The test runner (Raspberry Pi / MCU)
 
@@ -352,7 +396,8 @@ tools all edit it. The most used keys:
   "nets": {"+3V3": {"nominal": 3.3, "tolerance_pct": 3}, "/SDA": {"min": 2.9, "max": 3.5}, "VBUS": {"test": false}},
   "testplan": {"probe_side": "auto", "pogo": "P75", "signals": "auto", "max_channels": 32, "adc_max_v": 3.3},
   "fixture": {"outline": "rect", "panel": {"cols": 2, "rows": 1}},
-  "jig": {"parts": ["J1", "J2", "C1"], "heights": {"U1": 19.5}},
+  "stack": [{"name": "display", "refs": ["J6"], "outline": [126.5, 100, 148, 121.5], "height_mm": 14}],
+  "jig": {"parts": ["J1", "J2", "C1"], "heights": {"U1": 19.5}, "sides": "auto"},
   "analysis": {"waivers": [{"id": "ASM-FIDUCIALS", "reason": "fiducials on panel rails"}]},
   "video": {"animate": true, "fps": 24}
 }
@@ -373,20 +418,25 @@ hand-soldered parts) and *video* (a 312 mm, 4-layer PCI card).
 Checked against KiCad 10.0.8 and the 19 demo projects that ship with it (19,069 pads, 2024-2026 file formats):
 
 - **Parser:** every pad position and net matches KiCad's own `pcbnew` engine, including rotated and bottom-side parts; track and via counts match.
-- **Fixture boards:** generated in rectangular, 2-site panel and outline modes, opened by KiCad and run through its DRC with no clearance, courtyard, hole or short violations (only the expected unrouted ratsnest).
+- **Fixture boards:** generated and routed in rectangular, panel (2×2, 3×1), outline and two-plate modes and run through KiCad 10.0.8's DRC: no violations and no unconnected items, including pic_programmer (51 connections) and the 312 mm video card (134 connections). The tests check every routed board again for connectivity and clearance.
 - **Plugin:** tested live in KiCad 10's PCB Editor (toolbar, dialog tabs, *Generate*, DRC/ERC merge). The Plugin Manager package was checked against KiCad's schema rules and loaded under its install name in KiCad's Python.
 - **Jigs:** every demo board produces a watertight mesh; heights come from the KiCad 3D library (VRML and STEP).
 - **Class systems:** all 8 built-in systems pass the validator and their test vectors; spot checks of flagged items found real issues (fills running into the routed edge, copper touching NPTH holes, 0.12 mm silkscreen against JLCPCB's 0.15 mm).
-- **Speed:** a full export takes 0.2-13 s per board (largest demo: 1,508 parts); measuring for the class systems 0.1-7 s.
+- **Speed:** a full export takes 0.2-13 s per board (largest demo: 1,508 parts); measuring for the class systems 0.1-7 s; routing the fixture board 0.2 s (sample) to 4 s (pic_programmer) and 15 s (video).
 
 ## Limitations
 
 - Connectivity comes from the board; the schematic adds fields, ratings, power nets and DNP flags.
 - The analysis is heuristic: it points at risks and does not replace DRC/ERC (merged in when `kicad-cli` is found).
-- The fixture board is placed but not routed. Via probing is off by default (vias are usually tented).
+- The fixture router is a two-layer grid router: it keeps KiCad's default rules but does not optimise for signal
+  integrity, and on a very crowded fixture it may leave a connection for you to route (listed in the warnings). Via
+  probing is off by default (vias are usually tented).
 - Class systems check what the design shows; plating, impedance and material appear as order notes. IPC data come from secondary sources (the standards are paywalled); check them against your copy before using them for approvals. Gaps within 0.5 µm of a limit count as meeting it.
 - Voltage spacing uses the net voltages you set and straight-line clearance, not creepage along the surface.
-- The video renders every frame with KiCad, so it takes minutes, not seconds. Windows is supported but has had less testing than macOS and Linux.
+- A stacked board is modelled as a box (its outline and height); the fixture plate is flat, so test points on top of
+  a stacked board are not probed (test that board with its own fixture).
+- The video renders every frame with KiCad, so it takes minutes, not seconds. It shows the first side's jig set;
+  the guide covers every pass. Windows is supported but has had less testing than macOS and Linux.
 
 ---
 

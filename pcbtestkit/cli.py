@@ -29,6 +29,8 @@ def _design(args):
         overrides.setdefault("fixture", {})["panel"] = {"cols": int(c), "rows": int(r)}
     if getattr(args, "outline", None):
         overrides.setdefault("fixture", {})["outline"] = args.outline
+    if getattr(args, "no_route", False):
+        overrides.setdefault("fixture", {})["route"] = False
     if getattr(args, "jig_parts", None):
         overrides.setdefault("jig", {})["parts"] = [p.strip() for p in args.jig_parts.split(",") if p.strip()]
     if getattr(args, "fab", None):
@@ -302,6 +304,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--outline", choices=["rect", "outline"])
     p.add_argument("--jig-parts", help="comma separated refs (default: all THT)")
     p.add_argument("--no-fixture", action="store_true")
+    p.add_argument("--no-route", action="store_true", help="leave the fixture board unrouted (ratsnest only)")
     p.add_argument("--no-jig", action="store_true")
     p.add_argument("--no-runner", action="store_true")
     p.add_argument("--no-visuals", action="store_true", help="skip the KiCad 3D renders in the guide")

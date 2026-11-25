@@ -4,10 +4,13 @@ The fixture PCB carries one pogo pin per probe of the test plan, aligned with
 the DUT, plus a header to the measurement hardware (Raspberry Pi ADC HAT, MCU,
 ...), voltage dividers for channels above the ADC range, a power terminal,
 guide-pin holes copied from the DUT's mounting holes, mounting holes, and
-cut-outs for tall DUT parts on the probed side. Several DUT sites can be
-panelised on one fixture.
+cut-outs for tall DUT parts and fitted stacked boards on the probed side.
+Several DUT sites can be panelised on one fixture. With probe_side "both" there
+is one fixture plate per side (a clamshell: the DUT lies between them).
 
-Connections are left as ratsnest so you can route them (or run Freerouting).
+The board comes out routed by the built-in router (router.py): two layers, KiCad's default rules, wider
+GND/VIN tracks. Each divider pair sits above its own header pin, so the channel nets drop straight down.
+Connections the router cannot make are reported in the warnings and stay as ratsnest to route in KiCad.
 """
 from __future__ import annotations
 
@@ -47,6 +50,8 @@ class FixtureBuilder:
         self.refs: Dict[str, int] = {}
         self.channel_map: List[Dict[str, Any]] = []
         self.pogo_xy: List[Tuple[float, float]] = []
+        self._grid_origin: Optional[Tuple[float, float]] = None
+        self.routing: Optional[Dict[str, Any]] = None
         pogo = plan["pogo"]
         self.drill = float(pogo["drill_mm"])
         self.pad_d = float(pogo.get("pad_mm") or round(self.drill + float(design.cfg["pogo"]["pad_extra"]), 3))
@@ -156,19 +161,51 @@ class FixtureBuilder:
                     out.append(BBox.of_points(to_board(fx_, fy_, ang, px, py) for px, py in pts))
         return out
 
+    def _divided_pin_x(self) -> List[float]:
+        """For every channel with a divider (in header order): its header pin's x, relative to pin 1."""
+        xs = []
+        for h in self.plan["header"]:
+            if h["signal"] in ("GND", "NC"):
+                continue
+            probe = next((p for p in self.plan["probes"] if p.get("channel") == h["signal"]), None)
+            if probe is not None and probe.get("divider"):
+                xs.append(2.54 * ((h["pin"] - 1) // 2))
+        return xs
+
+    def divider_slots(self, xs: List[float]) -> List[Tuple[int, float]]:
+        """(row, x) of each divider pair: above its own header pin, staggered over as few rows as keep them
+        DIV_PITCH_X apart, so each channel net runs straight down to its pin (and is easy to route)."""
+        if not xs:
+            return []
+        best: List[Tuple[int, float]] = []
+        for rows in range(1, 9):
+            last = [-1e9] * rows
+            out = []
+            worst = 0.0
+            for x in xs:
+                r = min(range(rows), key=lambda k: (max(0.0, last[k] + self.DIV_PITCH_X - x), k))
+                px = max(x, last[r] + self.DIV_PITCH_X)
+                last[r] = px
+                out.append((r, round(px, 3)))
+                worst = max(worst, px - x)
+            best = out
+            if worst <= 1.3:
+                break
+        return best
+
     def block_layout(self, max_w: Optional[float] = None) -> Dict[str, Any]:
-        """Connector block: divider pairs in rows (wrapped to ~board width), then header + power terminal."""
+        """Connector block: divider pairs in rows above their header pins, then header + power terminal."""
         n_div = sum(1 for p in self.plan["probes"] if p.get("channel") and p.get("divider"))
         hdr_cols = len(self.plan["header"]) // 2
         hdr_w = 2.54 * max(0, hdr_cols - 1) + 1.7
-        term_w = 11.0 if (self.plan.get("supply") or {}).get("net") else 0.0
+        term_w = 11.0 if (self.plan.get("supply") or {}).get("net") and (
+            not self.plan.get("plate") or any(p["role"] == "supply" for p in self.plan["probes"])) else 0.0
         min_w = hdr_w + 6.0 + term_w + 4.0
-        target = max(min_w, max_w if max_w else self.bb.w + 2 * float(self.fx["margin_mm"]) - 8.0, 40.0)
-        per_row = max(1, int((target - 4.0) / self.DIV_PITCH_X))
-        div_rows = int(math.ceil(n_div / float(per_row))) if n_div else 0
-        w = max(min_w, 4.0 + self.DIV_PITCH_X * min(n_div, per_row))
+        slots = self.divider_slots(self._divided_pin_x())
+        div_rows = (max(r for r, _ in slots) + 1) if slots else 0
+        w = max(min_w, 6.0 + max(x for _, x in slots)) if slots else min_w
         h = div_rows * self.DIV_PITCH_Y + 2.54 + 2.54 + 5.0
-        return {"w": w, "h": h, "per_row": per_row, "div_rows": div_rows, "n_div": n_div}
+        return {"w": w, "h": h, "div_rows": div_rows, "n_div": n_div, "slots": slots}
 
     def block_dims(self) -> Tuple[float, float, int]:
         lay = self.block_layout()
@@ -230,6 +267,9 @@ class FixtureBuilder:
                 bw, bh = lay0["w"], lay0["h"]
         site_w = max(self.bb.w + 2 * margin, bw + 18.0)
         site_h = self.bb.h + 2 * margin + (0.0 if outline_mode == "outline" else bh + 7.0)
+        if nsite > 1:       # site pitch on the router's 0.254 mm grid, so every site's header pins are on it
+            site_w = math.ceil((site_w + spacing) / 0.254 - 1e-9) * 0.254 - spacing
+            site_h = math.ceil((site_h + spacing) / 0.254 - 1e-9) * 0.254 - spacing
         fx0, fy0 = self.bb.x0 - margin, self.bb.y0 - margin
         fx1 = fx0 + cols * site_w + (cols - 1) * spacing
         fy1 = fy0 + rows * site_h + (rows - 1) * spacing
@@ -275,11 +315,35 @@ class FixtureBuilder:
         self.items.append(W.gr_text("probe side: %s | %s %s pins | drill %.2f" % (
             self.plan["probe_side"], self.plan["pogo"]["family"], self.plan["pogo"]["mount"], self.drill),
             ob.cx, ob.y1 + 3.0, "Cmts.User", 0.8))
+        if fx.get("route", True):
+            self.route()
         text = W.board(self.nets, self.items, thickness=1.6, title="Test fixture for " + self.b.name,
                        rev=self.b.title_block.get("rev", ""), comment="Generated by PCB TestKit")
         return {"kicad_pcb": text, "sites": sites, "warnings": self.warnings, "channel_map": self.channel_map,
                 "outline_mode": outline_mode, "outline": ob.as_dict(2), "pogo_count": len(self.pogo_xy),
-                "nets": len(self.nets)}
+                "nets": len(self.nets), "routing": self.routing}
+
+    def route(self) -> None:
+        """Route the placed board with the built-in router and add its tracks and vias."""
+        from .pcb import load_board
+        from .router import route_board
+        board = load_board("fixture.kicad_pcb", pro_path="", text=W.board(self.nets, self.items, thickness=1.6))
+        opts: Dict[str, Any] = {k: self.fx.get(k) for k in ("track_mm", "power_track_mm", "clearance_mm", "via_mm",
+                                                              "via_drill_mm")}
+        opts["origin"] = self._grid_origin
+        power = [n for n in self.nets if n == "GND" or n.endswith("VIN")]
+        res = route_board(board, opts, power)
+        for lay, x1, y1, x2, y2, w, net in res["tracks"]:
+            self.items.append(W.segment(x1, y1, x2, y2, w, lay, self.net_ix[net]))
+        for x, y, size, drill, net in res["vias"]:
+            self.items.append(W.via(x, y, size, drill, self.net_ix[net]))
+        st = res["stats"]
+        self.routing = st
+        if st["unrouted_connections"]:
+            self.warnings.append("the router left %d of %d connection(s) unrouted (%s): route them in KiCad before "
+                                 "ordering" % (st["unrouted_connections"], st["connections"],
+                                               ", ".join(st["unrouted_nets"][:8]) +
+                                               (", ..." if len(st["unrouted_nets"]) > 8 else "")))
 
     def _site(self, k: int, nsite: int, dx: float, dy: float, bx: float, by: float, limit: BBox,
               limit_segs=None) -> Dict[str, Any]:
@@ -387,6 +451,9 @@ class FixtureBuilder:
         lay = self.block_layout(block_w)
         div_y = by + 1.0
         hdr_y = by + lay["div_rows"] * self.DIV_PITCH_Y + 2.54 + 1.0
+        hx = bx + 2.0
+        if self._grid_origin is None:          # header pin 1: the router aligns its grid to the 2.54 mm pins
+            self._grid_origin = (hx, hdr_y + 2.54)
         pins: List[Tuple[int, str, str]] = []
         col = 0
         for h in self.plan["header"]:
@@ -402,23 +469,24 @@ class FixtureBuilder:
             div = probe.get("divider")
             if div:
                 chnet = pre + sig
-                rx = bx + 2.0 + self.DIV_PITCH_X * (col % lay["per_row"])
-                ry = div_y + self.DIV_PITCH_Y * (col // lay["per_row"])
-                self.resistor(rx, ry + 1.0, div["r_top_ohm"], src, chnet)
-                self.resistor(rx, ry + 4.6, div["r_bottom_ohm"], chnet, gnd)
+                row, xr = lay["slots"][col]
+                rx = hx + xr
+                ry = div_y + self.DIV_PITCH_Y * row
+                # rotated 90 degrees, pad 2 is the upper one: probe, channel | channel, GND from top to bottom
+                self.resistor(rx, ry + 1.0, div["r_top_ohm"], chnet, src)
+                self.resistor(rx, ry + 4.6, div["r_bottom_ohm"], gnd, chnet)
                 col += 1
                 pins.append((h["pin"], chnet, sig))
             else:
                 pins.append((h["pin"], src, sig))
             self.channel_map.append({"site": k, "channel": sig, "header": None, "pin": h["pin"], "dut_net": probe["net"],
                                      "divider_ratio": div["ratio"] if div else 1.0})
-        hx = bx + 2.0
         href = self.header(hx, hdr_y + 2.54, pins)
         for cm in self.channel_map:
             if cm["site"] == k and cm["header"] is None:
                 cm["header"] = href
         tref = None
-        if sup.get("net"):
+        if sup.get("net") and (not self.plan.get("plate") or any(p["role"] == "supply" for p in self.plan["probes"])):
             tx = hx + 2.54 * (len(pins) // 2) + 5.0
             tref = self.terminal(tx, hdr_y + 1.27, vin, gnd)
         return {"site": k, "offset": [round(dx, 3), round(dy, 3)], "header": href, "power_terminal": tref,
@@ -451,7 +519,52 @@ def _ohm(v: float) -> str:
     return s
 
 
+def plate_plan(plan: Dict[str, Any], side: str) -> Dict[str, Any]:
+    """The part of a two-sided test plan that one fixture plate carries: its probes, cut-outs and header."""
+    sub = dict(plan)
+    sub["probe_side"] = side
+    sub["plate"] = side
+    sub["probes"] = [p for p in plan["probes"] if (p.get("side") or side) == side]
+    sub["fixture_keepouts"] = [k for k in plan.get("fixture_keepouts") or [] if k.get("side", side) == side]
+    sub["header"] = (plan.get("headers") or {}).get(side) or plan["header"]
+    return sub
+
+
 def build_fixture(design: Design, plan: Dict[str, Any]) -> Dict[str, Any]:
+    """The fixture board; with probe_side "both" the primary plate's result with every plate in ``plates``."""
+    if plan.get("probe_side") == "both":
+        plates: Dict[str, Any] = {}
+        for side in plan.get("plates") or ["bottom", "top"]:
+            W.reset_uids("fixture:%s:%s" % (design.board.name, side))
+            res = FixtureBuilder(design, plate_plan(plan, side)).build()
+            res["side"] = side
+            plates[side] = res
+        first = (plan.get("plates") or ["bottom"])[0]
+        out = dict(plates[first])
+        out["plates"] = plates
+        out["warnings"] = [("%s plate: %s" % (s_, w)) for s_, r_ in plates.items() for w in r_["warnings"]]
+        out["routing"] = merge_routing({s_: r_.get("routing") for s_, r_ in plates.items()})
+        return out
+    return _build_one(design, plan)
+
+
+def merge_routing(per_plate: Dict[str, Optional[Dict[str, Any]]]) -> Optional[Dict[str, Any]]:
+    """Routing stats of all fixture plates together (net names prefixed with their plate)."""
+    parts = {k: v for k, v in per_plate.items() if v}
+    if not parts:
+        return None
+    out: Dict[str, Any] = {"nets": 0, "routed_nets": 0, "unrouted_nets": [], "connections": 0, "unrouted_connections": 0,
+                           "length_mm": 0.0, "vias": 0}
+    for side, st in parts.items():
+        for k in ("nets", "routed_nets", "connections", "unrouted_connections", "vias"):
+            out[k] += st[k]
+        out["length_mm"] = round(out["length_mm"] + st["length_mm"], 1)
+        out["unrouted_nets"] += ["%s:%s" % (side, n) for n in st["unrouted_nets"]]
+    out["plates"] = parts
+    return out
+
+
+def _build_one(design: Design, plan: Dict[str, Any]) -> Dict[str, Any]:
     W.reset_uids("fixture:%s" % design.board.name)
     return FixtureBuilder(design, plan).build()
 
@@ -473,7 +586,7 @@ def probe_points_csv(plan: Dict[str, Any]) -> str:
         e = p.get("expected") or {}
         ratio = p["divider"]["ratio"] if p.get("divider") else (1.0 if p.get("channel") else "")
         lines.append("%s,%s,%s,%s,%.4f,%.4f,%s,%s,%s,%s,%s,%s,%s,%s,%s" % (
-            p["id"], '"%s"' % p["net"], p["role"], plan["probe_side"], p["x"], p["y"], p.get("target_mm", ""),
+            p["id"], '"%s"' % p["net"], p["role"], p.get("side") or plan["probe_side"], p["x"], p["y"], p.get("target_mm", ""),
             '"%s"' % (p.get("label") or ""), p.get("tip", ""), p.get("channel") or "", p.get("header_pin") or "", ratio,
             "" if e.get("nominal_v") is None else e["nominal_v"], "" if e.get("min_v") is None else e["min_v"],
             "" if e.get("max_v") is None else e["max_v"]))

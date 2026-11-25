@@ -71,8 +71,13 @@ DEFAULTS: Dict[str, Any] = {
     "nets": {},
     "supply": {"net": None, "voltage": None, "current_limit_a": 0.5, "max_idle_current_a": None,
                "min_idle_current_a": None},
+    # Boards stacked on this one (daughter board, shield, display on headers or board-to-board connectors).
+    # One entry each: {"name": "display", "refs": ["J6"], "side": "top", "outline": [x0, y0, x1, y1] (board mm),
+    # "height_mm": 14, "fitted_at_test": true}. Fitted: no probes under it, the fixture gets a window for it.
+    # Not fitted: the board is tested before the stack goes on. Missing outline/height are estimated.
+    "stack": [],
     "testplan": {
-        "probe_side": "auto",       # auto | bottom | top
+        "probe_side": "auto",       # auto | bottom | top | both (two fixture plates, probes from both sides)
         "pogo": "P75",
         "pogo_mount": "receptacle",
         "pogo_drill_mm": None,      # override the profile drill (check your pogo/receptacle datasheet)
@@ -91,6 +96,7 @@ DEFAULTS: Dict[str, Any] = {
         "adc_max_v": 3.3,
         "max_signal_voltage": None,
         "probe_clearance_mm": 6.0,
+        "stack_clearance_mm": 1.0,  # probes stay this far outside a fitted stacked board's outline
         "short_test_min_ohm": 100.0,
         "settle_ms": 500,
         "fine_pitch_exclude_mm": 0.8,
@@ -109,6 +115,12 @@ DEFAULTS: Dict[str, Any] = {
         "divider_r_bottom_signal": 100000.0,
         "draw_dut_components": True,
         "cut_tall_components": True,
+        "route": True,              # route the fixture board with the built-in router (two layers)
+        "track_mm": 0.25,           # signal tracks
+        "power_track_mm": 0.5,      # GND and VIN tracks (narrower where that does not fit)
+        "clearance_mm": 0.2,
+        "via_mm": 0.6,
+        "via_drill_mm": 0.3,
     },
     "jig": {
         "parts": "auto",            # auto | [refs]
@@ -137,6 +149,12 @@ DEFAULTS: Dict[str, Any] = {
         "stop_width_mm": 2.5,
         "stop_clearance_mm": 0.15,
         "bottom_part_clearance_mm": 0.8,
+        # boards with parts on both sides: one jig set per hand-soldered side, in this order
+        "sides": "auto",                 # auto (top then bottom, where there are hand-soldered parts) | ["bottom", "top"] | ...
+        "smt_first": "auto",             # SMD side reflowed first: auto (the side with fewer parts) | top | bottom
+        "paste_nest": "auto",            # paste-print nest: auto (second SMD side) | both | none
+        "lead_relief_mm": 2.5,           # reliefs for the soldered leads of the other side's parts
+        "nest_border_mm": 15.0,          # flat frame around the board in the paste-print nest (stencil support)
     },
     "video": {
         "animate": True,            # real 3D motion shots rendered with kicad-cli; false = quick stills-only video

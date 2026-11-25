@@ -2,7 +2,7 @@
 
 # Tool reference (agent API and MCP)
 
-The same 31 tools are available through `pcbtestkit api <tool> --args '<json>' --compact`, the MCP server (`pcbtestkit mcp`) and Python (`pcbtestkit.agent.Workspace.call`). Every call returns one JSON object with `"ok": true|false`; errors carry `code`, `message` and often `hint` or `did_you_mean`.
+The same 32 tools are available through `pcbtestkit api <tool> --args '<json>' --compact`, the MCP server (`pcbtestkit mcp`) and Python (`pcbtestkit.agent.Workspace.call`). Every call returns one JSON object with `"ok": true|false`; errors carry `code`, `message` and often `hint` or `did_you_mean`.
 
 R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo_last` reverts up to 20 writes). Every write accepts `rationale` (one sentence), `dry_run` (preview the effects) and `confirm` (needed after a `CONFIRM_REQUIRED` answer). Core = included in the MCP `core` profile (tool profiles: full, core, readonly).
 
@@ -20,12 +20,13 @@ R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo
 | [`get_finding`](#get_finding) | R | yes | Full detail of one finding (by uid like F003, or check id), items truncated to max_items |
 | [`get_testplan`](#get_testplan) | R |  | Current test plan |
 | [`get_config`](#get_config) | R |  | Project config |
-| [`get_schema`](#get_schema) | R |  | JSON schema/allowed values for: test_step \| net_spec \| testplan_options \| jig_options \| fixture_options \| profiles \| tech_classes (the ordered class system) \| class_system (format, metric names and a template for add_class_system) |
+| [`get_schema`](#get_schema) | R |  | JSON schema/allowed values for: test_step \| net_spec \| testplan_options \| jig_options \| fixture_options \| stacked_boards \| profiles \| tech_classes (the ordered class system) \| class_system (format, metric names, template) |
 | [`set_net_specs`](#set_net_specs) | W | yes | Set expected voltage limits / kind / test inclusion for one or more nets (batch up to 200) |
 | [`set_supply`](#set_supply) | W | yes | Set how the tester powers the DUT: net, voltage, current limit, idle current window |
 | [`set_test_options`](#set_test_options) | W | yes | Test-plan options (probe side, pogo family, signal policy, include/exclude nets, channels, ADC range...) |
 | [`set_jig_options`](#set_jig_options) | W |  | Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances |
-| [`set_fixture_options`](#set_fixture_options) | W |  | Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes |
+| [`set_fixture_options`](#set_fixture_options) | W |  | Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes) |
+| [`set_stacked_boards`](#set_stacked_boards) | W |  | Declare boards stacked on this one (daughter board, shield, display): parts, outline, height, fitted during the test or after |
 | [`set_analysis_options`](#set_analysis_options) | W | yes | Analysis settings: class system + class you will order (class_system e.g |
 | [`list_class_systems`](#list_class_systems) | R |  | Technology-class systems available (fab class tables, fab capability tiers, IPC standards), with their dimensions and levels |
 | [`describe_class_system`](#describe_class_system) | R |  | Limits of a class system: per level, or resolved for this board (resolved=true with a class) |
@@ -151,11 +152,11 @@ Project config. scope: overrides (what was decided, default) \| effective (all v
 
 ### get_schema
 
-JSON schema/allowed values for: test_step \| net_spec \| testplan_options \| jig_options \| fixture_options \| profiles \| tech_classes (the ordered class system) \| class_system (format, metric names and a template for add_class_system).
+JSON schema/allowed values for: test_step \| net_spec \| testplan_options \| jig_options \| fixture_options \| stacked_boards \| profiles \| tech_classes (the ordered class system) \| class_system (format, metric names, template).
 
 | Argument | Type | Description |
 |---|---|---|
-| `name` (required) | test_step \| net_spec \| testplan_options \| jig_options \| fixture_options \| profiles \| tech_classes \| class_system |  |
+| `name` (required) | test_step \| net_spec \| testplan_options \| jig_options \| fixture_options \| stacked_boards \| profiles \| tech_classes \| class_system |  |
 
 ### set_net_specs
 
@@ -193,7 +194,7 @@ Test-plan options (probe side, pogo family, signal policy, include/exclude nets,
 
 | Argument | Type | Description |
 |---|---|---|
-| `probe_side` | auto \| bottom \| top |  |
+| `probe_side` | auto \| bottom \| top \| both | both = two fixture plates, the board between them (nets covered on one side are probed from the other). |
 | `pogo` | P100 \| P50 \| P75 |  |
 | `pogo_mount` | receptacle \| direct |  |
 | `pogo_drill_mm` | number | Override the fixture drill for the pogo pins/receptacles. |
@@ -214,6 +215,7 @@ Test-plan options (probe side, pogo family, signal policy, include/exclude nets,
 | `probe_clearance_mm` | number |  |
 | `short_test_min_ohm` | number |  |
 | `settle_ms` | integer |  |
+| `stack_clearance_mm` | number | Probes stay this far outside a fitted stacked board. |
 
 ### set_jig_options
 
@@ -245,10 +247,15 @@ Solder-jig options: workflow (two jigs or one), which parts it holds, part heigh
 | `stop_width_mm` | number |  |
 | `stop_clearance_mm` | number |  |
 | `bottom_part_clearance_mm` | number |  |
+| `sides` | array \| string | Hand-solder passes, in order: 'auto' (every side with hand-soldered parts, top first) or e.g. ['bottom', 'top']. Each side gets its own jig set. |
+| `smt_first` | auto \| top \| bottom | SMD side reflowed first. |
+| `paste_nest` | auto \| both \| none | Paste-print nest: auto = for the second SMD side (rests on the first side's parts). |
+| `lead_relief_mm` | number | Relief depth for the soldered leads of the other side's parts. |
+| `nest_border_mm` | number |  |
 
 ### set_fixture_options
 
-Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes.
+Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes).
 
 | Argument | Type | Description |
 |---|---|---|
@@ -265,6 +272,26 @@ Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sit
 | `divider_r_bottom_signal` | number |  |
 | `draw_dut_components` | boolean |  |
 | `cut_tall_components` | boolean |  |
+| `route` | boolean | Route the fixture board with the built-in router (default true). |
+| `track_mm` | number |  |
+| `power_track_mm` | number | GND and VIN tracks. |
+| `clearance_mm` | number |  |
+| `via_mm` | number |  |
+| `via_drill_mm` | number |  |
+
+### set_stacked_boards
+
+Declare boards stacked on this one (daughter board, shield, display): parts, outline, height, fitted during the test or after. Replaces the whole list; [] clears it.
+
+| Argument | Type | Description |
+|---|---|---|
+| `boards` (required) | array of object |  |
+| `boards[].name` | string |  |
+| `boards[].refs` | array of string | Connectors it plugs into, or the footprint that draws the stacked board. |
+| `boards[].side` | top \| bottom |  |
+| `boards[].outline` | array of number | [x0, y0, x1, y1]: its shadow on this board, KiCad board coordinates in mm. Default: outline of refs (an estimate for connectors). |
+| `boards[].height_mm` | number | Top of the stack above this board's surface. |
+| `boards[].fitted_at_test` | boolean | true (default): on the board during the test; false: fitted after it. |
 
 ### set_analysis_options
 
