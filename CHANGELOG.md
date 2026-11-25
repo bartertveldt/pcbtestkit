@@ -2,7 +2,7 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 
-## 1.1.0 (unreleased)
+## 1.1.0 (2026-11-25)
 
 ### Batches
 - `batch.count` boards are handled together (dialog: *Boards per batch*; CLI: `run --batch N`; tool:
