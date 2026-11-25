@@ -88,6 +88,10 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
     h.append("<h1>%s %s</h1><div class='muted'>%s &middot; generated %s &middot; %s</div>" %
              (_e(b["title"] or b["name"]), _e(("rev " + b["revision"]) if b["revision"] else "(no revision)"), _e(b["name"]),
               _e(spec["generated"]), _e(spec["generator"])))
+    if outputs.get("video_error"):
+        why = next((w[len("video not made: "):] for w in design.warnings if w.startswith("video not made: ")), "")
+        h.append("<div class='small' style='color:%s'>&#9888; The explainer video could not be made: %s Details: <code>%s</code>"
+                 "</div>" % (SEV_COLOR["major"], _e(why), _e(os.path.basename(outputs["video_error"]))))
     c = s["counts"]
     h.append("<div class='cards'>")
     h.append("<div class='card'><span class='muted'>Readiness</span><b>%s</b><span class='muted'>score %d/100</span></div>" % (_e(s["verdict"]), s["score"]))
@@ -237,8 +241,10 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
     for k, v in outputs.items():
         h.append("<li>%s: <code>%s</code></li>" % (_e(k), _e(os.path.basename(v))))
     h.append("</ul>")
-    if spec.get("warnings"):
-        h.append("<details><summary>Warnings</summary><ul>%s</ul></details>" % "".join("<li>%s</li>" % _e(w) for w in spec["warnings"]))
+    # warnings from the whole run: the spec's copy is taken before the renders and the video
+    warns = list(dict.fromkeys(list(spec.get("warnings") or []) + list(design.warnings)))
+    if warns:
+        h.append("<details><summary>Warnings</summary><ul>%s</ul></details>" % "".join("<li>%s</li>" % _e(w) for w in warns))
     h.append("</main></body></html>")
     return "\n".join(h)
 

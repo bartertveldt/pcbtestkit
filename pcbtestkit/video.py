@@ -32,6 +32,12 @@ def find_ffmpeg() -> Optional[str]:
         (p for p in ("/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg", "/usr/bin/ffmpeg") if os.path.exists(p)), None)
 
 
+def _last_line(text: str) -> str:
+    """The last meaningful line of a tool's output (the error), shortened."""
+    lines = [l.strip() for l in (text or "").splitlines() if l.strip()]
+    return (lines[-1] if lines else "no output")[:300]
+
+
 def find_wx_python() -> Optional[str]:
     """A Python interpreter that can import wx: KiCad's bundled one, or the current one."""
     cands: List[str] = []
@@ -258,9 +264,80 @@ def video_settings(cfg: Dict[str, Any]) -> Dict[str, Any]:
             "workers": int(v.get("workers", 0) or 0), "quality": str(v.get("quality", "basic") or "basic")}
 
 
+# H.264 encoders in order of preference (libx264 is missing from some ffmpeg builds), then MPEG-4 as a last resort
+ENCODERS = [("libx264", ["-preset", "medium", "-crf", "20"]), ("libopenh264", ["-b:v", "8M"]),
+            ("h264_videotoolbox", ["-b:v", "8M"]), ("h264_mf", ["-b:v", "8M"]), ("h264_vaapi", ["-b:v", "8M"]),
+            ("mpeg4", ["-q:v", "3"])]
+
+
+def ffmpeg_caps(ff: str) -> Dict[str, Any]:
+    """The encoders (from ENCODERS) and whether the xfade filter exist in this ffmpeg."""
+    def listing(flag: str) -> str:
+        try:
+            return subprocess.run([ff, "-hide_banner", flag], capture_output=True, text=True, timeout=60).stdout
+        except (OSError, subprocess.SubprocessError):
+            return ""
+    enc = listing("-encoders")
+    names = {ln.split()[1] for ln in enc.splitlines() if len(ln.split()) > 1 and ln.strip()[:1] == "V"}
+    found = [e for e in ENCODERS if e[0] in names] or [ENCODERS[0], ENCODERS[-1]]    # unknown listing: just try
+    return {"encoders": found, "xfade": " xfade " in listing("-filters") or not enc}
+
+
+def filter_graph(durs: List[float], size, fps: float, fade: float, xfade: bool):
+    """ffmpeg filter graph joining the clips (cross-fades with xfade, plain cuts without). Returns (graph, out label,
+    total duration)."""
+    W, H = size
+    n = len(durs)
+    filt = ["[%d:v]scale=%d:%d:force_original_aspect_ratio=increase,crop=%d:%d,fps=%g,format=yuv420p,settb=AVTB,"
+            "setpts=PTS-STARTPTS[v%d]" % (i, W, H, W, H, fps, i) for i in range(n)]
+    if not xfade or n == 1:
+        if n == 1:
+            return ";".join(filt), "v0", durs[0]
+        filt.append("%sconcat=n=%d:v=1:a=0[cat]" % ("".join("[v%d]" % i for i in range(n)), n))
+        return ";".join(filt), "cat", sum(durs)
+    last, t = "v0", durs[0]
+    for i in range(1, n):
+        filt.append("[%s][v%d]xfade=transition=fade:duration=%.2f:offset=%.3f[x%d]" % (last, i, fade, t - fade, i))
+        last = "x%d" % i
+        t = t + durs[i] - fade
+    return ";".join(filt), last, t
+
+
+def video_fingerprint(design, paths: Optional[Dict[str, str]], vs: Dict[str, Any], size) -> str:
+    """What the animation frames depend on: the board, the generated fixture and jigs, the settings, the video
+    size and quality, and the PCB TestKit version. Frames kept from a failed run are reused while it matches."""
+    import hashlib
+    from . import __version__
+    h = hashlib.sha1()
+    h.update(("%s|%s|%s|%s" % (__version__, list(size), vs, json.dumps(design.cfg, sort_keys=True, default=str))).encode())
+    for p in [design.board.path] + [(paths or {}).get(k) for k in ("fixture", "jig_stl", "jig_place_stl")]:
+        if p and os.path.exists(p):
+            with open(p, "rb") as fh:
+                h.update(fh.read())
+    return h.hexdigest()
+
+
+def _kept_shots(anim_dir: str, fp: str) -> Optional[Dict[str, Any]]:
+    """Animation shots kept from an earlier run with the same fingerprint, if every frame is still there."""
+    path = os.path.join(anim_dir, "shots.json")
+    try:
+        with open(path) as fh:
+            kept = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    if kept.get("fingerprint") != fp:
+        return None
+    if not all(os.path.exists(f) for sh in kept.get("shots", {}).values() for f in sh.get("images", [])):
+        return None
+    return kept
+
+
 def build_video(design, spec, plan, fixture, jig, visuals, out_dir: str, out_path: str, work_dir: Optional[str] = None,
                 size=None, fade: float = 0.6, paths: Optional[Dict[str, str]] = None, visuals_dir: Optional[str] = None,
                 progress: Optional[Callable[[int, int], None]] = None) -> Dict[str, Any]:
+    """Make the MP4. Every stage keeps its results until the video is done, so a run after a failure reuses them:
+    the 3D animation frames (when the board, fixture, jigs, settings and version are unchanged) and the caption
+    frames (when the storyboard is the same); only what is missing or changed is made again."""
     ff = find_ffmpeg()
     if not ff:
         return {"ok": False, "reason": "ffmpeg not found (install it or set FFMPEG)"}
@@ -274,49 +351,75 @@ def build_video(design, spec, plan, fixture, jig, visuals, out_dir: str, out_pat
     os.makedirs(work, exist_ok=True)
     shots: Dict[str, Dict[str, Any]] = {}
     anim_info: Dict[str, Any] = {}
+    reused: List[str] = []
     if vs["animate"] and paths is not None and visuals.get("available", True):
-        from .animate import build_shots
-        try:
-            res = build_shots(design, plan, fixture, jig, paths, visuals_dir or os.path.join(out_dir, "visuals"),
-                              fps=fps, size=size, quality=vs["quality"], workers=vs["workers"], progress=progress)
-            shots, anim_info = res["shots"], res["stats"]
-            for line in res.get("log", []):
-                design.warnings.append(line)
-        except Exception as exc:  # animation is optional; fall back to stills
-            design.warnings.append("video animation skipped: %r" % exc)
+        vdir = visuals_dir or os.path.join(out_dir, "visuals")
+        anim_dir = os.path.join(vdir, "scenes", "anim")
+        fp = video_fingerprint(design, paths, vs, size)
+        kept = _kept_shots(anim_dir, fp)
+        if kept is not None:
+            shots, anim_info = kept["shots"], kept.get("stats", {})
+            reused.append("%d animation frames" % sum(len(sh["images"]) for sh in shots.values()))
+        else:
+            from .animate import build_shots
+            try:
+                res = build_shots(design, plan, fixture, jig, paths, vdir, fps=fps, size=size, quality=vs["quality"],
+                                  workers=vs["workers"], progress=progress)
+                shots, anim_info = res["shots"], res["stats"]
+                for line in res.get("log", []):
+                    design.warnings.append(line)
+                if shots:
+                    os.makedirs(anim_dir, exist_ok=True)
+                    with open(os.path.join(anim_dir, "shots.json"), "w") as fh:
+                        json.dump({"fingerprint": fp, "shots": shots, "stats": anim_info}, fh)
+            except Exception as exc:  # animation is optional; fall back to stills
+                design.warnings.append("video animation skipped: %r" % exc)
     scenes = storyboard(design, spec, plan, fixture, jig, visuals, out_dir, work, shots)
     job = {"size": list(size), "frames_dir": work, "scenes": scenes}
+    job_text = json.dumps(job, sort_keys=True)
     job_path = os.path.join(work, "storyboard.json")
-    with open(job_path, "w") as fh:
-        json.dump(job, fh)
-    env = dict(os.environ)
-    env["PYTHONPATH"] = os.path.dirname(HERE) + os.pathsep + env.get("PYTHONPATH", "")
-    r = subprocess.run([py, "-m", "pcbtestkit.video_frames", job_path], capture_output=True, text=True, env=env, timeout=3600)
     fj = os.path.join(work, "frames.json")
-    if r.returncode != 0 or not os.path.exists(fj):
-        return {"ok": False, "reason": "frame rendering failed: %s" % (r.stderr or r.stdout)[-400:]}
-    with open(fj) as fh:
-        frames_lists = json.load(fh)
+    frames_lists = None
+    try:                                            # captions drawn by an earlier run for the same storyboard
+        with open(job_path) as fh:
+            same = fh.read() == job_text
+        with open(fj) as fh:
+            old = json.load(fh)
+        if same and all(os.path.exists(f) for fl in old for f in fl):
+            frames_lists = old
+            reused.append("the caption frames")
+    except (OSError, ValueError):
+        pass
+    if frames_lists is None:
+        with open(job_path, "w") as fh:
+            fh.write(job_text)
+        if os.path.exists(fj):
+            os.remove(fj)
+        env = dict(os.environ)
+        env["PYTHONPATH"] = os.path.dirname(HERE) + os.pathsep + env.get("PYTHONPATH", "")
+        r = subprocess.run([py, "-m", "pcbtestkit.video_frames", job_path], capture_output=True, text=True, env=env,
+                           timeout=3600)
+        if r.returncode != 0 or not os.path.exists(fj):
+            return {"ok": False, "reason": "drawing the titles and captions (%s -m pcbtestkit.video_frames) failed: %s" % (
+                        os.path.basename(py), _last_line(r.stderr or r.stdout)),
+                    "log": "exit code %s\n--- stdout ---\n%s\n--- stderr ---\n%s" % (r.returncode, r.stdout, r.stderr)}
+        with open(fj) as fh:
+            frames_lists = json.load(fh)
     used = [(sc, fl) for sc, fl in zip(scenes, frames_lists) if fl]
     args, durs = _clip_inputs([u[0] for u in used], [u[1] for u in used], work, fps)
-    n = len(durs)
-    W, H = size
-    filt = []
-    for i in range(n):
-        filt.append("[%d:v]scale=%d:%d:force_original_aspect_ratio=increase,crop=%d:%d,fps=%g,"
-                    "format=yuv420p,settb=AVTB,setpts=PTS-STARTPTS[v%d]" % (i, W, H, W, H, fps, i))
-    last = "v0"
-    t = durs[0]
-    for i in range(1, n):
-        off = t - fade
-        filt.append("[%s][v%d]xfade=transition=fade:duration=%.2f:offset=%.3f[x%d]" % (last, i, fade, off, i))
-        last = "x%d" % i
-        t = t + durs[i] - fade
-    cmd = [ff, "-y", "-hide_banner", "-loglevel", "error"] + args + [
-        "-filter_complex", ";".join(filt), "-map", "[%s]" % last, "-c:v", "libx264", "-preset", "medium", "-crf", "20",
-        "-pix_fmt", "yuv420p", "-movflags", "+faststart", out_path]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
-    if r.returncode != 0 or not os.path.exists(out_path):
-        return {"ok": False, "reason": "ffmpeg failed: %s" % r.stderr[-400:]}
-    return {"ok": True, "path": out_path, "duration_s": round(t, 1), "scenes": n, "animated_shots": sorted(shots),
-            "animation": anim_info}
+    caps = ffmpeg_caps(ff)
+    graph, last, t = filter_graph(durs, size, fps, fade, caps["xfade"])
+    tried = []
+    for name, opts in caps["encoders"]:
+        cmd = [ff, "-y", "-hide_banner", "-loglevel", "error"] + args + [
+            "-filter_complex", graph, "-map", "[%s]" % last, "-c:v", name] + opts + [
+            "-pix_fmt", "yuv420p", "-movflags", "+faststart", out_path]
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
+        if r.returncode == 0 and os.path.exists(out_path):
+            return {"ok": True, "path": out_path, "duration_s": round(t, 1), "scenes": len(durs),
+                    "animated_shots": sorted(shots), "animation": anim_info, "encoder": name,
+                    "crossfades": caps["xfade"], "reused": reused}
+        tried.append("--- %s: exit code %s ---\n%s" % (name, r.returncode, r.stderr))
+    return {"ok": False, "reason": "ffmpeg (%s) could not join the frames into the MP4 with %s: %s" % (
+                ff, ", ".join(e[0] for e in caps["encoders"]), _last_line(r.stderr)),
+            "log": "frames reused: %s\ncross-fades: %s\n%s" % (", ".join(reused) or "none", caps["xfade"], "\n".join(tried))}

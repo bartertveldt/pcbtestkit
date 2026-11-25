@@ -76,6 +76,9 @@ def cmd_run(args) -> int:
                                                                   res["coverage"]["power_nets"]))
         for k, v in res["paths"].items():
             print("  %-15s %s" % (k, v))
+        vid = res.get("video") or {}
+        if vid.get("ok") and vid.get("reused"):
+            print("  video made from frames kept from the last run: %s" % ", ".join(vid["reused"]))
         for w in res["fixture_warnings"] + res["warnings"]:
             print("  ! %s" % w)
     return 0

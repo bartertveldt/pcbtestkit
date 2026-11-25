@@ -238,6 +238,12 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
              "<a href='#jig'>3 Solder with the jigs</a><a href='#files'>Files</a></nav>")
     if paths.get("video") and os.path.exists(paths["video"]):
         h.append("<section><h2>Explainer video</h2><video controls src='%s'></video></section>" % _e(os.path.basename(paths["video"])))
+    elif paths.get("video_error"):
+        why = next((w[len("video not made: "):] for w in design.warnings if w.startswith("video not made: ")), "")
+        h.append("<section><h2>Explainer video</h2><p>The video could not be made: %s</p><p class='small muted'>The whole "
+                 "error is in <code>%s</code>; the frames rendered so far are kept in <code>visuals/scenes/</code> and are reused "
+                 "when you generate again with the same settings.</p>"
+                 "</section>" % (_e(why), _e(os.path.basename(paths["video_error"]))))
     h.append("<div class='grid2'><div>%s<div class='cap'>The board (KiCad 3D render)</div></div><div>%s<div class='cap'>Bottom side</div></div></div>" %
              (_img(im.get("dut_iso"), "Board, 3D view"), _img(im.get("dut_bottom"), "Board bottom")))
 

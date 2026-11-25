@@ -2,6 +2,18 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 
+## 1.1.1 (unreleased)
+
+### Explainer video
+- When the video cannot be made after its frames are rendered, the frames are no longer deleted, and the reason is
+  shown: in the dialog's final message, the guide, the report and `<board>-video-error.txt` (the whole error output).
+  Before, the reason only reached the command line, and the frames disappeared.
+- Kept frames are reused: generating again with the same board, fixture, jigs, settings and version skips the 3D
+  animation (and the captions when the storyboard is unchanged) and only makes the MP4 again.
+- The MP4 step asks ffmpeg what it has: when libx264 is missing it uses another H.264 encoder (OpenH264,
+  VideoToolbox, Media Foundation, VA-API) or MPEG-4, and an ffmpeg without the xfade filter joins the clips with
+  plain cuts instead of failing.
+
 ## 1.1.0 (2026-11-25)
 
 ### Batches

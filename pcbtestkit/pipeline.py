@@ -195,6 +195,8 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
             paths["runner"] = rdir
 
     visuals: Dict[str, Any] = {}
+    video: Optional[Dict[str, Any]] = None
+    keep_frames = False
     if want.get("guide", True):
         vdir = os.path.join(out_dir, "visuals")
         if want.get("visuals", True):
@@ -221,13 +223,28 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
                 vres = {"ok": False, "reason": repr(exc)}
             if vres.get("ok"):
                 paths["video"] = vp
+                video = {"ok": True, "path": vp, "reused": vres.get("reused") or [], "encoder": vres.get("encoder")}
+                stale = os.path.join(out_dir, "%s-video-error.txt" % name)
+                if os.path.exists(stale):              # from an earlier failed try
+                    os.remove(stale)
             else:
-                design.warnings.append("video skipped: %s" % vres.get("reason"))
+                why = vres.get("reason") or "unknown error"
+                design.warnings.append("video not made: %s" % why)
+                # keep the frames rendered so far and write the whole error, so the failure can be looked into
+                keep_frames = True
+                paths["video_error"] = os.path.join(out_dir, "%s-video-error.txt" % name)
+                log = (vres.get("log") or "").replace(out_dir + os.sep, "")
+                with open(paths["video_error"], "w", encoding="utf-8") as fh:
+                    fh.write("PCB TestKit could not make the explainer video.\n\nReason: %s\n\nThe frames rendered so far "
+                             "are kept in visuals/scenes/. Fix the cause and generate again with the same settings: the "
+                             "frames are reused (only changed or missing ones are made again), so the next try is quick. "
+                             "The folder is removed once the video is made.\n\n%s\n" % (why, log))
+                video = {"ok": False, "reason": why, "error_file": paths["video_error"]}
         from .guide import build_guide
         paths["guide"] = os.path.join(out_dir, "%s-guide.html" % name)
         with open(paths["guide"], "w", encoding="utf-8") as fh:
             fh.write(build_guide(design, spec, plan, fixture, jig, visuals, paths))
-        if not want.get("keep_scenes"):
+        if not want.get("keep_scenes") and not keep_frames:
             from .visuals import clean_scenes
             clean_scenes(vdir)
         for w in (visuals.get("log") or []):
@@ -244,6 +261,7 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
             "fixture_routing": fixture.get("routing") if fixture else None,
             "jig": {k: jig[k] for k in ("jig_size_mm", "parts_to_place", "mesh", "workflow", "passes", "batch") if k in jig} if jig else None,
             "batch": plan.get("batch"),
+            "video": video,
             "program": [{"header": h["ref"], "protocol": h["protocol"], "connector": h.get("connector"), "missing": h["missing"]}
                         for h in (plan.get("program") or {}).get("headers") or []],
             "warnings": design.warnings + plan["warnings"]}

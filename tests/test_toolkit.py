@@ -1345,3 +1345,65 @@ class TestBatchAndProgramming(unittest.TestCase):
         self.assertTrue(ws.call("set_batch_and_programming", {"batch_count": 3, "program_connector": "swd10",
                                                               "rationale": "3 boards per batch", "dry_run": True})["ok"])
         self.assertFalse(ws.call("set_batch_and_programming", {"program_headers": ["J99"]})["ok"])
+
+
+class TestVideoRecovery(Base):
+    """A video that fails after its frames are rendered says why, keeps the frames and reuses them next time."""
+
+    def test_filter_graph_and_kept_frames(self):
+        from pcbtestkit.video import _kept_shots, filter_graph, video_fingerprint, video_settings
+        g, last, t = filter_graph([2.0, 3.0, 1.5], (640, 360), 24, 0.5, True)
+        self.assertEqual(last, "x2")
+        self.assertAlmostEqual(t, 5.5)                                   # two 0.5 s cross-fades overlap
+        g2, last2, t2 = filter_graph([2.0, 3.0, 1.5], (640, 360), 24, 0.5, False)
+        self.assertIn("concat=n=3", g2)                                  # old ffmpeg without xfade: plain cuts
+        self.assertNotIn("xfade", g2)
+        self.assertEqual((last2, t2), ("cat", 6.5))
+        d = self.design()
+        fp = video_fingerprint(d, {}, video_settings(d.cfg), (640, 360))
+        self.assertEqual(fp, video_fingerprint(self.design(), {}, video_settings(d.cfg), (640, 360)))
+        d12 = self.design(video={"fps": 12})
+        self.assertNotEqual(fp, video_fingerprint(d12, {}, video_settings(d12.cfg), (640, 360)))
+        anim = os.path.join(self.tmp, "anim_kept")
+        os.makedirs(anim, exist_ok=True)
+        frame = os.path.join(anim, "orbit_0000.png")
+        with open(frame, "wb") as fh:
+            fh.write(b"png")
+        with open(os.path.join(anim, "shots.json"), "w") as fh:
+            json.dump({"fingerprint": fp, "shots": {"orbit": {"images": [frame], "fps": 24, "hold": 1, "meta": {}}},
+                       "stats": {}}, fh)
+        self.assertIsNotNone(_kept_shots(anim, fp))
+        self.assertIsNone(_kept_shots(anim, "another board or setting"))
+        os.remove(frame)
+        self.assertIsNone(_kept_shots(anim, fp))                          # a frame is gone: render again
+
+    @unittest.skipIf(os.name == "nt", "a shell script stands in for ffmpeg")
+    def test_ffmpeg_without_libx264_or_xfade(self):
+        from pcbtestkit.video import ffmpeg_caps
+        ff = os.path.join(self.tmp, "ffmpeg")
+        with open(ff, "w") as fh:
+            fh.write('#!/bin/sh\ncase "$2" in\n -encoders) printf " V....D libopenh264 OpenH264\\n V.S..D mpeg4 MPEG-4\\n";;\n'
+                     ' -filters) printf " ... concat N->N Concatenate\\n";;\nesac\n')
+        os.chmod(ff, 0o755)
+        caps = ffmpeg_caps(ff)
+        self.assertEqual([e[0] for e in caps["encoders"]], ["libopenh264", "mpeg4"])
+        self.assertFalse(caps["xfade"])
+
+    def test_failed_video_is_reported_and_frames_kept(self):
+        from unittest import mock
+        out = os.path.join(self.tmp, "video_fail")
+        kept = os.path.join(out, "visuals", "scenes", "anim", "orbit_0000.png")
+        os.makedirs(os.path.dirname(kept), exist_ok=True)
+        with open(kept, "wb") as fh:
+            fh.write(b"png")
+        with mock.patch("pcbtestkit.video.find_ffmpeg", return_value=None):
+            res = run_pipeline(self.design(), out_dir=out, include_kicad=False,
+                               outputs={"visuals": False, "video": True, "jig": False})
+        self.assertFalse(res["video"]["ok"])
+        self.assertIn("ffmpeg not found", res["video"]["reason"])
+        self.assertTrue(os.path.exists(res["paths"]["video_error"]))
+        self.assertTrue(os.path.exists(kept))                             # not cleaned up after a failure
+        with open(res["paths"]["guide"], encoding="utf-8") as fh:
+            self.assertIn("The video could not be made", fh.read())
+        with open(res["paths"]["report"], encoding="utf-8") as fh:
+            self.assertIn(os.path.basename(res["paths"]["video_error"]), fh.read())

@@ -592,6 +592,13 @@ class MainDialog(wx.Dialog):
             nxt = "Your fixture: the probe points are in %s." % os.path.basename(res["paths"]["probe_points"])
         else:
             nxt = "No fixture: the guide lists the test points and limits for a manual test."
+        vid = res.get("video")
+        if vid and vid.get("ok"):
+            nxt += "\n\nVideo: %s" % os.path.basename(vid["path"])
+        elif vid:
+            nxt += ("\n\nThe video could NOT be made: %s\nThe whole error is in %s. The frames rendered so far are kept "
+                    "in visuals/scenes: generate again with the same settings and they are reused, so only the MP4 is "
+                    "made again." % (vid.get("reason"), os.path.basename(vid.get("error_file") or "")))
         msg = ("%s - score %d/100\n%s\n\nTest coverage: %s%% of nets\n\nFiles written to:\n%s\n\n%s\n\nOpen the HTML report now?") % (
             s["verdict"].upper(), s["score"], ", ".join("%d %s" % (v, k) for k, v in s["counts"].items() if v),
             res["coverage"]["percent"], res["out_dir"], nxt)

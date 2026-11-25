@@ -375,6 +375,11 @@ a private KiCad model cache, so your KiCad cache doesn't fill up. Rendering take
 8-core laptop (5-20 minutes per board); `--video-fps 15` halves it and `--video-stills` makes a stills-only video
 in under a minute. Settings: the `video` section of `pcbtestkit.json`.
 
+If the MP4 cannot be made (ffmpeg missing an encoder, for example), the frames are kept in `visuals/scenes/` and the
+reason is shown in the dialog, the guide, the report and `<board>-video-error.txt`. Generate again with the same
+settings and the frames are reused, so only the MP4 is made again. ffmpeg without libx264 falls back to another
+H.264 encoder or MPEG-4, and one without the xfade filter to plain cuts.
+
 ---
 
 ## AI assistants and automation
