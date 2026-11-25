@@ -88,6 +88,6 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 
 - `python3 -m pcbtestkit tools --brief` (one line per tool) and `tools --name X` (one schema) instead of
   `docs/reference/tools.md` (18 KB) unless you need everything.
-- MCP: `--profile core` exposes 16 tools (about 3k tokens of tool definitions) instead of 32 (about 6k).
+- MCP: `--profile core` exposes 16 tools (about 3k tokens of tool definitions) instead of 33 (about 6k).
 - Large files to avoid reading whole: `pcbtestkit/agent.py`, `pcbtestkit/analysis.py`, `pcbtestkit/pcb.py`,
   everything under `docs/examples/`, any `.kicad_pcb`, `.stl`, `.mp4`, `.html`.

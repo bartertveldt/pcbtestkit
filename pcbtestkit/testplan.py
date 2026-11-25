@@ -38,7 +38,7 @@ class Candidate:
 class ProbePoint:
     id: str
     net: str
-    role: str            # ground | supply | measure
+    role: str            # ground | supply | measure | program
     x: float
     y: float
     source: str
@@ -50,6 +50,7 @@ class ProbePoint:
     divider: Optional[Dict[str, float]] = None
     expected: Optional[Dict[str, Any]] = None
     side: str = ""            # bottom | top: the fixture plate this probe is on
+    pogo: Optional[Dict[str, Any]] = None     # a finer pogo family than the plan's (fine-pitch programming headers)
 
 
 def e24_at_least(v: float) -> float:
@@ -174,8 +175,9 @@ class Planner:
         return out
 
     def _pad_candidate(self, fp: Footprint, p: Pad, is_tp: bool, pitch: float, fine: float,
-                       side: Optional[str] = None) -> Optional[Candidate]:
+                       side: Optional[str] = None, min_target: Optional[float] = None) -> Optional[Candidate]:
         side = side or self.sides[0]
+        min_target = self.min_target if min_target is None else min_target
         size = p.min_size if p.shape != "circle" else p.w
         if p.is_tht:
             # THT leads are reachable from the opposite side of the body only
@@ -186,7 +188,7 @@ class Planner:
         elif p.kind == "smd":
             if not (p.on_copper(side) and p.mask_open(side)):
                 return None
-            if size < self.min_target:
+            if size < min_target:
                 return None
             if not is_tp and "pad_prop_testpoint" not in p.props:
                 if not self.tp.get("allow_component_pads", True):
@@ -327,6 +329,10 @@ class Planner:
                     untestable[net] = "all candidate pads conflict with other probes (pitch %.2f mm)" % self.pitch
             elif got < count:
                 self.warnings.append("only %d of %d %s probes placed for %s" % (got, count, role, net))
+        program = self._program(cands, chosen)
+        for pp in chosen:                    # reached for programming (no measurement channel): no longer untestable
+            if pp.role == "program":
+                untestable.pop(pp.net, None)
         headers: Dict[str, List[Dict[str, Any]]] = {}
         if self.side == "both":
             # one fixture plate per side that has probes, each with a header for the channels of its own probes
@@ -343,7 +349,85 @@ class Planner:
             plates = list(self.sides)
             header = _header(chosen)
         return {"points": chosen, "untestable": untestable, "skipped": skipped, "supply": supply,
-                "main_ground": main_gnd, "header": header, "headers": headers, "plates": plates, "candidates": cands}
+                "main_ground": main_gnd, "header": header, "headers": headers, "plates": plates, "candidates": cands,
+                "program": program}
+
+    # ------------------------------------------------------------------ #
+    def _program(self, cands: Dict[str, List[Candidate]], chosen: List[ProbePoint]) -> List[Dict[str, Any]]:
+        """Probe every pin of the programming headers, so a programmer on the fixture reaches the board.
+
+        A pin whose net already has a probe (a rail, GND, a measured signal) is wired to that probe; any other pin
+        gets a "program" probe, on the header's own pad first. Pads closer than the plan's pogo spacing (1.27 mm
+        Tag-Connect / Cortex headers) get a finer pogo family."""
+        from .config import pogo_for_pitch
+        from .program import selected
+        out: List[Dict[str, Any]] = []
+        spacing: Dict[str, float] = {}
+
+        def gap(q: ProbePoint) -> float:
+            return spacing.get(q.id, self.pitch)
+
+        edge_keep = float(self.tp["edge_keepout_mm"])
+        fine = float(self.tp["fine_pitch_exclude_mm"])
+        for h in selected(self.d):
+            fp = self.b.by_ref.get(h["ref"])
+            pitch_h = h.get("pitch_mm") or 99.0
+            geo = pogo_for_pitch(self.d.cfg, pitch_h) if pitch_h < self.pitch - 1e-6 else None
+            pins, missing = [], []
+            for pin in h["pins"]:
+                rec = {"pad": pin["pad"], "net": pin["net"], "signal": pin["signal"], "probe": None}
+                net = pin["net"]
+                if not net or C.is_unconnected(net):
+                    pins.append(rec)
+                    continue
+                ex = next((q for q in chosen if q.net == net), None)
+                if ex is not None:
+                    rec["probe"] = ex.id
+                    pins.append(rec)
+                    continue
+                opts: List[Tuple[Candidate, Optional[Dict[str, Any]]]] = []
+                pad = fp.pad(pin["pad"]) if fp is not None else None
+                if pad is not None:
+                    for side in self.sides:
+                        c = self._pad_candidate(fp, pad, True, 99.0, fine, side,
+                                                min_target=geo["min_target_mm"] if geo else None)
+                        if c is None or (self.b.edge_segs and (self.b.edge_distance(c.x, c.y) < edge_keep
+                                                               or not self.b.inside(c.x, c.y))):
+                            continue
+                        if self._in_keepout(c.x, c.y, side):
+                            continue
+                        opts.append((c, geo))
+                opts += [(c, None) for c in cands.get(net, []) if not (fp is not None and c.ref == fp.ref)]
+                placed = None
+                for c, g in opts:
+                    sp = g["min_spacing_mm"] if g else self.pitch
+                    if any(q.side == c.side and math.hypot(c.x - q.x, c.y - q.y) < max(sp, gap(q)) - 1e-6 for q in chosen):
+                        continue
+                    pp = ProbePoint(id="PP%02d" % (len(chosen) + 1), net=net, role="program", x=round(c.x, 4),
+                                    y=round(c.y, 4), source=c.source, label=c.label, target_mm=round(c.size, 3),
+                                    tip="crown" if c.source == "tht" else "spear", side=c.side,
+                                    pogo={k: g[k] for k in ("family", "mount", "drill_mm", "pad_mm", "min_spacing_mm")} if g else None)
+                    chosen.append(pp)
+                    spacing[pp.id] = sp
+                    placed = pp
+                    break
+                if placed is None:
+                    missing.append("%s (%s)" % (pin["pad"], pin["signal"] or C.base_net(net)))
+                else:
+                    rec["probe"] = placed.id
+                pins.append(rec)
+            if missing:
+                self.warnings.append("programming header %s: no probe fits pin(s) %s; program through test points on "
+                                     "those nets or probe the %s side" % (h["ref"], ", ".join(missing),
+                                                                          "other" if self.side != "both" else "board's"))
+            if fp is not None and fp.side in self.sides and fp.is_smd and not (fp.board_only or fp.exclude_from_bom):
+                self.warnings.append("programming header %s is fitted on the probed side: the pogo pins land on its "
+                                     "pads, under the connector. Leave it unfitted in production (DNP) or probe from "
+                                     "the other side" % h["ref"])
+            rec_h = {k: h[k] for k in ("ref", "value", "footprint", "protocol", "side", "why", "pitch_mm")}
+            rec_h.update(pins=pins, missing=missing, pogo=geo["family"] if geo else None)
+            out.append(rec_h)
+        return out
 
 
 def _header(points: List[ProbePoint]) -> List[Dict[str, Any]]:
@@ -481,6 +565,14 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
             rails.append(chk)
     if rails:
         steps.append({"id": "S4", "name": "Rail voltages", "type": "voltage", "power": "on", "checks": rails})
+    prog_cfg = design.cfg.get("program") or {}
+    prog_headers = r.get("program") or []
+    if prog_headers:
+        refs = ", ".join("%s (%s)" % (h["ref"], h["protocol"]) for h in prog_headers)
+        steps.append({"id": "SP", "name": "Program the board through %s" % refs, "type": "program", "power": "on",
+                      "headers": [h["ref"] for h in prog_headers], "command": list(prog_cfg.get("command") or []),
+                      "timeout_s": float(prog_cfg.get("timeout_s", 180)),
+                      "instruction": "Connect the programmer to the fixture's PROG connector of this board and program it."})
     sigs = []
     for p in points:
         if p.channel and design.net_kind(p.net) == "signal":
@@ -516,7 +608,21 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
     cov["percent"] = round(100.0 * cov["nets_probed"] / cov["nets_total"], 1) if cov["nets_total"] else 0.0
     pogo = design.cfg["pogo"]
     mount = tp.get("pogo_mount", "receptacle")
+    from .batch import layout as batch_layout
+    from .program import connector_for
     from .stack import brief
+    bb = design.board.outline_bbox()
+    batch = batch_layout(design.cfg, bb.w, bb.h)
+    program = None
+    if prog_headers:
+        conns = []
+        for h in prog_headers:
+            kind, warn = connector_for(h, prog_cfg.get("connector", "same"))
+            h["connector"] = kind
+            conns += warn
+        pl.warnings.extend(conns)
+        program = {"headers": prog_headers, "connector": prog_cfg.get("connector", "same"),
+                   "command": list(prog_cfg.get("command") or []), "timeout_s": float(prog_cfg.get("timeout_s", 180))}
     return {
         "schema": TESTPLAN_SCHEMA,
         "board": {"name": design.board.name, "revision": design.board.title_block.get("rev", "")},
@@ -540,6 +646,8 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
         "stack": [brief(st) for st in pl.stacks],
         "after_test": [{"fit": st["name"], "refs": st["refs"], "side": st["side"]} for st in pl.stacks
                        if st["valid"] and not st["fitted_at_test"]],
+        "batch": batch,
+        "program": program,
         "warnings": pl.warnings + ["stacked board %s: %s" % (st["name"], pr) for st in pl.stacks for pr in st["problems"]],
     }
 

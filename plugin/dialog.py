@@ -138,8 +138,28 @@ class MainDialog(wx.Dialog):
         self.adc = wx.TextCtrl(p, value=str(tp["adc_max_v"]))
         self.outline = wx.Choice(p, choices=["rect", "outline"])
         self.outline.SetStringSelection(fx.get("outline", "rect"))
-        self.cols = wx.SpinCtrl(p, min=1, max=10, initial=int((fx.get("panel") or {}).get("cols", 1)))
-        self.rows = wx.SpinCtrl(p, min=1, max=10, initial=int((fx.get("panel") or {}).get("rows", 1)))
+        bc, panel = cfg.get("batch") or {}, fx.get("panel") or {}
+        n0 = int(bc.get("count") or 1)
+        if n0 <= 1:                                   # older projects: fixture.panel cols x rows
+            n0 = int(panel.get("cols", 1)) * int(panel.get("rows", 1))
+        self.batch_n = wx.SpinCtrl(p, min=1, max=48, initial=n0)
+        self.batch_cols = wx.SpinCtrl(p, min=0, max=12, initial=int(bc.get("cols") or 0))
+        pc = cfg.get("program") or {}
+        self.prog_opts = [("same", "Copy of the board's header (its cable fits)"), ("swd10", "ARM Cortex 10-pin SWD, 1.27 mm"),
+                          ("jtag20", "ARM 20-pin JTAG, 2.54 mm"), ("avr_isp6", "AVR ISP 6-pin"),
+                          ("pic_icsp6", "PIC ICSP 6-pin (PICkit)"), ("pins", "1 x N pin header, labelled")]
+        self.prog_conn = wx.Choice(p, choices=[lab for _, lab in self.prog_opts])
+        kinds = [k for k, _ in self.prog_opts]
+        self.prog_conn.SetSelection(kinds.index(pc.get("connector", "same")) if pc.get("connector", "same") in kinds else 0)
+        import shlex
+        self.prog_cmd = wx.TextCtrl(p, value=" ".join(shlex.quote(a) for a in pc.get("command") or []), size=(380, -1))
+        self.prog_cmd.SetHint("optional, e.g. openocd -f board.cfg -c \"program fw.elf verify reset exit\"")
+        try:
+            from ..pcbtestkit.program import detect
+            found = detect(self.design)
+        except Exception:  # detection must never stop the dialog
+            found = []
+        self.prog_found = ", ".join("%s (%s)" % (h["ref"], h["protocol"]) for h in found) or "none found"
         self.route_fx = wx.CheckBox(p, label="tracks and vias, KiCad's default rules")
         self.route_fx.SetValue(bool(fx.get("route", True)))
         sup = self.design.supply()
@@ -156,8 +176,12 @@ class MainDialog(wx.Dialog):
                          ("ADC input range (V)", self.adc), ("Supply net", self.sup_net), ("Supply voltage (V)", self.sup_v),
                          ("Supply current limit (A)", self.sup_i), ("Max idle current (A, empty = no check)", self.idle_max),
                          ("Min idle current (A, empty = no check)", self.idle_min),
-                         ("Fixture outline", self.outline), ("Panel columns", self.cols), ("Panel rows", self.rows),
-                         ("Route the fixture board", self.route_fx)]:
+                         ("Fixture outline", self.outline),
+                         ("Boards per batch (fixture sites, jig positions)", self.batch_n),
+                         ("Batch columns (0 = automatic)", self.batch_cols),
+                         ("Route the fixture board", self.route_fx),
+                         ("Programming connector per board", self.prog_conn),
+                         ("Programming command (test runner)", self.prog_cmd)]:
             g.Add(wx.StaticText(p, label=lab), 0, wx.ALIGN_CENTER_VERTICAL)
             g.Add(ctl)
         s.Add(g, 0, wx.ALL, 10)
@@ -165,7 +189,11 @@ class MainDialog(wx.Dialog):
                                      "board by the test runner (learn mode).\nCustom functional steps can be added in "
                                      "pcbtestkit.json (testplan.custom_steps). No AI is needed for any of it.\n"
                                      "Probe side 'both' makes two fixture plates (the board between them), e.g. when a stacked "
-                                     "board covers test points on one side."), 0, wx.ALL, 10)
+                                     "board covers test points on one side.\n"
+                                     "Programming headers on this board: %s. The fixture gets a programming connector per "
+                                     "board, wired to pogo pins on the header,\nso any programmer that fits it programs the "
+                                     "board on the fixture. The command (optional) is run by the test runner for each board."
+                                     % self.prog_found), 0, wx.ALL, 10)
         p.SetSizer(s)
         return p
 
@@ -477,8 +505,16 @@ class MainDialog(wx.Dialog):
         fx = u.setdefault("fixture", {})
         fx["mode"] = self.fix_modes[max(0, self.fix_mode.GetSelection())][0]
         fx["outline"] = self.outline.GetStringSelection()
-        fx["panel"] = dict(fx.get("panel") or {}, cols=self.cols.GetValue(), rows=self.rows.GetValue())
+        fx["panel"] = {"cols": 1, "rows": 1, "spacing_mm": float((fx.get("panel") or {}).get("spacing_mm", 10.0))}
+        u.setdefault("batch", {}).update({"count": self.batch_n.GetValue(), "cols": self.batch_cols.GetValue()})
         fx["route"] = self.route_fx.GetValue()
+        import shlex
+        pr = u.setdefault("program", {})
+        pr["connector"] = self.prog_opts[max(0, self.prog_conn.GetSelection())][0]
+        try:
+            pr["command"] = shlex.split(self.prog_cmd.GetValue())
+        except ValueError:
+            pass
         sup = u.setdefault("supply", {})
         if self.sup_net.GetStringSelection():
             sup["net"] = self.sup_net.GetStringSelection()

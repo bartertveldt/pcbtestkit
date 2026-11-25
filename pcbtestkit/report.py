@@ -167,7 +167,20 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
             h.append("<div class='small' style='color:%s'>&#9888; %s</div>" % (SEV_COLOR["major"], _e(w)))
         if fixture.get("drc"):
             h.append("<div class='small muted'>KiCad DRC on the fixture: %s</div>" % _e(fixture["drc"]))
-    elif plan:
+    if fixture and plan:
+        b_ = plan.get("batch") or {}
+        if int(b_.get("count") or 1) > 1:
+            h.append("<div class='small'>Batch of <b>%d boards</b>: %d fixture sites (%d x %d), each with its own header, power "
+                     "terminal%s; the runner tests them one after the other.</div>" % (
+                         b_["count"], len(fixture.get("sites") or []), b_["cols"], b_["rows"],
+                         " and programming connector" if (plan.get("program") or {}).get("headers") else ""))
+        for hd in (plan.get("program") or {}).get("headers") or []:
+            conns = [pc["ref"] for st in fixture.get("sites") or [] for pc in st.get("program") or [] if pc["header"] == hd["ref"]]
+            h.append("<div class='small'>Programming header <b>%s</b> (%s, %s): probed on every pin; fixture connector%s %s "
+                     "(%s)%s.</div>" % (_e(hd["ref"]), _e(hd["protocol"]), _e(hd["why"]), "s" if len(conns) > 1 else "",
+                                         _e(", ".join(conns) or "-"), _e(hd.get("connector", "same")),
+                                         "; no probe on pin(s) " + _e(", ".join(hd["missing"])) if hd.get("missing") else ""))
+    if not fixture and plan:
         mode = (design.cfg.get("fixture") or {}).get("mode", "generate")
         if mode == "own":
             h.append("<h2>Fixture</h2><div class='muted small'>You design the fixture: %d probe point(s) with coordinates, "

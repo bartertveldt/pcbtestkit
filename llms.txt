@@ -8,7 +8,7 @@ Cheapest start for an agent: run `python3 -m pcbtestkit guide` (or `pcbtestkit g
 
 - [Agent quick reference](pcbtestkit/quickref.py): the text printed by `pcbtestkit guide`, workflow and token rules
 - [Skill](skills/pcbtestkit/SKILL.md): when to use which command, full workflow, rules
-- [Tool reference](docs/reference/tools.md): all 32 tools with arguments (generated)
+- [Tool reference](docs/reference/tools.md): all 33 tools with arguments (generated)
 - [CLI reference](docs/reference/cli.md): every command and option (generated)
 - [Configuration reference](docs/reference/config.md): every pcbtestkit.json key with defaults (generated)
 - [MCP server](docs/MCP.md): client setup (Claude Code, Claude Desktop, Cursor, VS Code, Codex), profiles, resources, prompts

@@ -72,16 +72,23 @@ class FixtureBuilder:
         return 2 * self.bb.cx - x if self.mirror else x
 
     # ------------------------------------------------------------------ #
-    def pogo(self, x, y, net, dut_net, probe_id, tip, role, isolated=True):
-        r = self.pad_d / 2
-        fam = self.plan["pogo"]["family"]
-        items = [W.fp_circle(0, 0, r + 0.15, SILK, 0.12),
-                 W.fp_circle(0, 0, max(r + 0.1, self.pitch / 2 - 0.01), CRT, 0.05),
-                 W.fp_text(probe_id, 0, -(r + 1.1), SILK if isolated else FAB, 0.8 if isolated else 0.5),
+    def pogo(self, x, y, net, dut_net, probe_id, tip, role, isolated=True, geo: Optional[Dict[str, Any]] = None):
+        """One pogo pin. ``geo``: a finer family for this probe (fine-pitch programming headers)."""
+        pad_d = float(geo["pad_mm"]) if geo else self.pad_d
+        drill = float(geo["drill_mm"]) if geo else self.drill
+        pitch = float(geo["min_spacing_mm"]) if geo else self.pitch
+        fam = geo["family"] if geo else self.plan["pogo"]["family"]
+        mount = geo["mount"] if geo else self.plan["pogo"]["mount"]
+        r = pad_d / 2
+        silk = isolated and not geo                  # fine-pitch clusters: labels on the fab layer only
+        items = [W.fp_circle(0, 0, max(r + 0.1, pitch / 2 - 0.01), CRT, 0.05),
+                 W.fp_text(probe_id, 0, -(r + 1.1), SILK if silk else FAB, 0.8 if silk else 0.5),
                  W.fp_text(C.base_net(dut_net)[:16], 0, r + 0.9, FAB, 0.5),
-                 W.pad("1", "thru_hole", "circle", 0, 0, self.pad_d, self.pad_d, THT, drill=self.drill,
+                 W.pad("1", "thru_hole", "circle", 0, 0, pad_d, pad_d, THT, drill=drill,
                        net=self.net(net), pintype="passive")]
-        self.items.append(W.footprint("PCBTestKit:Pogo_%s_%s" % (fam, self.plan["pogo"]["mount"]), x, y, self.ref("P"),
+        if not geo:
+            items.insert(0, W.fp_circle(0, 0, r + 0.15, SILK, 0.12))
+        self.items.append(W.footprint("PCBTestKit:Pogo_%s_%s" % (fam, mount), x, y, self.ref("P"),
                                       C.base_net(dut_net), items, attr=("through_hole",),
                                       extra_props={"Probe": probe_id, "DUT_Net": dut_net, "Tip": tip, "Role": role},
                                       hide_ref=True, models=["${KIPRJMOD}/pcbtestkit-models/%s" % pogo_model_name(fam, tip)]))
@@ -134,6 +141,136 @@ class FixtureBuilder:
         self.items.append(W.footprint("MountingHole:MountingHole_%.1fmm" % d, x, y, self.ref(prefix), label, items,
                                       attr=("exclude_from_pos_files", "exclude_from_bom"), ref_pos=(0, -(d / 2 + 1.2)),
                                       value_pos=(0, d / 2 + 1.2), hide_ref=True))
+
+    # ---- programming connector ---------------------------------------------------
+    def fixture_net(self, dut_net: str, pre: str) -> str:
+        """The fixture net that carries a DUT net on a site ("" when no probe on this plate reaches it)."""
+        probes = [p for p in self.plan["probes"] if p["net"] == dut_net]
+        if not dut_net or not probes:
+            return ""
+        if any(p["role"] == "ground" for p in probes):
+            return "GND"
+        if any(p["role"] == "supply" for p in probes):
+            return pre + "VIN"
+        return pre + "TP_" + _safe(dut_net)
+
+    def prog_headers(self) -> List[Dict[str, Any]]:
+        """Programming headers this plate serves: those with at least one pin reached by its probes."""
+        prog = self.plan.get("program") or {}
+        mine = {p["id"] for p in self.plan["probes"]}
+        return [h for h in prog.get("headers") or [] if any(pin.get("probe") in mine for pin in h["pins"])]
+
+    def _prog_shape(self, header: Dict[str, Any]) -> Dict[str, Any]:
+        """The programming connector in its own frame: lib id, pads, 3D models, pins, angle and its board-frame
+        box (relative to the footprint origin). ``same`` copies the board's header footprint as designed (a bottom
+        footprint is un-mirrored), so the cable that programs the board fits the fixture."""
+        from .geometry import to_board
+        from .program import STANDARD, pinout
+        cached = self.__dict__.setdefault("_prog_cache", {})
+        if header["ref"] in cached:
+            return cached[header["ref"]]
+        kind = header.get("connector") or "same"
+        fp = self.b.by_ref.get(header["ref"])
+        if kind == "same" and fp is None:
+            kind = "pins"
+        pins = pinout(header, kind)
+        pads: List[Dict[str, Any]] = []
+        models: List[str] = []
+        if kind == "same":
+            flip = fp.local_flipped
+            for p in fp.pads:
+                ly = -p.local_y if flip else p.local_y
+                ang = (p.angle - fp.angle) * (-1 if flip else 1)
+                if p.is_npth:
+                    d = p.drill_w
+                    pads.append({"num": "", "kind": "np_thru_hole", "shape": "circle", "x": p.local_x, "y": ly, "w": d,
+                                 "h": d, "drill": d, "angle": 0.0, "rratio": None, "layers": ["*.Cu", "*.Mask"]})
+                    continue
+                if not p.has_copper:
+                    continue
+                tht = p.is_tht
+                pads.append({"num": p.number, "kind": "thru_hole" if tht else "smd",
+                             "shape": p.shape if p.shape in ("circle", "rect", "oval", "roundrect") else "rect",
+                             "x": p.local_x, "y": ly, "w": p.w, "h": p.h, "drill": p.drill_w if tht else None,
+                             "angle": ang, "rratio": p.rratio if p.shape == "roundrect" else None,
+                             "layers": THT if tht else ["F.Cu", "F.Mask"]})
+            lib = fp.lib_id or "PCBTestKit:Prog"
+            models = [m.path for m in fp.models if not m.hide and "KIPRJMOD" not in m.path]
+        else:
+            if kind == "pins":
+                n = len(pins)
+                st = {"cols": 1, "pitch": 2.54, "pad": 1.7, "drill": 1.0,
+                      "lib": "Connector_PinHeader_2.54mm:PinHeader_1x%02d_P2.54mm_Vertical" % n,
+                      "model": "Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x%02d_P2.54mm_Vertical.wrl" % n}
+            else:
+                st = STANDARD[kind]
+            for num, _net, _label in pins:
+                k = int(num)
+                col, row = (k - 1) % st["cols"], (k - 1) // st["cols"]
+                pads.append({"num": num, "kind": "thru_hole", "shape": "rect" if k == 1 else "oval", "x": st["pitch"] * col,
+                             "y": st["pitch"] * row, "w": st["pad"], "h": st["pad"], "drill": st["drill"], "angle": 0.0,
+                             "rratio": None, "layers": THT})
+            lib = st["lib"]
+            models = ["${KICAD8_3DMODEL_DIR}/" + st["model"]]
+        lb = BBox()
+        for p in pads:
+            r = max(p["w"], p["h"]) / 2
+            lb.merge(BBox(p["x"] - r, p["y"] - r, p["x"] + r, p["y"] + r))
+        angle = 90.0 if lb.h > lb.w + 0.01 else 0.0       # lie flat along the connector row
+        board = BBox.of_points(to_board(0.0, 0.0, angle, x, y) for x, y in lb.grow(1.0).corners())
+        res = {"kind": kind, "lib": lib, "pads": pads, "models": models, "pins": pins, "angle": angle, "local": lb,
+               "box": board}
+        cached[header["ref"]] = res
+        return res
+
+    def prog_connector(self, x0: float, cy: float, header: Dict[str, Any], pre: str, site: int) -> Dict[str, Any]:
+        """Place the programming connector for ``header`` with its left edge at x0, centred on cy."""
+        sh = self._prog_shape(header)
+        ox, oy = x0 - sh["box"].x0, cy - sh["box"].cy
+        net_of = {num: self.fixture_net(dut, pre) for num, dut, _label in sh["pins"]}
+        label_of = {num: label for num, _dut, label in sh["pins"]}
+        dut_of = {num: dut for num, dut, _label in sh["pins"]}
+        for num, _dut, label in sh["pins"]:
+            if label == "GND" and not net_of.get(num):
+                net_of[num] = "GND"
+        lb = sh["local"]
+        items = [W.fp_rect(lb.x0 - 1.0, lb.y0 - 1.0, lb.x1 + 1.0, lb.y1 + 1.0, CRT, 0.05),
+                 W.fp_rect(lb.x0 - 0.6, lb.y0 - 0.6, lb.x1 + 0.6, lb.y1 + 0.6, FAB, 0.1)]
+        out_pins = []
+        for p in sh["pads"]:
+            net = net_of.get(p["num"], "") if p["num"] else ""
+            items.append(W.pad(p["num"], p["kind"], p["shape"], p["x"], p["y"], p["w"], p["h"], p["layers"],
+                               drill=p["drill"], net=self.net(net) if net else None, angle=p["angle"] + sh["angle"],
+                               rratio=p["rratio"], pinfunction=label_of.get(p["num"], "")[:12] if p["num"] else "",
+                               pintype="passive" if p["num"] else ""))
+            if p["num"]:
+                dut = dut_of.get(p["num"], "")
+                pad_ = next((q["pad"] for q in header["pins"] if dut and q["net"] == dut), "")
+                out_pins.append({"pin": p["num"], "signal": label_of.get(p["num"], ""), "net": net, "dut_net": dut,
+                                 "dut_pad": pad_})
+                if not net and dut_of.get(p["num"]):
+                    self.warnings.append("programming connector for %s%s: pin %s (%s) is not reached by a probe on this "
+                                         "fixture plate" % (header["ref"], " site %d" % site if pre else "", p["num"],
+                                                            label_of.get(p["num"])))
+        p1 = next((p for p in sh["pads"] if p["num"] in ("1", "A1")), None)
+        if p1 is not None:                            # pin-1 mark on the silkscreen, clear of every pad and hole
+            r1 = max(p1["w"], p1["h"]) / 2 + 0.6
+            for mx_, my_ in ((-r1, 0.0), (0.0, -r1), (0.0, r1), (r1, 0.0), (-r1, -r1)):
+                cx_, cy_ = p1["x"] + mx_, p1["y"] + my_
+                if all(math.hypot(cx_ - q["x"], cy_ - q["y"]) > max(q["w"], q["h"]) / 2 + 0.45 for q in sh["pads"]):
+                    items.append(W.fp_circle(cx_, cy_, 0.2, SILK, 0.2))
+                    break
+        ref = self.ref("PRG")                         # own prefix: never mistaken for the board's J refs
+        title = "PROG %s%s" % (header["ref"], " S%d" % site if pre else "")
+        self.items.append(W.footprint(sh["lib"], round(ox, 4), round(oy, 4), ref, title, items, angle=sh["angle"],
+                                      attr=("through_hole",) if any(p["kind"] == "thru_hole" for p in sh["pads"]) else ("smd",),
+                                      extra_props={"Programs": header["ref"], "Protocol": header.get("protocol", ""),
+                                                   "Connector": sh["kind"]},
+                                      hide_ref=True, models=sh["models"]))
+        b = sh["box"]
+        self.items.append(W.gr_text(title, ox + b.cx, oy + b.y0 - 1.2, SILK, 0.9))
+        return {"ref": ref, "header": header["ref"], "protocol": header.get("protocol"), "connector": sh["kind"],
+                "pins": out_pins, "x": round(ox, 3), "y": round(oy, 3)}
 
     # ------------------------------------------------------------------ #
     DIV_PITCH_X, DIV_PITCH_Y = 3.5, 8.0
@@ -200,11 +337,13 @@ class FixtureBuilder:
         hdr_w = 2.54 * max(0, hdr_cols - 1) + 1.7
         term_w = 11.0 if (self.plan.get("supply") or {}).get("net") and (
             not self.plan.get("plate") or any(p["role"] == "supply" for p in self.plan["probes"])) else 0.0
-        min_w = hdr_w + 6.0 + term_w + 4.0
+        progs = [self._prog_shape(hd)["box"] for hd in self.prog_headers()]
+        prog_w = sum(b.w + 4.0 for b in progs)
+        min_w = hdr_w + 6.0 + term_w + 4.0 + prog_w
         slots = self.divider_slots(self._divided_pin_x())
         div_rows = (max(r for r, _ in slots) + 1) if slots else 0
         w = max(min_w, 6.0 + max(x for _, x in slots)) if slots else min_w
-        h = div_rows * self.DIV_PITCH_Y + 2.54 + 2.54 + 5.0
+        h = div_rows * self.DIV_PITCH_Y + 2.54 + 2.54 + 5.0 + max([0.0] + [b.h + 2.5 - 7.6 for b in progs])
         return {"w": w, "h": h, "div_rows": div_rows, "n_div": n_div, "slots": slots}
 
     def block_dims(self) -> Tuple[float, float, int]:
@@ -237,14 +376,14 @@ class FixtureBuilder:
 
     def build(self) -> Dict[str, Any]:
         fx = self.fx
-        panel = fx.get("panel") or {}
-        cols, rows = max(1, int(panel.get("cols", 1))), max(1, int(panel.get("rows", 1)))
-        nsite = cols * rows
+        from .batch import layout as batch_layout
+        blay = batch_layout(self.d.cfg, self.bb.w, self.bb.h)     # batch.count (or fixture.panel): one site per board
+        cols, rows, nsite = blay["cols"], blay["rows"], blay["count"]
         margin = float(fx["margin_mm"])
         lay0 = self.block_layout()
         bw, bh, n_div = lay0["w"], lay0["h"], lay0["n_div"]
         self._block_w = None
-        spacing = float(panel.get("spacing_mm", 10.0))
+        spacing = float(blay["spacing_mm"])
         outline_mode = fx.get("outline", "rect")
         if outline_mode == "outline" and (nsite > 1 or not self.b.edge_segs):
             self.warnings.append("outline mode needs a single site and a DUT outline; using a rectangle")
@@ -277,6 +416,8 @@ class FixtureBuilder:
         for j in range(rows):
             for i in range(cols):
                 k = j * cols + i + 1
+                if k > nsite:                           # a batch that does not fill the last row
+                    continue
                 dx, dy = i * (site_w + spacing), j * (site_h + spacing)
                 if inside_xy:
                     bx, by = inside_xy
@@ -321,7 +462,7 @@ class FixtureBuilder:
                        rev=self.b.title_block.get("rev", ""), comment="Generated by PCB TestKit")
         return {"kicad_pcb": text, "sites": sites, "warnings": self.warnings, "channel_map": self.channel_map,
                 "outline_mode": outline_mode, "outline": ob.as_dict(2), "pogo_count": len(self.pogo_xy),
-                "nets": len(self.nets), "routing": self.routing}
+                "nets": len(self.nets), "routing": self.routing, "batch": blay}
 
     def route(self) -> None:
         """Route the placed board with the built-in router and add its tracks and vias."""
@@ -369,7 +510,7 @@ class FixtureBuilder:
             x, y = self.mx(p["x"]) + dx, p["y"] + dy
             fnet = gnd if p["role"] == "ground" else vin if p["role"] == "supply" else pre + "TP_" + _safe(p["net"])
             iso = all(math.hypot(p["x"] - q["x"], p["y"] - q["y"]) >= 6.0 for q in self.plan["probes"] if q is not p)
-            self.pogo(x, y, fnet, p["net"], p["id"], p["tip"], p["role"], iso)
+            self.pogo(x, y, fnet, p["net"], p["id"], p["tip"], p["role"], iso, geo=p.get("pogo"))
             site_pogos.append((x, y))
             probes_out.append({"probe": p["id"], "x": round(x, 4), "y": round(y, 4), "fixture_net": fnet})
         # ---- cut-outs for tall probe-side parts (merged so outlines never intersect) ----
@@ -486,11 +627,18 @@ class FixtureBuilder:
             if cm["site"] == k and cm["header"] is None:
                 cm["header"] = href
         tref = None
+        cursor = hx + 2.54 * (len(pins) // 2) + 3.0
         if sup.get("net") and (not self.plan.get("plate") or any(p["role"] == "supply" for p in self.plan["probes"])):
             tx = hx + 2.54 * (len(pins) // 2) + 5.0
             tref = self.terminal(tx, hdr_y + 1.27, vin, gnd)
+            cursor = tx + 7.9 + 3.0
+        progs = []
+        for hd in self.prog_headers():               # one programming connector per header and board
+            pc = self.prog_connector(cursor, hdr_y + 1.27, hd, pre, k)
+            progs.append(pc)
+            cursor += self._prog_shape(hd)["box"].w + 4.0
         return {"site": k, "offset": [round(dx, 3), round(dy, 3)], "header": href, "power_terminal": tref,
-                "probes": probes_out, "net_prefix": pre}
+                "probes": probes_out, "net_prefix": pre, "program": progs}
 
 
 def pogo_model_name(family: str, tip: str) -> str:
@@ -502,10 +650,14 @@ def write_pogo_models(out_dir: str, plan: Dict[str, Any]) -> str:
     from .visuals import pogo_shapes, write_wrl
     d = os.path.join(out_dir, "pcbtestkit-models")
     os.makedirs(d, exist_ok=True)
-    fam = plan["pogo"]["family"]
     height = float(plan["pogo"].get("probe_clearance_mm", 6.0)) + 1.5
-    for tip in ("spear", "crown"):
-        write_wrl(os.path.join(d, pogo_model_name(fam, tip)), pogo_shapes(float(plan["pogo"]["drill_mm"]), height, tip))
+    fams = {plan["pogo"]["family"]: float(plan["pogo"]["drill_mm"])}
+    for p in plan.get("probes") or []:          # finer pins for fine-pitch programming headers
+        if p.get("pogo"):
+            fams.setdefault(p["pogo"]["family"], float(p["pogo"]["drill_mm"]))
+    for fam, drill in sorted(fams.items()):
+        for tip in ("spear", "crown"):
+            write_wrl(os.path.join(d, pogo_model_name(fam, tip)), pogo_shapes(drill, height, tip))
     return d
 
 

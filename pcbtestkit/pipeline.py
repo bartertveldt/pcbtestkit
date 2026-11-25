@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import shutil
 from typing import Any, Callable, Dict, List, Optional
@@ -31,11 +32,19 @@ def analyze(design: Design, include_kicad: Optional[bool] = None):
     return findings, plan
 
 
+SITE_POWER_GPIOS = [17, 22, 23, 24, 25, 5, 6, 12, 13, 16, 19, 20, 21, 26, 4, 18]
+
+
 def hardware_template(plan: Dict[str, Any], fixture: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     chans = [p["channel"] for p in plan["probes"] if p.get("channel")]
-    return {
+    nsite = int((plan.get("batch") or {}).get("count") or 1)
+    if fixture and fixture.get("sites"):
+        nsite = len(fixture["sites"])
+    adc_n = max(1, int(math.ceil(len(chans) * nsite / 4.0)))
+    hw: Dict[str, Any] = {
         "_comment": "Map test channels to your ADC hardware. Types: ads1115, mcp3008, serial (MCU firmware), simulated.",
-        "adc": {"type": "ads1115", "i2c_bus": 1, "addresses": ["0x48", "0x49", "0x4A", "0x4B"], "fsr_v": 4.096},
+        "adc": {"type": "ads1115", "i2c_bus": 1, "addresses": ["0x%02X" % (0x48 + i) for i in range(min(4, adc_n))],
+                "fsr_v": 4.096},
         "channel_map": "auto",
         "channel_map_example": {ch: {"device": "0x%02X" % (0x48 + i // 4), "input": i % 4} for i, ch in enumerate(chans)},
         "power": {"type": "gpio", "pin": 17, "active_high": True},
@@ -44,6 +53,18 @@ def hardware_template(plan: Dict[str, Any], fixture: Optional[Dict[str, Any]]) -
         "adc_max_v": plan["adc"]["max_input_v"],
         "site": 1,
     }
+    if nsite > 1:
+        hw["_batch_comment"] = (
+            "Batch fixture with %d sites (one board each, its own header and power terminal). With channel_map 'auto', "
+            "site k uses the ADC inputs right after site k-1's (%d per site, %d in all: %s). 'power' has one entry "
+            "per site so each board is switched on only while it is tested; override a site in 'sites', e.g. "
+            "{\"2\": {\"channel_map\": {...}, \"power\": {...}}}." % (
+                nsite, len(chans), len(chans) * nsite,
+                "more than 4 ADS1115 on one bus: use mcp3008 or a serial MCU" if adc_n > 4 else "%d x ADS1115" % adc_n))
+        hw["power"] = [{"type": "gpio", "pin": SITE_POWER_GPIOS[k], "active_high": True} if k < len(SITE_POWER_GPIOS)
+                       else {"type": "manual"} for k in range(nsite)]
+        hw["sites"] = {}
+    return hw
 
 
 def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optional[Dict[str, bool]] = None,
@@ -221,5 +242,8 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
     return {"out_dir": out_dir, "paths": paths, "summary": spec["summary"], "coverage": plan["coverage"],
             "fixture_warnings": fixture["warnings"] if fixture else [],
             "fixture_routing": fixture.get("routing") if fixture else None,
-            "jig": {k: jig[k] for k in ("jig_size_mm", "parts_to_place", "mesh", "workflow", "passes") if k in jig} if jig else None,
+            "jig": {k: jig[k] for k in ("jig_size_mm", "parts_to_place", "mesh", "workflow", "passes", "batch") if k in jig} if jig else None,
+            "batch": plan.get("batch"),
+            "program": [{"header": h["ref"], "protocol": h["protocol"], "connector": h.get("connector"), "missing": h["missing"]}
+                        for h in (plan.get("program") or {}).get("headers") or []],
             "warnings": design.warnings + plan["warnings"]}

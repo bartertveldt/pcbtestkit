@@ -138,6 +138,43 @@ def _png(path: Optional[str], cap: str) -> str:
                 "<div class='cap'>%s</div></div></div>" % (_e(cap), base64.b64encode(fh.read()).decode(), _e(cap)))
 
 
+def _prog_title(kind: str, plan: Dict[str, Any]) -> str:
+    from .program import STANDARD
+    if kind == "same":
+        return "copy of the board's programming header"
+    if kind == "pins":
+        return "1 x N pin header 2.54 mm"
+    return STANDARD[kind]["title"]
+
+
+def _program_section(plan: Dict[str, Any], fixture: Optional[Dict[str, Any]]) -> str:
+    """The programming connectors: which header they serve, their pinout and how the boards are programmed."""
+    heads = (plan.get("program") or {}).get("headers") or []
+    if not heads:
+        return ""
+    sites = (fixture or {}).get("sites") or []
+    out = ["<h3>Programming</h3>"]
+    for hd in heads:
+        conns = [pc for st in sites for pc in st.get("program") or [] if pc["header"] == hd["ref"]]
+        kind = hd.get("connector", "same")
+        out.append("<p><b>%s</b> (%s, %s): the pogo pins reach every pin of it, and the fixture has %s per board, %s. "
+                   "Plug your programmer into it while the board sits on the pins: it programs the board as if it were "
+                   "plugged into %s.</p>" % (
+                       _e(hd["ref"]), _e(hd["protocol"].upper().replace("_", " ")), _e(hd.get("value") or hd["footprint"]),
+                       "a %s" % _e(_prog_title(kind, plan)), ", ".join(_e(pc["ref"]) for pc in conns) or "-", _e(hd["ref"])))
+        if conns:
+            rows = []
+            for q in conns[0]["pins"]:
+                board = ("%s pin %s" % (hd["ref"], q["dut_pad"])) if q.get("dut_pad") else (
+                    "GND" if q["net"] == "GND" else "not connected")
+                rows.append("<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (_e(q["pin"]), _e(q["signal"] or "-"), _e(board)))
+            out.append("<table><tr><th>Connector pin</th><th>Signal</th><th>Board</th></tr>%s</table>" % "".join(rows))
+        if hd.get("missing"):
+            out.append("<p class='small muted'>No probe fits pin(s) %s: program through test points on those nets, or "
+                       "probe the other side.</p>" % _e(", ".join(hd["missing"])))
+    return "".join(out)
+
+
 def _step_html(n: int, text: str, img: Optional[str] = None, cap: str = "") -> str:
     pic = _img(img, cap) if img else ""
     if pic:
@@ -254,17 +291,23 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
         h.append("<section id='fixture'><h2>1 &middot; Build the test fixture</h2>")
         h.append("<div class='grid2'><div>%s<div class='cap'>Fixture PCB with pogo pins (render of the generated .kicad_pcb)</div></div>"
                  "<div class='svgbox'>%s%s</div></div>" % (_img(im.get("fixture_iso"), "Fixture"), board_svg(design, [], plan, 700), points_cap))
-        tips = Counter(p["tip"] for p in plan["probes"])
+        nsite = len((fixture or {}).get("sites") or []) or int((plan.get("batch") or {}).get("count") or 1)
         pogo = plan["pogo"]
         holes_g = [] if not fixture else None
-        bom = ["%d x pogo pin %s (%s)" % (len(plan["probes"]), pogo["family"], ", ".join("%d %s tip" % (v, k) for k, v in tips.items()))]
-        if pogo["mount"] == "receptacle":
-            bom.append("%d x receptacle R%s (fixture drill %.2f mm)" % (len(plan["probes"]), pogo["family"][1:], pogo["drill_mm"]))
+        fams = Counter((p.get("pogo") or {}).get("family") or pogo["family"] for p in plan["probes"])
+        bom = []
+        for fam, n in sorted(fams.items()):
+            tips = Counter(p["tip"] for p in plan["probes"] if ((p.get("pogo") or {}).get("family") or pogo["family"]) == fam)
+            bom.append("%d x pogo pin %s (%s)" % (n * nsite, fam, ", ".join("%d %s tip" % (v * nsite, k) for k, v in tips.items())))
+            fine = next((p["pogo"] for p in plan["probes"] if p.get("pogo") and p["pogo"]["family"] == fam), None)
+            mount, drill = (fine["mount"], fine["drill_mm"]) if fine else (pogo["mount"], pogo["drill_mm"])
+            if mount == "receptacle":
+                bom.append("%d x receptacle R%s (fixture drill %.2f mm)" % (n * nsite, fam[1:], drill))
         divs = Counter()
         for p in plan["probes"]:
             if p.get("divider"):
-                divs["%g" % p["divider"]["r_top_ohm"]] += 1
-                divs["%g" % p["divider"]["r_bottom_ohm"]] += 1
+                divs["%g" % p["divider"]["r_top_ohm"]] += nsite
+                divs["%g" % p["divider"]["r_bottom_ohm"]] += nsite
         if divs:
             bom.append("0805 resistors: " + ", ".join("%d x %s ohm" % (v, k) for k, v in sorted(divs.items(), key=lambda kv: float(kv[0]))))
         plates = list((fixture or {}).get("plates") or {})
@@ -273,7 +316,11 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
                 bom.append("%s plate: 1 x 2 x %d pin header 2.54 mm" % (sd, len((plan.get("headers") or {}).get(sd, plan["header"])) // 2))
             bom.append("1 x 2-pin 5.08 mm terminal block (on the plate with the supply probes)")
         else:
-            bom.append("1 x 2 x %d pin header 2.54 mm, 1 x 2-pin 5.08 mm terminal block" % (len(plan["header"]) // 2))
+            bom.append("%d x pin header 2 x %d, 2.54 mm; %d x 2-pin 5.08 mm terminal block" % (nsite, len(plan["header"]) // 2, nsite))
+        progs = [pc for st in (fixture or {}).get("sites") or [] for pc in st.get("program") or []]
+        if progs:
+            kinds = Counter(pc["connector"] for pc in progs)
+            bom.append("programming connector: " + ", ".join("%d x %s" % (v, _prog_title(k, plan)) for k, v in sorted(kinds.items())))
         bom.append("guide pins matching the board's mounting holes; 4 x M3 standoffs")
         h.append("<h3>Parts</h3><ul>%s</ul>" % "".join("<li>%s</li>" % _e(x) for x in bom))
         files_ = ", ".join("<code>%s</code>" % _e(os.path.basename(paths.get("fixture_" + sd, sd))) for sd in plates) if plates else \
@@ -287,8 +334,15 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
             steps.append("Two plates (clamshell): the board lies on the bottom plate's guide pins; the top plate is mirrored, "
                          "comes down from above on the same guide pins and presses its probes onto the top side. Wire both "
                          "headers to the measurement hardware (channel numbers are shared).")
+        if nsite > 1:
+            b_ = plan.get("batch") or {}
+            steps.append("The fixture takes a batch of <b>%d boards</b> (%d x %d sites, numbered row by row from the top left, "
+                         "S1..S%d on the silkscreen). Every site has its own header and power terminal; wire them as "
+                         "<code>runner/hardware.json</code> describes (one power switch per site)." % (
+                             nsite, b_.get("cols", nsite), b_.get("rows", 1), nsite))
         h.append("".join("<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, t) for i, t in enumerate(steps)))
         h.append("<h3>Wiring</h3><div class='svgbox'>%s</div>" % wiring_svg(plan))
+        h.append(_program_section(plan, fixture))
         h.append("</section>")
 
     stacks = [st for st in plan.get("stack") or [] if st.get("valid")]
@@ -319,6 +373,17 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
              "Once, with known-good boards: <code>python3 pcbtest_runner.py learn --units 3</code> to fill in signal limits.",
              "For every board: place it, press down, run <code>python3 pcbtest_runner.py test --loop</code> and enter the serial number.",
              "Green PASS: next board. Red FAIL: the failed checks are listed and stored in <code>results/results.csv</code>."]
+    nsites = int((plan.get("batch") or {}).get("count") or 1)
+    if mode == "generate" and nsites > 1:
+        steps[2] = ("For every batch: put a board in each of the %d sites, press down, run <code>python3 pcbtest_runner.py test "
+                    "--loop</code>. The runner tests site 1 to %d in turn, asks the serial number of each board and gives a "
+                    "verdict per board (<code>--site 2</code> retests one board)." % (nsites, nsites))
+    if mode == "generate" and (plan.get("program") or {}).get("headers"):
+        cmd = (plan["program"] or {}).get("command")
+        steps.insert(3, ("Programming (step SP): the runner flashes each board with <code>%s</code> through its PROG connector "
+                         "(start it with <code>--allow-commands</code>)." % _e(" ".join(cmd))) if cmd else
+                     ("Programming (step SP): when the runner asks, program the board through the fixture's PROG connector of "
+                      "that site with your programmer, then answer y. Set <code>program.command</code> to let the runner do it."))
     for a in plan.get("after_test") or []:
         steps.append("After a PASS, fit the stacked board <b>%s</b>%s." % (_e(a["fit"]), (" on " + _e(", ".join(a["refs"]))) if a["refs"] else ""))
     h.append("".join("<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, t) for i, t in enumerate(steps)))
@@ -356,6 +421,12 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
                      "not go into the reflow oven.</p>" % (_e(p["side"]), _e(os.path.basename(paths.get("jig_%s_stl" % key, "paste-nest.stl"))),
                                                            _e(p["side"])))
             h.append(_png(ej.get("preview_png"), "Paste-print nest (%s x %s x %s mm)" % tuple(ej["jig_size_mm"])))
+        jb = jig.get("batch") or {}
+        if jb.get("boards_per_jig", 1) > 1 or jb.get("batch_count", 1) > 1:
+            h.append("<p><b>Batch:</b> every jig holds %d board(s) (%d x %d)%s.</p>" % (
+                jb["boards_per_jig"], jb["cols"], jb["rows"],
+                "; print %d sets for a batch of %d (one set for all of them does not fit the %.0f x %.0f mm printer bed)" % (
+                    jb["sets"], jb["batch_count"], jb["bed_mm"][0], jb["bed_mm"][1]) if jb["sets"] > 1 else ""))
         side0 = jig.get("side", "top")
         if len(sides_) > 1 or any((p.get("jig") or "").startswith("nest_") for p in passes):
             h.append("<h3>%s-side parts</h3>" % _e(side0.capitalize()))

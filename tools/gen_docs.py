@@ -30,6 +30,10 @@ CONFIG_NOTES = {
     "nets": "Per-net expectations: nominal + tolerance_pct or min/max (volts), kind, test: false to skip.",
     "testplan": "Probe side, pogo family and mounting, signal policy, channel budget, ADC range, timing.",
     "fixture": "Fixture PCB outline, margins, N x M panel, mounting holes, dividers, routing (tracks, vias, clearance).",
+    "batch": "Boards per batch: one fixture site per board, jigs that hold them all (fewer per jig if the printer bed "
+             "is too small); column count, site spacing, printer bed.",
+    "program": "Programming headers (auto-detected SWD/JTAG/ISP/ICSP/UPDI/UART-boot or by ref), the fixture's programming "
+               "connector per board (copy of the header or a standard pinout) and the runner's flash command.",
     "jig": "Solder-jig parts (auto = all THT), pocket clearances and depths, part heights by ref.",
     "analysis": "Waivers, ignored checks and thresholds for the weak-point analysis.",
     "video": "Explainer video: real 3D animation on/off, frame rate, size, parallel renders, render quality.",

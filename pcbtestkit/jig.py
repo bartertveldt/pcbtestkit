@@ -19,6 +19,7 @@ editable OpenSCAD file with exact shapes.
 from __future__ import annotations
 
 import math
+import os
 import struct
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -437,6 +438,33 @@ def point_inside(x: float, y: float, segs) -> bool:
         if (ay > y) != (by > y) and x < ax + (y - ay) * (bx - ax) / (by - ay):
             c = not c
     return c
+
+
+_point_inside = point_inside
+
+
+def tile_grid(g: Dict[str, Any], frame: str, cols: int, rows: int, n: int, px: int, py: int, fill: int) -> None:
+    """Repeat a jig heightmap for n boards, ``cols`` per row, ``px`` x ``py`` cells apart (in place).
+
+    ``frame`` "y_down" (holding jig: jig Y = board y - oy) or "y_up" (placement jig and nest: jig Y = ay1 - board
+    y). Board k sits at board offset (col * px, row * py) * res in both frames, so a placement jig and a holding
+    jig tiled with the same pitch still close over every board. Cells between the boards get ``fill``."""
+    H, nx, ny = g["H"], g["nx"], g["ny"]
+    NX, NY = (cols - 1) * px + nx, (rows - 1) * py + ny
+    T = [[fill] * NX for _ in range(NY)]
+    res = g["res"]
+    offsets = []
+    for k in range(n):
+        c, r = k % cols, k // cols
+        i0 = c * px
+        j0 = r * py if frame == "y_down" else (rows - 1 - r) * py
+        for j in range(ny):
+            T[j0 + j][i0:i0 + nx] = H[j]
+        offsets.append((round(c * px * res, 4), round(r * py * res, 4)))
+    g["H"], g["nx"], g["ny"] = T, NX, NY
+    if frame == "y_up":
+        g["ay1"] = g["ay1"] + (rows - 1) * py * res
+    g["boards"] = offsets
 
 
 def mounting_holes(design: Design) -> List[Tuple[float, float, float, str]]:
@@ -891,16 +919,30 @@ def build_jigs(design: Design, stl_path: Optional[str] = None, scad_path: Option
     def name(tag: str, ext: str) -> Optional[str]:
         return file_for(tag, ext) if file_for else None
 
+    # batches: every jig holds several boards; geometry first, files once the heightmaps are tiled
+    from .batch import layout as batch_layout
+    bbx = design.board.outline_bbox()
+    blay = batch_layout(design.cfg, bbx.w, bbx.h)
+    tiled = blay["count"] > 1
+    later_files: List[Tuple[Dict[str, Any], Dict[str, Any], str, Dict[str, Optional[str]], Any]] = []
+
     def hand_jig(side: str, mounted: set, files: Dict[str, Optional[str]]) -> Dict[str, Any]:
         v = view(design, side)
         stops = stop_anchors(v, outline_segments(v), stop_len) if two else []
         g = grids.setdefault(side, {})
-        jig = build_jig(v, files.get("stl"), files.get("scad"), files.get("png"), stops=stops,
+        f = {"scad": files.get("scad")} if tiled else files       # tiled: the SCAD is wrapped after tiling
+        jig = build_jig(v, f.get("stl"), f.get("scad"), f.get("png"), stops=stops,
                         grid_out=g.setdefault("holding", {}), mounted=mounted)
+        if tiled:
+            later_files.append((jig, g["holding"], "y_down", {"stl": files.get("stl"), "png": files.get("png"),
+                                                               "scad": files.get("scad")}, v))
         jig["workflow"] = "two_jig" if two else "single"
         if two:
-            jig["placement"] = build_placement_jig(v, stops, files.get("place_stl"), files.get("place_png"),
+            jig["placement"] = build_placement_jig(v, stops, f.get("place_stl"), f.get("place_png"),
                                                    grid_out=g.setdefault("placement", {}), mounted=mounted)
+            if tiled:
+                later_files.append((jig["placement"], g["placement"], "y_up",
+                                    {"stl": files.get("place_stl"), "png": files.get("place_png")}, v))
             jig["notes"] = [n for n in jig["notes"] if not n.startswith("Place parts in the 'hold' pockets")] + [
                 "Two-jig workflow: put the PCB %s side up in the placement jig, fit the parts, put this holding jig "
                 "on top (pockets down), turn the stack over, lift off the placement jig and solder from above." % side]
@@ -930,8 +972,11 @@ def build_jigs(design: Design, stl_path: Optional[str] = None, scad_path: Option
             key = "nest_%s" % p["side"]
             tag = "paste-nest-%s" % p["side"]
             g = grids.setdefault("nest_%s" % p["side"], {})
-            extra[key] = build_placement_jig(view(design, p["side"]), [], name(tag, "stl"), name(tag, "png"),
+            vn = view(design, p["side"])
+            extra[key] = build_placement_jig(vn, [], None if tiled else name(tag, "stl"), None if tiled else name(tag, "png"),
                                              grid_out=g, mounted=set(smd_done), nest=True)
+            if tiled:
+                later_files.append((extra[key], g, "y_up", {"stl": name(tag, "stl"), "png": name(tag, "png")}, vn))
         if p["process"] == "smt":
             smd_done |= set(p["parts"])
         summary.append({"pass": p["pass"], "process": p["process"], "side": p["side"],
@@ -939,11 +984,90 @@ def build_jigs(design: Design, stl_path: Optional[str] = None, scad_path: Option
     jig["passes"] = summary
     jig["extra"] = extra
     jig["notes"] = jig["notes"] + pass_notes
+    if tiled:
+        _tile_batch(design, jig, blay, later_files)
     if len(hand) > 1:
         jig["notes"].append("Parts on both sides: %s. Each side has its own jig set; the later set has pockets for "
                             "the parts already soldered." % " then ".join("%s side (pass %d)" % (p["side"], p["pass"])
                                                                           for p in hand))
     return jig
+
+
+def _tile_batch(design: Design, primary: Dict[str, Any], blay: Dict[str, Any], later: List[Tuple]) -> None:
+    """Tile every jig of the board for a batch (batch.count boards), write its files and record the layout.
+
+    The holding and placement jigs share one board pitch (the larger of their footprints), so they still close
+    over every board when the stack is turned over; the paste-print nests, which are used on their own, get their
+    own pitch with their flush frames touching. When the whole batch does not fit the printer bed
+    (batch.bed_mm), each jig holds fewer boards and more sets are printed."""
+    from .batch import fit_on_bed
+    if not later:
+        return
+    jc = design.cfg["jig"]
+    n_all = int(blay["count"])
+    bed = (design.cfg.get("batch") or {}).get("bed_mm") or [220.0, 220.0]
+    res = later[0][1]["res"]
+    same_res = all(abs(g["res"] - res) < 1e-9 for _, g, _, _, _ in later)
+    pitch: Dict[bool, Tuple[int, int]] = {}
+    if same_res:
+        sizes = []
+        for is_nest in (False, True):
+            gs = [g for rd, g, _, _, _ in later if (rd.get("kind") == "paste_nest") == is_nest]
+            if gs:
+                px_ = max(g["nx"] for g in gs)
+                py_ = max(g["ny"] for g in gs)
+                pitch[is_nest] = (px_, py_)
+                sizes.append((px_ * res, py_ * res))
+        nb, cols, rows = fit_on_bed(n_all, int(blay["cols"]), sizes, (float(bed[0]), float(bed[1])))
+    else:                                       # a coarsened (huge) board: one board per jig
+        nb, cols, rows = 1, 1, 1
+        primary["notes"].append("batch: these jigs hold one board each (board too large to tile)")
+    sets = int(math.ceil(n_all / float(nb)))
+    floor = int(round(float(jc["floor_mm"]) * Q))
+    name = design.board.name
+    for rd, g, frame, files, v in later:
+        nest = rd.get("kind") == "paste_nest"
+        px, py = pitch.get(nest, (0, 0))
+        if nb > 1:
+            # between the boards: a floor web joins them (holding / placement jig); the paste nest stays flush
+            tile_grid(g, frame, cols, rows, nb, px, py, g["H"][0][0] if nest else floor)
+            rd["jig_size_mm"][0], rd["jig_size_mm"][1] = round(g["nx"] * g["res"], 2), round(g["ny"] * g["res"], 2)
+            if frame == "y_up":
+                dy = (rows - 1) * py * g["res"]
+                bbj = rd["board_bbox_in_jig_mm"]
+                rd["board_bbox_in_jig_mm"] = [bbj[0], round(bbj[1] + dy, 3), bbj[2], round(bbj[3] + dy, 3)]
+        else:
+            g["boards"] = [(0.0, 0.0)]
+        rd["batch"] = {"boards": nb, "cols": cols, "rows": rows, "pitch_mm": [round(px * g["res"], 3), round(py * g["res"], 3)],
+                       "board_offsets_mm": [list(o) for o in g["boards"]], "sets": sets, "batch_count": n_all}
+        what = "paste-print nest" if nest else ("placement jig" if frame == "y_up" else "solder jig")
+        if files.get("png"):
+            write_heightmap_png(files["png"], g["H"], g["nx"], g["ny"])
+            rd["preview_png"] = files["png"]
+        if files.get("stl"):
+            tris = heightmap_mesh(g["H"], g["nx"], g["ny"], g["res"])
+            write_stl(files["stl"], tris, "PCB TestKit %s %s (%d boards)" % (what, name, nb))
+            rd["mesh"] = mesh_check(tris) if len(tris) < 600000 else {"triangles": len(tris)}
+            rd["stl"] = files["stl"]
+        if files.get("scad") and os.path.exists(files["scad"]) and nb > 1:
+            with open(files["scad"], "r", encoding="utf-8") as fh:
+                one = fh.read()
+            offs = ", ".join("[%.3f, %.3f]" % (ox_, oy_) for ox_, oy_ in g["boards"])
+            with open(files["scad"], "w", encoding="utf-8") as fh:
+                fh.write("// PCB TestKit solder jig for a batch: %d boards (%d x %d), %.3f x %.3f mm apart\n"
+                         "module one_board() {\n%s}\n\nfor (p = [%s]) translate([p[0], p[1], 0]) one_board();\n"
+                         "cube([%.3f, %.3f, %.3f]);   // floor web joining the boards\n" % (
+                             nb, cols, rows, px * g["res"], py * g["res"], "".join("  " + ln + "\n" for ln in one.splitlines()),
+                             offs, g["nx"] * g["res"], g["ny"] * g["res"], float(jc["floor_mm"])))
+            rd["scad"] = files["scad"]
+    primary["batch"] = {"boards_per_jig": nb, "cols": cols, "rows": rows, "sets": sets, "batch_count": n_all,
+                        "bed_mm": [float(bed[0]), float(bed[1])]}
+    if nb < n_all:
+        primary["notes"].append("Batch of %d boards: a jig set for all of them does not fit the %.0f x %.0f mm printer bed, "
+                                "so each jig holds %d boards (%d x %d); print %d sets." % (n_all, bed[0], bed[1], nb, cols,
+                                                                                          rows, sets))
+    elif nb > 1:
+        primary["notes"].append("Batch of %d boards: every jig holds all of them (%d x %d)." % (nb, cols, rows))
 
 
 def jig_of(jig: Dict[str, Any], key: Optional[str]) -> Optional[Dict[str, Any]]:
@@ -961,11 +1085,16 @@ def stack_collisions(design: Design, grids: Dict[str, Dict[str, Any]], gap: floa
     Both heightmaps are compared in board coordinates, in the placement jig's frame: the PCB lies on
     pcb_rest .. pcb_rest + thickness; the holding jig's lowest point above board point p is
     pcb_rest + thickness + (support - H_hold(p)). Returns (board x, board y, what) for every conflict.
+    Jigs for a batch hold a board at every offset in the grids' ``boards`` (board coordinates).
     """
     A, B = grids["placement"], grids["holding"]
     t = float(design.board.thickness)
     rest, support = A["rest"], B["support"]
     segs = outline_segments(design)
+    offsets = A.get("boards") or [(0.0, 0.0)]
+
+    def point_inside(x, y, s):          # on any of the boards
+        return any(_point_inside(x - tx, y - ty, s) for tx, ty in offsets)
     out = []
     for j in range(A["ny"]):
         for i in range(A["nx"]):

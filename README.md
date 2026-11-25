@@ -49,13 +49,13 @@ the placement jig comes off and every lead is soldered.*
 | **Technology class** | Which class each fab's system needs (Eurocircuits `6C`, JLCPCB `standard`, OSH Park `4-layer`, ...), what drives it, whether the board fits at all, and every feature that breaks the class you order, with coordinates. |
 | **`<board>-spec.json`** | A "good unit" specification: geometry, fab limits and measured stats, BOM with placement, connectivity, expected rail voltages, acceptance criteria, findings, decision log. |
 | **`<board>-testplan.json`** | The test scheme: probe points, measurement channels, voltage dividers, header pinout and an ordered sequence (visual → short check → power-up/current → rails → signals → custom steps → power-off). |
-| **`<board>-fixture.kicad_pcb`** | A bed-of-nails fixture PCB: pogo pins at the probe points, a header for the Pi/MCU, dividers, a power terminal, guide-pin holes from the board's mounting holes, cut-outs for tall parts and stacked boards, routed on two layers by the built-in router. Single board or N×M panel; two plates (`-fixture-top` / `-fixture-bottom`) when probing both sides. |
-| **`<board>-jig-placement.stl`, `<board>-jig.stl` / `.scad`** | Two 3D-printable solder jigs that work as a pair: fit the hand-soldered parts with the PCB top side up in the placement jig, close the holding jig over them, turn the stack over, lift off the placement jig and solder. Every part stays flush and square. Parts on both sides: a jig set per side (`-jig-bottom*.stl`) and a paste-print nest for the second SMD side. |
-| **`runner/`** | A Raspberry Pi / microcontroller test runner that executes the plan, with MicroPython firmware for RP2040/ESP32 front-ends. |
+| **`<board>-fixture.kicad_pcb`** | A bed-of-nails fixture PCB: pogo pins at the probe points, a header for the Pi/MCU, dividers, a power terminal, guide-pin holes from the board's mounting holes, cut-outs for tall parts and stacked boards, routed on two layers by the built-in router. One site per board for a batch, each with its own header, power terminal and programming connector; two plates (`-fixture-top` / `-fixture-bottom`) when probing both sides. |
+| **`<board>-jig-placement.stl`, `<board>-jig.stl` / `.scad`** | Two 3D-printable solder jigs that work as a pair: fit the hand-soldered parts with the PCB top side up in the placement jig, close the holding jig over them, turn the stack over, lift off the placement jig and solder. Every part stays flush and square. Parts on both sides: a jig set per side (`-jig-bottom*.stl`) and a paste-print nest for the second SMD side. For a batch every jig holds several boards (as many as fit your printer bed). |
+| **`runner/`** | A Raspberry Pi / microcontroller test runner that executes the plan board by board through a batch, programs each board through the fixture, with MicroPython firmware for RP2040/ESP32 front-ends. |
 | **`<board>-report.html`** | Everything above on one page, with a board map. |
 | **`<board>-guide.html`** | A step-by-step visual guide with KiCad 3D renders: what to fix, how to build the fixture, how to test, how to use the jig. |
 | **`<board>-explainer.mp4`** | Optional ~50 s video with real 3D animation rendered by KiCad: assembly, jig, fixture, test. |
-| **AI interface** | 32 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
+| **AI interface** | 33 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
 
 Everything runs locally. The core uses only the Python standard library and reads KiCad 6-10 files directly, so
 it also works on the command line, in CI and on the Pi. No AI service or account is needed for any of it: every
@@ -131,7 +131,7 @@ server (chat apps). See [AI assistants and automation](#ai-assistants-and-automa
 
 1. Save the board, then click the toolbar button.
 2. **Outputs:** output folder, fab profile, class system and class to order (it shows the class the board needs), extra checks such as IPC, and which files to generate (including the video).
-3. **Test & fixture:** whether you want a fixture (generate a pogo-pin fixture board / I design my own, from a probe-point list / no fixture, manual test), probe side (auto, bottom, top or both), pogo family (P50/P75/P100) and mounting, signal policy, ADC range, supply voltage and current limits, fixture outline, panel size.
+3. **Test & fixture:** whether you want a fixture (generate a pogo-pin fixture board / I design my own, from a probe-point list / no fixture, manual test), probe side (auto, bottom, top or both), pogo family (P50/P75/P100) and mounting, signal policy, ADC range, supply voltage and current limits, fixture outline, boards per batch, routing, and the programming connector and command (it lists the programming headers it found).
 4. **Rails:** the expected voltage and tolerance (or min/max range) of every power rail, and which rails to test. Rails whose voltage is not in the net name show a suggestion from the regulator part number.
 5. **Stacked boards:** boards that sit on this one (daughter board, shield, display). Pin sockets and board-to-board connectors are listed as candidates; tick one and give its outline, height and whether it is fitted during the test.
 6. **Solder jig:** tick the parts you hand-solder on either side (all THT parts by default), correct a part's height where its 3D model is generic, and choose the side order and the paste-print nest.
@@ -146,7 +146,8 @@ Settings are stored in `pcbtestkit.json` next to the project. Commit it with the
 ## Command line
 
 ```bash
-pcbtestkit run P [--out DIR] [--panel 2x2] [--outline rect|outline] [--jig-parts J1,J2] [--no-visuals] [--video]
+pcbtestkit run P [--out DIR] [--outline rect|outline] [--jig-parts J1,J2] [--no-visuals] [--video]
+pcbtestkit run P --batch 4 --program-connector swd10    # 4 boards per fixture and jig set, ARM 10-pin SWD per board
 pcbtestkit run P --class-system jlcpcb-2026 --tech-class standard --check-class ipc-2221-voltage:B2
 pcbtestkit analyze P [--strict]                  # CI gate: exit 1 on critical findings
 pcbtestkit init P                                # write a pcbtestkit.json template
@@ -224,6 +225,45 @@ For `generate`:
 - **Dividers** are inserted where a channel's maximum exceeds 90 % of the ADC range; the runner multiplies readings by the exact ratio.
 - `*-fixture-probes.csv` lists every pogo position (handy for drilling a plain plate instead).
 
+### Batches
+
+`batch.count` (dialog: **Boards per batch**, CLI `--batch N`, tool `set_batch_and_programming`) sets how many
+boards are handled together:
+
+- **Fixture:** one site per board (`S1` .. `SN`, row by row from the top left), each with its own pogo pins, header,
+  power terminal and programming connector; GND is shared. Columns are chosen automatically (as square as possible)
+  or set with `batch.cols`; `batch.spacing_mm` is the gap between sites.
+- **Jigs:** the placement jig, holding jig and paste-print nest each hold the batch side by side, as close as the
+  jigs allow; the placement and holding jigs share one board pitch so they still close over every board. When a jig
+  for the whole batch does not fit the printer bed (`batch.bed_mm`, default 220 x 220 mm), each jig holds fewer
+  boards and the guide says how many sets to print.
+- **Runner:** tests site 1 to N in turn, each with its own serial number, ADC inputs and power switch
+  (`hardware.json` gets one power entry per site), and prints a verdict per board; `--site 2` retests one board.
+
+The older `fixture.panel` (cols x rows) still works when `batch.count` is 1.
+
+### Programming on the fixture
+
+PCB TestKit finds the board's programming / debug headers by what their pins carry (SWDIO/SWCLK, TMS/TCK/TDI/TDO,
+MOSI/MISO/SCK + RESET, UPDI, PGD/PGC + MCLR, TXD/RXD + BOOT/EN) or by their name (SWD, JTAG, ISP, ICSP, PROG,
+DEBUG, Tag-Connect), or takes the refs in `program.headers`. Then:
+
+- **Every pin is probed.** A pin whose net is already probed is wired to that probe; the others get pogo pins on the
+  header's own pads. Pads closer than the fixture's pogo spacing (1.27 mm Tag-Connect and Cortex headers) get finer
+  P50 pins.
+- **Each board's site gets a programming connector** (`PRG1`, `PRG2`, ...) wired to those probes. `program.connector`:
+  `same` (default) is a copy of the board's own header footprint, so the cable that programs the board today plugs
+  into the fixture (a Tag-Connect cable presses onto the copied pads); or a standard pinout: `swd10` (ARM Cortex
+  10-pin, 1.27 mm), `jtag20`, `avr_isp6`, `pic_icsp6`, or `pins` (1 x N, 2.54 mm, labelled, for jumper wires).
+  Any programmer for that connector works: J-Link, ST-Link, CMSIS-DAP / Pico probe, PICkit, USBasp, a USB-serial
+  adapter, ...
+- **The test sequence programs each board** (step `SP`, after the rail checks): with `program.command` the runner
+  runs it per board (`{site}` and `{serial}` are filled in; needs `--allow-commands`), e.g.
+  `["openocd", "-f", "interface/cmsis-dap.cfg", "-f", "target/stm32g0x.cfg", "-c", "program fw.elf verify reset exit"]`;
+  without it the operator programs the board and confirms.
+
+The guide shows the connector's pinout (connector pin, signal, board pin) for each header.
+
 ### Stacked boards
 
 A daughter board, shield or display on headers or board-to-board connectors covers part of the board, and a
@@ -300,8 +340,10 @@ python3 pcbtest_runner.py test --simulate            # dry run without hardware
 ```
 
 Describe the wiring in `hardware.json` (ADS1115, MCP3008 or an RP2040/ESP32 over serial; GPIO relay power;
-INA219 current; optional short check). Power is always switched off at the end, over-current at power-up aborts,
-and shell `command` steps only run with `--allow-commands`. Details: [pcbtestkit/runner/README.md](pcbtestkit/runner/README.md).
+INA219 current; optional short check; one power switch per site for a batch). For a batch the runner tests
+the boards one after the other and records each board's site with its result. Power is always switched off at the
+end, over-current at power-up aborts, and shell `command` steps and the programming command only run with
+`--allow-commands`. Details: [pcbtestkit/runner/README.md](pcbtestkit/runner/README.md).
 
 ---
 
@@ -395,7 +437,9 @@ tools all edit it. The most used keys:
   "supply": {"net": "VIN_12V", "voltage": 12, "current_limit_a": 0.3, "max_idle_current_a": 0.08},
   "nets": {"+3V3": {"nominal": 3.3, "tolerance_pct": 3}, "/SDA": {"min": 2.9, "max": 3.5}, "VBUS": {"test": false}},
   "testplan": {"probe_side": "auto", "pogo": "P75", "signals": "auto", "max_channels": 32, "adc_max_v": 3.3},
-  "fixture": {"outline": "rect", "panel": {"cols": 2, "rows": 1}},
+  "fixture": {"outline": "rect", "route": true},
+  "batch": {"count": 4, "bed_mm": [250, 210]},
+  "program": {"connector": "same", "command": ["openocd", "-f", "board.cfg", "-c", "program fw.elf verify reset exit"]},
   "stack": [{"name": "display", "refs": ["J6"], "outline": [126.5, 100, 148, 121.5], "height_mm": 14}],
   "jig": {"parts": ["J1", "J2", "C1"], "heights": {"U1": 19.5}, "sides": "auto"},
   "analysis": {"waivers": [{"id": "ASM-FIDUCIALS", "reason": "fiducials on panel rails"}]},
@@ -433,6 +477,9 @@ Checked against KiCad 10.0.8 and the 19 demo projects that ship with it (19,069 
   probing is off by default (vias are usually tented).
 - Class systems check what the design shows; plating, impedance and material appear as order notes. IPC data come from secondary sources (the standards are paywalled); check them against your copy before using them for approvals. Gaps within 0.5 µm of a limit count as meeting it.
 - Voltage spacing uses the net voltages you set and straight-line clearance, not creepage along the surface.
+- Programming through pogo pins works at the speeds production programmers use, but long leads and pogo contact
+  resistance can limit SWD/JTAG clock rates; lower the programmer's clock if verification fails. A programming header
+  that is fitted on the probed side covers its own pads: leave it unfitted in production or probe from the other side.
 - A stacked board is modelled as a box (its outline and height); the fixture plate is flat, so test points on top of
   a stacked board are not probed (test that board with its own fixture).
 - The video renders every frame with KiCad, so it takes minutes, not seconds. It shows the first side's jig set;

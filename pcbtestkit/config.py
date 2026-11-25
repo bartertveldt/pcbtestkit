@@ -122,6 +122,20 @@ DEFAULTS: Dict[str, Any] = {
         "via_mm": 0.6,
         "via_drill_mm": 0.3,
     },
+    "batch": {
+        "count": 1,                 # boards per batch: one fixture site per board, jigs that hold them all
+        "cols": 0,                  # 0 = automatic (as square as possible); rows follow from count
+        "spacing_mm": 10.0,         # gap between the fixture sites (the jigs place the boards as close as they fit)
+        "bed_mm": [220.0, 220.0],   # 3D-printer bed: a jig set that does not fit holds fewer boards (print more sets)
+    },
+    "program": {
+        "headers": "auto",          # programming/debug headers the fixture serves: auto | [refs] | [] (none)
+        "connector": "same",        # fixture connector per board: same (copy of the board's header: its cable fits) |
+                                    # swd10 | jtag20 | avr_isp6 | pic_icsp6 | pins (1 x N, 2.54 mm, labelled)
+        "command": [],              # runner: flash each board with this program, e.g. ["openocd", "-f", "board.cfg",
+                                    # "-c", "program fw.elf verify reset exit"]; {site} {serial} are filled in
+        "timeout_s": 180,
+    },
     "jig": {
         "parts": "auto",            # auto | [refs]
         "exclude": [],
@@ -227,3 +241,23 @@ def pogo_geometry(cfg: Dict[str, Any]):
     drill = float(tp.get("pogo_drill_mm") or pg["drill_receptacle" if mount == "receptacle" else "drill_direct"])
     pad = round(drill + float(pg["pad_extra"]), 3)
     return drill, pad, round(max(float(pg["pitch"]), pad + 0.5), 3)
+
+
+def pogo_for_pitch(cfg: Dict[str, Any], pitch: float) -> Dict[str, Any]:
+    """The coarsest pogo family that probes pads ``pitch`` apart (programming headers are often 1.27 mm). The
+    finest falls back to direct-mount P50 pins with a slim pad ring: no track fits between those pads, but every
+    pin of a two-row header can still be routed away from the outside."""
+    mount = cfg["testplan"].get("pogo_mount", "receptacle")
+    for fam in ("P100", "P75", "P50"):
+        pg = POGO_PROFILES[fam]
+        drill = float(pg["drill_receptacle" if mount == "receptacle" else "drill_direct"])
+        pad = round(drill + float(pg["pad_extra"]), 3)
+        spacing = round(max(float(pg["pitch"]), pad + 0.5), 3)
+        if spacing <= pitch + 1e-6:
+            return {"family": fam, "mount": mount, "drill_mm": drill, "pad_mm": pad, "min_spacing_mm": spacing,
+                    "min_target_mm": float(pg["min_target"])}
+    pg = POGO_PROFILES["P50"]
+    drill = float(pg["drill_direct"])
+    pad = round(drill + 0.2, 3)
+    return {"family": "P50", "mount": "direct", "drill_mm": drill, "pad_mm": pad,
+            "min_spacing_mm": round(max(float(pg["pitch"]), pad + 0.25), 3), "min_target_mm": float(pg["min_target"])}

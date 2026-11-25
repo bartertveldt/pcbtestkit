@@ -193,6 +193,39 @@ Fixture PCB outline, margins, N x M panel, mounting holes, dividers, routing (tr
 }
 ```
 
+## `batch`
+
+Boards per batch: one fixture site per board, jigs that hold them all (fewer per jig if the printer bed is too small); column count, site spacing, printer bed.
+
+```json
+{
+  "batch": {
+    "count": 1,
+    "cols": 0,
+    "spacing_mm": 10.0,
+    "bed_mm": [
+      220.0,
+      220.0
+    ]
+  }
+}
+```
+
+## `program`
+
+Programming headers (auto-detected SWD/JTAG/ISP/ICSP/UPDI/UART-boot or by ref), the fixture's programming connector per board (copy of the header or a standard pinout) and the runner's flash command.
+
+```json
+{
+  "program": {
+    "headers": "auto",
+    "connector": "same",
+    "command": [],
+    "timeout_s": 180
+  }
+}
+```
+
 ## `jig`
 
 Solder-jig parts (auto = all THT), pocket clearances and depths, part heights by ref.

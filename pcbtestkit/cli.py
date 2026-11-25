@@ -27,6 +27,10 @@ def _design(args):
     if getattr(args, "panel", None):
         c, r = args.panel.lower().split("x")
         overrides.setdefault("fixture", {})["panel"] = {"cols": int(c), "rows": int(r)}
+    if getattr(args, "batch", None):
+        overrides.setdefault("batch", {})["count"] = int(args.batch)
+    if getattr(args, "program_connector", None):
+        overrides.setdefault("program", {})["connector"] = args.program_connector
     if getattr(args, "outline", None):
         overrides.setdefault("fixture", {})["outline"] = args.outline
     if getattr(args, "no_route", False):
@@ -301,6 +305,9 @@ def build_parser() -> argparse.ArgumentParser:
     common(p)
     p.add_argument("--out", help="output folder (default <project>/production_test)")
     p.add_argument("--panel", help="fixture sites, e.g. 2x2")
+    p.add_argument("--batch", type=int, help="boards per batch: one fixture site per board, jigs that hold them all")
+    p.add_argument("--program-connector", choices=["same", "swd10", "jtag20", "avr_isp6", "pic_icsp6", "pins"],
+                   help="programming connector per board on the fixture (default: a copy of the board's header)")
     p.add_argument("--outline", choices=["rect", "outline"])
     p.add_argument("--jig-parts", help="comma separated refs (default: all THT)")
     p.add_argument("--no-fixture", action="store_true")

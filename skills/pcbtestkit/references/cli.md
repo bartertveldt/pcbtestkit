@@ -23,9 +23,11 @@ full export
 pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
                       [--fab {standard,advanced,conservative}] [--class-system CLASS_SYSTEM]
                       [--tech-class TECH_CLASS] [--check-class SYSTEM[:CLASS]] [--no-kicad]
-                      [--json] [--out OUT] [--panel PANEL] [--outline {rect,outline}]
-                      [--jig-parts JIG_PARTS] [--no-fixture] [--no-route] [--no-jig] [--no-runner]
-                      [--no-visuals] [--video] [--video-fps VIDEO_FPS] [--video-stills] [-q]
+                      [--json] [--out OUT] [--panel PANEL] [--batch BATCH]
+                      [--program-connector {same,swd10,jtag20,avr_isp6,pic_icsp6,pins}]
+                      [--outline {rect,outline}] [--jig-parts JIG_PARTS] [--no-fixture]
+                      [--no-route] [--no-jig] [--no-runner] [--no-visuals] [--video]
+                      [--video-fps VIDEO_FPS] [--video-stills] [-q]
                       project
 ```
 
@@ -42,6 +44,8 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
 | `--json` |  |
 | `--out` | output folder (default <project>/production_test) |
 | `--panel` | fixture sites, e.g. 2x2 |
+| `--batch` | boards per batch: one fixture site per board, jigs that hold them all |
+| `--program-connector` | programming connector per board on the fixture (default: a copy of the board's header) (one of: same, swd10, jtag20, avr_isp6, pic_icsp6, pins) |
 | `--outline` | (one of: rect, outline) |
 | `--jig-parts` | comma separated refs (default: all THT) |
 | `--no-fixture` |  |

@@ -37,7 +37,8 @@ GUIDE = """PCB TestKit agent workflow (follow in order, batch your writes):
 2. get_open_decisions -> each decision has evidence, a suggestion and example_args for the tool to call.
 3. Resolve decisions with the set_* tools. Batch: set_net_specs takes many nets at once. Give a short rationale.
    Use list_nets / get_net / get_component / list_findings only when a decision needs more evidence.
-4. Optionally add_test_step for functional checks (they can only measure nets that have a probe channel).
+4. Optionally add_test_step for functional checks (they can only measure nets that have a probe channel);
+   set_batch_and_programming for boards per batch and how each board is programmed on the fixture.
 5. validate -> fix every error; warnings are advisory.
 6. generate_outputs -> spec JSON, test plan, fixture .kicad_pcb, solder jig STL/SCAD, HTML report, Pi runner.
 Rules: never invent net names or refs (use the names returned by the tools); units are in field names
@@ -351,6 +352,8 @@ def t_overview(ws: Workspace):
                       "tht": sum(1 for f in comps if f.is_tht),
                       "tht_bottom": sum(1 for f in comps if f.is_tht and f.side == "bottom")},
             "stacked_boards": [st["name"] for st in plan.get("stack") or []],
+            "batch": (plan.get("batch") or {}).get("count", 1),
+            "program_headers": ["%s:%s" % (h["ref"], h["protocol"]) for h in (plan.get("program") or {}).get("headers") or []],
             "nets": len(b.net_names()), "ground": d.nets_of_kind("ground"), "rails": rails,
             "supply": {k: plan["supply"].get(k) for k in ("net", "voltage", "reason")},
             "readiness": summarize(findings), "coverage_pct": plan["coverage"]["percent"],
@@ -1086,6 +1089,60 @@ def t_set_fixture_options(ws: Workspace, rationale: str = "", dry_run: bool = Fa
     return _set_section(ws, "fixture", clean, FIXTURE_OPTS, rationale, dry_run, confirm)
 
 
+PRODUCTION_OPTS = {
+    "batch_count": {"type": "integer", "description": "Boards per batch: one fixture site per board, jigs that hold them."},
+    "batch_cols": {"type": "integer", "description": "Columns of boards (0 = automatic)."},
+    "bed_mm": {"type": "array", "items": {"type": "number"}, "description": "3D-printer bed [x, y] mm for the jigs."},
+    "program_headers": {"type": "array", "items": {"type": "string"},
+                        "description": "Programming headers the fixture serves (refs); omit = auto-detected, [] = none."},
+    "program_connector": {"type": "string", "enum": ["same", "swd10", "jtag20", "avr_isp6", "pic_icsp6", "pins"],
+                          "description": "Fixture connector per board: same = copy of the board's header."},
+    "program_command": {"type": "array", "items": {"type": "string"},
+                        "description": "argv the runner uses to flash each board ({site}, {serial} filled in)."},
+}
+
+
+@tool("set_batch_and_programming", "Batch size (boards per fixture and jig set) and programming: headers, fixture connector "
+      "type, flash command.", {"properties": dict(PRODUCTION_OPTS, **WRITE_COMMON)}, read_only=False, writes=True)
+def t_set_batch_and_programming(ws: Workspace, rationale: str = "", dry_run: bool = False, confirm: bool = False, **opts):
+    batch: Dict[str, Any] = {}
+    prog: Dict[str, Any] = {}
+    if opts.get("batch_count") is not None:
+        batch["count"] = int(_num(opts["batch_count"], "batch_count", 1, 48))
+    if opts.get("batch_cols") is not None:
+        batch["cols"] = int(_num(opts["batch_cols"], "batch_cols", 0, 12))
+    if opts.get("bed_mm") is not None:
+        bed = opts["bed_mm"]
+        if not isinstance(bed, list) or len(bed) != 2:
+            raise ToolError("BAD_VALUE", "bed_mm must be [x, y] in mm")
+        batch["bed_mm"] = [_num(bed[0], "bed_mm", 50, 1000), _num(bed[1], "bed_mm", 50, 1000)]
+    if opts.get("program_headers") is not None:
+        prog["headers"] = [ws.resolve_ref(r).ref for r in opts["program_headers"]]
+    if opts.get("program_connector") is not None:
+        if opts["program_connector"] not in PRODUCTION_OPTS["program_connector"]["enum"]:
+            raise ToolError("BAD_VALUE", "program_connector must be one of %s" % PRODUCTION_OPTS["program_connector"]["enum"])
+        prog["connector"] = opts["program_connector"]
+    if opts.get("program_command") is not None:
+        cmd = [str(a) for a in opts["program_command"]]
+        prog["command"] = cmd
+    if not batch and not prog:
+        raise ToolError("NOTHING_TO_DO", "no options given")
+
+    def mutate(cfg):
+        if batch:
+            cfg.setdefault("batch", {}).update(batch)
+        if prog:
+            cfg.setdefault("program", {}).update(prog)
+        w = []
+        if prog.get("command"):
+            w.append("CONFIRM: the test runner will run %r on the test station for every board (with --allow-commands)"
+                     % " ".join(prog["command"])[:120])
+        if batch.get("count", 1) > 16:
+            w.append("CONFIRM: %d boards per batch makes a large fixture; check it fits your test station" % batch["count"])
+        return w
+    return ws.apply(mutate, rationale, dry_run, confirm, what="set batch/programming %s" % sorted(list(batch) + list(prog)))
+
+
 STACK_SCHEMA = {
     "type": "object", "additionalProperties": False,
     "properties": {
@@ -1645,7 +1702,7 @@ PROFILES: Dict[str, Optional[List[str]]] = {
 DESTRUCTIVE = {"generate_outputs", "add_class_system"}
 # Writes that give the same result when repeated with the same arguments.
 IDEMPOTENT_WRITES = {"set_net_specs", "set_supply", "set_test_options", "set_jig_options", "set_fixture_options",
-                     "set_stacked_boards",
+                     "set_stacked_boards", "set_batch_and_programming",
                      "set_analysis_options", "waive_finding", "generate_outputs", "add_class_system"}
 
 

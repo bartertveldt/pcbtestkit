@@ -1167,3 +1167,181 @@ class TestFixtureRouting(Base):
         self.assertEqual(r.returncode, 0, r.stderr[-2000:])
         with open(os.path.join(out, "sample_sensor-fixture.kicad_pcb")) as fh:
             self.assertNotIn("(segment", fh.read())
+
+
+def add_swd_header(pcb, ref="J9", x=106.0, y=100.0):
+    """Give the sample board an SWD programming header: a Tag-Connect TC2030 footprint on the bottom side (1.27 mm
+    pads), wired to new SWDIO/SWCLK nets on the MCU, its reset and +3V3."""
+    import re
+    from pcbtestkit import kicad_writer as W
+    from pcbtestkit.visuals import append_items
+    with open(pcb) as fh:
+        text = fh.read()
+    ids = {name: int(i) for i, name in re.findall(r'^\t\(net (\d+) "([^"]*)"\)', text, re.M)}
+    nmax = max(ids.values())
+    new = []
+    for name in ("/SWDIO", "/SWCLK", "/SWO"):
+        nmax += 1
+        ids[name] = nmax
+        new.append('\t(net %d "%s")\n' % (nmax, name))
+    last = list(re.finditer(r'^\t\(net \d+ "[^"]*"\)\n', text, re.M))[-1]
+    text = text[:last.end()] + "".join(new) + text[last.end():]
+    for pad, net in (("25", "/SWDIO"), ("26", "/SWCLK")):
+        text = re.sub(r'\(net \d+ "unconnected-\(U3-P%s-Pad%s\)"\)' % (pad, pad), '(net %d "%s")' % (ids[net], net), text)
+    pins = {1: "+3V3", 2: "/SWDIO", 3: "/NRST", 4: "/SWCLK", 5: "GND", 6: "/SWO"}
+    items = [W.fp_rect(-2.6, -1.6, 2.6, 1.6, "B.CrtYd", 0.05)]
+    for n, net in pins.items():
+        col, row = (n - 1) // 2, (n - 1) % 2
+        items.append(W.pad(str(n), "smd", "circle", -1.27 + 1.27 * col, 0.635 if row == 0 else -0.635, 0.787, 0.787,
+                           ["B.Cu", "B.Mask"], net=(ids[net], net), pintype="passive"))
+    for hx, hy in ((-2.54, 0.0), (2.54, 1.016), (2.54, -1.016)):
+        items.append(W.pad("", "np_thru_hole", "circle", hx, hy, 0.991, 0.991, ["*.Cu", "*.Mask"], drill=0.991))
+    fp = W.footprint("Connector:Tag-Connect_TC2030-IDC-NL_2x03_P1.27mm_Vertical", x, y, ref, "TC2030 SWD", items,
+                     layer="B.Cu", attr=("smd", "board_only", "exclude_from_pos_files", "exclude_from_bom"))
+    with open(pcb, "w") as fh:
+        fh.write(append_items(text, [fp]))
+
+
+class TestBatchAndProgramming(unittest.TestCase):
+    """Batches (one fixture site and one jig position per board) and programming the board on the fixture."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="pcbtk_prog_")
+        cls.proj = os.path.join(cls.tmp, "sample_sensor")
+        make_sample.main(cls.proj)
+        cls.pcb = os.path.join(cls.proj, "sample_sensor.kicad_pcb")
+        add_swd_header(cls.pcb)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def design(self, **over):
+        over.setdefault("testplan", {"probe_side": "bottom"})
+        return Design.load(self.pcb, overrides=over)
+
+    def test_detect_and_probe_programming_header(self):
+        import math
+        from pcbtestkit.program import detect
+        d = self.design()
+        found = detect(d)
+        self.assertEqual([(h["ref"], h["protocol"]) for h in found], [("J9", "swd")])
+        plan = build_testplan(d, [])
+        hd = plan["program"]["headers"][0]
+        self.assertEqual(hd["missing"], [])
+        by_id = {p["id"]: p for p in plan["probes"]}
+        for pin in hd["pins"]:                   # every pin reached; new probes sit on the header's own pads
+            self.assertIn(pin["probe"], by_id, pin)
+        prog = [p for p in plan["probes"] if p["role"] == "program"]
+        self.assertEqual(sorted(p["net"] for p in prog), ["/NRST", "/SWCLK", "/SWDIO", "/SWO"])
+        self.assertTrue(all(p["pogo"]["family"] == "P50" and p["channel"] is None for p in prog))
+        for a in plan["probes"]:                 # spacing: the finer family only between fine-pitch probes
+            for b in plan["probes"]:
+                if a is b or a["side"] != b["side"]:
+                    continue
+                need = max((a.get("pogo") or plan["pogo"])["min_spacing_mm"], (b.get("pogo") or plan["pogo"])["min_spacing_mm"])
+                self.assertGreaterEqual(math.hypot(a["x"] - b["x"], a["y"] - b["y"]), need - 1e-6)
+        self.assertNotIn("/SWDIO", [u["net"] for u in plan["coverage"]["untestable"]])
+        self.assertIn("SP", [s["id"] for s in plan["sequence"]])
+        # the plain sample board has no programming header (its I2C header and USB socket are not one)
+        plain = os.path.join(self.tmp, "plain")
+        make_sample.main(plain)
+        self.assertEqual(detect(Design.load(os.path.join(plain, "sample_sensor.kicad_pcb"))), [])
+
+    def test_fixture_programming_connectors_for_a_batch(self):
+        d = self.design(batch={"count": 2})
+        plan = build_testplan(d, [])
+        fx = build_fixture(d, plan)
+        self.assertEqual(len(fx["sites"]), 2)
+        self.assertEqual(fx["routing"]["unrouted_connections"], 0)
+        for st in fx["sites"]:
+            pc = st["program"][0]
+            self.assertEqual(pc["connector"], "same")
+            nets = {q["pin"]: q["net"] for q in pc["pins"]}
+            pre = "S%d_" % st["site"]
+            self.assertEqual(nets["2"], pre + "TP_SWDIO")
+            self.assertEqual(nets["5"], "GND")
+            self.assertEqual({q["pin"]: q["dut_pad"] for q in pc["pins"]}["4"], "4")
+        b = load_board_text(fx["kicad_pcb"])
+        prg = [f for f in b.footprints if f.ref.startswith("PRG")]
+        self.assertEqual(len(prg), 2)
+        # a copy of the header as designed: the bottom-side footprint is un-mirrored, so its cable fits
+        dut = d.board.by_ref["J9"]
+        want = sorted((p.number, round(p.local_x, 3), round(-p.local_y, 3)) for p in dut.pads if p.number)
+        self.assertEqual(sorted((p.number, round(p.local_x, 3), round(p.local_y, 3)) for p in prg[0].pads if p.number), want)
+        self.assertTrue(all("F.Cu" in p.layers for p in prg[0].pads if p.number))
+        # a standard connector that cannot carry SWD falls back to a copy of the header, with a warning
+        plan2 = build_testplan(self.design(program={"connector": "avr_isp6"}), [])
+        self.assertEqual(plan2["program"]["headers"][0]["connector"], "same")
+        self.assertTrue(any("avr_isp6" in w for w in plan2["warnings"]))
+        fx3 = build_fixture(self.design(program={"connector": "swd10"}), build_testplan(self.design(program={"connector": "swd10"}), []))
+        pins = {q["pin"]: q["signal"] for q in fx3["sites"][0]["program"][0]["pins"]}
+        self.assertEqual((pins["1"], pins["2"], pins["4"], pins["10"]), ("VREF", "SWDIO", "SWCLK", "NRST"))
+
+    def test_batch_layout_and_bed(self):
+        from pcbtestkit.batch import auto_cols, fit_on_bed, layout
+        self.assertEqual(auto_cols(4, 60, 45, 10), 2)
+        self.assertEqual(auto_cols(3, 100, 20, 0), 1)
+        lay = layout({"batch": {"count": 5}}, 60, 45)
+        self.assertEqual((lay["count"], lay["cols"], lay["rows"]), (5, 2, 3))
+        self.assertEqual(layout({"fixture": {"panel": {"cols": 2, "rows": 1}}}, 60, 45)["count"], 2)
+        self.assertEqual(fit_on_bed(6, 0, [(70, 55)], (220, 220)), (6, 2, 3))       # 140 x 165 mm: squarer than 3 x 2
+        self.assertEqual(fit_on_bed(6, 0, [(70, 55)], (150, 120))[0], 4)
+
+    def test_batch_jigs(self):
+        from pcbtestkit.jig import build_jigs, stack_collisions
+        out = os.path.join(self.tmp, "jigs")
+        os.makedirs(out, exist_ok=True)
+        grids = {}
+        d = self.design(batch={"count": 4})
+        j = build_jigs(d, os.path.join(out, "j.stl"), os.path.join(out, "j.scad"), None, os.path.join(out, "p.stl"), None,
+                       grids=grids, file_for=lambda tag, ext: os.path.join(out, "%s.%s" % (tag, ext)))
+        self.assertEqual(j["batch"]["boards_per_jig"], 4)
+        self.assertEqual(len(grids["holding"]["boards"]), 4)
+        self.assertTrue(j["mesh"]["watertight"] and j["placement"]["mesh"]["watertight"])
+        self.assertEqual(stack_collisions(d, grids), [])               # the jigs close over every board
+        with open(os.path.join(out, "j.scad")) as fh:
+            self.assertIn("module one_board()", fh.read())
+        small = build_jigs(self.design(batch={"count": 4, "bed_mm": [150, 150]}))
+        self.assertLess(small["batch"]["boards_per_jig"], 4)
+        self.assertGreater(small["batch"]["sets"], 1)
+
+    def test_runner_tests_the_batch_and_programs_each_board(self):
+        out = os.path.join(self.tmp, "run")
+        with open(os.path.join(self.proj, "pcbtestkit.json"), "w") as fh:
+            json.dump({"testplan": {"probe_side": "bottom"}, "batch": {"count": 2},
+                       "program": {"command": [sys.executable, "-c", "import sys; sys.exit(0 if sys.argv[1] == '2' else 3)",
+                                               "{site}"]}}, fh)
+        try:
+            res = run_pipeline(Design.load(self.pcb), out_dir=out, include_kicad=False,
+                               outputs={"visuals": False, "guide": True, "jig": False})
+        finally:
+            os.remove(os.path.join(self.proj, "pcbtestkit.json"))
+        self.assertEqual(res["batch"]["count"], 2)
+        self.assertEqual(res["program"][0]["header"], "J9")
+        rdir = res["paths"]["runner"]
+        with open(os.path.join(rdir, "hardware.json")) as fh:
+            self.assertEqual(len(json.load(fh)["power"]), 2)              # one power switch per site
+        hw = os.path.join(self.tmp, "hw_sim.json")
+        with open(hw, "w") as fh:
+            json.dump({"adc": {"type": "simulated"}}, fh)                 # simulated ADC, real program command
+        r = subprocess.run([sys.executable, os.path.join(rdir, "pcbtest_runner.py"), "test", "--non-interactive",
+                            "--allow-commands", "--hardware", hw, "--serial", "SN"], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 1, r.stdout[-1500:] + r.stderr[-1500:])     # site 1's programmer fails
+        with open(os.path.join(rdir, "results", "results.csv")) as fh:
+            rows = [ln.strip().split(",") for ln in fh.readlines()[1:]]
+        self.assertEqual([(row[1], row[2], row[5]) for row in rows], [("SN-1", "FAIL", "1"), ("SN-2", "PASS", "2")])
+        self.assertIn("SP", rows[0][3])
+        with open(res["paths"]["guide"], encoding="utf-8") as fh:
+            g = fh.read()
+        self.assertIn("<h3>Programming</h3>", g)
+        self.assertIn("put a board in each of the 2 sites", g)
+
+    def test_agent_tool(self):
+        ws = Workspace(self.pcb)
+        r = ws.call("set_batch_and_programming", {"program_command": ["openocd", "-f", "x.cfg"], "rationale": "flash"})
+        self.assertEqual(r["error"]["code"], "CONFIRM_REQUIRED")
+        self.assertTrue(ws.call("set_batch_and_programming", {"batch_count": 3, "program_connector": "swd10",
+                                                              "rationale": "3 boards per batch", "dry_run": True})["ok"])
+        self.assertFalse(ws.call("set_batch_and_programming", {"program_headers": ["J99"]})["ok"])

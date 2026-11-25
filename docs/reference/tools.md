@@ -2,7 +2,7 @@
 
 # Tool reference (agent API and MCP)
 
-The same 32 tools are available through `pcbtestkit api <tool> --args '<json>' --compact`, the MCP server (`pcbtestkit mcp`) and Python (`pcbtestkit.agent.Workspace.call`). Every call returns one JSON object with `"ok": true|false`; errors carry `code`, `message` and often `hint` or `did_you_mean`.
+The same 33 tools are available through `pcbtestkit api <tool> --args '<json>' --compact`, the MCP server (`pcbtestkit mcp`) and Python (`pcbtestkit.agent.Workspace.call`). Every call returns one JSON object with `"ok": true|false`; errors carry `code`, `message` and often `hint` or `did_you_mean`.
 
 R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo_last` reverts up to 20 writes). Every write accepts `rationale` (one sentence), `dry_run` (preview the effects) and `confirm` (needed after a `CONFIRM_REQUIRED` answer). Core = included in the MCP `core` profile (tool profiles: full, core, readonly).
 
@@ -26,6 +26,7 @@ R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo
 | [`set_test_options`](#set_test_options) | W | yes | Test-plan options (probe side, pogo family, signal policy, include/exclude nets, channels, ADC range...) |
 | [`set_jig_options`](#set_jig_options) | W |  | Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances |
 | [`set_fixture_options`](#set_fixture_options) | W |  | Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes) |
+| [`set_batch_and_programming`](#set_batch_and_programming) | W |  | Batch size (boards per fixture and jig set) and programming: headers, fixture connector type, flash command |
 | [`set_stacked_boards`](#set_stacked_boards) | W |  | Declare boards stacked on this one (daughter board, shield, display): parts, outline, height, fitted during the test or after |
 | [`set_analysis_options`](#set_analysis_options) | W | yes | Analysis settings: class system + class you will order (class_system e.g |
 | [`list_class_systems`](#list_class_systems) | R |  | Technology-class systems available (fab class tables, fab capability tiers, IPC standards), with their dimensions and levels |
@@ -278,6 +279,19 @@ Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sit
 | `clearance_mm` | number |  |
 | `via_mm` | number |  |
 | `via_drill_mm` | number |  |
+
+### set_batch_and_programming
+
+Batch size (boards per fixture and jig set) and programming: headers, fixture connector type, flash command.
+
+| Argument | Type | Description |
+|---|---|---|
+| `batch_count` | integer | Boards per batch: one fixture site per board, jigs that hold them. |
+| `batch_cols` | integer | Columns of boards (0 = automatic). |
+| `bed_mm` | array of number | 3D-printer bed [x, y] mm for the jigs. |
+| `program_headers` | array of string | Programming headers the fixture serves (refs); omit = auto-detected, [] = none. |
+| `program_connector` | same \| swd10 \| jtag20 \| avr_isp6 \| pic_icsp6 \| pins | Fixture connector per board: same = copy of the board's header. |
+| `program_command` | array of string | argv the runner uses to flash each board ({site}, {serial} filled in). |
 
 ### set_stacked_boards
 

@@ -4,6 +4,32 @@ All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 
 ## 1.1.0 (unreleased)
 
+### Batches
+- `batch.count` boards are handled together (dialog: *Boards per batch*; CLI: `run --batch N`; tool:
+  `set_batch_and_programming`). The fixture gets one site per board (S1..SN, columns automatic or `batch.cols`),
+  each with its own pogo pins, header, power terminal and programming connector.
+- The placement jig, holding jig and paste-print nest hold the whole batch side by side; the two stacking jigs share
+  one board pitch, so they still close over every board (checked). When a jig for the whole batch does not fit the
+  printer bed (`batch.bed_mm`), each jig holds fewer boards and the guide says how many sets to print. The SCAD
+  repeats the single-board jig.
+- The runner tests the boards of a batch one after the other: serial number, ADC inputs and power switch per site
+  (`hardware.json` gets one power entry per site), a verdict per board and the site in the results; `--site N`
+  tests one board. `fixture.panel` still works for a single-board batch.
+
+### Programming on the fixture
+- Programming / debug headers are found by what their pins carry (SWD, JTAG, AVR ISP, UPDI, PDI, PIC ICSP, UART
+  bootloader with BOOT/EN) or by their name (SWD, JTAG, ISP, ICSP, PROG, DEBUG, Tag-Connect), or set in
+  `program.headers`. Interfaces that merely look similar (SPI with a reset line, a UART on a larger connector) are not
+  taken for one unless their name says so.
+- Every pin of a programming header is probed: on the header's own pads, with finer P50 pins where the pads are
+  closer than the fixture's pogo spacing (1.27 mm Tag-Connect / Cortex headers); a pin whose net is already probed is
+  wired to that probe.
+- Each fixture site gets a programming connector (`PRG1`, ...) wired to those probes: by default a copy of the
+  board's own header footprint (its cable fits, a Tag-Connect cable included), or a standard pinout (`swd10`,
+  `jtag20`, `avr_isp6`, `pic_icsp6`) or a labelled 1 x N header (`pins`).
+- Test step `SP` programs each board: the runner runs `program.command` per board (`{site}`, `{serial}`; needs
+  `--allow-commands`) or asks the operator to program it. The guide shows each connector's pinout.
+
 ### Routed fixture boards
 - The fixture board comes out routed: a built-in two-layer router (standard library only, the same tracks on every
   run) with 45-degree tracks, vias, wider GND/VIN tracks and KiCad's default rules. Every track and via is checked

@@ -216,12 +216,18 @@ class Ina219:
 
 
 class Hardware:
-    """Facade used by the runner: read_v(channel) returns the voltage at the DUT (divider undone)."""
+    """Facade used by the runner: read_v(channel) returns the voltage at the DUT (divider undone).
+
+    Batches: the fixture has one site per board, each with its own header. select_site(k) points the channels
+    and the power switch at site k: with channel_map "auto", site k uses the ADC inputs after those of site k-1;
+    "power" may be a list with one entry per site; "sites": {"2": {"channel_map": ..., "power": ...}} overrides."""
 
     def __init__(self, cfg: Dict[str, Any], plan: Dict[str, Any], simulate: bool = False, fail_channels=(), interactive=True):
         self.cfg = cfg
         self.plan = plan
         self.interactive = interactive
+        self.site = 1
+        self.nsites = int((plan.get("batch") or {}).get("count") or 1)
         self.ratio = {p["channel"]: (p.get("divider") or {}).get("ratio", 1.0) for p in plan.get("probes", []) if p.get("channel")}
         adc = dict(cfg.get("adc") or {})
         self.sim = None
@@ -239,24 +245,46 @@ class Hardware:
         else:
             raise HardwareError("unknown adc.type %r" % adc.get("type"))
         self.map = self._channel_map(cfg.get("channel_map", "auto"))
-        pw = dict(cfg.get("power") or {})
+        raw = cfg.get("power") or {}
+        self.power_list = [dict(p or {}) for p in raw] if isinstance(raw, list) else None
+        pw = dict(self.power_list[0] if self.power_list else raw)
         self.power_type = "simulated" if self.sim else pw.get("type", "manual")
         self.power_cfg = pw
-        self.gpio = Gpio() if (not self.sim and (self.power_type == "gpio" or cfg.get("resistance", {}).get("type") == "source_resistor")) else None
+        uses_gpio = any(p.get("type") == "gpio" for p in (self.power_list or [pw])) or any(
+            (s or {}).get("power", {}).get("type") == "gpio" for s in (cfg.get("sites") or {}).values())
+        self.gpio = Gpio() if (not self.sim and (uses_gpio or cfg.get("resistance", {}).get("type") == "source_resistor")) else None
         cs = dict(cfg.get("current_sensor") or {})
         self.cur = None
         if not self.sim and cs.get("type") == "ina219":
             self.cur = Ina219(cs.get("i2c_bus", 1), cs.get("address", "0x40"), cs.get("shunt_ohm", 0.1))
         self.res_cfg = dict(cfg.get("resistance") or {})
 
-    def _channel_map(self, m) -> Dict[str, Tuple]:
+    def select_site(self, k: int) -> None:
+        """Measure and power board k of a batch (fixture site k)."""
+        if k < 1 or k > self.nsites:
+            raise HardwareError("site %d: the fixture has %d site(s)" % (k, self.nsites))
+        self.site = int(k)
+        sc = (self.cfg.get("sites") or {}).get(str(k)) or {}
+        m = sc.get("channel_map", self.cfg.get("channel_map", "auto"))
+        self.map = self._channel_map(m, offset=(k - 1) * len(self.ratio) if (m == "auto" or not m) else 0)
+        if sc.get("power"):
+            pw = dict(sc["power"])
+        elif self.power_list:
+            pw = dict(self.power_list[min(k, len(self.power_list)) - 1])
+        else:
+            pw = dict(self.cfg.get("power") or {})
+        self.power_cfg = pw
+        self.power_type = "simulated" if self.sim else pw.get("type", "manual")
+
+    def _channel_map(self, m, offset: int = 0) -> Dict[str, Tuple]:
         chans = sorted(self.ratio)
         out: Dict[str, Tuple] = {}
         if m == "auto" or not m:
-            if len(chans) > self.adc.channels():
-                raise HardwareError("%d channels needed but the ADC config has %d" % (len(chans), self.adc.channels()))
+            if offset + len(chans) > self.adc.channels():
+                raise HardwareError("%d channels needed (site %d) but the ADC config has %d" % (
+                    offset + len(chans), self.site, self.adc.channels()))
             for i, ch in enumerate(chans):
-                out[ch] = (i,)
+                out[ch] = (offset + i,)
         else:
             for ch in chans:
                 if ch not in m:
@@ -289,7 +317,8 @@ class Hardware:
             (self.serial or SerialLink(self.power_cfg.get("port", "/dev/ttyACM0"))).cmd("PWR %d" % (1 if on else 0))
         else:
             if self.interactive:
-                input("  >> Turn DUT power %s and press Enter " % ("ON" if on else "OFF"))
+                input("  >> Turn DUT power %s%s and press Enter " % ("ON" if on else "OFF",
+                                                                   " (site %d)" % self.site if self.nsites > 1 else ""))
 
     def current_a(self) -> Optional[float]:
         if self.sim:
