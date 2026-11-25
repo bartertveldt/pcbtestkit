@@ -214,7 +214,8 @@
           "fixture_net": "TP_DQ10"
         }
       ],
-      "net_prefix": ""
+      "net_prefix": "",
+      "program": []
     }
   ],
   "warnings": [],
@@ -481,10 +482,31 @@
     "x_min": 45.59,
     "y_min": 48.52,
     "x_max": 373.63,
-    "y_max": 196.27,
+    "y_max": 212.27,
     "width": 328.04,
-    "height": 147.76
+    "height": 163.76
   },
   "pogo_count": 34,
-  "nets": 65
+  "nets": 65,
+  "routing": {
+    "nets": 65,
+    "routed_nets": 65,
+    "unrouted_nets": [],
+    "connections": 134,
+    "unrouted_connections": 0,
+    "length_mm": 4831.6,
+    "vias": 128,
+    "grid_mm": 0.254,
+    "passes": 1,
+    "best_pass": 1,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5
+  },
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  }
 }

@@ -58,7 +58,8 @@
           "fixture_net": "TP_SCL"
         }
       ],
-      "net_prefix": ""
+      "net_prefix": "",
+      "program": []
     }
   ],
   "warnings": [],
@@ -109,10 +110,31 @@
     "x_min": 92.0,
     "y_min": 72.0,
     "x_max": 168.0,
-    "y_max": 158.08,
+    "y_max": 174.08,
     "width": 76.0,
-    "height": 86.08
+    "height": 102.08
   },
   "pogo_count": 8,
-  "nets": 11
+  "nets": 11,
+  "routing": {
+    "nets": 11,
+    "routed_nets": 11,
+    "unrouted_nets": [],
+    "connections": 26,
+    "unrouted_connections": 0,
+    "length_mm": 482.6,
+    "vias": 10,
+    "grid_mm": 0.254,
+    "passes": 1,
+    "best_pass": 1,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5
+  },
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  }
 }

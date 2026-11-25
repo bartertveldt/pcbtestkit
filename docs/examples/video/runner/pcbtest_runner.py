@@ -2,14 +2,19 @@
 """PCB TestKit production test runner (Raspberry Pi / Linux / MCU over serial).
 
     python3 pcbtest_runner.py check-hw                 read every channel once
-    python3 pcbtest_runner.py test   [--serial SN]     run the test sequence on one board
+    python3 pcbtest_runner.py test   [--serial SN]     run the test sequence on the board (each board of a batch)
+    python3 pcbtest_runner.py test --site 2            only site 2 of a batch fixture
     python3 pcbtest_runner.py learn  --units 3         derive limits for 'learn' checks from golden units
     python3 pcbtest_runner.py test --simulate          dry run without hardware
 
 Files (same folder by default): testplan.json (generated), hardware.json (your wiring).
-Results: results/<serial>_<time>.json and results/results.csv.
+Results: results/<serial>_<time>.json and results/results.csv (with the fixture site of each board).
+Batches: the fixture has one site per board; the boards are tested one after the other, each with its own
+channels and power switch (see hardware.json), serial number and verdict.
+Programming: the 'program' step runs program.command for each board through its PROG connector, or asks
+the operator to program it by hand.
 Safety: power is always switched off at the end (also on errors / Ctrl-C);
-'command' steps only run with --allow-commands.
+'command' and programming steps only run programs with --allow-commands.
 """
 from __future__ import annotations
 
@@ -42,11 +47,13 @@ def load(path: str) -> Dict[str, Any]:
 
 
 class Runner:
-    def __init__(self, plan, hwcfg, args):
+    def __init__(self, plan, hwcfg, args, site: int = 1, serial: str = ""):
         self.plan = plan
         self.args = args
+        self.site, self.serial = site, serial
         self.hw = Hardware(hwcfg, plan, simulate=args.simulate, fail_channels=args.sim_fail or (),
                            interactive=not args.non_interactive)
+        self.hw.select_site(site)
         self.results: List[Dict[str, Any]] = []
         self.powered = False
         self.learn_data: Dict[str, List[float]] = {}
@@ -79,8 +86,11 @@ class Runner:
 
     # ------------------------------------------------------------------ #
     def run(self, mode: str = "test") -> str:
-        print("%s %s rev %s - %s" % ("LEARN" if mode == "learn" else "TEST", self.plan["board"]["name"],
-                                    self.plan["board"].get("revision") or "-", "SIMULATED" if self.args.simulate else "hardware"))
+        nsites = int((self.plan.get("batch") or {}).get("count") or 1)
+        print("%s %s rev %s%s - %s" % ("LEARN" if mode == "learn" else "TEST", self.plan["board"]["name"],
+                                      self.plan["board"].get("revision") or "-",
+                                      " - site %d of %d" % (self.site, nsites) if nsites > 1 else "",
+                                      "SIMULATED" if self.args.simulate else "hardware"))
         verdict = "PASS"
         try:
             for st in self.plan["sequence"]:
@@ -234,6 +244,31 @@ class Runner:
         except (OSError, subprocess.TimeoutExpired) as e:
             self.record(st, st["id"], "fail", note=str(e)[:80])
 
+    def step_program(self, st, mode):
+        """Program the board through the fixture's PROG connector of this site: with program.command (run per
+        board, {site} and {serial} filled in; needs --allow-commands), or by hand with a prompt."""
+        if mode == "learn":
+            return self.record(st, st["id"], "skip", note="not programmed while learning")
+        cmd = st.get("command") or []
+        if cmd:
+            if self.args.simulate:
+                return self.record(st, st["id"], "skip", note="simulated: %s not run" % cmd[0])
+            if not self.args.allow_commands:
+                return self.record(st, st["id"], "skip", note="programming command needs --allow-commands")
+            argv = [str(a).replace("{site}", str(self.site)).replace("{serial}", self.serial or "") for a in cmd]
+            try:
+                r = subprocess.run(argv, capture_output=True, text=True, timeout=float(st.get("timeout_s", 180)))
+                ok = r.returncode == 0
+                return self.record(st, st["id"], "pass" if ok else "fail", r.returncode,
+                                   note=(r.stdout + r.stderr).strip().splitlines()[-1][:80] if (r.stdout or r.stderr) else "")
+            except (OSError, subprocess.TimeoutExpired) as e:
+                return self.record(st, st["id"], "fail", note=str(e)[:80])
+        if self.args.skip_manual or self.args.non_interactive:
+            return self.record(st, st["id"], "skip", note="no program.command; program it by hand")
+        where = "%s%s" % (", ".join(st.get("headers") or []), " (site %d)" % self.site if self.hw.nsites > 1 else "")
+        ans = input("    ? Program the board through the fixture's PROG connector for %s now. Programmed OK? [y/n] " % where)
+        return self.record(st, st["id"], "pass" if ans.strip().lower().startswith("y") else "fail")
+
     def step_unknown(self, st, mode):
         self.record(st, st["id"], "skip", note="unknown step type %r" % st.get("type"))
 
@@ -242,7 +277,7 @@ class Runner:
 def save_results(args, plan, runner, verdict, serial_no):
     os.makedirs(args.results, exist_ok=True)
     ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    rec = {"board": plan["board"], "serial": serial_no, "time": ts, "verdict": verdict,
+    rec = {"board": plan["board"], "serial": serial_no, "site": runner.site, "time": ts, "verdict": verdict,
            "simulated": bool(args.simulate), "results": runner.results}
     with open(os.path.join(args.results, "%s_%s.json" % (re.sub(r"[^\w.-]", "_", serial_no), ts)), "w") as fh:
         json.dump(rec, fh, indent=1)
@@ -251,16 +286,30 @@ def save_results(args, plan, runner, verdict, serial_no):
     with open(csv_path, "a", newline="") as fh:
         w = csv.writer(fh)
         if new:
-            w.writerow(["time", "serial", "verdict", "failed_checks", "simulated"])
-        w.writerow([ts, serial_no, verdict, " ".join(r["check"] for r in runner.results if r["status"] == "fail"), int(bool(args.simulate))])
+            w.writerow(["time", "serial", "verdict", "failed_checks", "simulated", "site"])
+        w.writerow([ts, serial_no, verdict, " ".join(r["check"] for r in runner.results if r["status"] == "fail"),
+                    int(bool(args.simulate)), runner.site])
+
+
+def batch_sites(plan, args) -> List[int]:
+    """The fixture sites to test: --site, else every board of the batch."""
+    n = int((plan.get("batch") or {}).get("count") or 1)
+    if args.site:
+        bad = [k for k in args.site if k < 1 or k > n]
+        if bad:
+            raise SystemExit("--site %s: the fixture has %d site(s)" % (" ".join(map(str, bad)), n))
+        return list(args.site)
+    return list(range(1, n + 1))
 
 
 def do_learn(args, plan, hwcfg):
     data: Dict[str, List[float]] = {}
+    site = batch_sites(plan, args)[0]
     for u in range(args.units):
         if not args.non_interactive:
-            input("Insert GOLDEN unit %d/%d and press Enter " % (u + 1, args.units))
-        r = Runner(plan, hwcfg, args)
+            input("Insert GOLDEN unit %d/%d%s and press Enter " % (u + 1, args.units,
+                                                                 " in site %d" % site if len(batch_sites(plan, args)) > 1 or site > 1 else ""))
+        r = Runner(plan, hwcfg, args, site=site)
         v = r.run("learn")
         if v not in ("PASS", "FAIL"):
             print("learn run aborted")
@@ -302,29 +351,47 @@ def main(argv=None) -> int:
     ap.add_argument("--skip-manual", action="store_true")
     ap.add_argument("--non-interactive", action="store_true")
     ap.add_argument("--stop-on-fail", action="store_true")
-    ap.add_argument("--allow-commands", action="store_true", help="allow 'command' steps to run programs")
-    ap.add_argument("--loop", action="store_true", help="test board after board until Ctrl-C")
+    ap.add_argument("--allow-commands", action="store_true", help="allow 'command' and programming steps to run programs")
+    ap.add_argument("--loop", action="store_true", help="test batch after batch until Ctrl-C")
+    ap.add_argument("--site", nargs="*", type=int, help="test only these fixture sites (boards of a batch), e.g. --site 2 3")
     args = ap.parse_args(argv)
 
     plan = load(args.plan)
     hwcfg = load(args.hardware) if os.path.exists(args.hardware) else {"adc": {"type": "simulated"}}
+    sites = batch_sites(plan, args)
+    many = int((plan.get("batch") or {}).get("count") or 1) > 1
     if args.mode == "check-hw":
         hw = Hardware(hwcfg, plan, simulate=args.simulate, interactive=not args.non_interactive)
-        for p in plan["probes"]:
-            if p.get("channel"):
-                print("  %-5s %-16s %8.4f V" % (p["channel"], p["net"][:16], hw.read_v(p["channel"])))
+        for k in sites:
+            hw.select_site(k)
+            if many:
+                print("site %d" % k)
+            for p in plan["probes"]:
+                if p.get("channel"):
+                    print("  %-5s %-16s %8.4f V" % (p["channel"], p["net"][:16], hw.read_v(p["channel"])))
         return 0
     if args.mode == "learn":
         return do_learn(args, plan, hwcfg)
     while True:
-        sn = args.serial or ("SIM-%d" % int(time.time()) if args.non_interactive else input("Serial number: ").strip() or "unknown")
-        r = Runner(plan, hwcfg, args)
-        verdict = r.run("test")
-        save_results(args, plan, r, verdict, sn)
-        col = GREEN if verdict == "PASS" else RED
-        print("\n  %s==== %s ====%s  %s\n" % (col, verdict, RST, sn))
+        verdicts = []
+        for k in sites:
+            tag = " (site %d)" % k if many else ""
+            if args.serial:
+                sn = args.serial + ("-%d" % k if len(sites) > 1 else "")
+            elif args.non_interactive:
+                sn = "SIM-%d%s" % (int(time.time()), "-%d" % k if len(sites) > 1 else "")
+            else:
+                sn = input("Serial number%s: " % tag).strip() or "unknown"
+            r = Runner(plan, hwcfg, args, site=k, serial=sn)
+            verdict = r.run("test")
+            save_results(args, plan, r, verdict, sn)
+            col = GREEN if verdict == "PASS" else RED
+            print("\n  %s==== %s ====%s  %s%s\n" % (col, verdict, RST, sn, tag))
+            verdicts.append((k, sn, verdict))
+        if len(verdicts) > 1:
+            print("  batch: " + "  ".join("site %d %s%s%s" % (k, GREEN if v == "PASS" else RED, v, RST) for k, _sn, v in verdicts))
         if not args.loop:
-            return 0 if verdict == "PASS" else 1
+            return 0 if all(v == "PASS" for _k, _sn, v in verdicts) else 1
         args.serial = None
 
 

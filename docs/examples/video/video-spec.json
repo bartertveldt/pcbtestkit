@@ -1,7 +1,7 @@
 {
   "schema": "pcbtestkit/spec@1",
-  "generator": "PCB TestKit 1.0.0",
-  "generated": "2026-11-23T20:03:56",
+  "generator": "PCB TestKit 1.1.0",
+  "generated": "2026-11-25T15:03:23",
   "source": {
     "board": "video.kicad_pcb",
     "schematic": "video.kicad_sch",
@@ -253,7 +253,7 @@
           "copper to board edge",
           "component hole annular ring (inner)",
           "component hole annular ring (outer)",
-          "copper layer count (allowed)"
+          "surface finish"
         ],
         "services": []
       },

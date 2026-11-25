@@ -1,7 +1,7 @@
 {
   "schema": "pcbtestkit/spec@1",
-  "generator": "PCB TestKit 1.0.0",
-  "generated": "2026-11-23T19:46:40",
+  "generator": "PCB TestKit 1.1.0",
+  "generated": "2026-11-25T14:47:19",
   "source": {
     "board": "sample_sensor.kicad_pcb",
     "schematic": "sample_sensor.kicad_sch",
@@ -1758,7 +1758,7 @@
       "category": "testability",
       "title": "1 power net(s) cannot be probed",
       "detail": "Rails without probe access cannot be verified on the production tester.",
-      "recommendation": "Add a >= 0.9 mm test pad on the bottom side for each listed rail.",
+      "recommendation": "Add a >= 0.9 mm test pad on the bottom side for each listed rail. The other side reaches VBUS: probe both sides (testplan.probe_side = \"both\", two fixture plates).",
       "nets": [
         "VBUS"
       ],

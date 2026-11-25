@@ -68,7 +68,9 @@
         "min_v": 11.4,
         "max_v": 12.6,
         "voltage_source": "net name"
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP02",
@@ -83,7 +85,9 @@
       "channel": null,
       "header_pin": null,
       "divider": null,
-      "expected": null
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP03",
@@ -98,7 +102,9 @@
       "channel": null,
       "header_pin": null,
       "divider": null,
-      "expected": null
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP04",
@@ -113,7 +119,9 @@
       "channel": null,
       "header_pin": null,
       "divider": null,
-      "expected": null
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP05",
@@ -138,7 +146,9 @@
         "min_v": 3.135,
         "max_v": 3.465,
         "voltage_source": "net name"
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP06",
@@ -163,7 +173,9 @@
         "min_v": 4.75,
         "max_v": 5.25,
         "voltage_source": "net name"
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP07",
@@ -188,7 +200,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP08",
@@ -213,7 +227,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     }
   ],
   "header": [
@@ -452,5 +468,24 @@
     "percent": 50.0
   },
   "fixture_keepouts": [],
+  "plates": [
+    "bottom"
+  ],
+  "headers": null,
+  "probe_side_hint": {
+    "both_sides_reach": [
+      "VBUS"
+    ]
+  },
+  "stack": [],
+  "after_test": [],
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  },
+  "program": null,
   "warnings": []
 }

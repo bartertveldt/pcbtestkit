@@ -94,7 +94,8 @@
           "fixture_net": "TP_DATA-RB7"
         }
       ],
-      "net_prefix": ""
+      "net_prefix": "",
+      "program": []
     }
   ],
   "warnings": [],
@@ -193,10 +194,31 @@
     "x_min": 65.66,
     "y_min": 32.64,
     "x_max": 241.68,
-    "y_max": 172.78,
+    "y_max": 188.78,
     "width": 176.02,
-    "height": 140.14
+    "height": 156.14
   },
   "pogo_count": 14,
-  "nets": 23
+  "nets": 23,
+  "routing": {
+    "nets": 23,
+    "routed_nets": 23,
+    "unrouted_nets": [],
+    "connections": 51,
+    "unrouted_connections": 0,
+    "length_mm": 1806.5,
+    "vias": 34,
+    "grid_mm": 0.254,
+    "passes": 1,
+    "best_pass": 1,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5
+  },
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  }
 }

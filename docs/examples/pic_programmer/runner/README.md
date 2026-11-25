@@ -46,3 +46,19 @@ Without it the step is reported as skipped.
 MicroPython for an RP2040 (Pico) or ESP32, copied to the board as `main.py`. It answers a line protocol on USB
 serial (115200 baud): `ID?`, `READ <n>`, `PWR <0|1>`, `GPIO <pin> <v>`, `CUR`. Up to 16 extra channels through
 a 74HC4067 multiplexer. Configure the pins at the top of the file.
+
+## Batches (several boards per fixture)
+
+A batch fixture has one site per board, each with its own header and power terminal. `test` runs site 1 to N in
+turn: it asks the serial number of each board, measures it on its own ADC inputs and switches only its power.
+With `channel_map: "auto"`, site k uses the inputs right after site k-1's; `power` is a list with one entry per
+site (generated for you). Override a site with `"sites": {"2": {"channel_map": {...}, "power": {...}}}`.
+`--site 2 3` tests only those sites; results record the site of every board.
+
+## Programming (step SP)
+
+The fixture has a programming connector per board, wired to pogo pins on the board's programming header. With
+`program.command` in `pcbtestkit.json` (copied into the plan) the runner runs it for every board, filling in
+`{site}` and `{serial}`, e.g. `["openocd", "-f", "interface/cmsis-dap.cfg", "-f", "target/stm32g0x.cfg", "-c",
+"program fw.elf verify reset exit"]`; it only runs with `--allow-commands` and fails the step on a non-zero exit
+code. Without a command the operator programs the board through that site's connector and confirms.

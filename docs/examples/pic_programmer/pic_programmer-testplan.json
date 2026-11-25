@@ -68,7 +68,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP02",
@@ -83,7 +85,9 @@
       "channel": null,
       "header_pin": null,
       "divider": null,
-      "expected": null
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP03",
@@ -98,7 +102,9 @@
       "channel": null,
       "header_pin": null,
       "divider": null,
-      "expected": null
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP04",
@@ -113,7 +119,9 @@
       "channel": null,
       "header_pin": null,
       "divider": null,
-      "expected": null
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP05",
@@ -138,7 +146,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP06",
@@ -163,7 +173,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP07",
@@ -188,7 +200,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP08",
@@ -213,7 +227,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP09",
@@ -238,7 +254,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP10",
@@ -263,7 +281,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP11",
@@ -288,7 +308,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP12",
@@ -313,7 +335,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP13",
@@ -338,7 +362,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     },
     {
       "id": "PP14",
@@ -363,7 +389,9 @@
         "min_v": null,
         "max_v": null,
         "voltage_source": null
-      }
+      },
+      "side": "bottom",
+      "pogo": null
     }
   ],
   "header": [
@@ -721,5 +749,20 @@
     "percent": 35.3
   },
   "fixture_keepouts": [],
+  "plates": [
+    "bottom"
+  ],
+  "headers": null,
+  "probe_side_hint": null,
+  "stack": [],
+  "after_test": [],
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  },
+  "program": null,
   "warnings": []
 }
