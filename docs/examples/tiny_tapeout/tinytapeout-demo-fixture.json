@@ -1,0 +1,1101 @@
+{
+  "sites": [
+    {
+      "site": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 141.3725,
+          "y": 67.1975,
+          "fixture_net": "S1_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 146.71,
+          "y": 67.21,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 144.1,
+          "y": 55.96,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 94.05,
+          "y": 121.24,
+          "fixture_net": "S1_TP_+3V3"
+        },
+        {
+          "probe": "PP05",
+          "x": 144.05,
+          "y": 64.65,
+          "fixture_net": "S1_TP_+5V"
+        },
+        {
+          "probe": "PP06",
+          "x": 132.8,
+          "y": 108.35,
+          "fixture_net": "S1_TP_DVDD"
+        },
+        {
+          "probe": "PP07",
+          "x": 134.6,
+          "y": 77.15,
+          "fixture_net": "S1_TP_in1"
+        },
+        {
+          "probe": "PP08",
+          "x": 134.6,
+          "y": 79.69,
+          "fixture_net": "S1_TP_in2"
+        },
+        {
+          "probe": "PP09",
+          "x": 134.6,
+          "y": 82.23,
+          "fixture_net": "S1_TP_in3"
+        },
+        {
+          "probe": "PP10",
+          "x": 134.6,
+          "y": 84.77,
+          "fixture_net": "S1_TP_in4"
+        },
+        {
+          "probe": "PP11",
+          "x": 134.6,
+          "y": 87.31,
+          "fixture_net": "S1_TP_in5"
+        },
+        {
+          "probe": "PP12",
+          "x": 134.6,
+          "y": 89.85,
+          "fixture_net": "S1_TP_in6"
+        },
+        {
+          "probe": "PP13",
+          "x": 134.6,
+          "y": 92.39,
+          "fixture_net": "S1_TP_in7"
+        }
+      ],
+      "net_prefix": "S1_",
+      "program": []
+    },
+    {
+      "site": 2,
+      "offset": [
+        130.556,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 271.9285,
+          "y": 67.1975,
+          "fixture_net": "S2_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 277.266,
+          "y": 67.21,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 274.656,
+          "y": 55.96,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 224.606,
+          "y": 121.24,
+          "fixture_net": "S2_TP_+3V3"
+        },
+        {
+          "probe": "PP05",
+          "x": 274.606,
+          "y": 64.65,
+          "fixture_net": "S2_TP_+5V"
+        },
+        {
+          "probe": "PP06",
+          "x": 263.356,
+          "y": 108.35,
+          "fixture_net": "S2_TP_DVDD"
+        },
+        {
+          "probe": "PP07",
+          "x": 265.156,
+          "y": 77.15,
+          "fixture_net": "S2_TP_in1"
+        },
+        {
+          "probe": "PP08",
+          "x": 265.156,
+          "y": 79.69,
+          "fixture_net": "S2_TP_in2"
+        },
+        {
+          "probe": "PP09",
+          "x": 265.156,
+          "y": 82.23,
+          "fixture_net": "S2_TP_in3"
+        },
+        {
+          "probe": "PP10",
+          "x": 265.156,
+          "y": 84.77,
+          "fixture_net": "S2_TP_in4"
+        },
+        {
+          "probe": "PP11",
+          "x": 265.156,
+          "y": 87.31,
+          "fixture_net": "S2_TP_in5"
+        },
+        {
+          "probe": "PP12",
+          "x": 265.156,
+          "y": 89.85,
+          "fixture_net": "S2_TP_in6"
+        },
+        {
+          "probe": "PP13",
+          "x": 265.156,
+          "y": 92.39,
+          "fixture_net": "S2_TP_in7"
+        }
+      ],
+      "net_prefix": "S2_",
+      "program": []
+    },
+    {
+      "site": 3,
+      "offset": [
+        0.0,
+        191.144
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 141.3725,
+          "y": 258.3415,
+          "fixture_net": "S3_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 146.71,
+          "y": 258.354,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 144.1,
+          "y": 247.104,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 94.05,
+          "y": 312.384,
+          "fixture_net": "S3_TP_+3V3"
+        },
+        {
+          "probe": "PP05",
+          "x": 144.05,
+          "y": 255.794,
+          "fixture_net": "S3_TP_+5V"
+        },
+        {
+          "probe": "PP06",
+          "x": 132.8,
+          "y": 299.494,
+          "fixture_net": "S3_TP_DVDD"
+        },
+        {
+          "probe": "PP07",
+          "x": 134.6,
+          "y": 268.294,
+          "fixture_net": "S3_TP_in1"
+        },
+        {
+          "probe": "PP08",
+          "x": 134.6,
+          "y": 270.834,
+          "fixture_net": "S3_TP_in2"
+        },
+        {
+          "probe": "PP09",
+          "x": 134.6,
+          "y": 273.374,
+          "fixture_net": "S3_TP_in3"
+        },
+        {
+          "probe": "PP10",
+          "x": 134.6,
+          "y": 275.914,
+          "fixture_net": "S3_TP_in4"
+        },
+        {
+          "probe": "PP11",
+          "x": 134.6,
+          "y": 278.454,
+          "fixture_net": "S3_TP_in5"
+        },
+        {
+          "probe": "PP12",
+          "x": 134.6,
+          "y": 280.994,
+          "fixture_net": "S3_TP_in6"
+        },
+        {
+          "probe": "PP13",
+          "x": 134.6,
+          "y": 283.534,
+          "fixture_net": "S3_TP_in7"
+        }
+      ],
+      "net_prefix": "S3_",
+      "program": []
+    },
+    {
+      "site": 4,
+      "offset": [
+        130.556,
+        191.144
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 271.9285,
+          "y": 258.3415,
+          "fixture_net": "S4_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 277.266,
+          "y": 258.354,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 274.656,
+          "y": 247.104,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 224.606,
+          "y": 312.384,
+          "fixture_net": "S4_TP_+3V3"
+        },
+        {
+          "probe": "PP05",
+          "x": 274.606,
+          "y": 255.794,
+          "fixture_net": "S4_TP_+5V"
+        },
+        {
+          "probe": "PP06",
+          "x": 263.356,
+          "y": 299.494,
+          "fixture_net": "S4_TP_DVDD"
+        },
+        {
+          "probe": "PP07",
+          "x": 265.156,
+          "y": 268.294,
+          "fixture_net": "S4_TP_in1"
+        },
+        {
+          "probe": "PP08",
+          "x": 265.156,
+          "y": 270.834,
+          "fixture_net": "S4_TP_in2"
+        },
+        {
+          "probe": "PP09",
+          "x": 265.156,
+          "y": 273.374,
+          "fixture_net": "S4_TP_in3"
+        },
+        {
+          "probe": "PP10",
+          "x": 265.156,
+          "y": 275.914,
+          "fixture_net": "S4_TP_in4"
+        },
+        {
+          "probe": "PP11",
+          "x": 265.156,
+          "y": 278.454,
+          "fixture_net": "S4_TP_in5"
+        },
+        {
+          "probe": "PP12",
+          "x": 265.156,
+          "y": 280.994,
+          "fixture_net": "S4_TP_in6"
+        },
+        {
+          "probe": "PP13",
+          "x": 265.156,
+          "y": 283.534,
+          "fixture_net": "S4_TP_in7"
+        }
+      ],
+      "net_prefix": "S4_",
+      "program": []
+    }
+  ],
+  "warnings": [
+    "site 1: fewer than 2 guide-pin holes (DUT has 0 usable holes); add tooling holes to the DUT or locate it with a nest",
+    "site 2: fewer than 2 guide-pin holes (DUT has 0 usable holes); add tooling holes to the DUT or locate it with a nest",
+    "site 3: fewer than 2 guide-pin holes (DUT has 0 usable holes); add tooling holes to the DUT or locate it with a nest",
+    "site 4: fewer than 2 guide-pin holes (DUT has 0 usable holes); add tooling holes to the DUT or locate it with a nest"
+  ],
+  "channel_map": [
+    {
+      "site": 1,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 3,
+      "dut_net": "VBUS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 4,
+      "dut_net": "+3V3",
+      "divider_ratio": 1.18
+    },
+    {
+      "site": 1,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 5,
+      "dut_net": "+5V",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 6,
+      "dut_net": "/RP2040/DVDD",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 7,
+      "dut_net": "in1",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 8,
+      "dut_net": "in2",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH07",
+      "header": "J1",
+      "pin": 9,
+      "dut_net": "in3",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH08",
+      "header": "J1",
+      "pin": 11,
+      "dut_net": "in4",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH09",
+      "header": "J1",
+      "pin": 12,
+      "dut_net": "in5",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH10",
+      "header": "J1",
+      "pin": 13,
+      "dut_net": "in6",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH11",
+      "header": "J1",
+      "pin": 14,
+      "dut_net": "in7",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 16,
+      "dut_net": "VBUS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 17,
+      "dut_net": "+3V3",
+      "divider_ratio": 1.18
+    },
+    {
+      "site": 2,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 18,
+      "dut_net": "+5V",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 19,
+      "dut_net": "/RP2040/DVDD",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 21,
+      "dut_net": "in1",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 22,
+      "dut_net": "in2",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH07",
+      "header": "J1",
+      "pin": 23,
+      "dut_net": "in3",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH08",
+      "header": "J1",
+      "pin": 24,
+      "dut_net": "in4",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH09",
+      "header": "J1",
+      "pin": 25,
+      "dut_net": "in5",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH10",
+      "header": "J1",
+      "pin": 26,
+      "dut_net": "in6",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH11",
+      "header": "J1",
+      "pin": 27,
+      "dut_net": "in7",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 29,
+      "dut_net": "VBUS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 31,
+      "dut_net": "+3V3",
+      "divider_ratio": 1.18
+    },
+    {
+      "site": 3,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 32,
+      "dut_net": "+5V",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 33,
+      "dut_net": "/RP2040/DVDD",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 34,
+      "dut_net": "in1",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 35,
+      "dut_net": "in2",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH07",
+      "header": "J1",
+      "pin": 36,
+      "dut_net": "in3",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH08",
+      "header": "J1",
+      "pin": 37,
+      "dut_net": "in4",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH09",
+      "header": "J1",
+      "pin": 38,
+      "dut_net": "in5",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH10",
+      "header": "J1",
+      "pin": 39,
+      "dut_net": "in6",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH11",
+      "header": "J1",
+      "pin": 41,
+      "dut_net": "in7",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 43,
+      "dut_net": "VBUS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 44,
+      "dut_net": "+3V3",
+      "divider_ratio": 1.18
+    },
+    {
+      "site": 4,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 45,
+      "dut_net": "+5V",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 46,
+      "dut_net": "/RP2040/DVDD",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 47,
+      "dut_net": "in1",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 48,
+      "dut_net": "in2",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH07",
+      "header": "J1",
+      "pin": 49,
+      "dut_net": "in3",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH08",
+      "header": "J1",
+      "pin": 51,
+      "dut_net": "in4",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH09",
+      "header": "J1",
+      "pin": 52,
+      "dut_net": "in5",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH10",
+      "header": "J1",
+      "pin": 53,
+      "dut_net": "in6",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH11",
+      "header": "J1",
+      "pin": 54,
+      "dut_net": "in7",
+      "divider_ratio": 1.82
+    }
+  ],
+  "outline_mode": "rect",
+  "outline": {
+    "x_min": 48.5,
+    "y_min": 45.5,
+    "x_max": 299.61,
+    "y_max": 333.79,
+    "width": 251.11,
+    "height": 288.29
+  },
+  "pogo_count": 52,
+  "nets": 89,
+  "routing": {
+    "nets": 89,
+    "routed_nets": 89,
+    "unrouted_nets": [],
+    "connections": 194,
+    "unrouted_connections": 0,
+    "length_mm": 7078.6,
+    "vias": 160,
+    "grid_mm": 0.254,
+    "passes": 1,
+    "best_pass": 1,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5
+  },
+  "batch": {
+    "count": 4,
+    "cols": 2,
+    "rows": 2,
+    "spacing_mm": 10.0,
+    "source": "batch"
+  },
+  "central_header": {
+    "ref": "J1",
+    "pins": [
+      {
+        "pin": 1,
+        "site": null,
+        "signal": "GND",
+        "net": "GND"
+      },
+      {
+        "pin": 2,
+        "site": 1,
+        "signal": "VIN",
+        "net": "S1_VIN"
+      },
+      {
+        "pin": 3,
+        "site": 1,
+        "signal": "CH01",
+        "net": "S1_CH01"
+      },
+      {
+        "pin": 4,
+        "site": 1,
+        "signal": "CH02",
+        "net": "S1_CH02"
+      },
+      {
+        "pin": 5,
+        "site": 1,
+        "signal": "CH03",
+        "net": "S1_CH03"
+      },
+      {
+        "pin": 6,
+        "site": 1,
+        "signal": "CH04",
+        "net": "S1_CH04"
+      },
+      {
+        "pin": 7,
+        "site": 1,
+        "signal": "CH05",
+        "net": "S1_CH05"
+      },
+      {
+        "pin": 8,
+        "site": 1,
+        "signal": "CH06",
+        "net": "S1_CH06"
+      },
+      {
+        "pin": 9,
+        "site": 1,
+        "signal": "CH07",
+        "net": "S1_CH07"
+      },
+      {
+        "pin": 10,
+        "site": null,
+        "signal": "GND",
+        "net": "GND"
+      },
+      {
+        "pin": 11,
+        "site": 1,
+        "signal": "CH08",
+        "net": "S1_CH08"
+      },
+      {
+        "pin": 12,
+        "site": 1,
+        "signal": "CH09",
+        "net": "S1_CH09"
+      },
+      {
+        "pin": 13,
+        "site": 1,
+        "signal": "CH10",
+        "net": "S1_CH10"
+      },
+      {
+        "pin": 14,
+        "site": 1,
+        "signal": "CH11",
+        "net": "S1_CH11"
+      },
+      {
+        "pin": 15,
+        "site": 2,
+        "signal": "VIN",
+        "net": "S2_VIN"
+      },
+      {
+        "pin": 16,
+        "site": 2,
+        "signal": "CH01",
+        "net": "S2_CH01"
+      },
+      {
+        "pin": 17,
+        "site": 2,
+        "signal": "CH02",
+        "net": "S2_CH02"
+      },
+      {
+        "pin": 18,
+        "site": 2,
+        "signal": "CH03",
+        "net": "S2_CH03"
+      },
+      {
+        "pin": 19,
+        "site": 2,
+        "signal": "CH04",
+        "net": "S2_CH04"
+      },
+      {
+        "pin": 20,
+        "site": null,
+        "signal": "GND",
+        "net": "GND"
+      },
+      {
+        "pin": 21,
+        "site": 2,
+        "signal": "CH05",
+        "net": "S2_CH05"
+      },
+      {
+        "pin": 22,
+        "site": 2,
+        "signal": "CH06",
+        "net": "S2_CH06"
+      },
+      {
+        "pin": 23,
+        "site": 2,
+        "signal": "CH07",
+        "net": "S2_CH07"
+      },
+      {
+        "pin": 24,
+        "site": 2,
+        "signal": "CH08",
+        "net": "S2_CH08"
+      },
+      {
+        "pin": 25,
+        "site": 2,
+        "signal": "CH09",
+        "net": "S2_CH09"
+      },
+      {
+        "pin": 26,
+        "site": 2,
+        "signal": "CH10",
+        "net": "S2_CH10"
+      },
+      {
+        "pin": 27,
+        "site": 2,
+        "signal": "CH11",
+        "net": "S2_CH11"
+      },
+      {
+        "pin": 28,
+        "site": 3,
+        "signal": "VIN",
+        "net": "S3_VIN"
+      },
+      {
+        "pin": 29,
+        "site": 3,
+        "signal": "CH01",
+        "net": "S3_CH01"
+      },
+      {
+        "pin": 30,
+        "site": null,
+        "signal": "GND",
+        "net": "GND"
+      },
+      {
+        "pin": 31,
+        "site": 3,
+        "signal": "CH02",
+        "net": "S3_CH02"
+      },
+      {
+        "pin": 32,
+        "site": 3,
+        "signal": "CH03",
+        "net": "S3_CH03"
+      },
+      {
+        "pin": 33,
+        "site": 3,
+        "signal": "CH04",
+        "net": "S3_CH04"
+      },
+      {
+        "pin": 34,
+        "site": 3,
+        "signal": "CH05",
+        "net": "S3_CH05"
+      },
+      {
+        "pin": 35,
+        "site": 3,
+        "signal": "CH06",
+        "net": "S3_CH06"
+      },
+      {
+        "pin": 36,
+        "site": 3,
+        "signal": "CH07",
+        "net": "S3_CH07"
+      },
+      {
+        "pin": 37,
+        "site": 3,
+        "signal": "CH08",
+        "net": "S3_CH08"
+      },
+      {
+        "pin": 38,
+        "site": 3,
+        "signal": "CH09",
+        "net": "S3_CH09"
+      },
+      {
+        "pin": 39,
+        "site": 3,
+        "signal": "CH10",
+        "net": "S3_CH10"
+      },
+      {
+        "pin": 40,
+        "site": null,
+        "signal": "GND",
+        "net": "GND"
+      },
+      {
+        "pin": 41,
+        "site": 3,
+        "signal": "CH11",
+        "net": "S3_CH11"
+      },
+      {
+        "pin": 42,
+        "site": 4,
+        "signal": "VIN",
+        "net": "S4_VIN"
+      },
+      {
+        "pin": 43,
+        "site": 4,
+        "signal": "CH01",
+        "net": "S4_CH01"
+      },
+      {
+        "pin": 44,
+        "site": 4,
+        "signal": "CH02",
+        "net": "S4_CH02"
+      },
+      {
+        "pin": 45,
+        "site": 4,
+        "signal": "CH03",
+        "net": "S4_CH03"
+      },
+      {
+        "pin": 46,
+        "site": 4,
+        "signal": "CH04",
+        "net": "S4_CH04"
+      },
+      {
+        "pin": 47,
+        "site": 4,
+        "signal": "CH05",
+        "net": "S4_CH05"
+      },
+      {
+        "pin": 48,
+        "site": 4,
+        "signal": "CH06",
+        "net": "S4_CH06"
+      },
+      {
+        "pin": 49,
+        "site": 4,
+        "signal": "CH07",
+        "net": "S4_CH07"
+      },
+      {
+        "pin": 50,
+        "site": null,
+        "signal": "GND",
+        "net": "GND"
+      },
+      {
+        "pin": 51,
+        "site": 4,
+        "signal": "CH08",
+        "net": "S4_CH08"
+      },
+      {
+        "pin": 52,
+        "site": 4,
+        "signal": "CH09",
+        "net": "S4_CH09"
+      },
+      {
+        "pin": 53,
+        "site": 4,
+        "signal": "CH10",
+        "net": "S4_CH10"
+      },
+      {
+        "pin": 54,
+        "site": 4,
+        "signal": "CH11",
+        "net": "S4_CH11"
+      },
+      {
+        "pin": 55,
+        "site": null,
+        "signal": "GND",
+        "net": "GND"
+      },
+      {
+        "pin": 56,
+        "site": null,
+        "signal": "NC",
+        "net": ""
+      }
+    ]
+  }
+}

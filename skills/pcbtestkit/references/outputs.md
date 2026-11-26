@@ -16,6 +16,8 @@
 | `<board>-explainer.mp4` | 3D-animated explainer (only with `--video`) | Binary. |
 | `runner/` | Raspberry Pi / MCU test runner + `testplan.json` + `hardware.json` | Read `runner/README.md` if the user sets up the tester. |
 | `visuals/` | KiCad 3D renders used by the guide | Binary. |
+| `visuals/video-job.json` | Status of a background video job: state, frames done/total, time left | Small: read it to report progress. |
+| `visuals/scenes/video/BUILD-VIDEO.md` | Only when the video failed: what is there and the exact commands to finish it | Small: read and follow it. |
 
 ## `read_output` pointers
 
@@ -26,7 +28,7 @@ pcbtestkit api read_output --project P --args '{"file":"spec","pointer":"/electr
 | File | Useful pointers (small) | Large (add `max_chars`, or page into them) |
 |---|---|---|
 | spec | `/board`, `/summary`, `/technology/required`, `/technology/ordered`, `/manufacturing/fab_limits`, `/electrical/supply`, `/electrical/power_nets`, `/acceptance_criteria` | `/assembly/components`, `/electrical/nets`, `/findings`, `/manufacturing/measured`, `/decision_log` |
-| testplan | `/probe_side`, `/probe_side_reason`, `/pogo`, `/adc`, `/supply`, `/coverage`, `/header`, `/warnings` | `/probes`, `/sequence` (use `/probes/0`, `/sequence/2`, ...) |
+| testplan | `/probe_side`, `/probe_side_reason`, `/pogo`, `/adc`, `/supply`, `/coverage`, `/header`, `/warnings`, `/batch`, `/program`, `/facility`, `/firmware/programmed`, `/timing/per_board_s`, `/timing/suggested_batch`, `/timing/test`, `/timing/assembly` | `/probes`, `/sequence` (use `/probes/0`, `/sequence/2`, ...), `/firmware/firmware_nets`, `/timing/by_batch_size`, `/timing/test/timeline` |
 | fixture | `/pogo_count`, `/outline_mode`, `/warnings`, `/sites` | `/channel_map`, `/nets` |
 | jig | `/workflow`, `/jig_size_mm`, `/support_height_mm`, `/parts_to_place`, `/notes`, `/mesh`, `/placement/lead_clearance_mm`, `/placement/stops` | `/pockets`, `/posts` |
 

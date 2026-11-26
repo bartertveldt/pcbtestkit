@@ -15,16 +15,18 @@ The explainer video's motion shots are rendered by :mod:`pcbtestkit.animate` fro
 """
 from __future__ import annotations
 
+import json
 import math
 import os
 import re
 import shutil
 import struct
 import subprocess
+import sys
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from . import kicad_writer as W
-from .kicad_cli import find_kicad_cli
+from .kicad_cli import QUIET, find_kicad_cli, sexpr_path
 
 MM_PER_UNIT = 2.54          # KiCad reads VRML models in 0.1 inch units
 
@@ -195,6 +197,37 @@ def model_footprint(ref: str, x: float, y: float, model_path: str, offset=(0.0, 
 # --------------------------------------------------------------------------- #
 # Renderer
 # --------------------------------------------------------------------------- #
+# kicad-cli always renders with KiCad's ray tracer; its "basic" quality just turns shadows, ambient occlusion and
+# anti-aliasing off, and "high" turns everything on (soft shadows, reflections, refractions: about 10x slower).
+# These presets sit in between. They run kicad-cli with --quality user and a private settings folder
+# (KICAD_CONFIG_HOME) holding a copy of your kicad_common.json (path variables) and these ray-tracing switches,
+# so your own KiCad settings are never touched. Seconds per 1280 x 720 frame on an 8-core laptop, 8 frames at a
+# time: basic 0.42, standard 0.77, best 1.6, high 4.7.
+RAYTRACE_PRESETS: Dict[str, Dict[str, Any]] = {
+    "standard": {"raytrace_shadows": True, "raytrace_nrsamples_shadows": 1, "raytrace_post_processing": True},
+    "best": {"raytrace_shadows": True, "raytrace_nrsamples_shadows": 1, "raytrace_post_processing": True,
+             "raytrace_anti_aliasing": True, "raytrace_procedural_textures": True},
+}
+_RAYTRACE_OFF = {"raytrace_shadows": False, "raytrace_backfloor": False, "raytrace_refractions": False,
+                 "raytrace_reflections": False, "raytrace_post_processing": False, "raytrace_procedural_textures": False,
+                 "raytrace_anti_aliasing": False}
+QUALITIES = ("basic", "standard", "best", "high")
+
+
+def kicad_user_config_dir(version: str) -> Optional[str]:
+    """KiCad's own settings folder for ``version`` ("10.0"), where kicad_common.json and 3d_viewer.json live."""
+    env = os.environ.get("KICAD_CONFIG_HOME")
+    if env:
+        cands = [os.path.join(env, version), env]
+    elif sys.platform == "darwin":
+        cands = [os.path.expanduser("~/Library/Preferences/kicad/%s" % version)]
+    elif os.name == "nt":
+        cands = [os.path.join(os.environ.get("APPDATA", ""), "kicad", version)]
+    else:
+        cands = [os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "kicad", version)]
+    return next((c for c in cands if os.path.isdir(c)), None)
+
+
 class Renderer:
     def __init__(self, out_dir: str, width: int = 1600, height: int = 1000, quality: str = "high"):
         self.cli = find_kicad_cli()
@@ -207,6 +240,39 @@ class Renderer:
         # private cache that is deleted with the scenes instead of filling the user's KiCad cache.
         self.env = dict(os.environ)
         self.env["KICAD_CACHE_HOME"] = os.path.join(self.scene_dir, "kicad_cache")
+        self._preset_env: Dict[str, Dict[str, str]] = {}
+
+    def env_for(self, quality: str) -> Dict[str, str]:
+        """The environment kicad-cli runs in for ``quality``: a preset gets its private settings folder."""
+        if quality not in RAYTRACE_PRESETS:
+            return self.env
+        if quality not in self._preset_env:
+            from .kicad_cli import kicad_version
+            m = re.search(r"(\d+)\.(\d+)", (kicad_version(self.cli) if self.cli else "") or "")
+            ver = "%s.%s" % (m.group(1), m.group(2)) if m else "10.0"
+            home = os.path.join(self.scene_dir, "kicad_config_" + quality)
+            dst = os.path.join(home, ver)
+            os.makedirs(dst, exist_ok=True)
+            src = kicad_user_config_dir(ver)
+            viewer: Dict[str, Any] = {}
+            if src:
+                if os.path.exists(os.path.join(src, "kicad_common.json")):      # path variables for 3D models
+                    shutil.copy2(os.path.join(src, "kicad_common.json"), dst)
+                try:
+                    with open(os.path.join(src, "3d_viewer.json"), encoding="utf-8") as fh:
+                        viewer = json.load(fh)
+                except (OSError, ValueError):
+                    viewer = {}
+            render = dict(viewer.get("render") or {})
+            render.update(_RAYTRACE_OFF)
+            render.update(RAYTRACE_PRESETS[quality])
+            viewer["render"] = render
+            with open(os.path.join(dst, "3d_viewer.json"), "w", encoding="utf-8") as fh:
+                json.dump(viewer, fh, indent=1)
+            env = dict(self.env)
+            env["KICAD_CONFIG_HOME"] = home
+            self._preset_env[quality] = env
+        return self._preset_env[quality]
 
     @property
     def available(self) -> bool:
@@ -217,8 +283,9 @@ class Renderer:
                perspective: bool = False, pan: Optional[str] = None) -> bool:
         if not self.cli:
             return False
+        q = quality or self.quality
         args = [self.cli, "pcb", "render", "-o", png, "-w", str(w or self.w), "-h", str(h or self.h), "--side", side,
-                "--quality", quality or self.quality, "--background", "opaque", "--zoom", "%g" % zoom]
+                "--quality", "user" if q in RAYTRACE_PRESETS else q, "--background", "opaque", "--zoom", "%g" % zoom]
         if rotate:
             args += ["--rotate", rotate]
         if floor:
@@ -229,7 +296,7 @@ class Renderer:
             args += ["--pan", pan]
         args.append(board)
         try:
-            r = subprocess.run(args, capture_output=True, text=True, timeout=600, env=self.env)
+            r = subprocess.run(args, capture_output=True, timeout=600, env=self.env_for(q), **QUIET)
         except (OSError, subprocess.SubprocessError) as e:
             self.log.append("render failed: %s" % e)
             return False
@@ -244,7 +311,7 @@ class Renderer:
         args = [self.cli, "pcb", "export", "vrml", "--units", "tenths", "-f", "--user-origin",
                 "%.4fx%.4fmm" % origin, "-o", wrl, board]
         try:
-            r = subprocess.run(args, capture_output=True, text=True, timeout=900, env=self.env)
+            r = subprocess.run(args, capture_output=True, timeout=900, env=self.env, **QUIET)
             return r.returncode == 0 and os.path.exists(wrl)
         except (OSError, subprocess.SubprocessError):
             return False
@@ -284,7 +351,7 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
             img["fixture_iso"] = P("fixture_iso")
         if have_dut_wrl:
             with open(paths["fixture"], "r", encoding="utf-8") as fh:
-                fx_text = fh.read().replace("${KIPRJMOD}", os.path.dirname(os.path.abspath(paths["fixture"])))
+                fx_text = fh.read().replace("${KIPRJMOD}", sexpr_path(os.path.dirname(os.path.abspath(paths["fixture"]))))
             clear = float(plan["pogo"].get("probe_clearance_mm", 6.0))
             from .testplan import fixture_side
             mirror = fixture_side(plan) == "top"

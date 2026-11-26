@@ -4,6 +4,8 @@
 
 Reads a storyboard written by :mod:`pcbtestkit.video` and writes PNG frames
 next to it. Kept separate so the rest of the toolkit never imports wx.
+Relative paths in the storyboard are relative to its folder; frames.json lists
+the frames per scene relative to that folder too.
 """
 from __future__ import annotations
 
@@ -222,6 +224,31 @@ def render(job):
                 fr = new_frame(img)
                 fr.stamp(overlay)
                 finish(fr)
+        elif kind == "anim_live":
+            # the boards under test, the runner's output beside them in step, the caption of what happens now
+            lines = sc.get("lines") or []
+            pw = int(W * 0.40)
+            for i, img in enumerate(sc["images"]):
+                fr = new_frame(img)
+                fr.title_bar(sc.get("step"), sc.get("title", ""))
+                fr.rect(W - pw - 24, 84, pw, H - 84 - 128, (10, 12, 16), 215, 12)
+                shown = min(len(lines), (sc.get("line_at") or [len(lines)])[min(i, len(sc.get("line_at") or [1]) - 1)])
+                vis = lines[max(0, shown - 22):shown]
+                for k, ln in enumerate(vis):
+                    c = WHITE
+                    if " PASS " in ln or ln.strip().startswith("PASS") or "==== PASS" in ln:
+                        c = (90, 210, 120)
+                    elif "FAIL" in ln:
+                        c = (235, 90, 90)
+                    elif "SKIP" in ln:
+                        c = MUTED
+                    elif ln.startswith("=="):
+                        c = (120, 190, 255)
+                    fr.text(ln[:58], W - pw - 10, 96 + k * 19, 14, False, c, mono=True)
+                caps = sc.get("captions") or [""]
+                at = sc.get("caption_at") or [0]
+                fr.caption(caps[min(at[min(i, len(at) - 1)], len(caps) - 1)], sc.get("sub", ""))
+                finish(fr)
         elif kind == "map":
             fr = new_frame()
             fr.title_bar(sc.get("step"), sc.get("title", ""))
@@ -250,13 +277,34 @@ def render(job):
                 fr.caption(sc.get("caption", ""), sc.get("sub", ""))
                 finish(fr)
         sc["files"] = files
-    with open(os.path.join(out, "frames.json"), "w") as fh:
-        json.dump([sc.get("files", []) for sc in job["scenes"]], fh)
+    with open(os.path.join(out, "frames.json"), "w", encoding="utf-8") as fh:
+        json.dump([[_rel(f, out) for f in sc.get("files", [])] for sc in job["scenes"]], fh)
+
+
+def _rel(path, base):
+    try:
+        return os.path.relpath(path, base).replace(os.sep, "/")
+    except ValueError:              # another drive (Windows)
+        return path
+
+
+def resolve(job, base):
+    """The storyboard with its relative paths (frames folder, backgrounds, animation frames) made absolute."""
+    def a(p):
+        return p if not p or os.path.isabs(p) else os.path.normpath(os.path.join(base, p))
+    job["frames_dir"] = a(job.get("frames_dir") or ".")
+    for sc in job["scenes"]:
+        if sc.get("bg"):
+            sc["bg"] = a(sc["bg"])
+        if sc.get("images"):
+            sc["images"] = [a(p) for p in sc["images"]]
+    return job
 
 
 def main():
-    with open(sys.argv[1]) as fh:
-        job = json.load(fh)
+    path = os.path.abspath(sys.argv[1])
+    with open(path, encoding="utf-8") as fh:
+        job = resolve(json.load(fh), os.path.dirname(path))
     app = wx.App(False)  # noqa: F841 - needed for fonts/bitmaps
     render(job)
     return 0

@@ -1,7 +1,7 @@
 {
   "schema": "pcbtestkit/spec@1",
   "generator": "PCB TestKit 1.1.0",
-  "generated": "2026-11-25T15:03:23",
+  "generated": "2026-11-26T08:46:06",
   "source": {
     "board": "video.kicad_pcb",
     "schematic": "video.kicad_sch",
@@ -258,6 +258,18 @@
         "services": []
       },
       {
+        "system": "allpcb-2026",
+        "name": "ALLPCB standard PCB capability",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
         "system": "eurocircuits-2024",
         "name": "Eurocircuits pattern + drill classes",
         "kind": "fab-classes",
@@ -307,6 +319,30 @@
         "services": []
       },
       {
+        "system": "multicb-2026",
+        "name": "Multi-CB design parameters (35 um copper)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "nextpcb-2026",
+        "name": "NextPCB standard PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "1oz",
+        "fits": false,
+        "blockers": [
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
         "system": "oshpark-2026",
         "name": "OSH Park services",
         "kind": "fab-capability",
@@ -326,6 +362,18 @@
         "class": "standard",
         "fits": true,
         "blockers": [],
+        "services": []
+      },
+      {
+        "system": "seeed-fusion-2026",
+        "name": "Seeed Fusion PCB (standard FR4 specification)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "1oz",
+        "fits": false,
+        "blockers": [
+          "copper to board edge"
+        ],
         "services": []
       },
       {

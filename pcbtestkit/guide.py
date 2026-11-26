@@ -60,6 +60,92 @@ def pocket_map_svg(jig: Dict[str, Any]) -> str:
     return "".join(out)
 
 
+def _mmss(sec: float) -> str:
+    m, s = divmod(int(round(sec)), 60)
+    return "%d min %02d s" % (m, s) if m else "%d s" % s
+
+
+def timing_section(t: Dict[str, Any]) -> str:
+    """Production timing: the batch flow as a timeline per board, and the time per board by batch size."""
+    test, asm = t["test"], t["assembly"]
+    n = t["batch"]
+    out = ["<h3>Production timing</h3>"]
+    line = ("A batch of <b>%d</b> takes about <b>%s</b> to test (%s per board)" % (n, _mmss(test["batch_s"]), _mmss(test["per_board_s"])))
+    if n > 1 and test.get("saved_s", 0) > 0:
+        line += ", %s less than one board after the other" % _mmss(test["saved_s"])
+    if asm.get("batch_s"):
+        line += ", and about <b>%s</b> to hand-solder with the jigs (%d parts, %d joints per board, %d jig load%s)" % (
+            _mmss(asm["batch_s"]), asm["parts"], asm["joints"], asm["jig_loads"], "" if asm["jig_loads"] == 1 else "s")
+    out.append("<p>%s. Per board, everything together: <b>%s</b>.</p>" % (line, _mmss(t["per_board_s"])))
+    # timeline (the runner's batch flow)
+    lanes = test.get("timeline") or []
+    total = max([sg["end"] for ln in lanes for sg in ln["segments"]] or [1.0])
+    colors = {"load, check, power up": "#e8a33a", "programming": "#c548c5", "checks while programming": "#3fb950",
+              "checks with firmware": "#d4b106", "checks": "#3fb950"}
+    W, rowh, left = 760, 22, 70
+    svg = ["<svg viewBox='0 0 %d %d' width='100%%' xmlns='http://www.w3.org/2000/svg' font-size='11'>" % (W, 30 + rowh * len(lanes) + 30)]
+    for i, ln in enumerate(lanes):
+        y = 20 + i * rowh
+        svg.append("<text x='4' y='%d'>Board %d</text>" % (y + 14, ln["site"]))
+        for sg in ln["segments"]:
+            x0 = left + (W - left - 10) * sg["start"] / total
+            x1 = left + (W - left - 10) * sg["end"] / total
+            svg.append("<rect x='%.1f' y='%d' width='%.1f' height='%d' rx='3' fill='%s'><title>%s: %.0f-%.0f s</title></rect>" % (
+                x0, y + 3, max(1.0, x1 - x0), rowh - 6, colors.get(sg["phase"], "#888"), _e(sg["phase"]), sg["start"], sg["end"]))
+    y = 24 + rowh * len(lanes)
+    for k in range(0, int(total) + 1, max(10, int(total / 8) // 10 * 10 or 10)):
+        x = left + (W - left - 10) * k / total
+        svg.append("<line x1='%.1f' y1='14' x2='%.1f' y2='%d' stroke='#ccc' stroke-width='0.5'/><text x='%.1f' y='%d' "
+                   "text-anchor='middle' fill='#888'>%d s</text>" % (x, x, y, x, y + 14, k))
+    svg.append("</svg>")
+    legend = "".join("<span style='background:%s'></span>%s" % (c, _e(p)) for p, c in colors.items() if
+                     any(sg["phase"] == p for ln in lanes for sg in ln["segments"]))
+    out.append("<div class='svgbox'>%s<div class='legend small'>%s</div></div>" % ("".join(svg), legend))
+    rows = "".join("<tr%s><td>%d</td><td>%s</td><td>%s</td><td><b>%s</b></td></tr>" % (
+        " style='background:#eef7ee'" if r["boards"] == n else "", r["boards"], _mmss(r["test_per_board_s"]),
+        _mmss(r["assembly_per_board_s"]), _mmss(r["per_board_s"])) for r in t["by_batch_size"])
+    out.append("<table><tr><th>Boards per batch</th><th>Test per board</th><th>Assembly per board</th><th>Per board</th></tr>"
+               "%s</table><p class='small'>Past <b>%d</b> boards per batch a bigger batch saves less than 5%% per board. "
+               "Estimates (programming %s per board, set your own durations in <code>timing</code> in "
+               "<code>pcbtestkit.json</code>); the runner records the real ones in every result file.</p>" % (
+                   rows, t["suggested_batch"], _mmss(t["assumptions"]["program_s"])))
+    return "".join(out)
+
+
+def central_pin_table(plan: Dict[str, Any], fixture: Dict[str, Any]) -> str:
+    """The batch's one connector: pin, board, signal and the board net it measures, in pin order, two columns."""
+    net_of = {p["channel"]: p["net"] for p in plan.get("probes") or [] if p.get("channel")}
+    net_of["VIN"] = (plan.get("supply") or {}).get("net") or ""
+    for h in (plan.get("program") or {}).get("headers") or []:
+        for pin in h.get("pins") or []:
+            net_of.setdefault(str(pin.get("signal") or pin.get("pad")), pin.get("net", ""))
+    rows = ["<tr><td>%d</td><td>%s</td><td>%s</td><td class='small'>%s</td></tr>" % (
+        q["pin"], "S%d" % q["site"] if q["site"] else "-", _e(q["signal"]),
+        _e(C.base_net(net_of.get(q["signal"], "")) if q["site"] else "")) for q in fixture["central_header"]["pins"]]
+    half = (len(rows) + 1) // 2
+    head = "<tr><th>Pin</th><th>Board</th><th>Signal</th><th>Net</th></tr>"
+    return ("<div class='grid2'><div><table>%s%s</table></div><div><table>%s%s</table></div></div>" % (
+        head, "".join(rows[:half]), head, "".join(rows[half:])))
+
+
+def facility_pin_table(plan: Dict[str, Any]) -> str:
+    """The test facility's connector pins: function, what the fixture puts on it, the board net (site 1)."""
+    fac = plan.get("facility") or {}
+    net_of = {p["channel"]: p["net"] for p in plan.get("probes") or [] if p.get("channel")}
+    for b in fac.get("bus_checks") or []:
+        if b.get("via") == "fixture":
+            net_of.update(b["signals"])
+    net_of["VIN"] = (plan.get("supply") or {}).get("net") or ""
+    out = []
+    for c in fac.get("connectors") or []:
+        rows = "".join("<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td></tr>" % (
+            q["pin"], _e(q["function"]), _e(q["signal"] if q["signal"] != "NC" else "-"), _e(net_of.get(q["signal"], "")))
+            for q in c["pins"] if q["signal"] != "NC" or q["function"] != "NC")
+        out.append("<p class='small'>%s%s</p><table><tr><th>Pin</th><th>Facility</th><th>Fixture</th><th>Board net</th></tr>%s"
+                   "</table>" % (_e(c["name"]), " (site %d)" % c["site"] if len(fac.get("connectors") or []) > 1 else "", rows))
+    return "".join(out)
+
+
 def wiring_svg(plan: Dict[str, Any]) -> str:
     """Fixture header -> ADS1115 boards -> Raspberry Pi, plus the supply path."""
     chans = [h for h in plan["header"] if h["signal"].startswith("CH")]
@@ -317,10 +403,19 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
         if divs:
             bom.append("0805 resistors: " + ", ".join("%d x %s ohm" % (v, k) for k, v in sorted(divs.items(), key=lambda kv: float(kv[0]))))
         plates = list((fixture or {}).get("plates") or {})
-        if plates:
+        fac = plan.get("facility") or {}
+        fconns = fac.get("connectors") or []
+        if fconns:                                  # the test facility's own connector instead of header + terminal
+            bom.append("%d x %s connector: the interface of %s (footprint and pin map from the facility)" % (
+                len(fconns), ", ".join(sorted({c["name"] for c in fconns})), fac.get("name", fac.get("id", ""))))
+        elif plates:
             for sd in plates:
                 bom.append("%s plate: 1 x 2 x %d pin header 2.54 mm" % (sd, len((plan.get("headers") or {}).get(sd, plan["header"])) // 2))
             bom.append("1 x 2-pin 5.08 mm terminal block (on the plate with the supply probes)")
+        elif (fixture or {}).get("central_header"):
+            ch = fixture["central_header"]
+            bom.append("1 x pin header 2 x %d, 2.54 mm: the one connector for all %d boards (supply, channels and "
+                       "programming lines of each)" % (len(ch["pins"]) // 2, nsite))
         else:
             bom.append("%d x pin header 2 x %d, 2.54 mm; %d x 2-pin 5.08 mm terminal block" % (nsite, len(plan["header"]) // 2, nsite))
         progs = [pc for st in (fixture or {}).get("sites") or [] for pc in st.get("program") or []]
@@ -335,19 +430,37 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
         steps = ["%s: %s" % (files_, _e(routing_note((fixture or {}).get("routing")))),
                  "Press the receptacles into the plated holes and solder them; insert the pogo pins (crown tips on through-hole leads, spear tips on flat pads - see the probes CSV).",
                  "Fit the guide pins in the GUIDE holes; they locate the board through its mounting holes. Mount the fixture on M3 standoffs.",
-                 "Solder the divider resistors, header and power terminal. Wire the header to the measurement hardware as shown below."]
+                 "Solder the divider resistors, header and power terminal. Wire the header to the measurement hardware as shown below."
+                 if not fconns else
+                 "Solder the divider resistors and the %s connector. The fixture is made for <b>%s</b>%s: it plugs straight in, "
+                 "the pin map is below." % (_e(", ".join(sorted({c["name"] for c in fconns}))), _e(fac.get("name", fac.get("id", ""))),
+                                           " (fixed %g x %g mm plate, its mounting holes and connector position)" % tuple(fac["plate_mm"])
+                                           if fac.get("plate_mm") else "")]
         if plates:
             steps.append("Two plates (clamshell): the board lies on the bottom plate's guide pins; the top plate is mirrored, "
                          "comes down from above on the same guide pins and presses its probes onto the top side. Wire both "
                          "headers to the measurement hardware (channel numbers are shared).")
         if nsite > 1:
             b_ = plan.get("batch") or {}
-            steps.append("The fixture takes a batch of <b>%d boards</b> (%d x %d sites, numbered row by row from the top left, "
-                         "S1..S%d on the silkscreen). Every site has its own header and power terminal; wire them as "
-                         "<code>runner/hardware.json</code> describes (one power switch per site)." % (
-                             nsite, b_.get("cols", nsite), b_.get("rows", 1), nsite))
+            if (fixture or {}).get("central_header"):
+                steps.append("The fixture takes a batch of <b>%d boards</b> (%d x %d sites, numbered row by row from the top "
+                             "left, S1..S%d on the silkscreen) with <b>one connector</b> in the middle: every board's dividers sit "
+                             "on its edge facing it, so the traces run about as far for every board. Each board has its own "
+                             "supply pin (<code>S1 VIN</code>, ...) for its own power switch, its channels and its programming "
+                             "lines; the pin map is below and <code>runner/hardware.json</code> has one power switch per site." % (
+                                 nsite, b_.get("cols", nsite), b_.get("rows", 1), nsite))
+            else:
+                steps.append("The fixture takes a batch of <b>%d boards</b> (%d x %d sites, numbered row by row from the top left, "
+                             "S1..S%d on the silkscreen). Every site has its own header and power terminal; wire them as "
+                             "<code>runner/hardware.json</code> describes (one power switch per site)." % (
+                                 nsite, b_.get("cols", nsite), b_.get("rows", 1), nsite))
         h.append("".join("<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, t) for i, t in enumerate(steps)))
-        h.append("<h3>Wiring</h3><div class='svgbox'>%s</div>" % wiring_svg(plan))
+        if fconns:
+            h.append("<h3>%s pin map</h3>%s" % (_e(fac.get("name", fac.get("id", ""))), facility_pin_table(plan)))
+        elif (fixture or {}).get("central_header"):
+            h.append("<h3>Batch connector pin map</h3>%s" % central_pin_table(plan, fixture))
+        else:
+            h.append("<h3>Wiring</h3><div class='svgbox'>%s</div>" % wiring_svg(plan))
         h.append(_program_section(plan, fixture))
         h.append("</section>")
 
@@ -375,15 +488,26 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
                  _e(sup.get("net") or "the supply input"), _e(str(sup.get("voltage") if sup.get("voltage") is not None else "?")),
                  _e(str(sup.get("current_limit_a") or 0.5))),
              "Measure every step below at the marked test points (section 1) and compare with the limits.",
-             "Record pass/fail per board; any value outside its limits is a fail."] if mode == "none" else ["Copy the <code>runner</code> folder to the Raspberry Pi and describe your wiring in <code>hardware.json</code>.",
+             "Record pass/fail per board; any value outside its limits is a fail."] if mode == "none" else [
+             ("Copy the <code>runner</code> folder to the Raspberry Pi and describe your wiring in <code>hardware.json</code>."
+              if not (plan.get("facility") or {}).get("driver") else
+              "Copy the <code>runner</code> folder to the computer that drives <b>%s</b> and set how to reach it in "
+              "<code>hardware.json</code>; its driver (<code>facility_driver.py</code>) measures, switches the supply and "
+              "runs the bus checks." % _e((plan.get("facility") or {}).get("name", ""))),
              "Once, with known-good boards: <code>python3 pcbtest_runner.py learn --units 3</code> to fill in signal limits.",
              "For every board: place it, press down, run <code>python3 pcbtest_runner.py test --loop</code> and enter the serial number.",
              "Green PASS: next board. Red FAIL: the failed checks are listed and stored in <code>results/results.csv</code>."]
     nsites = int((plan.get("batch") or {}).get("count") or 1)
+    phased = any(st.get("phase") == "program" for st in plan.get("sequence") or [])
     if mode == "generate" and nsites > 1:
         steps[2] = ("For every batch: put a board in each of the %d sites, press down, run <code>python3 pcbtest_runner.py test "
                     "--loop</code>. The runner tests site 1 to %d in turn, asks the serial number of each board and gives a "
-                    "verdict per board (<code>--site 2</code> retests one board)." % (nsites, nsites))
+                    "verdict per board (<code>--site 2</code> retests one board)." % (nsites, nsites)) if not phased else (
+                    "For every batch: put a board in each of the %d sites, press down, run <code>python3 pcbtest_runner.py test "
+                    "--loop</code> and enter the serial numbers. The runner checks every board unpowered and powers it up, "
+                    "then programs all %d at the same time and, while the programmers run, measures what needs no "
+                    "firmware; the checks that need the firmware follow. A verdict per board (<code>--site 2</code> retests "
+                    "one board, <code>--sequential</code> tests one board after the other)." % (nsites, nsites))
     if mode == "generate" and (plan.get("program") or {}).get("headers"):
         cmd = (plan["program"] or {}).get("command")
         steps.insert(3, ("Programming (step SP): the runner flashes each board with <code>%s</code> through its PROG connector "
@@ -399,7 +523,17 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
         desc = ", ".join("%s %s..%s" % (C.base_net(c.get("net", "")), c.get("min_v", c.get("min_ohm", "")), c.get("max_v", ""))
                          if c.get("net") else c.get("check", "") for c in checks[:6])
         h.append("<tr><td><b>%s</b> %s</td><td class='small'>%s</td></tr>" % (_e(st["id"]), _e(st["name"]), _e(desc)))
-    h.append("</table></section>")
+    h.append("</table>")
+    if (plan.get("firmware") or {}).get("programmed"):
+        fwn = plan["firmware"]["firmware_nets"]
+        h.append("<p class='small'>What needs the firmware: the nets of <b>%s</b>, the programmed part%s (%d nets, e.g. %s). "
+                 "Their checks run after programming; everything else runs while the boards are programmed. A check can "
+                 "force it with <code>needs_firmware</code> in the plan.</p>" % (
+                     _e(", ".join(plan["firmware"]["programmed"])), "s" if len(plan["firmware"]["programmed"]) > 1 else "",
+                     len(fwn), _e(", ".join("%s (%s)" % (C.base_net(x["net"]), x["why"]) for x in fwn[:3]))))
+    if plan.get("timing"):
+        h.append(timing_section(plan["timing"]))
+    h.append("</section>")
 
     # ---- jig ---------------------------------------------------------------------------------------
     if jig:

@@ -1,6 +1,7 @@
 """End-to-end export: analysis -> spec -> test plan -> fixture -> jig -> report -> runner bundle."""
 from __future__ import annotations
 
+import glob
 import json
 import math
 import os
@@ -55,7 +56,8 @@ def hardware_template(plan: Dict[str, Any], fixture: Optional[Dict[str, Any]]) -
     }
     if nsite > 1:
         hw["_batch_comment"] = (
-            "Batch fixture with %d sites (one board each, its own header and power terminal). With channel_map 'auto', "
+            "Batch fixture with %d sites (one board each; every board's supply and channels on the fixture's batch "
+            "connector, or on its own header with fixture.batch_connector per_site). With channel_map 'auto', "
             "site k uses the ADC inputs right after site k-1's (%d per site, %d in all: %s). 'power' has one entry "
             "per site so each board is switched on only while it is tested; override a site in 'sites', e.g. "
             "{\"2\": {\"channel_map\": {...}, \"power\": {...}}}." % (
@@ -67,8 +69,9 @@ def hardware_template(plan: Dict[str, Any], fixture: Optional[Dict[str, Any]]) -
     return hw
 
 
-def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optional[Dict[str, bool]] = None,
-                 progress: Optional[Callable[[str, float], None]] = None, include_kicad: Optional[bool] = None) -> Dict[str, Any]:
+def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optional[Dict[str, Any]] = None,
+                 progress: Optional[Callable[[str, float], None]] = None, include_kicad: Optional[bool] = None,
+                 cancel: Optional[Any] = None) -> Dict[str, Any]:
     from .jig import build_jigs
     from .report import build_report
 
@@ -182,6 +185,12 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
                         else rel(v) if isinstance(v, dict) else v) for k, v in d.items()}
         _write_json(paths["jig_meta"], rel(jig))
 
+    # how long a batch takes to assemble, program and test (pcbtestkit.timing); kept in the test plan
+    from .timing import production_timing
+    plan["timing"] = production_timing(design, plan, jig)
+    if "testplan" in paths:
+        _write_json(paths["testplan"], plan)
+
     if want.get("runner", True) and mode != "none":
         step("Bundling test runner", 0.85)
         rdir = os.path.join(out_dir, "runner")
@@ -191,7 +200,15 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
                 shutil.rmtree(rdir)
             shutil.copytree(src, rdir, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
             shutil.copy2(paths["testplan"], os.path.join(rdir, "testplan.json")) if "testplan" in paths else None
-            _write_json(os.path.join(rdir, "hardware.json"), hardware_template(plan, fixture))
+            # the test facility's own hardware.json and runner driver, else the Raspberry Pi template
+            from .facility import facility_for, hardware_template as facility_hardware
+            fac = facility_for(design)
+            hw = facility_hardware(fac)
+            if hw is None:
+                hw = hardware_template(plan, fixture)
+            elif (fac.get("runner") or {}).get("driver"):
+                shutil.copy2(os.path.join(fac["_dir"], fac["runner"]["driver"]), os.path.join(rdir, "facility_driver.py"))
+            _write_json(os.path.join(rdir, "hardware.json"), hw)
             paths["runner"] = rdir
 
     visuals: Dict[str, Any] = {}
@@ -199,7 +216,12 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
     keep_frames = False
     if want.get("guide", True):
         vdir = os.path.join(out_dir, "visuals")
-        if want.get("visuals", True):
+        kept_imgs = sorted(glob.glob(os.path.join(vdir, "*.png"))) if want.get("visuals") == "reuse" else []
+        if kept_imgs:                           # the stills of the run just before (the video in the background)
+            from .kicad_cli import find_kicad_cli
+            visuals = {"images": {os.path.splitext(os.path.basename(p_))[0]: p_ for p_ in kept_imgs}, "log": [],
+                       "available": bool(find_kicad_cli())}
+        elif want.get("visuals", True):
             step("Rendering 3D views with KiCad (this takes a minute)", 0.88)
             from .visuals import build_visuals
             try:
@@ -212,13 +234,13 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
             vp = os.path.join(out_dir, "%s-explainer.mp4" % name)
 
             def anim_progress(done: int, total: int) -> None:
-                if done == total or done % max(1, total // 25) == 0:
+                if done == total or done % max(1, total // 100) == 0:
                     step("Rendering video frame %d of %d" % (done, total), 0.9 + 0.04 * done / max(1, total))
 
             try:
                 vres = build_video(design, spec, plan, fixture, jig, visuals, out_dir, vp,
                                    work_dir=os.path.join(vdir, "scenes", "video"), paths=paths, visuals_dir=vdir,
-                                   progress=anim_progress)
+                                   progress=anim_progress, cancel=cancel)
             except Exception as exc:
                 vres = {"ok": False, "reason": repr(exc)}
             if vres.get("ok"):

@@ -14,6 +14,10 @@ the class you order (with x/y locations), process limits, and order notes for wh
 | `oshpark-2026` | `2-layer`, `2-layer-2oz-0.8mm`, `4-layer`, `6-layer` |
 | `aisler-2025` | `2L-35um-HASL`, `2L-35um-ENIG`, `2L-70um-HASL`, `2L-70um-ENIG`, `4L-35um-ENIG`, `6L-35um-ENIG` |
 | `wurth-basic-2022` | `standard`, `advanced` |
+| `seeed-fusion-2026` | `1oz`, `2oz`, `3oz` |
+| `nextpcb-2026` | `1oz`, `2oz` |
+| `allpcb-2026` | `standard`, `aspect-8` |
+| `multicb-2026` | `standard`, `special` |
 | `ipc-2221-voltage` | `B2`, `B3`, `B4`, `A5` (needs net voltages: `set_net_specs`) |
 | `ipc-6012-ring` | `1`, `2`, `3` |
 

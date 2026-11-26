@@ -156,8 +156,29 @@ Probe side, pogo family and mounting, signal policy, channel budget, ADC range, 
     "settle_ms": 500,
     "fine_pitch_exclude_mm": 0.8,
     "custom_steps": [],
-    "manual_checks": []
+    "manual_checks": [],
+    "bus_nets": {}
   }
+}
+```
+
+## `facility`
+
+
+
+```json
+{
+  "facility": "raspberry-pi"
+}
+```
+
+## `facility_dirs`
+
+
+
+```json
+{
+  "facility_dirs": []
 }
 ```
 
@@ -183,6 +204,7 @@ Fixture PCB outline, margins, N x M panel, mounting holes, dividers, routing (tr
     "divider_r_bottom_signal": 100000.0,
     "draw_dut_components": true,
     "cut_tall_components": true,
+    "batch_connector": "central",
     "route": true,
     "track_mm": 0.25,
     "power_track_mm": 0.5,
@@ -221,7 +243,28 @@ Programming headers (auto-detected SWD/JTAG/ISP/ICSP/UPDI/UART-boot or by ref), 
     "headers": "auto",
     "connector": "same",
     "command": [],
-    "timeout_s": 180
+    "timeout_s": 180,
+    "estimate_s": 30
+  }
+}
+```
+
+## `timing`
+
+
+
+```json
+{
+  "timing": {
+    "board_handling_s": 8.0,
+    "serial_entry_s": 3.0,
+    "visual_s": 15.0,
+    "short_check_s": 0.5,
+    "read_s": 0.05,
+    "bus_s": 3.0,
+    "place_part_s": 6.0,
+    "solder_joint_s": 2.5,
+    "jig_cycle_s": 45.0
   }
 }
 ```
@@ -278,7 +321,7 @@ Explainer video: real 3D animation on/off, frame rate, size, parallel renders, r
     "width": 1280,
     "height": 720,
     "workers": 0,
-    "quality": "basic"
+    "quality": "standard"
   }
 }
 ```

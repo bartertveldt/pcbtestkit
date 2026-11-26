@@ -102,7 +102,15 @@ DEFAULTS: Dict[str, Any] = {
         "fine_pitch_exclude_mm": 0.8,
         "custom_steps": [],
         "manual_checks": [],
+        "bus_nets": {},             # board nets per bus when their names are not recognised, e.g.
+                                    # {"can": {"CAN_H": "/CANH", "CAN_L": "/CANL"}} (see the facility's buses)
     },
+    # The tester the fixture plugs into (pcbtestkit facilities list): raspberry-pi (built-in: generated header,
+    # ADC, GPIO power) or a facility file of your own with its fixed plate, connector and pin map, buses and
+    # runner driver. An inline definition (an object) works too. Facilities are looked up in ~/.pcbtestkit/
+    # facilities (or PCBTESTKIT_FACILITIES), <project>/facilities and facility_dirs.
+    "facility": "raspberry-pi",
+    "facility_dirs": [],
     "fixture": {
         "mode": "generate",         # generate (pogo-pin fixture board) | own (you design it: probe-point CSV) | none
         "outline": "rect",          # rect | outline
@@ -115,6 +123,8 @@ DEFAULTS: Dict[str, Any] = {
         "divider_r_bottom_signal": 100000.0,
         "draw_dut_components": True,
         "cut_tall_components": True,
+        "batch_connector": "central",  # batch: one connector in the middle for every board (even trace lengths) |
+                                    # per_site (a header, power terminal and programming connector per board)
         "route": True,              # route the fixture board with the built-in router (two layers)
         "track_mm": 0.25,           # signal tracks
         "power_track_mm": 0.5,      # GND and VIN tracks (narrower where that does not fit)
@@ -135,6 +145,19 @@ DEFAULTS: Dict[str, Any] = {
         "command": [],              # runner: flash each board with this program, e.g. ["openocd", "-f", "board.cfg",
                                     # "-c", "program fw.elf verify reset exit"]; {site} {serial} are filled in
         "timeout_s": 180,
+        "estimate_s": 30,           # how long programming one board takes (production timing; boards run at once)
+    },
+    # Production timing (the guide's timeline and time per board by batch size): your own durations, in seconds
+    "timing": {
+        "board_handling_s": 8.0,    # put a board on the fixture, press down, take it off
+        "serial_entry_s": 3.0,      # scan or type its serial number
+        "visual_s": 15.0,           # the visual check
+        "short_check_s": 0.5,       # per rail, unpowered
+        "read_s": 0.05,             # one voltage reading
+        "bus_s": 3.0,               # one bus check
+        "place_part_s": 6.0,        # fit one hand-soldered part in the placement jig
+        "solder_joint_s": 2.5,      # solder and clip one lead
+        "jig_cycle_s": 45.0,        # load the PCBs, close the holding jig, turn over, lift off, unload (per jig load)
     },
     "jig": {
         "parts": "auto",            # auto | [refs]
@@ -175,8 +198,10 @@ DEFAULTS: Dict[str, Any] = {
         "fps": 24,
         "width": 1280,
         "height": 720,
-        "workers": 0,               # parallel kicad-cli renders; 0 = number of CPU cores - 2 (max 8)
-        "quality": "basic",         # kicad-cli render quality for the motion shots: basic | high
+        "workers": 0,               # frames rendered at the same time; 0 = one per CPU core (max 12)
+        "quality": "standard",      # ray tracing of the motion shots: basic (flat, fastest) | standard (shadows and
+                                    # ambient occlusion) | best (+ anti-aliasing, textures; 2x slower) | high (KiCad's
+                                    # own: soft shadows, reflections; about 6x slower than standard)
     },
     "outputs": {"spec": True, "testplan": True, "fixture": True, "jig": True, "report": True, "runner": True,
                 "guide": True, "visuals": True, "video": False, "keep_scenes": False},

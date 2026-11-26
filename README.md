@@ -30,6 +30,7 @@ the placement jig comes off and every lead is soldered.*
 - [The test fixture](#the-test-fixture)
 - [The solder jigs](#the-solder-jigs)
 - [The test runner (Raspberry Pi / MCU)](#the-test-runner-raspberry-pi--mcu)
+- [Your own tester: test facilities](#your-own-tester-test-facilities)
 - [Visual guide and explainer video](#visual-guide-and-explainer-video)
 - [AI assistants and automation](#ai-assistants-and-automation)
 - [Configuration](#configuration-pcbtestkitjson)
@@ -49,13 +50,13 @@ the placement jig comes off and every lead is soldered.*
 | **Technology class** | Which class each fab's system needs (Eurocircuits `6C`, JLCPCB `standard`, OSH Park `4-layer`, ...), what drives it, whether the board fits at all, and every feature that breaks the class you order, with coordinates. |
 | **`<board>-spec.json`** | A "good unit" specification: geometry, fab limits and measured stats, BOM with placement, connectivity, expected rail voltages, acceptance criteria, findings, decision log. |
 | **`<board>-testplan.json`** | The test scheme: probe points, measurement channels, voltage dividers, header pinout and an ordered sequence (visual → short check → power-up/current → rails → signals → custom steps → power-off). |
-| **`<board>-fixture.kicad_pcb`** | A bed-of-nails fixture PCB: pogo pins at the probe points, a header for the Pi/MCU, dividers, a power terminal, guide-pin holes from the board's mounting holes, cut-outs for tall parts and stacked boards, routed on two layers by the built-in router. One site per board for a batch, each with its own header, power terminal and programming connector; two plates (`-fixture-top` / `-fixture-bottom`) when probing both sides. |
+| **`<board>-fixture.kicad_pcb`** | A bed-of-nails fixture PCB: pogo pins at the probe points, a header for the Pi/MCU, dividers, a power terminal, guide-pin holes from the board's mounting holes, cut-outs for tall parts and stacked boards, routed on two layers by the built-in router. One site per board for a batch, all on one connector in the middle; two plates (`-fixture-top` / `-fixture-bottom`) when probing both sides. |
 | **`<board>-jig-placement.stl`, `<board>-jig.stl` / `.scad`** | Two 3D-printable solder jigs that work as a pair: fit the hand-soldered parts with the PCB top side up in the placement jig, close the holding jig over them, turn the stack over, lift off the placement jig and solder. Every part stays flush and square. Parts on both sides: a jig set per side (`-jig-bottom*.stl`) and a paste-print nest for the second SMD side. For a batch every jig holds several boards (as many as fit your printer bed). |
-| **`runner/`** | A Raspberry Pi / microcontroller test runner that executes the plan board by board through a batch, programs each board through the fixture, with MicroPython firmware for RP2040/ESP32 front-ends. |
+| **`runner/`** | A Raspberry Pi / microcontroller test runner that executes the plan board by board through a batch, programs each board through the fixture, with MicroPython firmware for RP2040/ESP32 front-ends. Testing with your own tester instead? Describe it as a [test facility](docs/FACILITIES.md): its fixed connector, plate, buses (CAN, USB, Ethernet, ...) and runner driver. |
 | **`<board>-report.html`** | Everything above on one page, with a board map. |
 | **`<board>-guide.html`** | A step-by-step visual guide with KiCad 3D renders: what to fix, how to build the fixture, how to test, how to use the jig. |
 | **`<board>-explainer.mp4`** | Optional ~50 s video with real 3D animation rendered by KiCad: assembly, jig, fixture, test. |
-| **AI interface** | 33 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
+| **AI interface** | 34 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
 
 Everything runs locally. The core uses only the Python standard library and reads KiCad 6-10 files directly, so
 it also works on the command line, in CI and on the Pi. No AI service or account is needed for any of it: every
@@ -152,6 +153,8 @@ pcbtestkit run P --class-system jlcpcb-2026 --tech-class standard --check-class 
 pcbtestkit analyze P [--strict]                  # CI gate: exit 1 on critical findings
 pcbtestkit init P                                # write a pcbtestkit.json template
 pcbtestkit classes list | show <id> | check P [--system S --target C] | validate [file] | template | catalog
+pcbtestkit facilities list | show <id> | validate [file] | template --out DIR    # your own tester
+pcbtestkit run P --facility bench-tester-example                                  # fixture for that tester
 pcbtestkit api <tool> --project P --args '<json>' --compact    # any agent tool, one JSON answer
 pcbtestkit tools --brief | --name <tool> | --format mcp|anthropic|openai
 pcbtestkit guide                                 # the agent quick reference
@@ -176,6 +179,10 @@ of them with one engine; each **class system** is a small JSON file of data.
 | `oshpark-2026` | `2-layer`, `2-layer-2oz-0.8mm`, `4-layer`, `6-layer` | OSH Park |
 | `aisler-2025` | `2L-35um-HASL`, `2L-35um-ENIG`, `2L-70um-HASL`, `2L-70um-ENIG`, `4L-35um-ENIG`, `6L-35um-ENIG` | AISLER (all six stack-ups) |
 | `wurth-basic-2022` | `standard`, `advanced` | Würth Elektronik BASIC rules |
+| `seeed-fusion-2026` | `1oz`, `2oz`, `3oz` | Seeed Fusion standard FR4 (track/space per copper weight) |
+| `nextpcb-2026` | `1oz`, `2oz` | NextPCB standard PCB (0.15 mm drill up to 1.2 mm thick) |
+| `allpcb-2026` | `standard`, `aspect-8` | ALLPCB (aspect ratio 6:1, or 8:1 with an extra day) |
+| `multicb-2026` | `standard`, `special` | Multi-CB (EU), 35 µm copper: free standard and special production |
 | `ipc-2221-voltage` | `B2`, `B3`, `B4`, `A5` | Conductor spacing per voltage (set net voltages) |
 | `ipc-6012-ring` | `1`, `2`, `3` | IPC-6012 annular ring and plating |
 
@@ -230,15 +237,26 @@ For `generate`:
 `batch.count` (dialog: **Boards per batch**, CLI `--batch N`, tool `set_batch_and_programming`) sets how many
 boards are handled together:
 
-- **Fixture:** one site per board (`S1` .. `SN`, row by row from the top left), each with its own pogo pins, header,
-  power terminal and programming connector; GND is shared. Columns are chosen automatically (as square as possible)
-  or set with `batch.cols`; `batch.spacing_mm` is the gap between sites.
+- **Fixture:** one site per board (`S1` .. `SN`, row by row from the top left), each with its own pogo pins, and
+  **one connector** in a band across the middle of the fixture that carries every board's supply (`S1 VIN`, ...),
+  channels and programming lines; GND is shared. The boards sit on both sides of it with their dividers on the
+  corner facing it, so every board's traces run about as far. `fixture.batch_connector: "per_site"` gives each
+  board its own header, power terminal and programming connector instead. Columns are chosen automatically (as
+  square as possible) or set with `batch.cols`; `batch.spacing_mm` is the gap between sites.
 - **Jigs:** the placement jig, holding jig and paste-print nest each hold the batch side by side, as close as the
   jigs allow; the placement and holding jigs share one board pitch so they still close over every board. When a jig
   for the whole batch does not fit the printer bed (`batch.bed_mm`, default 220 x 220 mm), each jig holds fewer
   boards and the guide says how many sets to print.
-- **Runner:** tests site 1 to N in turn, each with its own serial number, ADC inputs and power switch
-  (`hardware.json` gets one power entry per site), and prints a verdict per board; `--site 2` retests one board.
+- **Runner:** every board is checked unpowered and powered up, then **all boards are programmed at the same time**
+  while the checks that need no firmware are measured, then the checks that need the firmware run; each board has its
+  own serial number, ADC inputs and power switch (`hardware.json` gets one power entry per site) and a verdict
+  (`--site 2` retests one board, `--sequential` tests one after the other).
+- **What needs the firmware** is worked out from the design: the programmed MCU is the IC on the programming
+  header's nets; checks on its pins (directly or through a series resistor) and on rails whose regulator it enables
+  wait for the firmware. A check can force it with `needs_firmware`.
+- **Production timing:** the guide shows how long a batch takes to assemble with the jigs, program and test, as a
+  timeline per board, and the time per board for every batch size, with the size past which a bigger batch saves
+  little. Set your own durations in `timing` (pcbtestkit.json); the runner records the real ones.
 
 The older `fixture.panel` (cols x rows) still works when `batch.count` is 1.
 
@@ -347,6 +365,35 @@ end, over-current at power-up aborts, and shell `command` steps and the programm
 
 ---
 
+## Your own tester: test facilities
+
+Not everyone tests with a Raspberry Pi. A **test facility** describes the tester the fixture plugs into, once, as a
+JSON file (plus a Python driver if the runner should drive it), and every fixture PCB TestKit makes then plugs straight in:
+
+- **Fixed connector, plate and holes:** the fixture gets your tester's interface connector at its fixed place, with
+  your pin map (analog inputs, supply, CAN, USB, Ethernet, UART, I2C, RS-485), on a plate of your size with your
+  mounting holes, so every fixture fits the same tester.
+- **Channels and range:** the test plan uses no more channels than the tester has and sizes the dividers for its
+  input range.
+- **Buses:** the board's bus nets are found by name. A bus wired through the fixture gets pogo pins onto the
+  connector, a bus by cable gets an operator prompt, and each one becomes a test step.
+- **Runner driver:** the runner hands measuring, power switching and the bus checks to your `driver.py` (the example
+  speaks SCPI over TCP), with your `hardware.json`.
+- **Batches:** one connector per board of a batch.
+
+```bash
+pcbtestkit facilities template --out ~/.pcbtestkit/facilities/my-tester    # facility.json + driver.py to edit
+pcbtestkit facilities validate ~/.pcbtestkit/facilities/my-tester/facility.json
+pcbtestkit run my_board.kicad_pcb --facility my-tester
+```
+
+Pick it in the dialog (*Test facility*), in `pcbtestkit.json` (`"facility": "my-tester"`) or with the `set_facility`
+tool. The default `raspberry-pi` facility changes nothing. The built-in `bench-tester-example` is a complete worked
+example (160 x 120 mm plate, 2 x 20 IDC connector, 16 inputs, CAN/UART/I2C through the fixture, USB/Ethernet by cable).
+Everything about the format: [docs/FACILITIES.md](docs/FACILITIES.md).
+
+---
+
 ## Visual guide and explainer video
 
 `<board>-guide.html` is a page for whoever builds and runs the tester, with photoreal KiCad renders of the board,
@@ -367,18 +414,38 @@ by KiCad's own renderer:
 | Solder from above | A soldering iron works along the leads and solder joints appear (sped up after the first ones) |
 | Lift out the finished board | The board rises and turns over; the camera follows it |
 | Build the fixture | The pogo pins drop into the fixture PCB |
-| Test a board | The board slides over the fixture and presses onto the pins |
+| Test a board | The board (every board of a batch) slides over the fixture and presses onto the pins |
+| Test the batch | The runner's batch flow: the copper of what is measured lights up on each board in turn, every board's programming nets while they are programmed, next to the runner's output |
 
 Each frame is an ordinary `.kicad_pcb` scene where only 3D-model offsets and rotations change; the parts in the
-jig use the board's own 3D models turned over with the PCB, so they line up with their holes exactly. Renders use
-a private KiCad model cache, so your KiCad cache doesn't fill up. Rendering takes about 0.75 s per frame on an
-8-core laptop (5-20 minutes per board); `--video-fps 15` halves it and `--video-stills` makes a stills-only video
-in under a minute. Settings: the `video` section of `pcbtestkit.json`.
+jig use the board's own 3D models turned over with the PCB, so they line up with their holes exactly. A batch shows
+every board the jigs hold. Renders use a private KiCad model cache and settings folder, so your KiCad settings and
+cache stay as they are.
 
-If the MP4 cannot be made (ffmpeg missing an encoder, for example), the frames are kept in `visuals/scenes/` and the
-reason is shown in the dialog, the guide, the report and `<board>-video-error.txt`. Generate again with the same
-settings and the frames are reused, so only the MP4 is made again. ffmpeg without libx264 falls back to another
-H.264 encoder or MPEG-4, and one without the xfade filter to plain cuts.
+**Ray tracing and speed.** kicad-cli always ray-traces; `video.quality` picks how much: `basic` (flat, 0.4 s per
+frame on an 8-core laptop), `standard` (default: shadows and ambient occlusion, 0.8 s), `best` (adds anti-aliasing
+and textures, 1.6 s) and `high` (KiCad's own: soft shadows and reflections, 4.7 s). About 0.5 s of every frame is
+kicad-cli starting and loading the scene, and KiCad renders one frame per call, so PCB TestKit renders as many
+frames at once as the computer has cores. `--video-fps 15` cuts the frames, `--video-stills` makes a stills-only
+video in under a minute. Settings: the `video` section of `pcbtestkit.json`.
+
+**In the background.** From the KiCad dialog the video renders in a background job after the other outputs: one
+process (no window per frame), one small progress window with frames done, speed, time left and Cancel, and KiCad
+stays usable. `pcbtestkit run P --video --background` does the same from the command line; the status is in
+`visuals/video-job.json`. A cancelled or interrupted run goes on from the frames it kept.
+
+Boards with hand-soldered parts on both sides get the jig shots twice: first the top side's jig set, then the
+bottom side's, with the board turned over and captions that name the side.
+
+If the MP4 cannot be made (ffmpeg missing or missing an encoder, for example), the frames are kept in
+`visuals/scenes/` and the reason is shown in the dialog, the guide, the report and `<board>-video-error.txt`.
+Generate again with the same settings and the frames are reused, so only the MP4 is made again. Or finish it without
+PCB TestKit's dialog: `visuals/scenes/video/BUILD-VIDEO.md` (and `video-recipe.json`) list what is there and the exact
+commands, every path relative to that folder, so you or an AI assistant can make the MP4 from the frames, and
+`python -m pcbtestkit.video visuals/scenes/video` does it in one go (`--no-captions` needs only ffmpeg). ffmpeg
+without libx264 falls back to another H.264 encoder or MPEG-4, and one without the xfade filter to plain cuts. On
+Windows ffmpeg is also found in the usual install folders (winget, Chocolatey, Scoop, `C:\ffmpeg`), no console
+window opens for each frame, and project folders with spaces or non-ASCII characters work.
 
 ---
 
@@ -487,8 +554,8 @@ Checked against KiCad 10.0.8 and the 19 demo projects that ship with it (19,069 
   that is fitted on the probed side covers its own pads: leave it unfitted in production or probe from the other side.
 - A stacked board is modelled as a box (its outline and height); the fixture plate is flat, so test points on top of
   a stacked board are not probed (test that board with its own fixture).
-- The video renders every frame with KiCad, so it takes minutes, not seconds. It shows the first side's jig set;
-  the guide covers every pass. Windows is supported but has had less testing than macOS and Linux.
+- The video renders every frame with KiCad, so it takes minutes, not seconds. Windows is supported but has had less
+  testing than macOS and Linux.
 
 ---
 

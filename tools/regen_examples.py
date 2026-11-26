@@ -5,19 +5,37 @@
     python3 tools/regen_examples.py --no-video      minutes instead of half an hour
     python3 tools/regen_examples.py --only sample_sensor
 
-Boards: the bundled sample (examples/sample_sensor) and KiCad's own demos pic_programmer and video, found
-next to kicad-cli (macOS app bundle, /usr/share/kicad/demos, Windows install) or in --demos.
+Boards: the bundled sample (examples/sample_sensor) and KiCad's own demos pic_programmer, video and
+tiny_tapeout, found next to kicad-cli (macOS app bundle, /usr/share/kicad/demos, Windows install) or in --demos.
+tiny_tapeout is the showcase: a batch of four boards on one fixture, programmed at the same time over SWD while
+the checks that need no firmware run, the production timing and the test shot with the tested copper lighting
+up. It runs on a copy of the demo with the settings in SHOWCASE.
 Needs KiCad 9+ (renders) and ffmpeg (video).
 """
 import argparse
 import glob
+import json
 import os
 import shutil
 import subprocess
 import sys
+import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
+
+
+# settings written next to a copy of the demo before it is generated (pcbtestkit.json)
+SHOWCASE = {
+    "tiny_tapeout": {
+        "batch": {"count": 4},
+        "testplan": {"max_channels": 12},
+        "program": {"command": ["openocd", "-f", "interface/cmsis-dap.cfg", "-c", "adapter serial PROBE-{site}",
+                                "-f", "target/rp2040.cfg", "-c", "program firmware.elf verify reset exit"],
+                    "estimate_s": 25},
+        "video": {"quality": "standard"},
+    },
+}
 
 
 def demos_dir(explicit=None):
@@ -49,6 +67,7 @@ def main() -> int:
     if demos:
         boards["pic_programmer"] = os.path.join(demos, "pic_programmer", "pic_programmer.kicad_pcb")
         boards["video"] = os.path.join(demos, "video", "video.kicad_pcb")
+        boards["tiny_tapeout"] = os.path.join(demos, "tiny_tapeout")
     else:
         print("KiCad demos not found (use --demos); only the sample board is regenerated")
     if not os.path.exists(boards["sample_sensor"]):
@@ -58,6 +77,13 @@ def main() -> int:
             continue
         out = os.path.join(ROOT, "docs", "examples", name)
         shutil.rmtree(out, ignore_errors=True)
+        if name in SHOWCASE:                    # a copy of the demo with the showcase settings
+            tmp = tempfile.mkdtemp(prefix="pcbtk_%s_" % name)
+            src = board if os.path.isdir(board) else os.path.dirname(board)
+            shutil.copytree(src, os.path.join(tmp, name))
+            with open(os.path.join(tmp, name, "pcbtestkit.json"), "w", encoding="utf-8") as fh:
+                json.dump(SHOWCASE[name], fh, indent=1)
+            board = os.path.join(tmp, name)
         cmd = [sys.executable, "-m", "pcbtestkit", "run", board, "-q", "--no-kicad", "--out", out]
         if not a.no_video:
             cmd.append("--video")

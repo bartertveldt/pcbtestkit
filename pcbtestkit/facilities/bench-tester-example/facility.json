@@ -1,0 +1,47 @@
+{
+ "schema": "pcbtestkit-facility/1",
+ "id": "bench-tester-example",
+ "name": "Bench tester with a fixed 2 x 20 interface (example)",
+ "description": "A worked example of a test facility with a fixed fixture: every fixture is a 160 x 120 mm plate with four M3 holes in the same place and the tester's 2 x 20 IDC connector at the same spot on the front edge, so any fixture plugs into the same tester. 16 analog inputs up to 10 V, one switched supply with current sense, CAN, UART and I2C through the fixture, USB and Ethernet by cable. The runner talks to it with SCPI over the network (driver.py). Copy this folder to ~/.pcbtestkit/facilities/<your-id>/ and change it to describe your tester.",
+ "analog": {"inputs": 16, "max_v": 10.0},
+ "power": {"outputs": 1, "max_v": 24.0, "max_a": 2.0, "current_sense": true, "switched": true},
+ "batch": {"max_sites": 1},
+ "buses": {
+  "can": {"via": "fixture", "check": {"bitrate": 500000, "send": "7DF#0201000000000000", "expect": "7E8#"}},
+  "uart": {"via": "fixture", "check": {"baud": 115200, "send": "\\r", "expect": "OK|>"}},
+  "i2c": {"via": "fixture", "check": {"scan": true}},
+  "usb": {"via": "cable", "note": "Plug the tester's USB cable into the board's USB port.", "check": {"enumerate": true}},
+  "ethernet": {"via": "cable", "note": "Plug the tester's Ethernet cable into the board's RJ45 port.", "check": {"link": true}}
+ },
+ "fixture": {
+  "plate_mm": [160.0, 120.0],
+  "holes": [{"at_mm": [5.0, 5.0], "d_mm": 3.2, "label": "M3"}, {"at_mm": [155.0, 5.0], "d_mm": 3.2, "label": "M3"},
+            {"at_mm": [5.0, 115.0], "d_mm": 3.2, "label": "M3"}, {"at_mm": [155.0, 115.0], "d_mm": 3.2, "label": "M3"}],
+  "connectors": [{
+   "name": "TESTER", "site": 1, "at_mm": [55.87, 114.0], "angle": 90, "pins_across": 2, "pins_along": 20, "pitch_mm": 2.54,
+   "numbering": "zigzag", "footprint": "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical",
+   "model": "${KICAD8_3DMODEL_DIR}/Connector_IDC.3dshapes/IDC-Header_2x20_P2.54mm_Vertical.wrl",
+   "pins": {
+    "1": "GND", "2": "GND", "3": "AIN1", "4": "AIN2", "5": "AIN3", "6": "AIN4", "7": "AIN5", "8": "AIN6",
+    "9": "AIN7", "10": "AIN8", "11": "GND", "12": "GND", "13": "AIN9", "14": "AIN10", "15": "AIN11", "16": "AIN12",
+    "17": "AIN13", "18": "AIN14", "19": "AIN15", "20": "AIN16", "21": "GND", "22": "GND", "23": "VOUT1", "24": "VOUT1",
+    "25": "CAN_H", "26": "CAN_L", "27": "UART_TX", "28": "UART_RX", "29": "I2C_SDA", "30": "I2C_SCL",
+    "31": "DIO1", "32": "DIO2", "33": "DIO3", "34": "DIO4", "35": "GND", "36": "GND", "37": "NC", "38": "NC",
+    "39": "GND", "40": "GND"}
+  }]
+ },
+ "runner": {
+  "driver": "driver.py",
+  "class": "Driver",
+  "hardware": {
+   "_comment": "How the runner reaches the bench tester (driver.py). Set host to your tester's address.",
+   "connection": {"type": "tcp", "host": "192.168.1.50", "port": 5025, "timeout_s": 3.0},
+   "commands": {
+    "volt": "MEAS:VOLT? (@{input})",
+    "power": "OUTP{output} {state}",
+    "current": "MEAS:CURR? (@{output})",
+    "bus": "BUS:{bus}:TEST? {args}"
+   }
+  }
+ }
+}

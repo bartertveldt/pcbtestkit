@@ -6,9 +6,13 @@ the Python standard library in 'simulated' mode.
 ADC     : ads1115 (I2C, 4 ch/device), mcp3008 (SPI, 8 ch/device), serial (MCU firmware), simulated
 Power   : gpio (relay/MOSFET), serial (MCU), manual (operator prompt), simulated
 Current : ina219 (I2C), serial, none
+Facility: a test facility's own driver (hardware.json "facility": {"driver": "facility_driver.py", "class": ...})
+          measures, switches power and runs the bus checks instead of all of the above.
 """
 from __future__ import annotations
 
+import importlib.util
+import os
 import random
 import time
 from typing import Any, Dict, Optional, Tuple
@@ -215,6 +219,32 @@ class Ina219:
         return (self._reg(0x02) >> 3) * 0.004
 
 
+def load_driver(cfg: Dict[str, Any]):
+    """The test facility's driver class from the runner folder (hardware.json "facility"), or None."""
+    fac = cfg.get("facility") or {}
+    if not fac.get("driver"):
+        return None
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), fac["driver"])
+    if not os.path.exists(path):
+        raise HardwareError("facility driver %s not found next to the runner" % fac["driver"])
+    spec = importlib.util.spec_from_file_location("facility_driver", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    cls = getattr(mod, fac.get("class", "Driver"), None)
+    if cls is None:
+        raise HardwareError("%s has no class %s" % (fac["driver"], fac.get("class", "Driver")))
+    return cls
+
+
+def facility_inputs(plan: Dict[str, Any], site: int) -> Dict[str, str]:
+    """Each channel's input on the test facility for board ``site``: its connector pin function ("AIN3"), or the
+    generated header's pin ("PIN4") when the facility has no connector of its own."""
+    conns = [c for c in (plan.get("facility") or {}).get("connectors") or [] if int(c.get("site", 1)) == site]
+    if conns:
+        return {q["signal"]: q["function"] for c in conns for q in c["pins"] if q["signal"].startswith("CH")}
+    return {p["channel"]: "PIN%d" % p["header_pin"] for p in plan.get("probes", []) if p.get("channel") and p.get("header_pin")}
+
+
 class Hardware:
     """Facade used by the runner: read_v(channel) returns the voltage at the DUT (divider undone).
 
@@ -229,6 +259,15 @@ class Hardware:
         self.site = 1
         self.nsites = int((plan.get("batch") or {}).get("count") or 1)
         self.ratio = {p["channel"]: (p.get("divider") or {}).get("ratio", 1.0) for p in plan.get("probes", []) if p.get("channel")}
+        self.driver = None
+        cls = None if simulate else load_driver(cfg)
+        if cls is not None:                     # the test facility's driver does the measuring and switching
+            self.driver = cls(cfg, plan)
+            self.sim = self.serial = self.adc = self.gpio = self.cur = None
+            self.map, self.power_list, self.power_cfg, self.power_type = {}, None, {}, "driver"
+            self.res_cfg = dict(cfg.get("resistance") or {})
+            self.select_site(1)
+            return
         adc = dict(cfg.get("adc") or {})
         self.sim = None
         self.serial = None
@@ -264,6 +303,10 @@ class Hardware:
         if k < 1 or k > self.nsites:
             raise HardwareError("site %d: the fixture has %d site(s)" % (k, self.nsites))
         self.site = int(k)
+        if self.driver is not None:
+            if hasattr(self.driver, "select_site"):
+                self.driver.select_site(self.site, facility_inputs(self.plan, self.site))
+            return
         sc = (self.cfg.get("sites") or {}).get(str(k)) or {}
         m = sc.get("channel_map", self.cfg.get("channel_map", "auto"))
         self.map = self._channel_map(m, offset=(k - 1) * len(self.ratio) if (m == "auto" or not m) else 0)
@@ -297,7 +340,9 @@ class Hardware:
         return out
 
     def read_v(self, ch: str) -> float:
-        if self.sim:
+        if self.driver is not None:
+            raw = float(self.driver.read_v(ch))
+        elif self.sim:
             raw = self.sim.read_channel(ch)
         else:
             loc = self.map[ch]
@@ -308,6 +353,9 @@ class Hardware:
         return raw * self.ratio.get(ch, 1.0)
 
     def power(self, on: bool) -> None:
+        if self.driver is not None:
+            self.driver.power(on)
+            return
         if self.power_type == "simulated":
             return
         if self.power_type == "gpio":
@@ -321,6 +369,9 @@ class Hardware:
                                                                    " (site %d)" % self.site if self.nsites > 1 else ""))
 
     def current_a(self) -> Optional[float]:
+        if self.driver is not None:
+            f = getattr(self.driver, "current_a", None)
+            return None if f is None else f()
         if self.sim:
             return 0.02
         if self.cur:
@@ -330,10 +381,30 @@ class Hardware:
         return None
 
     def can_measure_resistance(self) -> bool:
+        if self.driver is not None:
+            return hasattr(self.driver, "resistance")
         return bool(self.sim) or self.res_cfg.get("type") == "source_resistor"
+
+    def bus_test(self, step: Dict[str, Any]) -> Optional[Tuple[bool, str]]:
+        """A bus check (CAN, USB, Ethernet, UART, I2C, RS-485) by the facility driver: (passed, note), or None
+        when nothing here can run it (the operator then checks it)."""
+        if self.sim:
+            return True, "simulated"
+        f = getattr(self.driver, "bus_test", None) if self.driver is not None else None
+        if f is None:
+            return None
+        ok, note = f(step)
+        return bool(ok), str(note or "")
+
+    def close(self) -> None:
+        f = getattr(self.driver, "close", None) if self.driver is not None else None
+        if f is not None:
+            f()
 
     def resistance(self, ch: str, settle_s: float = 0.3) -> float:
         """Drive the rail through R_ref from a GPIO, read the node, compute DUT resistance to ground."""
+        if self.driver is not None:
+            return float(self.driver.resistance(ch))
         if self.sim:
             return 5000.0
         r_ref = float(self.res_cfg.get("r_ref_ohm", 1000))
@@ -357,6 +428,12 @@ class Hardware:
         return r_par
 
     def gpio_out(self, pin: int, level: int) -> None:
+        if self.driver is not None:
+            f = getattr(self.driver, "gpio_out", None)
+            if f is None:
+                raise HardwareError("the facility driver has no gpio_out")
+            f(pin, level)
+            return
         if self.sim:
             return
         if self.serial:

@@ -8,6 +8,7 @@
     python3 -m pcbtestkit mcp      [--project P] [--read-only]                MCP stdio server
     python3 -m pcbtestkit classes  list | show S [--class C] | check <project> [--system S] [--target C]
                                    | validate [file.json ...] | template [--out F] | catalog
+    python3 -m pcbtestkit facilities list | show ID | validate [file.json ...] | template [--out DIR]
 """
 from __future__ import annotations
 
@@ -29,6 +30,8 @@ def _design(args):
         overrides.setdefault("fixture", {})["panel"] = {"cols": int(c), "rows": int(r)}
     if getattr(args, "batch", None):
         overrides.setdefault("batch", {})["count"] = int(args.batch)
+    if getattr(args, "facility", None):
+        overrides["facility"] = args.facility
     if getattr(args, "program_connector", None):
         overrides.setdefault("program", {})["connector"] = args.program_connector
     if getattr(args, "outline", None):
@@ -47,6 +50,8 @@ def _design(args):
         overrides.setdefault("tech", {})["checks"] = list(args.check_class)
     if getattr(args, "video_fps", None):
         overrides.setdefault("video", {})["fps"] = args.video_fps
+    if getattr(args, "video_quality", None):
+        overrides.setdefault("video", {})["quality"] = args.video_quality
     if getattr(args, "video_stills", False):
         overrides.setdefault("video", {})["animate"] = False
     return Design.load(args.project, config_path=getattr(args, "config", None), overrides=overrides or None)
@@ -59,7 +64,7 @@ def cmd_run(args) -> int:
     if args.no_visuals:
         outputs["visuals"] = False
     if args.video:
-        outputs["video"] = True
+        outputs["video"] = not args.background
 
     def prog(msg, frac):
         if not args.quiet:
@@ -79,6 +84,12 @@ def cmd_run(args) -> int:
         vid = res.get("video") or {}
         if vid.get("ok") and vid.get("reused"):
             print("  video made from frames kept from the last run: %s" % ", ".join(vid["reused"]))
+        if args.video and args.background:
+            from .video_job import launch
+            job = launch(d.board.path, res["out_dir"])
+            print("  video: %s" % ("rendering in the background (pid %d%s; log %s)" % (
+                job["pid"], ", progress window" if job["window"] else "", job["log"]) if job.get("ok") else
+                "not started: %s" % job.get("reason")))
         for w in res["fixture_warnings"] + res["warnings"]:
             print("  ! %s" % w)
     return 0
@@ -158,6 +169,80 @@ def cmd_guide(args) -> int:
     from .quickref import quick_reference
     print(quick_reference())
     return 0
+
+
+def cmd_facilities(args) -> int:
+    """Test facilities (the tester a fixture plugs into): list, show, validate, template."""
+    from . import facility as F
+    act = args.action
+    if act == "template":
+        txt = json.dumps(F.TEMPLATE, indent=1)
+        if not args.out:
+            print(txt)
+            return 0
+        os.makedirs(args.out, exist_ok=True)
+        with open(os.path.join(args.out, "facility.json"), "w", encoding="utf-8") as fh:
+            fh.write(txt + "\n")
+        drv = os.path.join(F.BUILTIN_DIR, "bench-tester-example", "driver.py")
+        if not os.path.exists(os.path.join(args.out, "driver.py")):
+            with open(drv, encoding="utf-8") as src, open(os.path.join(args.out, "driver.py"), "w", encoding="utf-8") as dst:
+                dst.write(src.read())
+        print("wrote %s (facility.json + driver.py) - edit them, then: pcbtestkit facilities validate %s" % (
+            args.out, os.path.join(args.out, "facility.json")))
+        return 0
+    if act == "validate":
+        files = args.target or []
+        if not files:
+            found, warns = F.load_facilities()
+            for w in warns:
+                print("WARN", w)
+            print("%d facilities OK: %s" % (len(found), ", ".join(sorted(found))))
+            return 1 if warns else 0
+        bad = 0
+        for f in files:
+            try:
+                raw = F.read_facility(f)
+            except (OSError, ValueError) as e:
+                print("%s: cannot read (%s)" % (f, e))
+                bad += 1
+                continue
+            r = F.validate(raw)
+            print("%s: %s" % (f, "OK" if r["ok"] else "INVALID"))
+            for e in r["errors"]:
+                print("  ERROR", e)
+            for w in r["warnings"]:
+                print("  warn ", w)
+            bad += 0 if r["ok"] else 1
+        return 1 if bad else 0
+    project_dir = None
+    found, warns = F.load_facilities(None, project_dir)
+    if act == "list":
+        rows = [F.summary(f) for _k, f in sorted(found.items())]
+        if args.json:
+            print(json.dumps(rows, indent=1))
+        else:
+            for r_, (k, f) in zip(rows, sorted(found.items())):
+                print("%-24s %s%s" % (k, r_["name"], "" if f["_origin"] == "built-in" else "  [%s]" % f["_origin"]))
+                bits = ["%s analog inputs" % r_["analog_inputs"] if r_["analog_inputs"] else "channels: testplan.max_channels"]
+                if r_["buses"]:
+                    bits.append("buses " + ", ".join("%s (%s)" % kv for kv in sorted(r_["buses"].items())))
+                if r_["plate_mm"]:
+                    bits.append("plate %g x %g mm" % tuple(r_["plate_mm"]))
+                if r_["connectors"]:
+                    bits.append("connector " + ", ".join(r_["connectors"]))
+                print("%-24s %s" % ("", "; ".join(bits)))
+        for w in warns:
+            print("WARN", w, file=sys.stderr)
+        return 0
+    if act == "show":
+        if not args.target or args.target[0] not in found:
+            print("unknown facility; pcbtestkit facilities list", file=sys.stderr)
+            return 2
+        f = dict(found[args.target[0]])
+        f.pop("_dir", None)
+        print(json.dumps(f, indent=1))
+        return 0
+    return 2
 
 
 def cmd_classes(args) -> int:
@@ -309,6 +394,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", help="output folder (default <project>/production_test)")
     p.add_argument("--panel", help="fixture sites, e.g. 2x2")
     p.add_argument("--batch", type=int, help="boards per batch: one fixture site per board, jigs that hold them all")
+    p.add_argument("--facility", help="test facility the fixture plugs into (pcbtestkit facilities list), default raspberry-pi")
     p.add_argument("--program-connector", choices=["same", "swd10", "jtag20", "avr_isp6", "pic_icsp6", "pins"],
                    help="programming connector per board on the fixture (default: a copy of the board's header)")
     p.add_argument("--outline", choices=["rect", "outline"])
@@ -322,6 +408,10 @@ def build_parser() -> argparse.ArgumentParser:
                    help="also render the explainer video: real 3D animation rendered with KiCad (needs ffmpeg; several minutes)")
     p.add_argument("--video-fps", type=float, help="frame rate of the video's motion shots (default 24)")
     p.add_argument("--video-stills", action="store_true", help="quick video from stills only, without the 3D animation")
+    p.add_argument("--video-quality", choices=["basic", "standard", "best", "high"],
+                   help="ray tracing of the motion shots (default standard: shadows and ambient occlusion)")
+    p.add_argument("--background", action="store_true",
+                   help="with --video: make everything else now and render the video in a background job (progress window)")
     p.add_argument("-q", "--quiet", action="store_true")
     p.set_defaults(fn=cmd_run)
 
@@ -366,11 +456,18 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--json", action="store_true")
     p.set_defaults(fn=cmd_classes)
 
+    p = sub.add_parser("facilities", help="test facilities (your tester: connector, buses, driver): list, show, validate, template")
+    p.add_argument("action", choices=["list", "show", "validate", "template"])
+    p.add_argument("target", nargs="*", help="facility id (show) or facility.json files (validate)")
+    p.add_argument("--out", help="folder to write facility.json and driver.py to (template)")
+    p.add_argument("--json", action="store_true")
+    p.set_defaults(fn=cmd_facilities)
+
     p = sub.add_parser("mcp", help="run the MCP stdio server")
     p.add_argument("--project", help="board or project to open at start (open_project can switch later)")
     p.add_argument("--read-only", action="store_true", help="refuse every write tool")
     p.add_argument("--profile", choices=["full", "core", "readonly"], default="full",
-                   help="tools to expose: full (31), core (16, about half the tokens), readonly")
+                   help="tools to expose: full (34), core (16, about half the tokens), readonly")
     p.set_defaults(fn=cmd_mcp)
 
     return ap

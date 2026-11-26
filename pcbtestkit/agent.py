@@ -748,11 +748,18 @@ def t_get_config(ws: Workspace, scope: str = "overrides", section: Optional[str]
 
 
 @tool("get_schema", "JSON schema/allowed values for: test_step | net_spec | testplan_options | jig_options | fixture_options | "
-      "stacked_boards | profiles | tech_classes (the ordered class system) | class_system (format, metric names, template).",
+      "stacked_boards | profiles | tech_classes (the ordered class system) | class_system (format, metric names, template) | "
+      "facilities (testers to pick with set_facility).",
       {"properties": {"name": {"type": "string", "enum": ["test_step", "net_spec", "testplan_options", "jig_options",
                                                           "fixture_options", "stacked_boards", "profiles", "tech_classes",
-                                                          "class_system"]}}, "required": ["name"]})
+                                                          "class_system", "facilities"]}}, "required": ["name"]})
 def t_schema(ws: Workspace, name: str):
+    if name == "facilities":
+        from .facility import facility_for, load_facilities, summary
+        d = ws.design
+        found, warns = load_facilities(d.cfg if d else None, d.project_dir if d else None)
+        return {"selected": facility_for(d)["id"] if d else None, "facilities": [summary(f) for _k, f in sorted(found.items())],
+                "warnings": warns, "write_your_own": "pcbtestkit facilities template --out <folder>; see docs/FACILITIES.md"}
     if name == "profiles":
         return {"fab_profiles": FAB_PROFILES, "pogo_profiles": POGO_PROFILES}
     if name == "tech_classes":
@@ -1141,6 +1148,27 @@ def t_set_batch_and_programming(ws: Workspace, rationale: str = "", dry_run: boo
             w.append("CONFIRM: %d boards per batch makes a large fixture; check it fits your test station" % batch["count"])
         return w
     return ws.apply(mutate, rationale, dry_run, confirm, what="set batch/programming %s" % sorted(list(batch) + list(prog)))
+
+
+@tool("set_facility", "Pick the test facility (tester) the fixture plugs into, by id from get_schema('facilities'): its "
+      "channel count and range, fixed connector and plate, buses and runner driver.",
+      {"properties": dict({"facility": {"type": "string", "description": "Facility id, e.g. raspberry-pi."}}, **WRITE_COMMON),
+       "required": ["facility"]}, read_only=False, writes=True)
+def t_set_facility(ws: Workspace, facility: str, rationale: str = "", dry_run: bool = False, confirm: bool = False):
+    from .facility import load_facilities
+    d = ws._d()
+    found, _w = load_facilities(d.cfg, d.project_dir)
+    if facility not in found:
+        raise ToolError("UNKNOWN_FACILITY", "no facility %r (known: %s)" % (facility, ", ".join(sorted(found))),
+                        hint="get_schema('facilities') lists them; pcbtestkit facilities template writes a new one")
+
+    def mutate(cfg):
+        cfg["facility"] = facility
+        fac = found[facility]
+        n = (fac.get("batch") or {}).get("max_sites")
+        count = int(((cfg.get("batch") or {}).get("count")) or 1)
+        return ["facility %s tests at most %d board(s) per fixture; the batch is %d" % (facility, n, count)] if n and count > n else []
+    return ws.apply(mutate, rationale, dry_run, confirm, what="set facility %s" % facility)
 
 
 STACK_SCHEMA = {

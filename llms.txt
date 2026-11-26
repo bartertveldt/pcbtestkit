@@ -1,6 +1,6 @@
 # PCB TestKit
 
-> KiCad plugin, CLI and MCP server (Python standard library only) that turns a KiCad board into a production-test kit: weak-point/DFM analysis, fab technology-class checks (Eurocircuits, JLCPCB, PCBWay, OSH Park, AISLER, Würth, IPC-2221/6012), a good-unit spec, test plan, pogo-pin fixture PCB, 3D-printable solder jig, Raspberry Pi test runner, HTML report and guide, and a 3D-animated explainer video. AI models make the judgement calls through small validated JSON tools; the toolkit does all geometry and file generation.
+> KiCad plugin, CLI and MCP server (Python standard library only) that turns a KiCad board into a production-test kit: weak-point/DFM analysis, fab technology-class checks (Eurocircuits, JLCPCB, PCBWay, OSH Park, AISLER, Würth, Seeed Fusion, NextPCB, ALLPCB, Multi-CB, IPC-2221/6012), a good-unit spec, test plan, pogo-pin fixture PCB, 3D-printable solder jig, Raspberry Pi test runner, HTML report and guide, and a 3D-animated explainer video. AI models make the judgement calls through small validated JSON tools; the toolkit does all geometry and file generation.
 
 Cheapest start for an agent: run `python3 -m pcbtestkit guide` (or `pcbtestkit guide` after `pip install`) and follow it. Every `pcbtestkit api <tool> --project <board> --args '<json>' --compact` call returns one compact JSON object with "ok".
 
@@ -8,7 +8,7 @@ Cheapest start for an agent: run `python3 -m pcbtestkit guide` (or `pcbtestkit g
 
 - [Agent quick reference](pcbtestkit/quickref.py): the text printed by `pcbtestkit guide`, workflow and token rules
 - [Skill](skills/pcbtestkit/SKILL.md): when to use which command, full workflow, rules
-- [Tool reference](docs/reference/tools.md): all 33 tools with arguments (generated)
+- [Tool reference](docs/reference/tools.md): all 34 tools with arguments (generated)
 - [CLI reference](docs/reference/cli.md): every command and option (generated)
 - [Configuration reference](docs/reference/config.md): every pcbtestkit.json key with defaults (generated)
 - [MCP server](docs/MCP.md): client setup (Claude Code, Claude Desktop, Cursor, VS Code, Codex), profiles, resources, prompts

@@ -9,8 +9,11 @@
 
 Files (same folder by default): testplan.json (generated), hardware.json (your wiring).
 Results: results/<serial>_<time>.json and results/results.csv (with the fixture site of each board).
-Batches: the fixture has one site per board; the boards are tested one after the other, each with its own
-channels and power switch (see hardware.json), serial number and verdict.
+Batches: the fixture has one site per board. The test plan's phases decide the order: every board gets its
+unpowered checks and is powered up, then every board is programmed at the same time (program.command, one per
+board) and, while the programmers run, the checks that do not need the firmware are measured board by board; the
+checks that need the firmware follow. --sequential tests one board after the other instead. Each board has its
+own channels and power switch (see hardware.json), serial number and verdict.
 Programming: the 'program' step runs program.command for each board through its PROG connector, or asks
 the operator to program it by hand.
 Safety: power is always switched off at the end (also on errors / Ctrl-C);
@@ -47,14 +50,15 @@ def load(path: str) -> Dict[str, Any]:
 
 
 class Runner:
-    def __init__(self, plan, hwcfg, args, site: int = 1, serial: str = ""):
+    def __init__(self, plan, hwcfg, args, site: int = 1, serial: str = "", hw: Optional[Hardware] = None, tag: str = ""):
         self.plan = plan
         self.args = args
-        self.site, self.serial = site, serial
-        self.hw = Hardware(hwcfg, plan, simulate=args.simulate, fail_channels=args.sim_fail or (),
-                           interactive=not args.non_interactive)
+        self.site, self.serial, self.tag = site, serial, tag
+        self.hw = hw or Hardware(hwcfg, plan, simulate=args.simulate, fail_channels=args.sim_fail or (),
+                                 interactive=not args.non_interactive)
         self.hw.select_site(site)
         self.results: List[Dict[str, Any]] = []
+        self.timings: List[Dict[str, Any]] = []
         self.powered = False
         self.learn_data: Dict[str, List[float]] = {}
 
@@ -75,8 +79,37 @@ class Runner:
         if lo is not None or hi is not None:
             lim = " [%s .. %s]" % ("" if lo is None else "%g" % lo, "" if hi is None else "%g" % hi)
         val = ("%.4g %s" % (value, unit)) if isinstance(value, (int, float)) else ("" if value is None else str(value))
-        print("    %s%-5s%s %-28s %s%s %s" % (col, status.upper(), RST, cid[:28], val, lim, DIM + note + RST if note else ""))
+        print("    %s%s%-5s%s %-28s %s%s %s" % (self.tag, col, status.upper(), RST, cid[:28], val, lim,
+                                            DIM + note + RST if note else ""))
         return status
+
+    def run_steps(self, steps, mode: str = "test") -> bool:
+        """Run ``steps`` on this board (the caller has selected its site). False when a step aborted it: power is
+        then off. Each step's duration goes to self.timings."""
+        try:
+            for st in steps:
+                if self.args.only and st["id"] not in self.args.only:
+                    continue
+                print("  %s%s %s" % (self.tag, st["id"], st["name"]))
+                want_power = st.get("power")
+                if want_power in ("on", "off") and st["type"] not in ("power",):
+                    self.set_power(want_power == "on")
+                fails_before = sum(1 for r in self.results if r["status"] == "fail")
+                t0 = time.time()
+                getattr(self, "step_" + st["type"], self.step_unknown)(st, mode)
+                self.timings.append({"step": st["id"], "phase": st.get("phase"), "seconds": round(time.time() - t0, 3)})
+                failed = sum(1 for r in self.results if r["status"] == "fail") > fails_before
+                if failed and (st.get("abort_on_fail") or self.args.stop_on_fail):
+                    raise Abort("step %s failed" % st["id"])
+        except Abort as e:
+            print("  %s%sABORT%s %s" % (self.tag, RED, RST, e))
+            self.results.append({"step": "-", "check": "ABORT", "status": "fail", "note": str(e)})
+            try:
+                self.set_power(False)
+            except Exception:  # pragma: no cover
+                pass
+            return False
+        return True
 
     def set_power(self, on: bool):
         if on != self.powered:
@@ -120,6 +153,10 @@ class Runner:
                 self.powered = False
             except Exception as e:  # pragma: no cover
                 print("  !! could not switch power off: %s - SWITCH IT OFF MANUALLY" % e)
+            try:
+                self.hw.close()
+            except Exception:  # pragma: no cover - closing a connection must not hide the verdict
+                pass
         if verdict == "PASS" and any(r["status"] == "fail" for r in self.results):
             verdict = "FAIL"
         return verdict
@@ -269,6 +306,20 @@ class Runner:
         ans = input("    ? Program the board through the fixture's PROG connector for %s now. Programmed OK? [y/n] " % where)
         return self.record(st, st["id"], "pass" if ans.strip().lower().startswith("y") else "fail")
 
+    def step_bus(self, st, mode):
+        """A bus check (CAN, USB, Ethernet ...): the test facility's driver runs it; without one the operator
+        checks it (a cable plugged into the board, a reply on the bus) and answers."""
+        if st.get("unavailable"):
+            return self.record(st, st["id"], "skip", note=st["unavailable"])
+        res = self.hw.bus_test(st)
+        if res is None:
+            if self.args.non_interactive:
+                return self.record(st, st["id"], "skip", note="no facility driver for the %s check" % st.get("bus", "bus"))
+            ans = input("  >> %s: %s - working? [y/n] " % (st["name"], st.get("prompt") or "check it"))
+            return self.record(st, st["id"], "pass" if ans.strip().lower().startswith("y") else "fail", note="operator")
+        ok, note = res
+        self.record(st, st["id"], "pass" if ok else "fail", note=note)
+
     def step_unknown(self, st, mode):
         self.record(st, st["id"], "skip", note="unknown step type %r" % st.get("type"))
 
@@ -278,7 +329,7 @@ def save_results(args, plan, runner, verdict, serial_no):
     os.makedirs(args.results, exist_ok=True)
     ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     rec = {"board": plan["board"], "serial": serial_no, "site": runner.site, "time": ts, "verdict": verdict,
-           "simulated": bool(args.simulate), "results": runner.results}
+           "simulated": bool(args.simulate), "results": runner.results, "timings": runner.timings}
     with open(os.path.join(args.results, "%s_%s.json" % (re.sub(r"[^\w.-]", "_", serial_no), ts)), "w") as fh:
         json.dump(rec, fh, indent=1)
     csv_path = os.path.join(args.results, "results.csv")
@@ -300,6 +351,117 @@ def batch_sites(plan, args) -> List[int]:
             raise SystemExit("--site %s: the fixture has %d site(s)" % (" ".join(map(str, bad)), n))
         return list(args.site)
     return list(range(1, n + 1))
+
+
+def _fill(cmd, site: int, serial: str) -> List[str]:
+    return [str(a).replace("{site}", str(site)).replace("{serial}", serial or "") for a in cmd]
+
+
+def run_batch(plan, hwcfg, args, sites: List[int], serials: Dict[int, str]) -> Dict[int, Any]:
+    """Test the boards of a batch together, in the plan's phases: unpowered checks and power-up board by board,
+    then every board programmed at the same time while the checks that do not need the firmware are measured,
+    then the checks that need it. A board that aborts is powered off and the others go on. Returns
+    {site: (runner, verdict)}."""
+    hw = Hardware(hwcfg, plan, simulate=args.simulate, fail_channels=args.sim_fail or (), interactive=not args.non_interactive)
+    many = len(sites) > 1
+    runners = {k: Runner(plan, hwcfg, args, site=k, serial=serials[k], hw=hw, tag="[S%d] " % k if many else "")
+               for k in sites}
+    by: Dict[str, List[Dict[str, Any]]] = {}
+    for st in plan["sequence"]:
+        by.setdefault(st.get("phase") or "powered", []).append(st)
+    alive = list(sites)
+    t_start = time.time()
+
+    def phase(name: str, title: str, only=None) -> None:
+        steps = by.get(name) or []
+        if not steps:
+            return
+        print("== %s ==" % title)
+        for k in list(only if only is not None else alive):
+            if k not in alive:
+                continue
+            hw.select_site(k)
+            if not runners[k].run_steps(steps):
+                alive.remove(k)
+
+    verdict_over: Dict[int, str] = {}
+    try:
+        phase("unpowered", "Unpowered checks")
+        phase("power", "Power up")
+        prog = (by.get("program") or [None])[0]
+        procs: Dict[int, Any] = {}
+        t_prog = time.time()
+        if prog is not None and (not args.only or prog["id"] in args.only):
+            cmd = prog.get("command") or []
+            if args.simulate:
+                print("== Programming %d board(s) at the same time (simulated) ==" % len(alive))
+                procs = {k: "sim" for k in alive}
+            elif cmd and args.allow_commands:
+                print("== Programming %d board(s) at the same time: %s ==" % (len(alive), " ".join(cmd)[:60]))
+                for k in alive:
+                    try:
+                        procs[k] = subprocess.Popen(_fill(cmd, k, serials[k]), stdout=subprocess.PIPE,
+                                                    stderr=subprocess.STDOUT, text=True)
+                    except OSError as e:
+                        runners[k].record(prog, prog["id"], "fail", note=str(e)[:80])
+            else:                       # by hand (or not allowed): one board after the other, before the checks
+                phase("program", "Programming")
+                prog = None
+        phase("during_program", "Checks while the boards are programmed" if procs else "Checks")
+        if procs:
+            deadline = t_prog + float(prog.get("timeout_s", 180))
+            for k, p in procs.items():
+                r = runners[k]
+                t0 = time.time()
+                if p == "sim":
+                    time.sleep(max(0.0, t_prog + 1.0 - time.time()))
+                    r.record(prog, prog["id"], "pass", note="simulated")
+                else:
+                    try:
+                        out, _ = p.communicate(timeout=max(1.0, deadline - time.time()))
+                        last = (out or "").strip().splitlines()[-1][:80] if (out or "").strip() else ""
+                        r.record(prog, prog["id"], "pass" if p.returncode == 0 else "fail", p.returncode, note=last)
+                    except subprocess.TimeoutExpired:
+                        p.kill()
+                        r.record(prog, prog["id"], "fail", note="timed out after %.0f s" % float(prog.get("timeout_s", 180)))
+                r.timings.append({"step": prog["id"], "phase": "program", "seconds": round(time.time() - t_prog, 3),
+                                  "waited": round(time.time() - t0, 3)})
+                if r.results[-1]["status"] == "fail":       # no firmware: the checks that need it cannot pass
+                    for st in by.get("after_program") or []:
+                        r.record(st, st["id"], "skip", note="not programmed")
+                    hw.select_site(k)
+                    r.set_power(False)
+                    alive.remove(k)
+                    verdict_over[k] = "FAIL"
+        phase("after_program", "Checks with the firmware running")
+        phase("powered", "Checks")
+        phase("end", "Power off")
+    except KeyboardInterrupt:
+        print("  interrupted")
+        verdict_over.update({k: "ABORTED" for k in sites})
+    except HardwareError as e:
+        print("  %sHARDWARE ERROR%s %s" % (RED, RST, e))
+        verdict_over.update({k: "ERROR" for k in sites})
+    finally:
+        for k in sites:                                  # every board off, whatever happened
+            try:
+                hw.select_site(k)
+                hw.power(False)
+                runners[k].powered = False
+            except Exception as e:  # pragma: no cover
+                print("  !! could not switch power off (site %d): %s - SWITCH IT OFF MANUALLY" % (k, e))
+        try:
+            hw.close()
+        except Exception:  # pragma: no cover
+            pass
+    out = {}
+    for k in sites:
+        r = runners[k]
+        v = verdict_over.get(k) or ("FAIL" if any(x["status"] == "fail" for x in r.results) else "PASS")
+        out[k] = (r, v)
+    dt = time.time() - t_start
+    print("  batch of %d tested in %.1f s (%.1f s per board)" % (len(sites), dt, dt / max(1, len(sites))))
+    return out
 
 
 def do_learn(args, plan, hwcfg):
@@ -354,6 +516,8 @@ def main(argv=None) -> int:
     ap.add_argument("--allow-commands", action="store_true", help="allow 'command' and programming steps to run programs")
     ap.add_argument("--loop", action="store_true", help="test batch after batch until Ctrl-C")
     ap.add_argument("--site", nargs="*", type=int, help="test only these fixture sites (boards of a batch), e.g. --site 2 3")
+    ap.add_argument("--sequential", action="store_true",
+                    help="test the boards one after the other (each programmed in turn) instead of the batch flow")
     args = ap.parse_args(argv)
 
     plan = load(args.plan)
@@ -372,8 +536,31 @@ def main(argv=None) -> int:
         return 0
     if args.mode == "learn":
         return do_learn(args, plan, hwcfg)
+    phased = any(st.get("phase") for st in plan.get("sequence") or []) and not args.sequential
     while True:
         verdicts = []
+        if phased:                               # the batch flow: all boards programmed at once, checks meanwhile
+            serials = {}
+            for k in sites:
+                tag = " (site %d)" % k if many else ""
+                if args.serial:
+                    serials[k] = args.serial + ("-%d" % k if len(sites) > 1 else "")
+                elif args.non_interactive:
+                    serials[k] = "SIM-%d%s" % (int(time.time()), "-%d" % k if len(sites) > 1 else "")
+                else:
+                    serials[k] = input("Serial number%s: " % tag).strip() or "unknown"
+            for k, (r, verdict) in sorted(run_batch(plan, hwcfg, args, sites, serials).items()):
+                save_results(args, plan, r, verdict, serials[k])
+                col = GREEN if verdict == "PASS" else RED
+                print("\n  %s==== %s ====%s  %s%s" % (col, verdict, RST, serials[k], " (site %d)" % k if many else ""))
+                verdicts.append((k, serials[k], verdict))
+            print()
+            if len(verdicts) > 1:
+                print("  batch: " + "  ".join("site %d %s%s%s" % (k, GREEN if v == "PASS" else RED, v, RST) for k, _sn, v in verdicts))
+            if not args.loop:
+                return 0 if all(v == "PASS" for _k, _sn, v in verdicts) else 1
+            args.serial = None
+            continue
         for k in sites:
             tag = " (site %d)" % k if many else ""
             if args.serial:

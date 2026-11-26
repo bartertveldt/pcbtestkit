@@ -12,9 +12,23 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 _SEV = {"error": "major", "warning": "minor", "exclusion": "info", "info": "info"}
+
+# subprocess.run options for the tools PCB TestKit calls (kicad-cli, ffmpeg, KiCad's Python): output decoded as
+# UTF-8 whatever the Windows code page, and on Windows no console window flashing up for every call made from
+# KiCad's GUI (a video makes thousands of kicad-cli calls).
+QUIET: Dict[str, Any] = {"encoding": "utf-8", "errors": "replace"}
+if os.name == "nt":
+    QUIET["creationflags"] = 0x08000000          # CREATE_NO_WINDOW
+
+
+def sexpr_path(path: str) -> str:
+    """A folder or file path to paste into KiCad file text as it is (e.g. for ${KIPRJMOD}): forward slashes,
+    which KiCad takes on every OS. A Windows path such as C:\\Users\\builder\\new would otherwise be read with
+    \\b and \\n as escape sequences, and the 3D models under it would not load."""
+    return path.replace("\\", "/")
 
 
 def find_kicad_cli() -> Optional[str]:
@@ -43,13 +57,13 @@ def find_kicad_cli() -> Optional[str]:
 
 def kicad_version(cli: str) -> str:
     try:
-        return subprocess.run([cli, "version"], capture_output=True, text=True, timeout=30).stdout.strip()
+        return subprocess.run([cli, "version"], capture_output=True, timeout=30, **QUIET).stdout.strip()
     except (OSError, subprocess.SubprocessError):
         return ""
 
 
 def _run(args: List[str], timeout: int = 300) -> subprocess.CompletedProcess:
-    return subprocess.run(args, capture_output=True, text=True, timeout=timeout)
+    return subprocess.run(args, capture_output=True, timeout=timeout, **QUIET)
 
 
 def run_drc(cli: str, pcb_path: str, parity: bool = True) -> Optional[Dict]:

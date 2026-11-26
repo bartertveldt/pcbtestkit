@@ -4,7 +4,97 @@ All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 
 ## 1.1.1 (unreleased)
 
+### Batches: one connector, programmed at the same time, tested meanwhile
+- A batch fixture has one connector instead of a header, power terminal and programming connector per board: a
+  2 x N header in a band across the middle of the fixture carries every board's supply (its own pin, for its own
+  power switch), channels and programming lines, with GND first and every ten pins. The boards sit on both sides
+  of it with their dividers on the corner facing it, so the traces from every board run about as far (and route
+  faster). The pin map is in the guide and the fixture JSON (`central_header`); the runner's channel map and the
+  probes CSV point at its pins. `fixture.batch_connector: "per_site"` keeps the old layout.
+- The test plan works out what needs the firmware: the programmed MCU is the IC on the programming header's nets;
+  checks on its pins (directly or through a series resistor) and on rails whose regulator or load switch it enables
+  need the firmware, everything else does not (`firmware` in the test plan; force a check with `needs_firmware`).
+  The sequence is in phases: unpowered, power, program, during_program, after_program, end.
+- The runner tests a batch in those phases: every board checked unpowered and powered up, then all boards
+  programmed at the same time (`program.command` once per board) while the checks that need no firmware are
+  measured board by board, then the checks that need the firmware. A board whose programming fails skips them.
+  `--sequential` keeps the old one-board-after-the-other flow. Result files record how long each step took.
+- Production timing (`timing` in the test plan, a section in the guide): how long a batch takes to assemble with
+  the jigs, program and test, as a timeline per board, and the time per board for every batch size with the size
+  past which a bigger batch saves little. Durations in the new `timing` config section (`program.estimate_s` too).
+
+### Explainer video: in the background, ray-traced, the test made visible
+- From the KiCad dialog the video renders in a background job after the other outputs: one process, no window per
+  frame, one small progress window (frames done, speed, time left, Cancel) and KiCad stays usable.
+  `run --video --background` does the same; status in `visuals/video-job.json`. A cancelled or interrupted run
+  goes on from its kept frames instead of starting again.
+- Ray-tracing presets (`video.quality`, `run --video-quality`, the dialog): basic, standard (new default: shadows and ambient
+  occlusion), best (adds anti-aliasing), high. They run kicad-cli with a private settings folder, so your KiCad
+  settings are untouched. As many frames render at once as the computer has cores (measured: start-up and scene
+  loading are about 0.5 s of every kicad-cli call, and KiCad renders one frame per call).
+- New shot "Test the batch": the boards on the fixture while the runner tests them, the copper of what is being
+  measured lighting up (by phase colour, board by board, every board's programming nets while they are
+  programmed), beside the runner's output scrolling in step.
+- Batches in the jig shots: every board the jigs hold rides in the stack, is soldered and lifted out.
+
+### CI
+- New jobs render the sample board's 3D views, animation and MP4 with a real KiCad on Windows (KiCad and ffmpeg from
+  Chocolatey) and on Linux (KiCad's own image), also through the background job, and keep the video as an artifact.
+  CI now also runs for `feature/**` branches and by hand.
+- Fixed (found by testing on Linux in KiCad's own image): the ray-tracing presets crashed on a machine without
+  kicad-cli; the captions failed on a machine without a display (now drawn under `xvfb-run` when it is installed,
+  with a hint when it is not); ffmpeg 7 refused the cross-fades ("inputs needs to be a constant frame rate") because
+  the frame rate was set before the timestamps were reset.
+- Batch programming made robust (a review of the runner): programmer output goes to a file instead of a pipe (a
+  chatty programmer no longer stalls), programmers still running after an error or Ctrl-C are killed, a command
+  without `{site}` for several boards (one probe or mux) programs them one after the other, a programmer that
+  cannot start skips that board's firmware checks, and a hung one is killed with its last output kept.
+
+### Technology classes: four more fabs
+- `seeed-fusion-2026` (Seeed Fusion, track/space per copper weight), `nextpcb-2026` (NextPCB), `allpcb-2026` (ALLPCB,
+  with the 8:1 aspect-ratio option) and `multicb-2026` (Multi-CB, free standard and special production for 35 µm
+  copper), each with its source, the date it was checked and test vectors. 12 class systems are built in now.
+
+### Examples
+- `docs/examples/tiny_tapeout`: KiCad's Tiny Tapeout demo board as the showcase: a batch of four on one fixture and
+  in the jigs, programmed over SWD at the same time while the rails are checked, production timing, and the video
+  with every step. `tools/regen_examples.py` builds it from a copy of the demo with the settings in `SHOWCASE`.
+
+### Test facilities: your own tester
+- A test facility describes the tester a fixture plugs into, as data (`facility.json`, plus a runner driver if you
+  want one), so not every fixture has to be made for a Raspberry Pi: analog inputs and their range, switched
+  supplies, buses, and optionally a fixed plate size, fixed mounting holes and fixed interface connector(s) with a
+  pin map, the same on every fixture. Pick one with `"facility"` in `pcbtestkit.json`, `run --facility`, the dialog
+  (*Test facility*) or the `set_facility` tool (`get_schema('facilities')` lists them). Facilities live in
+  `~/.pcbtestkit/facilities`, `PCBTESTKIT_FACILITIES`, `<project>/facilities` or `facility_dirs`.
+- The test plan uses no more channels than the facility has and sizes the dividers for its input range. The board's
+  CAN, USB, Ethernet, UART, I2C and RS-485 nets are found by name (or `testplan.bus_nets`). A bus the facility takes
+  through the fixture gets pogo pins wired to its connector pins; a bus by cable gets an operator prompt; each one
+  becomes a test step (`SB1`, ...).
+- The fixture gets the facility's connector at its fixed position instead of the generated header (and no power
+  terminal when the facility supplies the board), on the facility's plate with its holes; batches get one connector
+  per board. When the boards do not fit the plate, the warning names a `batch.cols` that fits.
+- The runner hands measuring, power switching and the bus checks to the facility's driver (copied into `runner/` as
+  `facility_driver.py`) with the facility's `hardware.json`; the guide shows the facility's pin map.
+- `pcbtestkit facilities list | show | validate | template`. Built in: `raspberry-pi` (the default, unchanged) and
+  `bench-tester-example`, a worked example with a 2 x 20 IDC connector, CAN/UART/I2C through the fixture,
+  USB/Ethernet by cable and a driver that speaks SCPI over TCP. Format and driver interface: `docs/FACILITIES.md`.
+
 ### Explainer video
+- Boards with hand-soldered parts on both sides show both jig sets: after the top side's sequence (print, fit, close
+  the holding jig, turn over, lift off, solder) the same sequence runs for the bottom side's jig set, with the PCB
+  bottom side up and captions that name the side. The top side's shots leave out the parts fitted later. Single-sided
+  boards get the same video as before.
+- When the MP4 cannot be made, `visuals/scenes/video/BUILD-VIDEO.md` and `video-recipe.json` say what is there and
+  give the exact commands (every path relative to that folder), so the video can be finished from the kept frames by
+  hand or by an AI assistant; `python -m pcbtestkit.video <folder>` does it in one go, and `--no-captions` needs only
+  ffmpeg. A missing ffmpeg or wxPython no longer stops the frames being rendered, so only the last step is left.
+- Windows: project folders with backslashes in their path no longer break the 3D models in the animation scenes
+  (KiCad read `\b`, `\n` in them as escapes); no console window flashes up for each kicad-cli, ffmpeg or Python call;
+  the concat lists are UTF-8 and ffmpeg runs in the frames folder with relative paths (folder names with non-ASCII
+  characters, short command lines); tool output is decoded as UTF-8; ffmpeg is also found in the winget, Chocolatey
+  and Scoop folders and `C:\ffmpeg`; the runner demo uses KiCad's Python instead of `python3` (the Microsoft Store
+  placeholder).
 - When the video cannot be made after its frames are rendered, the frames are no longer deleted, and the reason is
   shown: in the dialog's final message, the guide, the report and `<board>-video-error.txt` (the whole error output).
   Before, the reason only reached the command line, and the frames disappeared.

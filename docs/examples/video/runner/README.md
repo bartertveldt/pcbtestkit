@@ -49,8 +49,21 @@ a 74HC4067 multiplexer. Configure the pins at the top of the file.
 
 ## Batches (several boards per fixture)
 
-A batch fixture has one site per board, each with its own header and power terminal. `test` runs site 1 to N in
-turn: it asks the serial number of each board, measures it on its own ADC inputs and switches only its power.
+A batch fixture has one site per board, all wired to one connector in the middle (each board's supply, channels
+and programming lines on its own pins; `fixture.batch_connector: per_site` gives a header per board). `test` asks the serial number
+of every board, then follows the test plan's phases:
+
+1. every board: visual and unpowered short check, then power-up with the supply checks;
+2. every board is programmed **at the same time** (`program.command` once per board, `{site}` and `{serial}`
+   filled in, needs `--allow-commands`) and, while the programmers run, the checks that need no firmware are
+   measured board by board (rails from regulators, signals the MCU does not drive);
+3. the checks that need the firmware (the MCU's GPIOs, rails it switches on, buses, functional steps); a board whose
+   programming failed skips them and fails;
+4. every board off.
+
+`--sequential` tests one board after the other instead (each programmed in turn). Every result file has the time
+each step took (`timings`), so the production timing in the guide can be checked. Each board is measured on its own
+ADC inputs and only its own power is switched.
 With `channel_map: "auto"`, site k uses the inputs right after site k-1's; `power` is a list with one entry per
 site (generated for you). Override a site with `"sites": {"2": {"channel_map": {...}, "power": {...}}}`.
 `--site 2 3` tests only those sites; results record the site of every board.
@@ -62,3 +75,13 @@ The fixture has a programming connector per board, wired to pogo pins on the boa
 `{site}` and `{serial}`, e.g. `["openocd", "-f", "interface/cmsis-dap.cfg", "-f", "target/stm32g0x.cfg", "-c",
 "program fw.elf verify reset exit"]`; it only runs with `--allow-commands` and fails the step on a non-zero exit
 code. Without a command the operator programs the board through that site's connector and confirms.
+
+## Your own tester (test facility driver)
+
+When the fixture was made for a test facility with a driver (`pcbtestkit run ... --facility <id>`), this folder has
+`facility_driver.py` and a `hardware.json` from that facility (`"facility": {"driver": "facility_driver.py", ...}`).
+The runner then hands measuring (`read_v`), the supply (`power`, `current_a`) and the bus checks (`bus_test`, steps
+`SB1`, ...) to the driver instead of the ADC and GPIO backends above; `--simulate` still runs without it. Set how to
+reach the tester in `hardware.json` (for the example driver: `connection.host` / `port` and the SCPI `commands`).
+A bus step without a driver method asks the operator (skipped with `--non-interactive`). The driver interface is in
+`docs/FACILITIES.md` of PCB TestKit.

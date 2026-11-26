@@ -21,9 +21,12 @@
 | Symptom | Cause | Fix |
 |---|---|---|
 | Renders, DRC/ERC or video skipped: "kicad-cli not found" | KiCad not installed or not found | Install KiCad 8+ (DRC/ERC) or 9+ (3D renders and video), or set `KICAD_CLI=/path/to/kicad-cli`. Everything else still works. |
-| "video skipped: ffmpeg not found" | No ffmpeg | Install ffmpeg (`brew install ffmpeg`, `apt install ffmpeg`, `winget install ffmpeg`) or set `FFMPEG`. |
-| "no Python with wxPython found" | The video's captions need KiCad's bundled Python | Install KiCad 9+; it ships wxPython. |
-| Video takes long | Every frame is a KiCad render (about 0.5-1 s each, in parallel) | `--video-fps 15`, or `--video-stills` for a stills-only video in under a minute. |
+| "video not made: ffmpeg not found" | No ffmpeg | Install ffmpeg (`brew install ffmpeg`, `apt install ffmpeg`, `winget install ffmpeg`) or set `FFMPEG`; then `python -m pcbtestkit.video <out>/visuals/scenes/video` finishes it from the kept frames (see `BUILD-VIDEO.md` there). |
+| "no Python with wxPython found" | The video's captions need KiCad's bundled Python | Install KiCad 9+; it ships wxPython. Or finish the video without captions: `python -m pcbtestkit.video <folder> --no-captions`. |
+| Video takes long | Every frame is a KiCad ray-traced render: about 0.5 s of kicad-cli start-up plus the tracing, several at a time | Run it in the background (`--video --background`, or the dialog does it). `--video-quality basic` (flat, 2x faster), `--video-fps 15`, or `--video-stills` (under a minute). A cancelled run goes on from its kept frames. |
+| A console window per frame (Windows, older versions) | Each kicad-cli call opened a console | Fixed: calls run without a window; update PCB TestKit. |
+| "Unable to access the X Display" (Linux server, CI) | The captions use wxPython, which needs a display | Install xvfb (`apt install xvfb xauth`): PCB TestKit then draws them under `xvfb-run`. Or `python -m pcbtestkit.video <folder> --no-captions`. |
+| "a video job for this folder is already running" | A background video job is still rendering | Wait (progress: `visuals/video-job.json`), or cancel it in its window. |
 | `python3` not found (Windows) | Windows uses `py -3` or `python` | Replace `python3` with `py -3`. |
 | Plugin button missing in KiCad | Plugin list not refreshed | PCB Editor: Tools > External Plugins > Refresh Plugins, or restart KiCad. |
 | Two PCB TestKit buttons | Installed both by the Plugin Manager and by `install.py` | Remove one: `python3 install.py --uninstall`, or uninstall in the Plugin Manager. |

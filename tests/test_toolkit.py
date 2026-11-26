@@ -2,6 +2,7 @@
 
     python3 -m unittest discover -s tests -v
 """
+import glob
 import io
 import json
 import os
@@ -9,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -563,6 +565,12 @@ class TestTwoJigWorkflow(Base):
         self.assertEqual(titles[2:9], ["Print the two jigs", "Fit the parts in the placement jig", "Put the holding jig on top",
                                        "Turn the stack over", "Lift off the placement jig", "Solder from above",
                                        "Lift out the finished board"])
+        # one-sided board: one jig set, captions without a side, and shots of another side change nothing
+        from pcbtestkit.animate import later_jig_sets
+        self.assertEqual(later_jig_sets(jig), [])
+        self.assertEqual([s for s in scenes if "-side" in s.get("title", "") + s.get("caption", "")], [])
+        more = dict({k: dict(shot) for k in names}, **{k + "_bottom": dict(shot) for k in names})
+        self.assertEqual(storyboard(d, spec, plan, build_fixture(d, plan), jig, {"images": {}}, self.tmp, self.tmp, more), scenes)
 
 
 def load_board_text(text):
@@ -912,6 +920,79 @@ class TestStackedAndTwoSided(unittest.TestCase):
         self.assertTrue(any("get no jig" in n for n in only_top["notes"]))
         self.assertEqual(build_jigs(self.design(jig={"sides": ["bottom", "top"]}))["side"], "bottom")
 
+    def test_video_shows_both_jig_sets(self):
+        """Hand-soldered parts on both sides: the video runs the jig shots again for the bottom set, with the board
+        turned over, and the captions name the side."""
+        from pcbtestkit import animate as A
+        from pcbtestkit.jig import build_jigs, jig_of
+        from pcbtestkit.pipeline import analyze
+        from pcbtestkit.spec import build_spec
+        from pcbtestkit.video import storyboard
+        from pcbtestkit.visuals import Renderer
+        d = self.design()
+        out = os.path.join(self.tmp, "video2")
+        os.makedirs(out, exist_ok=True)
+        paths = {"jig_stl": os.path.join(out, "j.stl"), "jig_place_stl": os.path.join(out, "p.stl")}
+        jig = build_jigs(d, paths["jig_stl"], None, None, paths["jig_place_stl"], None,
+                         file_for=lambda tag, ext: os.path.join(out, "b-%s.%s" % (tag, ext)))
+        bot = jig_of(jig, "hand_bottom")
+        paths.update(jig_hand_bottom_stl=bot["stl"], jig_hand_bottom_place_stl=bot["placement"]["stl"])
+        self.assertEqual([(p["jig"], j["side"]) for p, j in A.later_jig_sets(jig)], [("hand_bottom", "bottom")])
+        self.assertEqual(A.later_parts(jig), ["J7"])
+        findings, plan = analyze(d, include_kicad=False)
+        rd = Renderer(out)
+        top = A.Stage(d, plan, None, jig, paths, rd, out)
+        ep = dict(paths, jig_stl=bot["stl"], jig_place_stl=bot["placement"]["stl"])
+        st = A.Stage(d, plan, None, bot, ep, rd, out, tag="_bottom", later=A.later_parts(jig, "hand_bottom"))
+        seen = []
+        for s_ in (top, st):
+            s_.dut_wrl = lambda without=(), seen=seen: seen.append(tuple(sorted(without))) or os.path.join(out, "dut.wrl")
+        self.assertEqual((top.side, top.later, st.side, st.jig_parts, st.later), ("top", ["J7"], "bottom", ["J7"], []))
+        # J7 is fitted in the bottom pass: the top pass shows the board without it
+        top.bare_wrl()
+        top.done_wrl()
+        self.assertEqual(seen, [tuple(sorted(top.jig_parts + ["J7"])), ("J7",)])
+        # the exported DUT turns over with the bottom view: a real point lands where the view has it
+        bb, vbb, t = st.bb, st.vbb, st.t
+        for x, y, z, zd in ((120.0, 105.0, t / 2, -t), (131.3, 117.2, -t / 2, 0.0)):
+            got = st.dut_xf().apply((x - bb.cx, -(y - bb.cy), z))
+            for u, w in zip(got, (x - vbb.cx, -(-y - vbb.cy), zd)):
+                self.assertAlmostEqual(u, w, places=9)
+        self.assertEqual(top.dut_xf().apply((1.0, 2.0, 0.0)), (1.0, 2.0, -t / 2))
+        # J7 in the soldering pose sits in its pocket of the bottom holding jig (world = holding jig frame)
+        fp = st.vb.by_ref["J7"]
+        hold = [p for p in bot["pockets"] if p["type"] == "hold" and p["ref"] == "J7"][0]
+        pin1 = (st.two()["final"] * A.Xf.T(fp.x - vbb.cx, -(fp.y - vbb.cy), 0)).apply((0, 0, 0))
+        self.assertLess(abs(pin1[0] - hold["center"][0]) + abs(pin1[1] - hold["center"][1]), 2.0)
+        for name in A.JIG_SHOTS_TWO_JIG:
+            sh = getattr(st, "shot_" + name)()
+            self.assertTrue(sh.jobs, name)
+            self.assertTrue(os.path.basename(sh.jobs[0]["png"]).startswith(name + "_bottom_"))
+            text, _ = sh.jobs[-1]["make"](os.path.join(out, "scene"))
+            self.assertIn("JIG_", text)
+        self.assertNotEqual(top.two()["wb"], st.two()["wb"])            # each set has its own meshes
+        # storyboard: the bottom set's sequence follows the top set's, captions name the side
+        spec = build_spec(d, findings, plan)
+        shot = {"images": ["a.png", "b.png"], "fps": 24, "hold": 1.0, "meta": {"joints": 4}}
+        shots = dict({k: dict(shot) for k in A.SHOTS_TWO_JIG},
+                     **{k + "_bottom": dict(shot, meta={"parts": ["J7"], "joints": 2}) for k in A.JIG_SHOTS_TWO_JIG})
+        scenes = storyboard(d, spec, plan, None, jig, {"images": {}}, out, out, shots)
+        titles = [s_.get("title", "") for s_ in scenes if s_["kind"] == "anim"]
+        seq = ["Put the holding jig on top", "Turn the stack over", "Lift off the placement jig", "Solder from above"]
+        self.assertEqual(titles[2:], ["Print the top-side jigs", "Fit the top-side parts in the placement jig"] + seq +
+                         ["Lift out the board", "Print the bottom-side jigs", "Fit the bottom-side parts in the placement jig"] +
+                         seq + ["Lift out the finished board", "Build the fixture", "Test a board"])
+        caps = [s_.get("caption", "") for s_ in scenes]
+        self.assertIn("PCB bottom side up, then J7 into its holes.", caps)
+        self.assertIn("Hold both jigs together and turn them over as one: the top side now faces up.", caps)
+        self.assertIn("All 7 hand-soldered parts sit flush and square.", caps)
+        self.assertIn("b-jig-bottom.stl - bottom-side solder jig", scenes[-1]["bullets"])     # the file build_jigs wrote
+        # without animation the bottom pass still gets a scene with its steps
+        still = [s_ for s_ in storyboard(d, spec, plan, None, jig, {"images": {}}, out, out, {})
+                 if s_.get("title", "").startswith("Then the bottom-side parts")]
+        self.assertEqual(len(still), 1)
+        self.assertIn("PCB bottom side up in the placement jig, fit J7", still[0]["bullets"])
+
     def test_stacked_board_blocks_probes(self):
         import math
         st = dict(self.DISPLAY, outline=[125, 99.5, 148, 121.5])
@@ -1249,10 +1330,42 @@ class TestBatchAndProgramming(unittest.TestCase):
         make_sample.main(plain)
         self.assertEqual(detect(Design.load(os.path.join(plain, "sample_sensor.kicad_pcb"))), [])
 
-    def test_fixture_programming_connectors_for_a_batch(self):
+    def test_batch_has_one_central_connector(self):
+        """A batch fixture gets ONE connector in the middle with every board's supply, channels and programming
+        lines; the boards sit on both sides of it with their dividers facing it (even trace lengths)."""
+        from pcbtestkit.fixture import probes_csv
         d = self.design(batch={"count": 2})
         plan = build_testplan(d, [])
         fx = build_fixture(d, plan)
+        self.assertEqual(fx["routing"]["unrouted_connections"], 0)
+        ch = fx["central_header"]
+        self.assertEqual({st["header"] for st in fx["sites"]}, {ch["ref"]})
+        self.assertEqual([st["power_terminal"] for st in fx["sites"]], [None, None])
+        self.assertEqual([st["program"] for st in fx["sites"]], [[], []])
+        sig = {(q["site"], q["signal"]): q for q in ch["pins"]}
+        for k in (1, 2):
+            self.assertEqual(sig[(k, "VIN")]["net"], "S%d_VIN" % k)                  # a supply per board
+            self.assertEqual(sig[(k, "SWDIO")]["net"], "S%d_TP_SWDIO" % k)
+            self.assertIn((k, "CH01"), sig)
+        self.assertEqual([q["signal"] for q in ch["pins"] if q["pin"] % 10 == 0 or q["pin"] == 1], ["GND"] * len(
+            [q for q in ch["pins"] if q["pin"] % 10 == 0 or q["pin"] == 1]))
+        for cm in fx["channel_map"]:                                                     # runner and CSV point at it
+            self.assertEqual(cm["pin"], sig[(cm["site"], cm["channel"])]["pin"])
+        rows = [r.split(",") for r in probes_csv(plan, fx).splitlines()[1:]]
+        ch01 = {r[0]: r[9] for r in rows if r[8] == "CH01"}
+        self.assertNotEqual(ch01["1"], ch01["2"])
+        b = load_board_text(fx["kicad_pcb"])
+        self.assertEqual([f.ref for f in b.footprints if f.ref.startswith("PRG")], [])
+        hdr = b.by_ref[ch["ref"]]
+        self.assertEqual(len(hdr.pads), len(ch["pins"]))
+        oy = (fx["outline"]["y_min"] + fx["outline"]["y_max"]) / 2.0                     # in the middle of the fixture
+        self.assertLess(abs(hdr.y - 1.27 - oy), 0.2 * fx["outline"]["height"])
+
+    def test_fixture_programming_connectors_for_a_batch(self):
+        d = self.design(batch={"count": 2}, fixture={"batch_connector": "per_site"})
+        plan = build_testplan(d, [])
+        fx = build_fixture(d, plan)
+        self.assertNotIn("central_header", fx)
         self.assertEqual(len(fx["sites"]), 2)
         self.assertEqual(fx["routing"]["unrouted_connections"], 0)
         for st in fx["sites"]:
@@ -1397,7 +1510,7 @@ class TestVideoRecovery(Base):
         with open(kept, "wb") as fh:
             fh.write(b"png")
         with mock.patch("pcbtestkit.video.find_ffmpeg", return_value=None):
-            res = run_pipeline(self.design(), out_dir=out, include_kicad=False,
+            res = run_pipeline(self.design(video={"animate": False}), out_dir=out, include_kicad=False,
                                outputs={"visuals": False, "video": True, "jig": False})
         self.assertFalse(res["video"]["ok"])
         self.assertIn("ffmpeg not found", res["video"]["reason"])
@@ -1407,3 +1520,508 @@ class TestVideoRecovery(Base):
             self.assertIn("The video could not be made", fh.read())
         with open(res["paths"]["report"], encoding="utf-8") as fh:
             self.assertIn(os.path.basename(res["paths"]["video_error"]), fh.read())
+        # how to finish it from the kept frames: in the folder, and named in the error file
+        work = os.path.join(out, "visuals", "scenes", "video")
+        with open(res["paths"]["video_error"], encoding="utf-8") as fh:
+            self.assertIn("visuals/scenes/video/BUILD-VIDEO.md".replace("/", os.sep), fh.read())
+        for name in ("BUILD-VIDEO.md", "video-recipe.json", "storyboard.json"):
+            with open(os.path.join(work, name), encoding="utf-8") as fh:
+                text = fh.read()
+            self.assertNotIn(out, text, name)                             # relative paths only
+        with open(os.path.join(work, "video-recipe.json"), encoding="utf-8") as fh:
+            recipe = json.load(fh)
+        self.assertEqual(recipe["output"], "../../../sample_sensor-explainer.mp4")
+        self.assertEqual([st["step"] for st in recipe["steps"]], ["3d_frames", "captions", "mp4"])
+        self.assertEqual(recipe["finish"], ["python", "-m", "pcbtestkit.video", "."])
+        mp4 = recipe["steps"][2]
+        self.assertEqual(mp4["with_captions"] is not None, recipe["steps"][1]["done"])   # drawn when wxPython is here
+        if mp4["with_captions"]:
+            self.assertEqual(mp4["with_captions"]["command"][0], "ffmpeg")
+
+    @unittest.skipIf(os.name == "nt", "a shell script stands in for ffmpeg")
+    def test_finish_video_from_kept_frames(self):
+        """python -m pcbtestkit.video <folder> joins kept frames with ffmpeg, which runs in the folder with relative
+        paths (short command lines, any user folder name on Windows)."""
+        from unittest import mock
+        from pcbtestkit import video as V
+        work = os.path.join(self.tmp, "finish", "visuals", "scenes", "video")
+        anim = os.path.join(self.tmp, "finish", "visuals", "scenes", "anim")
+        os.makedirs(work, exist_ok=True)
+        os.makedirs(anim, exist_ok=True)
+        frames = []
+        for i in range(3):
+            frames.append(os.path.join(anim, "orbit_%04d.png" % i))
+            with open(frames[-1], "wb") as fh:
+                fh.write(b"png")
+        job = {"size": [640, 360], "fps": 24, "fade": 0.5, "output": "../../../b-explainer.mp4", "frames_dir": ".",
+               "scenes": [{"kind": "anim", "images": ["../anim/orbit_%04d.png" % i for i in range(3)], "fps": 24, "hold": 1.0,
+                           "title": "Orbit"}, {"kind": "card", "bg": "../anim/orbit_0002.png", "duration": 2.0, "title": "End"},
+                          {"kind": "map", "duration": 3.0, "title": "Probes"}]}
+        with open(os.path.join(work, "storyboard.json"), "w", encoding="utf-8") as fh:
+            json.dump(job, fh)
+        ff = os.path.join(self.tmp, "finish", "ff.sh")
+        log = os.path.join(self.tmp, "finish", "ff.log")
+        with open(ff, "w") as fh:          # lists its capabilities, records how it was called, writes the MP4
+            fh.write('#!/bin/sh\ncase "$2" in\n -encoders) printf " V....D libx264 H.264\\n"; exit 0;;\n'
+                     ' -filters) printf " ... xfade VV->V Cross fade\\n"; exit 0;;\nesac\n'
+                     'pwd > "%s"; printf "%%s\\n" "$@" >> "%s"\nfor a; do last="$a"; done\n: > "$last"\n' % (log, log))
+        os.chmod(ff, 0o755)
+        with mock.patch("sys.stdout", io.StringIO()) as printed:
+            self.assertEqual(V.main([work, "--no-captions", "--ffmpeg", ff]), 0)
+        self.assertIn("video written", printed.getvalue())
+        self.assertTrue(os.path.exists(os.path.join(self.tmp, "finish", "b-explainer.mp4")))
+        with open(log) as fh:
+            lines = fh.read().splitlines()
+        self.assertEqual(os.path.realpath(lines[0]), os.path.realpath(work))     # ran in the folder
+        self.assertIn("plain_00.txt", lines)
+        self.assertIn("../anim/orbit_0002.png", lines)                    # the card's still, relative
+        self.assertFalse([a for a in lines[1:] if a.startswith(self.tmp)])  # no absolute path on the command line
+        with open(os.path.join(work, "plain_00.txt"), encoding="utf-8") as fh:
+            self.assertIn("file '../anim/orbit_0000.png'", fh.read())
+        # build notes for the same folder: every step with its command, the scenes with their timing
+        md = V.write_build_notes(work, "ffmpeg not found")
+        with open(md, encoding="utf-8") as fh:
+            text = fh.read()
+        self.assertIn("python -m pcbtestkit.video .", text)
+        self.assertIn("python -m pcbtestkit.video_frames storyboard.json", text)
+        self.assertIn("| 0 | anim | Orbit |", text)
+
+    def test_windows_paths_in_board_text(self):
+        from pcbtestkit.kicad_cli import sexpr_path
+        from pcbtestkit.sexpr import parse
+        text = '(model "${KIPRJMOD}/3d/x.wrl")'.replace("${KIPRJMOD}", sexpr_path("C:\\Users\\builder\\new"))
+        self.assertEqual(parse(text)[1], "C:/Users/builder/new/3d/x.wrl")     # no \b or \n read as escapes
+
+
+class TestFacilities(Base):
+    """Test facilities: the tester a fixture plugs into (its channels, fixed plate and connector, buses, driver)."""
+
+    def test_builtin_facilities_template_and_validation(self):
+        from pcbtestkit import facility as F
+        found, warns = F.load_facilities()
+        self.assertEqual(warns, [])
+        self.assertTrue({"raspberry-pi", "bench-tester-example"} <= set(found))
+        self.assertEqual(F.analog_limits(found["raspberry-pi"]), (None, None))     # the test plan's own settings
+        self.assertEqual(F.analog_limits(found["bench-tester-example"]), (16, 10.0))
+        self.assertTrue(F.validate(dict(F.TEMPLATE))["ok"])
+        bad = json.loads(json.dumps(F.TEMPLATE))
+        bad["fixture"]["connectors"][0]["pins"].update({"13": "AIN99X", "41": "GND"})
+        bad["buses"]["rs485"] = {"via": "fixture"}
+        errs = " | ".join(F.validate(bad)["errors"])
+        self.assertIn("'AIN99X' is not a pin function", errs)
+        self.assertIn("pin 41 is not on a 2 x 10 connector", errs)
+        self.assertIn("buses.rs485 goes through the fixture but site 1's connector has no RS485_A, RS485_B pin", errs)
+        # a facility of your own: PCBTESTKIT_FACILITIES, a folder with facility.json + driver.py
+        from unittest import mock
+        own = os.path.join(self.tmp, "facilities", "my-tester")
+        os.makedirs(own, exist_ok=True)
+        with open(os.path.join(own, "facility.json"), "w") as fh:
+            json.dump(F.TEMPLATE, fh)
+        with open(os.path.join(own, "driver.py"), "w") as fh:
+            fh.write("class Driver: pass\n")
+        with mock.patch.dict(os.environ, {"PCBTESTKIT_FACILITIES": os.path.dirname(own)}):
+            self.assertIn("my-tester", F.load_facilities()[0])
+            d = self.design(facility="my-tester")
+            self.assertEqual(F.facility_for(d)["id"], "my-tester")
+        d = self.design(facility="no-such-tester")
+        self.assertEqual(F.facility_for(d)["id"], "raspberry-pi")
+        self.assertTrue(any("no-such-tester" in w for w in d.warnings))
+
+    def test_bus_nets_by_name(self):
+        from pcbtestkit.facility import _NET_RE
+        def sig(name):
+            return [s for s, rx in _NET_RE.items() if rx.match(name)]
+        for name, want in (("CANH", "CAN_H"), ("CAN1_L", "CAN_L"), ("USB_D+", "USB_DP"), ("USB_DM", "USB_DM"), ("D-", "USB_DM"),
+                           ("ETH_TX_P", "ETH_TX_P"), ("RD-", "ETH_RX_N"), ("UART1_TX", "UART_TX"), ("RXD", "UART_RX"),
+                           ("I2C_SDA", "I2C_SDA"), ("SCL", "I2C_SCL"), ("RS485_B", "RS485_B")):
+            self.assertEqual(sig(name), [want], name)
+        for name in ("VBUS", "TX+5V", "GND", "LED"):
+            self.assertEqual(sig(name), [], name)
+        from pcbtestkit.facility import bus_nets
+        self.assertEqual(bus_nets(self.design()), {"i2c": {"I2C_SDA": "/SDA", "I2C_SCL": "/SCL"},
+                                                   "usb": {"USB_DP": "/D+", "USB_DM": "/D-"}})
+
+    def test_fixed_connector_plan_and_fixture(self):
+        """The bench-tester example: 160 x 120 mm plate, fixed holes, its 2 x 20 connector carrying the channels,
+        the supply and the I2C bus; USB is a cable check."""
+        from pcbtestkit.testplan import build_testplan
+        d = self.design(facility="bench-tester-example")
+        plan = build_testplan(d)
+        fac = plan["facility"]
+        self.assertEqual((fac["id"], fac["analog_inputs"], plan["adc"]["max_input_v"]), ("bench-tester-example", 16, 10.0))
+        self.assertEqual([(b["bus"], b["via"]) for b in fac["bus_checks"]], [("i2c", "fixture"), ("usb", "cable")])
+        pins = {q["pin"]: q for q in fac["connectors"][0]["pins"]}
+        self.assertEqual(len(pins), 40)
+        self.assertEqual((pins[3]["function"], pins[3]["signal"]), ("AIN1", "CH01"))
+        self.assertEqual((pins[23]["signal"], pins[29]["signal"], pins[30]["signal"]), ("VIN", "I2C_SDA", "I2C_SCL"))
+        self.assertEqual(plan["header"], [dict(q, **({"net": n} if n else {})) for q, n in
+                                          ((dict(pin=q["pin"], signal=q["signal"], function=q["function"]),
+                                            {p["channel"]: p["net"] for p in plan["probes"] if p.get("channel")}.get(q["signal"])
+                                            or {"I2C_SDA": "/SDA", "I2C_SCL": "/SCL"}.get(q["signal"]))
+                                           for q in fac["connectors"][0]["pins"])])
+        sda = next(p for p in plan["probes"] if p["net"] == "/SDA")
+        self.assertEqual((sda["role"], sda["channel"], sda["header_pin"]), ("bus", None, 29))
+        steps = {s_["id"]: s_ for s_ in plan["sequence"]}
+        self.assertEqual((steps["SB1"]["type"], steps["SB1"]["bus"]), ("bus", "i2c"))
+        self.assertIn("USB cable", steps["SB2"]["prompt"])
+        fx = build_fixture(d, plan)
+        self.assertEqual((fx["outline"]["width"], fx["outline"]["height"]), (160.0, 120.0))
+        self.assertEqual(fx["facility"]["connectors"], [{"ref": fx["sites"][0]["header"], "name": "TESTER", "site": 1}])
+        self.assertIsNone(fx["sites"][0]["power_terminal"])              # the facility supplies the board
+        self.assertEqual(fx["routing"]["unrouted_connections"], 0)
+        b = load_board_text(fx["kicad_pcb"])
+        j = b.by_ref[fx["sites"][0]["header"]]
+        self.assertEqual(len(j.pads), 40)
+        net = {pd.number: pd.net for pd in j.pads}
+        self.assertEqual((net["1"], net["23"], net["29"]), ("GND", "VIN", "TP_SDA"))
+        self.assertEqual(net["37"], "")                                   # NC stays open
+        ox, oy = fx["outline"]["x_min"], fx["outline"]["y_min"]
+        self.assertAlmostEqual(j.x - ox, 55.87, places=2)               # pin 1 where the facility puts it
+        self.assertAlmostEqual(j.y - oy, 114.0, places=2)
+        holes = sorted((round(fp.x - ox, 2), round(fp.y - oy, 2)) for fp in b.footprints if fp.ref.startswith("H"))
+        self.assertEqual(holes, [(5.0, 5.0), (5.0, 115.0), (155.0, 5.0), (155.0, 115.0)])
+
+    def test_runner_drives_the_facility(self):
+        """The runner hands measuring, power and bus checks to the facility's driver (here: SCPI over TCP)."""
+        import socket
+        import threading
+        out = os.path.join(self.tmp, "fac_run")
+        run_pipeline(self.design(facility="bench-tester-example"), out_dir=out, include_kicad=False,
+                     outputs={"visuals": False, "jig": False, "guide": False, "report": False})
+        rdir = os.path.join(out, "runner")
+        self.assertTrue(os.path.exists(os.path.join(rdir, "facility_driver.py")))
+        srv = socket.socket()
+        srv.bind(("127.0.0.1", 0))
+        srv.listen(1)
+        seen = []
+
+        def serve():
+            con, _ = srv.accept()
+            buf = b""
+            with con:
+                while True:
+                    data = con.recv(4096)
+                    if not data:
+                        return
+                    buf += data
+                    while b"\n" in buf:
+                        line, buf = buf.split(b"\n", 1)
+                        cmd = line.decode()
+                        seen.append(cmd)
+                        if cmd.startswith("MEAS:VOLT?"):
+                            con.sendall(b"0.33\n")
+                        elif cmd.startswith("MEAS:CURR?"):
+                            con.sendall(b"0.05\n")
+                        elif cmd.startswith("BUS:"):
+                            con.sendall(b"OK 2 devices\n")
+        with open(os.path.join(rdir, "hardware.json")) as fh:
+            hw = json.load(fh)
+        hw["connection"].update(host="127.0.0.1", port=srv.getsockname()[1])
+        with open(os.path.join(rdir, "hardware.json"), "w") as fh:
+            json.dump(hw, fh)
+        runs = []
+        for only in ([], ["--only", "SB1", "SB2"]):      # the whole sequence (it stops at the 12 V check), the bus checks
+            th = threading.Thread(target=serve, daemon=True)
+            th.start()
+            runs.append(subprocess.run([sys.executable, "pcbtest_runner.py", "test", "--non-interactive", "--serial", "F1"] + only,
+                                       cwd=rdir, capture_output=True, text=True, timeout=120))
+            th.join(5)
+        srv.close()
+        self.assertIn("OUTP1 ON", seen)
+        self.assertIn("OUTP1 OFF", seen)                                  # switched off again at the end
+        self.assertIn("MEAS:VOLT? (@1)", seen)                            # CH01 is on AIN1
+        self.assertIn("FAIL", runs[0].stdout)                             # 0.33 V is not the 12 V supply
+        self.assertTrue(any(c.startswith("BUS:I2C:TEST?") for c in seen), seen)
+        self.assertTrue(any(c.startswith("BUS:USB:TEST?") for c in seen), seen)
+        self.assertIn("OK 2 devices", runs[1].stdout)
+        self.assertIn("PASS", runs[1].stdout)
+
+    def test_set_facility_tool(self):
+        ws = Workspace(self.pcb, persist=False)
+        r = ws.call("get_schema", {"name": "facilities"})
+        self.assertEqual(r["selected"], "raspberry-pi")
+        self.assertIn("bench-tester-example", [f["id"] for f in r["facilities"]])
+        self.assertEqual(ws.call("set_facility", {"facility": "nope"})["error"]["code"], "UNKNOWN_FACILITY")
+        r = ws.call("set_facility", {"facility": "bench-tester-example", "rationale": "our bench tester"})
+        self.assertTrue(r["ok"], r)
+        self.assertEqual(ws.call("get_testplan", {"section": "summary"})["ok"], True)
+        from pcbtestkit.facility import facility_for
+        self.assertEqual(facility_for(ws.design)["id"], "bench-tester-example")
+
+
+class TestBatchFlowAndVideoJob(unittest.TestCase):
+    """A batch programmed at the same time while the checks that need no firmware run; production timing; the test
+    shot; the video's background job, render presets and resume."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="pcbtk_flow_")
+        cls.proj = os.path.join(cls.tmp, "sample_sensor")
+        make_sample.main(cls.proj)
+        cls.pcb = os.path.join(cls.proj, "sample_sensor.kicad_pcb")
+        add_swd_header(cls.pcb)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def design(self, **over):
+        over.setdefault("testplan", {"probe_side": "bottom"})
+        return Design.load(self.pcb, overrides=over)
+
+    def test_firmware_phases_and_timing(self):
+        from pcbtestkit.timing import production_timing
+        d = self.design(batch={"count": 3})
+        plan = build_testplan(d, [])
+        self.assertEqual(plan["firmware"]["programmed"], ["U3"])
+        fw = {x["net"] for x in plan["firmware"]["firmware_nets"]}
+        self.assertIn("/SWDIO", fw)
+        self.assertIn("/LED", fw)                                    # through R3 from an MCU pin
+        self.assertNotIn("+3V3", fw)                                 # a regulator output, no enable from the MCU
+        phases = [st["phase"] for st in plan["sequence"]]
+        order = ["unpowered", "power", "program", "during_program", "after_program", "end"]
+        self.assertEqual(sorted(set(phases), key=order.index), [p for p in order if p in phases])
+        self.assertEqual(phases, sorted(phases, key=order.index))   # in phase order
+        prog = next(st for st in plan["sequence"] if st["phase"] == "program")
+        during = [st["id"] for st in plan["sequence"] if st["phase"] == "during_program"]
+        self.assertEqual(prog["concurrent"], during)
+        rails = [c["net"] for st in plan["sequence"] if st["phase"] == "during_program" for c in st.get("checks") or []]
+        self.assertIn("+3V3", rails)
+        after = [c["net"] for st in plan["sequence"] if st["phase"] == "after_program" for c in st.get("checks") or []]
+        self.assertTrue(set(after) <= fw)
+        t = production_timing(d, plan, None)
+        self.assertEqual(t["batch"], 3)
+        self.assertLess(t["test"]["batch_s"], t["test"]["sequential_s"])        # programmed at the same time
+        per = [r["per_board_s"] for r in t["by_batch_size"]]
+        self.assertEqual(per, sorted(per, reverse=True))
+        self.assertEqual(len(t["test"]["timeline"]), 3)
+        self.assertTrue(all(any(sg["phase"] == "programming" for sg in ln["segments"]) for ln in t["test"]["timeline"]))
+        plain = build_testplan(self.design(program={"headers": []}), [])          # nothing to program: no phase for it
+        self.assertNotIn("program", [st["phase"] for st in plain["sequence"]])
+
+    def test_runner_programs_the_batch_at_the_same_time(self):
+        out = os.path.join(self.tmp, "flow")
+        prog = os.path.join(self.tmp, "programmer.py")
+        with open(prog, "w") as fh:
+            fh.write("import json, sys, time\nt0 = time.time()\ntime.sleep(1.5)\n"
+                     "open(sys.argv[2] + '/prog_%s.json' % sys.argv[1], 'w').write(json.dumps([t0, time.time()]))\n"
+                     "print('verified site', sys.argv[1])\n")
+        d = self.design(batch={"count": 3}, program={"command": [sys.executable, prog, "{site}", out]})
+        run_pipeline(d, out_dir=out, include_kicad=False, outputs={"visuals": False, "jig": False, "guide": False, "report": False})
+        rdir = os.path.join(out, "runner")
+        with open(os.path.join(rdir, "hardware.json"), "w") as fh:      # simulated readings, real programmers
+            json.dump({"adc": {"type": "simulated"}}, fh)
+        t0 = time.time()
+        r = subprocess.run([sys.executable, "pcbtest_runner.py", "test", "--non-interactive", "--allow-commands",
+                            "--serial", "B"], cwd=rdir, capture_output=True, text=True, timeout=120)
+        took = time.time() - t0
+        spans = []
+        for k in (1, 2, 3):
+            with open(os.path.join(out, "prog_%d.json" % k)) as fh:
+                spans.append(json.load(fh))
+        self.assertLess(max(s[0] for s in spans), min(s[1] for s in spans), spans)   # all three at the same time
+        self.assertLess(took, 3 * 1.5 + 8, r.stdout)
+        self.assertIn("Programming 3 board(s) at the same time", r.stdout)
+        self.assertIn("Checks while the boards are programmed", r.stdout)
+        res = sorted(glob.glob(os.path.join(rdir, "results", "B-*.json")))
+        self.assertEqual(len(res), 3)
+        for p in res:
+            with open(p) as fh:
+                rec = json.load(fh)
+            sp = [x for x in rec["results"] if x["step"] == "SP"]
+            self.assertEqual(sp[0]["status"], "pass", rec)
+            steps = [x["step"] for x in rec["timings"]]
+            self.assertLess(steps.index("S4"), steps.index("SP"))      # rails measured while programming
+            self.assertTrue(all(x["seconds"] >= 0 for x in rec["timings"]))
+
+    def test_glow_mesh_and_test_scene(self):
+        from pcbtestkit import animate as A
+        from pcbtestkit.video import _live_test_scene
+        b = self.design().board
+        w = A.glow_wrl(b, ["+3V3"], A.GLOW["during_program"], 1.6)
+        self.assertIn("emissiveColor", w)
+        self.assertIn("coordIndex", w)
+        self.assertGreater(len(A.glow_wrl(b, ["+3V3"], (1, 1, 1), 1.6, outline=True)), len(w))
+        self.assertEqual(A.glow_wrl(b, ["no such net"], (1, 1, 1), 1.6), "#VRML V2.0 utf8\n")
+        # KiCad's ray tracer draws a face only from the side its winding points to: every lit face points away from
+        # the board on the side it lights (+z on top, -z under a board that lies bottom side up on the fixture)
+        import re
+        for side, sign in (("top", 1), ("bottom", -1)):
+            w = A.glow_wrl(b, ["+3V3", "GND"], (1, 1, 1), 1.6, side, outline=True)
+            pts = [tuple(map(float, ln.split())) for ln in re.search(r"point \[\n(.*?) \]", w, re.S).group(1).split(",\n")]
+            for face in re.search(r"coordIndex \[\n(.*?) \]", w, re.S).group(1).split(",-1"):
+                ix = [int(i) for i in face.replace("\n", "").split(",") if i.strip()]
+                if len(ix) < 3:
+                    continue
+                area = sum(pts[ix[k]][0] * pts[ix[(k + 1) % len(ix)]][1] - pts[ix[(k + 1) % len(ix)]][0] * pts[ix[k]][1]
+                           for k in range(len(ix)))
+                self.assertGreaterEqual(area * sign, -1e-9, (side, ix))
+        lines = ["== Unpowered checks ==", "  [S1] S2 Short check", "    [S1] PASS R_+3V3", "  [S2] S2 Short check",
+                 "    [S2] PASS R_+3V3", "== Programming 2 board(s) at the same time", "  [S1] S4 Rails", "  [S2] S4 Rails"]
+        shot = {"images": ["test_%04d.png" % i for i in range(8)], "fps": 24, "hold": 1.0,
+                "meta": {"sites": 2, "events": [
+                    {"label": "Board 1: short check", "phase": "unpowered", "sites": [1], "steps": ["S2"], "f0": 0, "f1": 1},
+                    {"label": "Board 2: short check", "phase": "unpowered", "sites": [2], "steps": ["S2"], "f0": 2, "f1": 3},
+                    {"label": "Board 1: rails", "phase": "during_program", "sites": [1], "steps": ["S4"], "f0": 4, "f1": 5},
+                    {"label": "Board 2: rails", "phase": "during_program", "sites": [2], "steps": ["S4"], "f0": 6, "f1": 7}]}}
+        sc = _live_test_scene(shot, lines, {"sequence": [{"phase": "program"}]})
+        self.assertEqual(sc["kind"], "anim_live")
+        self.assertEqual(sc["line_at"], sorted(sc["line_at"]))
+        self.assertEqual(sc["caption_at"], [0, 0, 1, 1, 2, 2, 3, 3])
+        self.assertEqual(sc["line_at"][2], 4)                         # board 2's short check starts at its own line
+        self.assertEqual(sc["title"], "Test the batch of 2 boards")
+
+    def test_render_presets_resume_and_cancel(self):
+        import threading
+        from pcbtestkit import animate as A
+        from pcbtestkit.visuals import RAYTRACE_PRESETS, Renderer
+        rd = Renderer(os.path.join(self.tmp, "presets"), 64, 36)
+        self.assertIs(rd.env_for("basic"), rd.env)
+        env = rd.env_for("standard")
+        cfg_dirs = glob.glob(os.path.join(env["KICAD_CONFIG_HOME"], "*", "3d_viewer.json"))
+        with open(cfg_dirs[0]) as fh:
+            render = json.load(fh)["render"]
+        self.assertTrue(render["raytrace_shadows"] and render["raytrace_post_processing"])
+        self.assertFalse(render["raytrace_reflections"] or render["raytrace_anti_aliasing"])
+        self.assertTrue(RAYTRACE_PRESETS["best"]["raytrace_anti_aliasing"])
+
+        class FakeRd:
+            scene_dir = os.path.join(self.tmp, "fake_scenes")
+            log = []
+            calls = []
+
+            def render(self, scene, png, **cam):
+                FakeRd.calls.append(png)
+                with open(png, "wb") as fh:
+                    fh.write(b"png")
+                return True
+        os.makedirs(FakeRd.scene_dir, exist_ok=True)
+        frames = os.path.join(self.tmp, "fake_frames")
+        os.makedirs(frames, exist_ok=True)
+        sh = A.Shot("s", 24)
+        for i in range(6):
+            sh.add(os.path.join(frames, "s_%04d.png" % i), {}, scene="x.kicad_pcb")
+        with open(sh.jobs[0]["png"], "wb") as fh:
+            fh.write(b"kept")
+        r = A.render_shots([sh], FakeRd(), workers=2, resume=True)
+        self.assertEqual((r["kept"], r["rendered"], len(FakeRd.calls)), (1, 5, 5))
+        self.assertEqual(len(sh.files), 6)
+        stop = threading.Event()
+        stop.set()
+        sh2 = A.Shot("s2", 24)
+        for i in range(20):
+            sh2.add(os.path.join(frames, "c_%04d.png" % i), {}, scene="x.kicad_pcb")
+        with self.assertRaises(A.Cancelled):
+            A.render_shots([sh2], FakeRd(), workers=1, cancel=stop)
+
+    def test_video_job_progress_and_single_instance(self):
+        from unittest import mock
+        from pcbtestkit import video_job as J
+        out = os.path.join(self.tmp, "job")
+        seen = []
+        tr = J.Tracker(out, seen.append)
+        with mock.patch("pcbtestkit.video_job.time.time", side_effect=[100.0, 100.0, 110.0, 110.0, 111.0]):
+            tr.first = None
+            tr.update("Rendering video frame 10 of 100", 0.9)
+            tr.update("Rendering video frame 60 of 100", 0.92)
+        self.assertEqual((tr.st["done"], tr.st["total"], tr.st["fps"], tr.st["eta_s"]), (60, 100, 5.0, 8))
+        self.assertIn("Frame 60 of 100 - 5.0 frames/s - about 8 s left", J.describe(tr.st))
+        tr.finish("done", "Video written", {"ok": True, "path": os.path.join(out, "b-explainer.mp4")})
+        st = J.status(out)
+        self.assertEqual((st["state"], st["result"]["video"]), ("done", "b-explainer.mp4"))   # no absolute path
+        self.assertFalse(J.running(out))
+        with open(os.path.join(out, "visuals", J.STATUS), "w") as fh:     # a job of this process "is running"
+            json.dump({"state": "running", "pid": os.getpid(), "message": "Starting"}, fh)
+        self.assertTrue(J.running(out))
+        r = J.launch(self.pcb, out, window=False)
+        self.assertFalse(r["ok"])
+        self.assertIn("already running", r["reason"])
+
+
+class TestBatchProgrammingEdgeCases(unittest.TestCase):
+    """The batch flow's programmers: chatty, shared, missing and hung ones (a review of run_batch)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="pcbtk_progedge_")
+        proj = os.path.join(cls.tmp, "sample_sensor")
+        make_sample.main(proj)
+        cls.pcb = os.path.join(proj, "sample_sensor.kicad_pcb")
+        add_swd_header(cls.pcb)
+        cls.out = os.path.join(cls.tmp, "out")
+        d = Design.load(cls.pcb, overrides={"testplan": {"probe_side": "bottom"}, "batch": {"count": 2},
+                                            "program": {"command": ["placeholder"]}})
+        run_pipeline(d, out_dir=cls.out, include_kicad=False, outputs={"visuals": False, "jig": False, "guide": False,
+                                                                        "report": False})
+        cls.rdir = os.path.join(cls.out, "runner")
+        with open(os.path.join(cls.rdir, "hardware.json"), "w") as fh:
+            json.dump({"adc": {"type": "simulated"}}, fh)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def run_with(self, cmd, timeout_s=60, serial="E"):
+        with open(os.path.join(self.rdir, "testplan.json")) as fh:
+            plan = json.load(fh)
+        for st in plan["sequence"]:
+            if st["type"] == "program":
+                st["command"], st["timeout_s"] = cmd, timeout_s
+        with open(os.path.join(self.rdir, "testplan.json"), "w") as fh:
+            json.dump(plan, fh)
+        shutil.rmtree(os.path.join(self.rdir, "results"), ignore_errors=True)
+        t0 = time.time()
+        r = subprocess.run([sys.executable, "pcbtest_runner.py", "test", "--non-interactive", "--allow-commands",
+                            "--serial", serial], cwd=self.rdir, capture_output=True, text=True, timeout=180)
+        recs = {}
+        for p in glob.glob(os.path.join(self.rdir, "results", "*.json")):
+            with open(p) as fh:
+                rec = json.load(fh)
+            recs[rec["site"]] = rec
+        return r, recs, time.time() - t0
+
+    def script(self, name, body):
+        path = os.path.join(self.tmp, name)
+        with open(path, "w") as fh:
+            fh.write(body)
+        return path
+
+    def test_chatty_programmer_does_not_stall(self):
+        p = self.script("chatty.py", "import sys\nfor i in range(4000):\n    print('x' * 80)\nprint('verified', sys.argv[1])\n")
+        r, recs, took = self.run_with([sys.executable, p, "{site}"])
+        for k in (1, 2):
+            sp = [x for x in recs[k]["results"] if x["step"] == "SP"][0]
+            self.assertEqual(sp["status"], "pass", r.stdout[-2000:])
+            self.assertIn("verified %d" % k, sp.get("note", ""))
+        self.assertLess(took, 60)
+
+    def test_command_without_site_programs_one_after_the_other(self):
+        p = self.script("shared.py", "import json, sys, time\nt0 = time.time()\ntime.sleep(0.8)\n"
+                                     "open(sys.argv[1] + '/shared_%d.json' % int(t0 * 1000), 'w').write(json.dumps([t0, time.time()]))\n")
+        r, recs, _ = self.run_with([sys.executable, p, self.tmp])
+        self.assertIn("no {site}: the boards are programmed one after the other", r.stdout)
+        spans = []
+        for f in sorted(glob.glob(os.path.join(self.tmp, "shared_*.json"))):
+            with open(f) as fh:
+                spans.append(json.load(fh))
+        self.assertEqual(len(spans), 2)
+        self.assertLessEqual(spans[0][1], spans[1][0] + 0.05)                       # never at the same time
+
+    def test_missing_programmer_skips_the_firmware_checks(self):
+        r, recs, _ = self.run_with(["/no/such/programmer-{site}"])
+        for k in (1, 2):
+            res = recs[k]["results"]
+            self.assertEqual([x["status"] for x in res if x["step"] == "SP"], ["fail"])
+            after = [x for x in res if x.get("note") == "not programmed"]
+            self.assertTrue(after, res)
+            self.assertEqual(recs[k]["verdict"], "FAIL")
+
+    def test_hung_programmer_is_killed_and_its_output_kept(self):
+        p = self.script("hung.py", "import sys, time\nprint('connecting to probe', sys.argv[1], flush=True)\ntime.sleep(60)\n")
+        r, recs, took = self.run_with([sys.executable, p, "{site}"], timeout_s=2)
+        self.assertLess(took, 40)
+        for k in (1, 2):
+            sp = [x for x in recs[k]["results"] if x["step"] == "SP"][0]
+            self.assertEqual(sp["status"], "fail")
+            self.assertIn("timed out after 2 s", sp["note"])
+            self.assertIn("connecting to probe %d" % k, sp["note"])

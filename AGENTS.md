@@ -48,8 +48,10 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `pcbtestkit/analysis.py`, `classify.py`, `measure.py`, `geometry.py` | Weak-point checks, part/net classification, board measurement streams. |
 | `pcbtestkit/classsys/` | Fab class-system engine; one JSON per system in `systems/`. Data, not code. |
 | `pcbtestkit/testplan.py`, `fixture.py`, `router.py`, `jig.py`, `kicad_writer.py` | Test plan, fixture PCB writer, its two-layer autorouter, solder-jig mesher, KiCad file writer. |
+| `pcbtestkit/facility.py`, `facilities/` | Test facilities (the tester a fixture plugs into: connector, plate, buses, runner driver). Data, not code; see `docs/FACILITIES.md`. |
 | `pcbtestkit/spec.py`, `report.py`, `guide.py`, `visuals.py` | Spec JSON, HTML report, visual guide, KiCad 3D renders. |
-| `pcbtestkit/animate.py`, `video.py`, `video_frames.py` | 3D-animated explainer (kicad-cli per frame), storyboard, wx captions. |
+| `pcbtestkit/animate.py`, `video.py`, `video_frames.py`, `video_job.py` | 3D-animated explainer (kicad-cli per frame, ray-tracing presets), storyboard, wx captions, the background job with its progress window. |
+| `pcbtestkit/phases.py`, `timing.py` | What needs the firmware (test phases, batch programmed at once); production timing per batch size. |
 | `pcbtestkit/agent.py` | The tool registry (`@tool`), `Workspace`, guardrails, profiles. 1,500 lines: grep, don't read whole. |
 | `pcbtestkit/mcp_server.py`, `cli.py`, `quickref.py` | MCP server, CLI, the agent quick reference. |
 | `pcbtestkit/runner/` | Raspberry Pi / MCU test runner copied into every output. |
@@ -75,7 +77,8 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 - **Docs are generated** where marked: change the code, then run `python3 tools/gen_docs.py`.
 - **Class systems are data**: a new fab is a JSON file with test vectors, validated by `classes validate`.
   Engine changes belong in `pcbtestkit/classsys/engine.py` with a test.
-- Video/animation code may only import `wx` in `video_frames.py` (run as a separate process with KiCad's Python).
+- Video/animation code may only import `wx` in `video_frames.py` and in `video_job.py`'s own process (both run as
+  separate processes with KiCad's Python; never import wx from the pipeline or the plugin's code paths).
 
 ### Definition of done
 
@@ -88,6 +91,6 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 
 - `python3 -m pcbtestkit tools --brief` (one line per tool) and `tools --name X` (one schema) instead of
   `docs/reference/tools.md` (18 KB) unless you need everything.
-- MCP: `--profile core` exposes 16 tools (about 3k tokens of tool definitions) instead of 33 (about 6k).
+- MCP: `--profile core` exposes 16 tools (about 3k tokens of tool definitions) instead of 34 (about 6k).
 - Large files to avoid reading whole: `pcbtestkit/agent.py`, `pcbtestkit/analysis.py`, `pcbtestkit/pcb.py`,
   everything under `docs/examples/`, any `.kicad_pcb`, `.stl`, `.mp4`, `.html`.

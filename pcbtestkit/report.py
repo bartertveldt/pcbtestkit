@@ -101,6 +101,11 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
         cov = plan["coverage"]
         h.append("<div class='card'><span class='muted'>Test coverage</span><b>%s%%</b><span class='muted'>%d/%d nets, %d/%d power</span></div>" %
                  (cov["percent"], cov["nets_probed"], cov["nets_total"], cov["power_nets_probed"], cov["power_nets"]))
+        tm = plan.get("timing")
+        if tm:                                  # assembly + programming + test, per board, for the configured batch
+            m, sec = divmod(int(round(tm["per_board_s"])), 60)
+            h.append("<div class='card'><span class='muted'>Per board (batch of %d)</span><b>%s</b><span class='muted'>"
+                     "assemble, program, test</span></div>" % (tm["batch"], "%d:%02d" % (m, sec)))
     h.append("</div>")
     h.append("<div class='muted small'>Board %.1f x %.1f mm, %d copper layers, %.2f mm thick, %d components (%d SMD top, %d SMD bottom, %d THT).</div>" %
              (b["outline_mm"]["width"], b["outline_mm"]["height"], b["copper_layers"], b["thickness_mm"],
@@ -174,10 +179,17 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
     if fixture and plan:
         b_ = plan.get("batch") or {}
         if int(b_.get("count") or 1) > 1:
-            h.append("<div class='small'>Batch of <b>%d boards</b>: %d fixture sites (%d x %d), each with its own header, power "
-                     "terminal%s; the runner tests them one after the other.</div>" % (
-                         b_["count"], len(fixture.get("sites") or []), b_["cols"], b_["rows"],
-                         " and programming connector" if (plan.get("program") or {}).get("headers") else ""))
+            if fixture.get("central_header"):
+                h.append("<div class='small'>Batch of <b>%d boards</b>: %d fixture sites (%d x %d) around <b>one connector</b> "
+                         "(2 x %d pins) in the middle, with every board's supply, channels%s on it.</div>" % (
+                             b_["count"], len(fixture.get("sites") or []), b_["cols"], b_["rows"],
+                             len(fixture["central_header"]["pins"]) // 2,
+                             " and programming lines" if (plan.get("program") or {}).get("headers") else ""))
+            else:
+                h.append("<div class='small'>Batch of <b>%d boards</b>: %d fixture sites (%d x %d), each with its own header, power "
+                         "terminal%s; the runner tests them one after the other.</div>" % (
+                             b_["count"], len(fixture.get("sites") or []), b_["cols"], b_["rows"],
+                             " and programming connector" if (plan.get("program") or {}).get("headers") else ""))
         for hd in (plan.get("program") or {}).get("headers") or []:
             conns = [pc["ref"] for st in fixture.get("sites") or [] for pc in st.get("program") or [] if pc["header"] == hd["ref"]]
             h.append("<div class='small'>Programming header <b>%s</b> (%s, %s): probed on every pin; fixture connector%s %s "

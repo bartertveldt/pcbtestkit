@@ -1,0 +1,4750 @@
+{
+  "jig_size_mm": [
+    121.5,
+    200.0,
+    15.56
+  ],
+  "support_height_mm": 13.0,
+  "floor_mm": 2.0,
+  "resolution_mm": 0.25,
+  "board_bbox_in_jig_mm": [
+    13.497,
+    6.413,
+    117.997,
+    87.413
+  ],
+  "side": "top",
+  "orientation": "PCB top side faces down into the jig; jig X = board X, jig Y = board Y (view from above shows the board's bottom side)",
+  "parts_to_place": [
+    "JP7",
+    "JP1",
+    "J13",
+    "JP3",
+    "JP8",
+    "J12",
+    "J3",
+    "J5",
+    "JP2",
+    "JP5",
+    "J14",
+    "JP6",
+    "J6",
+    "JP4"
+  ],
+  "pockets": [
+    {
+      "ref": "J3",
+      "type": "hold",
+      "center": [
+        41.192,
+        88.103
+      ],
+      "depth_mm": 5.18,
+      "part_height_mm": 5.08,
+      "height_source": "3D model; outline 3D model + fab",
+      "size_mm": [
+        13.17,
+        15.74
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "J5",
+      "type": "hold",
+      "center": [
+        64.052,
+        88.103
+      ],
+      "depth_mm": 5.18,
+      "part_height_mm": 5.08,
+      "height_source": "3D model; outline 3D model + fab",
+      "size_mm": [
+        13.17,
+        15.74
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "J6",
+      "type": "hold",
+      "center": [
+        86.912,
+        88.103
+      ],
+      "depth_mm": 5.18,
+      "part_height_mm": 5.08,
+      "height_source": "3D model; outline 3D model + fab",
+      "size_mm": [
+        13.17,
+        15.74
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "J12",
+      "type": "hold",
+      "center": [
+        11.762,
+        69.483
+      ],
+      "depth_mm": 5.18,
+      "part_height_mm": 5.08,
+      "height_source": "3D model; outline 3D model + fab",
+      "size_mm": [
+        13.17,
+        15.74
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "J13",
+      "type": "hold",
+      "center": [
+        11.762,
+        46.623
+      ],
+      "depth_mm": 5.18,
+      "part_height_mm": 5.08,
+      "height_source": "3D model; outline 3D model + fab",
+      "size_mm": [
+        13.17,
+        15.74
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "J14",
+      "type": "hold",
+      "center": [
+        11.762,
+        23.763
+      ],
+      "depth_mm": 5.18,
+      "part_height_mm": 5.08,
+      "height_source": "3D model; outline 3D model + fab",
+      "size_mm": [
+        13.17,
+        15.74
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "JP1",
+      "type": "hold",
+      "center": [
+        111.897,
+        55.633
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline courtyard",
+      "size_mm": [
+        3.3,
+        2.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "JP2",
+      "type": "hold",
+      "center": [
+        111.897,
+        58.133
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline courtyard",
+      "size_mm": [
+        3.3,
+        2.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "JP3",
+      "type": "hold",
+      "center": [
+        111.897,
+        60.633
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline courtyard",
+      "size_mm": [
+        3.3,
+        2.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "JP4",
+      "type": "hold",
+      "center": [
+        111.897,
+        63.133
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline courtyard",
+      "size_mm": [
+        3.3,
+        2.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "JP5",
+      "type": "hold",
+      "center": [
+        111.897,
+        65.633
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline courtyard",
+      "size_mm": [
+        3.3,
+        2.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "JP6",
+      "type": "hold",
+      "center": [
+        111.897,
+        68.133
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline courtyard",
+      "size_mm": [
+        3.3,
+        2.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "JP7",
+      "type": "hold",
+      "center": [
+        111.897,
+        70.633
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline courtyard",
+      "size_mm": [
+        3.3,
+        2.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "JP8",
+      "type": "hold",
+      "center": [
+        111.897,
+        73.133
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline courtyard",
+      "size_mm": [
+        3.3,
+        2.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C1",
+      "type": "relief",
+      "center": [
+        57.497,
+        73.513
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C2",
+      "type": "relief",
+      "center": [
+        76.997,
+        72.513
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C4",
+      "type": "relief",
+      "center": [
+        30.517,
+        80.768
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C5",
+      "type": "relief",
+      "center": [
+        31.897,
+        80.513
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C6",
+      "type": "relief",
+      "center": [
+        28.737,
+        20.123
+      ],
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D model",
+      "size_mm": [
+        5.0,
+        3.56
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C7",
+      "type": "relief",
+      "center": [
+        33.347,
+        7.713
+      ],
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D model",
+      "size_mm": [
+        5.0,
+        3.56
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C8",
+      "type": "relief",
+      "center": [
+        61.572,
+        76.313
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C9",
+      "type": "relief",
+      "center": [
+        61.872,
+        77.513
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C10",
+      "type": "relief",
+      "center": [
+        29.447,
+        8.873
+      ],
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D model",
+      "size_mm": [
+        5.0,
+        3.56
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C11",
+      "type": "relief",
+      "center": [
+        33.647,
+        13.813
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C12",
+      "type": "relief",
+      "center": [
+        28.997,
+        7.213
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C13",
+      "type": "relief",
+      "center": [
+        34.097,
+        15.313
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C14",
+      "type": "relief",
+      "center": [
+        83.597,
+        77.213
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C15",
+      "type": "relief",
+      "center": [
+        83.947,
+        78.513
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C16",
+      "type": "relief",
+      "center": [
+        79.672,
+        74.153
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C17",
+      "type": "relief",
+      "center": [
+        79.672,
+        72.653
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C18",
+      "type": "relief",
+      "center": [
+        82.172,
+        60.913
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C19",
+      "type": "relief",
+      "center": [
+        82.172,
+        17.913
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C20",
+      "type": "relief",
+      "center": [
+        82.172,
+        31.913
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C21",
+      "type": "relief",
+      "center": [
+        107.497,
+        12.913
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C22",
+      "type": "relief",
+      "center": [
+        82.172,
+        55.873
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C23",
+      "type": "relief",
+      "center": [
+        82.172,
+        15.413
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C24",
+      "type": "relief",
+      "center": [
+        82.172,
+        58.413
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C25",
+      "type": "relief",
+      "center": [
+        107.497,
+        11.373
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C26",
+      "type": "relief",
+      "center": [
+        82.172,
+        63.913
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C27",
+      "type": "relief",
+      "center": [
+        25.097,
+        62.013
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C28",
+      "type": "relief",
+      "center": [
+        100.697,
+        21.613
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C29",
+      "type": "relief",
+      "center": [
+        35.897,
+        76.063
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C30",
+      "type": "relief",
+      "center": [
+        41.197,
+        75.263
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C31",
+      "type": "relief",
+      "center": [
+        35.047,
+        54.013
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C32",
+      "type": "relief",
+      "center": [
+        41.697,
+        60.488
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C33",
+      "type": "relief",
+      "center": [
+        44.597,
+        61.013
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C34",
+      "type": "relief",
+      "center": [
+        45.547,
+        63.513
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C35",
+      "type": "relief",
+      "center": [
+        46.097,
+        68.213
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C36",
+      "type": "relief",
+      "center": [
+        40.897,
+        73.163
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C37",
+      "type": "relief",
+      "center": [
+        43.197,
+        60.513
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C38",
+      "type": "relief",
+      "center": [
+        33.197,
+        68.113
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C39",
+      "type": "relief",
+      "center": [
+        34.297,
+        63.313
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C40",
+      "type": "relief",
+      "center": [
+        41.147,
+        72.213
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "C41",
+      "type": "relief",
+      "center": [
+        39.297,
+        60.863
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C42",
+      "type": "relief",
+      "center": [
+        100.597,
+        16.213
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C43",
+      "type": "relief",
+      "center": [
+        108.297,
+        38.613
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "C56",
+      "type": "relief",
+      "center": [
+        22.197,
+        64.013
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C57",
+      "type": "relief",
+      "center": [
+        20.697,
+        64.313
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C58",
+      "type": "relief",
+      "center": [
+        21.997,
+        18.013
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C59",
+      "type": "relief",
+      "center": [
+        20.697,
+        18.313
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C60",
+      "type": "relief",
+      "center": [
+        21.897,
+        40.863
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.42,
+        2.52
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C61",
+      "type": "relief",
+      "center": [
+        20.647,
+        41.213
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "D1",
+      "type": "relief",
+      "center": [
+        114.297,
+        16.413
+      ],
+      "depth_mm": 2.1,
+      "part_height_mm": 1.1,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "D2",
+      "type": "relief",
+      "center": [
+        109.297,
+        16.413
+      ],
+      "depth_mm": 2.1,
+      "part_height_mm": 1.1,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "D3",
+      "type": "relief",
+      "center": [
+        105.197,
+        16.413
+      ],
+      "depth_mm": 2.1,
+      "part_height_mm": 1.1,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "D4",
+      "type": "relief",
+      "center": [
+        105.997,
+        23.913
+      ],
+      "depth_mm": 2.1,
+      "part_height_mm": 1.1,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "F1",
+      "type": "relief",
+      "center": [
+        32.187,
+        20.11
+      ],
+      "depth_mm": 1.45,
+      "part_height_mm": 0.45,
+      "height_source": "3D model",
+      "size_mm": [
+        4.96,
+        3.5
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "FID1",
+      "type": "relief",
+      "center": [
+        14.997,
+        78.913
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        4.1,
+        4.1
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "FID2",
+      "type": "relief",
+      "center": [
+        22.197,
+        8.913
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        4.1,
+        4.1
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "FID3",
+      "type": "relief",
+      "center": [
+        116.497,
+        14.913
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        4.1,
+        4.1
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "J4",
+      "type": "relief",
+      "center": [
+        75.417,
+        39.513
+      ],
+      "depth_mm": 10.3,
+      "part_height_mm": 9.3,
+      "height_source": "3D model",
+      "size_mm": [
+        49.4,
+        53.4
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "J7",
+      "type": "relief",
+      "center": [
+        75.417,
+        64.513
+      ],
+      "depth_mm": 10.3,
+      "part_height_mm": 9.3,
+      "height_source": "3D model",
+      "size_mm": [
+        8.5,
+        7.7
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "J15",
+      "type": "relief",
+      "center": [
+        41.747,
+        10.213
+      ],
+      "depth_mm": 3.71,
+      "part_height_mm": 2.71,
+      "height_source": "3D model",
+      "size_mm": [
+        14.34,
+        9.9
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "J16",
+      "type": "relief",
+      "center": [
+        57.417,
+        39.513
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        2.3,
+        2.3
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "J18",
+      "type": "relief",
+      "center": [
+        93.417,
+        39.513
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        2.3,
+        2.3
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "NT1",
+      "type": "relief",
+      "center": [
+        24.497,
+        69.313
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        3.6,
+        2.6
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "R1",
+      "type": "relief",
+      "center": [
+        28.397,
+        45.313
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R2",
+      "type": "relief",
+      "center": [
+        28.397,
+        42.77
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R3",
+      "type": "relief",
+      "center": [
+        28.397,
+        40.227
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R4",
+      "type": "relief",
+      "center": [
+        28.397,
+        37.684
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R5",
+      "type": "relief",
+      "center": [
+        28.397,
+        35.141
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R6",
+      "type": "relief",
+      "center": [
+        28.397,
+        32.598
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R7",
+      "type": "relief",
+      "center": [
+        54.997,
+        72.663
+      ],
+      "depth_mm": 1.45,
+      "part_height_mm": 0.45,
+      "height_source": "3D model",
+      "size_mm": [
+        4.56,
+        3.06
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R8",
+      "type": "relief",
+      "center": [
+        74.597,
+        74.013
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "R9",
+      "type": "relief",
+      "center": [
+        20.997,
+        37.913
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R10",
+      "type": "relief",
+      "center": [
+        28.397,
+        30.056
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R11",
+      "type": "relief",
+      "center": [
+        28.397,
+        27.513
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R12",
+      "type": "relief",
+      "center": [
+        54.997,
+        74.163
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R13",
+      "type": "relief",
+      "center": [
+        75.097,
+        72.513
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R14",
+      "type": "relief",
+      "center": [
+        15.097,
+        37.913
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R15",
+      "type": "relief",
+      "center": [
+        112.997,
+        16.113
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "R17",
+      "type": "relief",
+      "center": [
+        108.047,
+        16.113
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "R18",
+      "type": "relief",
+      "center": [
+        103.897,
+        16.113
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "R19",
+      "type": "relief",
+      "center": [
+        108.747,
+        23.913
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "R20",
+      "type": "relief",
+      "center": [
+        40.397,
+        16.213
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "R21",
+      "type": "relief",
+      "center": [
+        43.697,
+        17.013
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "R22",
+      "type": "relief",
+      "center": [
+        108.752,
+        55.593
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R23",
+      "type": "relief",
+      "center": [
+        108.752,
+        58.098
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R24",
+      "type": "relief",
+      "center": [
+        108.752,
+        60.604
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R25",
+      "type": "relief",
+      "center": [
+        108.752,
+        63.11
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R26",
+      "type": "relief",
+      "center": [
+        108.752,
+        65.616
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R27",
+      "type": "relief",
+      "center": [
+        108.752,
+        68.121
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R28",
+      "type": "relief",
+      "center": [
+        108.752,
+        70.627
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R29",
+      "type": "relief",
+      "center": [
+        108.752,
+        73.133
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R30",
+      "type": "relief",
+      "center": [
+        50.497,
+        18.513
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R31",
+      "type": "relief",
+      "center": [
+        50.497,
+        22.813
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R32",
+      "type": "relief",
+      "center": [
+        50.497,
+        24.113
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R33",
+      "type": "relief",
+      "center": [
+        23.997,
+        64.113
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "R34",
+      "type": "relief",
+      "center": [
+        37.397,
+        57.963
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R35",
+      "type": "relief",
+      "center": [
+        25.747,
+        58.378
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R36",
+      "type": "relief",
+      "center": [
+        20.097,
+        59.013
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "R37",
+      "type": "relief",
+      "center": [
+        39.397,
+        72.913
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "R38",
+      "type": "relief",
+      "center": [
+        37.347,
+        56.363
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R39",
+      "type": "relief",
+      "center": [
+        37.397,
+        59.713
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R40",
+      "type": "relief",
+      "center": [
+        25.747,
+        57.078
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "R41",
+      "type": "relief",
+      "center": [
+        52.747,
+        73.375
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "R43",
+      "type": "relief",
+      "center": [
+        106.797,
+        27.913
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R44",
+      "type": "relief",
+      "center": [
+        106.797,
+        26.813
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R45",
+      "type": "relief",
+      "center": [
+        106.797,
+        39.813
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R46",
+      "type": "relief",
+      "center": [
+        104.797,
+        40.813
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R47",
+      "type": "relief",
+      "center": [
+        106.797,
+        40.813
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "R48",
+      "type": "relief",
+      "center": [
+        104.797,
+        39.813
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.46,
+        2.54
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        41.197,
+        68.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        109.297,
+        69.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        68.397,
+        37.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        75.697,
+        31.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        100.597,
+        64.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        97.097,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        14.197,
+        28.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        80.897,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        24.697,
+        32.713
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        57.397,
+        51.013
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        33.497,
+        38.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        75.697,
+        42.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        39.497,
+        66.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.397,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        75.697,
+        22.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        21.997,
+        68.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        53.897,
+        81.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.797,
+        60.013
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        96.997,
+        80.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        17.197,
+        78.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        23.797,
+        58.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        49.197,
+        81.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        62.297,
+        21.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        99.497,
+        49.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        80.097,
+        60.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        80.097,
+        63.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        61.597,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        63.597,
+        70.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        44.697,
+        30.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        16.897,
+        37.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        99.497,
+        44.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        48.997,
+        68.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        72.197,
+        74.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        39.497,
+        24.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        76.797,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        14.397,
+        15.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        25.897,
+        15.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        25.997,
+        82.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        94.197,
+        73.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        114.897,
+        60.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        36.497,
+        44.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        109.697,
+        44.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        20.697,
+        52.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        48.997,
+        61.013
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        99.697,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        103.597,
+        28.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.797,
+        54.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        53.697,
+        68.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        102.297,
+        80.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        80.097,
+        55.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        25.997,
+        74.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        48.697,
+        15.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        47.897,
+        77.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        87.097,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        37.097,
+        79.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        49.197,
+        54.513
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        42.497,
+        17.013
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        25.997,
+        37.713
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        47.997,
+        72.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.797,
+        65.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.697,
+        28.013
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        66.597,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        25.997,
+        41.713
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        23.797,
+        48.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        40.497,
+        19.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        53.397,
+        77.713
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        70.097,
+        31.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.797,
+        41.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        14.197,
+        74.513
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        94.597,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        75.697,
+        68.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        21.997,
+        74.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        76.697,
+        81.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        25.797,
+        66.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        37.897,
+        68.513
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        22.097,
+        29.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        106.397,
+        64.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        69.997,
+        78.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        57.097,
+        46.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        75.697,
+        60.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        114.897,
+        65.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        33.197,
+        82.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        69.197,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        87.897,
+        13.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        21.947,
+        19.863
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        106.897,
+        32.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        37.997,
+        65.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        108.797,
+        13.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        75.697,
+        46.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        75.697,
+        53.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        70.197,
+        68.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        37.497,
+        14.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        37.697,
+        54.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        33.697,
+        30.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        85.097,
+        75.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        117.197,
+        58.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        66.497,
+        17.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.697,
+        36.513
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        99.497,
+        56.013
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        103.547,
+        64.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        105.297,
+        11.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        25.997,
+        45.513
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        65.497,
+        24.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        69.997,
+        57.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.697,
+        22.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        46.297,
+        14.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        92.397,
+        13.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        21.597,
+        24.513
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        51.297,
+        45.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        22.197,
+        45.513
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        111.197,
+        15.713
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        31.097,
+        73.513
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        57.397,
+        55.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        14.197,
+        23.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        45.397,
+        20.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        22.097,
+        32.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        37.247,
+        16.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        109.697,
+        49.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        80.097,
+        58.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        75.697,
+        37.113
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        102.197,
+        38.013
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        114.897,
+        63.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        21.597,
+        13.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        109.297,
+        61.813
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        100.347,
+        73.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        44.897,
+        42.913
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        109.397,
+        28.013
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        41.197,
+        65.413
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        24.747,
+        7.213
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH1",
+      "type": "relief",
+      "center": [
+        84.797,
+        48.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH2",
+      "type": "relief",
+      "center": [
+        117.197,
+        53.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH3",
+      "type": "relief",
+      "center": [
+        117.197,
+        48.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH4",
+      "type": "relief",
+      "center": [
+        117.197,
+        43.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH5",
+      "type": "relief",
+      "center": [
+        117.197,
+        38.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH6",
+      "type": "relief",
+      "center": [
+        56.397,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH6",
+      "type": "relief",
+      "center": [
+        25.997,
+        86.713
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH6",
+      "type": "relief",
+      "center": [
+        117.197,
+        33.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH7",
+      "type": "relief",
+      "center": [
+        117.197,
+        28.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH8",
+      "type": "relief",
+      "center": [
+        117.197,
+        23.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH9",
+      "type": "relief",
+      "center": [
+        117.197,
+        18.313
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH10",
+      "type": "relief",
+      "center": [
+        61.477,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH11",
+      "type": "relief",
+      "center": [
+        66.557,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH12",
+      "type": "relief",
+      "center": [
+        71.637,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH13",
+      "type": "relief",
+      "center": [
+        76.717,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH14",
+      "type": "relief",
+      "center": [
+        81.797,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH15",
+      "type": "relief",
+      "center": [
+        86.877,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH16",
+      "type": "relief",
+      "center": [
+        91.957,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH17",
+      "type": "relief",
+      "center": [
+        97.037,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "STITCH18",
+      "type": "relief",
+      "center": [
+        102.117,
+        86.613
+      ],
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "size_mm": [
+        2.72,
+        2.72
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "SW1",
+      "type": "relief",
+      "center": [
+        55.047,
+        77.413
+      ],
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "3D model",
+      "size_mm": [
+        10.0,
+        6.1
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "SW2",
+      "type": "relief",
+      "center": [
+        77.547,
+        77.413
+      ],
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "3D model",
+      "size_mm": [
+        10.0,
+        6.1
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "SW3",
+      "type": "relief",
+      "center": [
+        18.347,
+        34.513
+      ],
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "default for SMD",
+      "size_mm": [
+        10.0,
+        6.1
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "SW4",
+      "type": "relief",
+      "center": [
+        35.497,
+        36.413
+      ],
+      "depth_mm": 5.32,
+      "part_height_mm": 4.32,
+      "height_source": "3D model",
+      "size_mm": [
+        24.1,
+        13.0
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "TP1",
+      "type": "relief",
+      "center": [
+        98.797,
+        16.413
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        4.1,
+        4.1
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "U1",
+      "type": "relief",
+      "center": [
+        103.547,
+        64.413
+      ],
+      "depth_mm": 4.05,
+      "part_height_mm": 3.05,
+      "height_source": "3D model",
+      "size_mm": [
+        13.6,
+        9.6
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "U2",
+      "type": "relief",
+      "center": [
+        28.147,
+        14.413
+      ],
+      "depth_mm": 2.7,
+      "part_height_mm": 1.7,
+      "height_source": "3D model",
+      "size_mm": [
+        10.4,
+        8.8
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "U3",
+      "type": "relief",
+      "center": [
+        33.597,
+        10.913
+      ],
+      "depth_mm": 2.55,
+      "part_height_mm": 1.55,
+      "height_source": "3D model",
+      "size_mm": [
+        5.7,
+        5.0
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "U4",
+      "type": "relief",
+      "center": [
+        27.497,
+        66.413
+      ],
+      "depth_mm": 2.1,
+      "part_height_mm": 1.1,
+      "height_source": "3D model",
+      "size_mm": [
+        9.3,
+        7.1
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "U5",
+      "type": "relief",
+      "center": [
+        31.497,
+        57.413
+      ],
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "default for SMD",
+      "size_mm": [
+        10.9,
+        7.32
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "U6",
+      "type": "relief",
+      "center": [
+        39.497,
+        66.913
+      ],
+      "depth_mm": 1.9,
+      "part_height_mm": 0.9,
+      "height_source": "3D model",
+      "size_mm": [
+        9.84,
+        9.84
+      ],
+      "rotation_deg": 0.0
+    },
+    {
+      "ref": "X1",
+      "type": "relief",
+      "center": [
+        100.897,
+        19.513
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        4.36,
+        4.86
+      ],
+      "rotation_deg": 180.0
+    },
+    {
+      "ref": "Y1",
+      "type": "relief",
+      "center": [
+        38.497,
+        75.663
+      ],
+      "depth_mm": 1.64,
+      "part_height_mm": 0.64,
+      "height_source": "3D model",
+      "size_mm": [
+        5.8,
+        5.0
+      ],
+      "rotation_deg": 0.0
+    }
+  ],
+  "posts": [
+    {
+      "hole": "MT3",
+      "center": [
+        17.25,
+        10.16
+      ],
+      "diameter_mm": 2.8
+    },
+    {
+      "hole": "MT4",
+      "center": [
+        114.25,
+        10.16
+      ],
+      "diameter_mm": 2.8
+    },
+    {
+      "hole": "MT2",
+      "center": [
+        114.25,
+        83.66
+      ],
+      "diameter_mm": 2.8
+    },
+    {
+      "hole": "MT1",
+      "center": [
+        17.25,
+        83.66
+      ],
+      "diameter_mm": 2.8
+    }
+  ],
+  "notes": [
+    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud.",
+    "Two-jig workflow: put the PCB top side up in the placement jig, fit the parts, put this holding jig on top (pockets down), turn the stack over, lift off the placement jig and solder from above.",
+    "Batch of 4 boards: a jig set for all of them does not fit the 220 x 220 mm printer bed, so each jig holds 2 boards (1 x 2); print 2 sets."
+  ],
+  "scad": "tinytapeout-demo-jig.scad",
+  "workflow": "two_jig",
+  "placement": {
+    "jig_size_mm": [
+      116.5,
+      193.0,
+      13.36
+    ],
+    "pcb_rest_height_mm": 12.0,
+    "lead_clearance_mm": 10.0,
+    "floor_mm": 2.0,
+    "resolution_mm": 0.25,
+    "board_bbox_in_jig_mm": [
+      6.0,
+      106.0,
+      110.5,
+      187.0
+    ],
+    "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
+    "stops": [
+      {
+        "side": "right",
+        "at": [
+          161.0,
+          73.0
+        ]
+      },
+      {
+        "side": "right",
+        "at": [
+          161.0,
+          113.0
+        ]
+      },
+      {
+        "side": "bottom",
+        "at": [
+          74.07,
+          134.5
+        ]
+      }
+    ],
+    "lead_wells": 283,
+    "bottom_pockets": [
+      "J11"
+    ],
+    "notes": [
+      "Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm."
+    ],
+    "batch": {
+      "boards": 2,
+      "cols": 1,
+      "rows": 2,
+      "pitch_mm": [
+        121.5,
+        100.0
+      ],
+      "board_offsets_mm": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          100.0
+        ]
+      ],
+      "sets": 2,
+      "batch_count": 4
+    },
+    "preview_png": "tinytapeout-demo-jig-placement.png",
+    "mesh": {
+      "triangles": 399388,
+      "unmatched_edges": 0,
+      "volume_mm3": 207613.9,
+      "watertight": true
+    },
+    "stl": "tinytapeout-demo-jig-placement.stl"
+  },
+  "key": "hand_top",
+  "passes": [
+    {
+      "pass": 1,
+      "process": "smt",
+      "side": "top",
+      "parts": 114,
+      "jig": null
+    },
+    {
+      "pass": 2,
+      "process": "hand",
+      "side": "top",
+      "parts": [
+        "JP7",
+        "JP1",
+        "J13",
+        "JP3",
+        "JP8",
+        "J12",
+        "J3",
+        "J5",
+        "JP2",
+        "JP5",
+        "J14",
+        "JP6",
+        "J6",
+        "JP4"
+      ],
+      "jig": "hand_top"
+    }
+  ],
+  "extra": {},
+  "batch": {
+    "boards_per_jig": 2,
+    "cols": 1,
+    "rows": 2,
+    "sets": 2,
+    "batch_count": 4,
+    "bed_mm": [
+      220.0,
+      220.0
+    ]
+  },
+  "preview_png": "tinytapeout-demo-jig.png",
+  "mesh": {
+    "triangles": 190300,
+    "unmatched_edges": 0,
+    "volume_mm3": 225199.2,
+    "watertight": true
+  },
+  "stl": "tinytapeout-demo-jig.stl"
+}

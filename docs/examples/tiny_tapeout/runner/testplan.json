@@ -1,0 +1,3929 @@
+{
+  "schema": "pcbtestkit/testplan@1",
+  "board": {
+    "name": "tinytapeout-demo",
+    "revision": "0.9.4"
+  },
+  "probe_side": "top",
+  "probe_side_reason": "auto: top side scored higher (bottom 19, top 24)",
+  "probe_side_eval": {
+    "bottom": {
+      "power_nets": 2,
+      "nets": 13,
+      "test_pads": 0,
+      "component_pads": 0,
+      "supply_reached": false,
+      "score": 19
+    },
+    "top": {
+      "power_nets": 5,
+      "nets": 12,
+      "test_pads": 0,
+      "component_pads": 13,
+      "supply_reached": true,
+      "score": 24
+    }
+  },
+  "pogo": {
+    "family": "P75",
+    "mount": "receptacle",
+    "pitch_mm": 1.91,
+    "drill_mm": 1.4,
+    "pad_mm": 1.9,
+    "min_spacing_mm": 2.4,
+    "min_target_mm": 0.9,
+    "probe_clearance_mm": 6.0
+  },
+  "adc": {
+    "max_input_v": 3.3
+  },
+  "facility": {
+    "id": "raspberry-pi",
+    "name": "Raspberry Pi + ADC (built-in)",
+    "analog_inputs": null,
+    "max_input_v": null,
+    "buses": {},
+    "plate_mm": null,
+    "connectors": [],
+    "max_sites": null,
+    "driver": false,
+    "bus_checks": []
+  },
+  "supply": {
+    "net": "VBUS",
+    "voltage": 5.0,
+    "reason": "highest rail on connector J15",
+    "current_limit_a": 0.5
+  },
+  "main_ground": "GND",
+  "probes": [
+    {
+      "id": "PP01",
+      "net": "VBUS",
+      "role": "supply",
+      "x": 76.1275,
+      "y": 67.1975,
+      "source": "smd",
+      "label": "F1.1",
+      "target_mm": 0.975,
+      "tip": "spear",
+      "channel": "CH01",
+      "header_pin": 2,
+      "divider": {
+        "r_top_ohm": 8200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": 5.0,
+        "min_v": 4.75,
+        "max_v": 5.25,
+        "voltage_source": "net name"
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP02",
+      "net": "GND",
+      "role": "ground",
+      "x": 70.79,
+      "y": 67.21,
+      "source": "smd",
+      "label": "C6.2",
+      "target_mm": 1.0,
+      "tip": "spear",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null,
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP03",
+      "net": "GND",
+      "role": "ground",
+      "x": 73.4,
+      "y": 55.96,
+      "source": "smd",
+      "label": "C10.2",
+      "target_mm": 1.0,
+      "tip": "spear",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null,
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP04",
+      "net": "+3V3",
+      "role": "measure",
+      "x": 123.45,
+      "y": 121.24,
+      "source": "smd",
+      "label": "C16.2",
+      "target_mm": 0.9,
+      "tip": "spear",
+      "channel": "CH02",
+      "header_pin": 3,
+      "divider": {
+        "r_top_ohm": 1800.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.18,
+        "full_scale_v": 3.894
+      },
+      "expected": {
+        "nominal_v": 3.3,
+        "min_v": 3.135,
+        "max_v": 3.465,
+        "voltage_source": "net name"
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP05",
+      "net": "+5V",
+      "role": "measure",
+      "x": 73.45,
+      "y": 64.65,
+      "source": "smd",
+      "label": "U2.3",
+      "target_mm": 1.5,
+      "tip": "spear",
+      "channel": "CH03",
+      "header_pin": 4,
+      "divider": {
+        "r_top_ohm": 8200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": 5.0,
+        "min_v": 4.75,
+        "max_v": 5.25,
+        "voltage_source": "net name"
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP06",
+      "net": "/RP2040/DVDD",
+      "role": "measure",
+      "x": 84.7,
+      "y": 108.35,
+      "source": "smd",
+      "label": "C32.2",
+      "target_mm": 0.9,
+      "tip": "spear",
+      "channel": "CH04",
+      "header_pin": 5,
+      "divider": {
+        "r_top_ohm": 8200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP07",
+      "net": "in1",
+      "role": "measure",
+      "x": 82.9,
+      "y": 77.15,
+      "source": "smd",
+      "label": "SW4.15",
+      "target_mm": 1.1,
+      "tip": "spear",
+      "channel": "CH05",
+      "header_pin": 6,
+      "divider": {
+        "r_top_ohm": 82000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP08",
+      "net": "in2",
+      "role": "measure",
+      "x": 82.9,
+      "y": 79.69,
+      "source": "smd",
+      "label": "SW4.14",
+      "target_mm": 1.1,
+      "tip": "spear",
+      "channel": "CH06",
+      "header_pin": 7,
+      "divider": {
+        "r_top_ohm": 82000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP09",
+      "net": "in3",
+      "role": "measure",
+      "x": 82.9,
+      "y": 82.23,
+      "source": "smd",
+      "label": "SW4.13",
+      "target_mm": 1.1,
+      "tip": "spear",
+      "channel": "CH07",
+      "header_pin": 8,
+      "divider": {
+        "r_top_ohm": 82000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP10",
+      "net": "in4",
+      "role": "measure",
+      "x": 82.9,
+      "y": 84.77,
+      "source": "smd",
+      "label": "SW4.12",
+      "target_mm": 1.1,
+      "tip": "spear",
+      "channel": "CH08",
+      "header_pin": 9,
+      "divider": {
+        "r_top_ohm": 82000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP11",
+      "net": "in5",
+      "role": "measure",
+      "x": 82.9,
+      "y": 87.31,
+      "source": "smd",
+      "label": "SW4.11",
+      "target_mm": 1.1,
+      "tip": "spear",
+      "channel": "CH09",
+      "header_pin": 11,
+      "divider": {
+        "r_top_ohm": 82000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP12",
+      "net": "in6",
+      "role": "measure",
+      "x": 82.9,
+      "y": 89.85,
+      "source": "smd",
+      "label": "SW4.10",
+      "target_mm": 1.1,
+      "tip": "spear",
+      "channel": "CH10",
+      "header_pin": 12,
+      "divider": {
+        "r_top_ohm": 82000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "top",
+      "pogo": null
+    },
+    {
+      "id": "PP13",
+      "net": "in7",
+      "role": "measure",
+      "x": 82.9,
+      "y": 92.39,
+      "source": "smd",
+      "label": "SW4.9",
+      "target_mm": 1.1,
+      "tip": "spear",
+      "channel": "CH11",
+      "header_pin": 13,
+      "divider": {
+        "r_top_ohm": 82000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.82,
+        "full_scale_v": 6.006
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "top",
+      "pogo": null
+    }
+  ],
+  "header": [
+    {
+      "pin": 1,
+      "signal": "GND"
+    },
+    {
+      "pin": 2,
+      "signal": "CH01",
+      "net": "VBUS"
+    },
+    {
+      "pin": 3,
+      "signal": "CH02",
+      "net": "+3V3"
+    },
+    {
+      "pin": 4,
+      "signal": "CH03",
+      "net": "+5V"
+    },
+    {
+      "pin": 5,
+      "signal": "CH04",
+      "net": "/RP2040/DVDD"
+    },
+    {
+      "pin": 6,
+      "signal": "CH05",
+      "net": "in1"
+    },
+    {
+      "pin": 7,
+      "signal": "CH06",
+      "net": "in2"
+    },
+    {
+      "pin": 8,
+      "signal": "CH07",
+      "net": "in3"
+    },
+    {
+      "pin": 9,
+      "signal": "CH08",
+      "net": "in4"
+    },
+    {
+      "pin": 10,
+      "signal": "GND"
+    },
+    {
+      "pin": 11,
+      "signal": "CH09",
+      "net": "in5"
+    },
+    {
+      "pin": 12,
+      "signal": "CH10",
+      "net": "in6"
+    },
+    {
+      "pin": 13,
+      "signal": "CH11",
+      "net": "in7"
+    },
+    {
+      "pin": 14,
+      "signal": "GND"
+    }
+  ],
+  "sequence": [
+    {
+      "id": "S1",
+      "name": "Visual inspection",
+      "type": "manual",
+      "power": "off",
+      "items": [
+        {
+          "id": "VIS-POLARITY",
+          "check": "Polarity/orientation correct",
+          "refs": [
+            "D1",
+            "D2",
+            "D3",
+            "D4"
+          ]
+        },
+        {
+          "id": "VIS-PIN1",
+          "check": "IC pin-1 orientation matches silkscreen",
+          "refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6"
+          ]
+        },
+        {
+          "id": "VIS-DNP",
+          "check": "Not populated (DNP) parts are absent",
+          "refs": [
+            "C3",
+            "J1",
+            "J2",
+            "J8",
+            "J9",
+            "J10",
+            "J11",
+            "J17",
+            "R16",
+            "R42",
+            "U7"
+          ]
+        },
+        {
+          "id": "VIS-THT",
+          "check": "Through-hole joints filled, leads clipped <= 1.5 mm",
+          "refs": [
+            "J3",
+            "J5",
+            "J6",
+            "J12",
+            "J13",
+            "J14",
+            "JP1",
+            "JP2",
+            "JP3",
+            "JP4",
+            "JP5",
+            "JP6",
+            "JP7",
+            "JP8",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH1",
+            "STITCH2",
+            "STITCH3",
+            "STITCH4",
+            "STITCH5",
+            "STITCH6",
+            "STITCH6",
+            "STITCH6",
+            "STITCH7",
+            "STITCH8",
+            "STITCH9",
+            "STITCH10",
+            "STITCH11",
+            "STITCH12",
+            "STITCH13",
+            "STITCH14",
+            "STITCH15",
+            "STITCH16",
+            "STITCH17",
+            "STITCH18"
+          ]
+        },
+        {
+          "id": "VIS-BRIDGES",
+          "check": "No solder bridges on fine-pitch parts",
+          "refs": [
+            "J15",
+            "U4",
+            "U6"
+          ]
+        },
+        {
+          "id": "VIS-MLCC-CRACK",
+          "check": "No cracked MLCCs near the board edge",
+          "refs": [
+            "C10",
+            "C11",
+            "C12",
+            "C13",
+            "C3",
+            "C7"
+          ]
+        }
+      ],
+      "phase": "unpowered"
+    },
+    {
+      "id": "S2",
+      "name": "Unpowered short check (rails to GND)",
+      "type": "resistance",
+      "power": "off",
+      "optional": true,
+      "checks": [
+        {
+          "id": "R_VBUS",
+          "channel": "CH01",
+          "net": "VBUS",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_+3V3",
+          "channel": "CH02",
+          "net": "+3V3",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_+5V",
+          "channel": "CH03",
+          "net": "+5V",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_DVDD",
+          "channel": "CH04",
+          "net": "/RP2040/DVDD",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        }
+      ],
+      "note": "Needs the source-resistor circuit described in runner/README; skipped otherwise.",
+      "phase": "unpowered"
+    },
+    {
+      "id": "S3",
+      "name": "Apply power (VBUS = 5.0 V)",
+      "type": "power",
+      "action": "on",
+      "net": "VBUS",
+      "voltage": 5.0,
+      "settle_ms": 500,
+      "current": {
+        "limit_a": 0.5,
+        "max_idle_a": null,
+        "min_idle_a": null
+      },
+      "abort_on_fail": true,
+      "checks": [
+        {
+          "id": "V_SUPPLY",
+          "channel": "CH01",
+          "net": "VBUS",
+          "min_v": 4.75,
+          "max_v": 5.25
+        }
+      ],
+      "phase": "power"
+    },
+    {
+      "id": "SP",
+      "name": "Program the board through J7 (swd)",
+      "type": "program",
+      "power": "on",
+      "headers": [
+        "J7"
+      ],
+      "command": [
+        "openocd",
+        "-f",
+        "interface/cmsis-dap.cfg",
+        "-c",
+        "adapter serial PROBE-{site}",
+        "-f",
+        "target/rp2040.cfg",
+        "-c",
+        "program firmware.elf verify reset exit"
+      ],
+      "timeout_s": 180.0,
+      "instruction": "Connect the programmer to the fixture's PROG connector of this board and program it.",
+      "phase": "program",
+      "concurrent": [
+        "S4"
+      ]
+    },
+    {
+      "id": "S4",
+      "name": "Rail voltages",
+      "type": "voltage",
+      "power": "on",
+      "checks": [
+        {
+          "id": "V_+3V3",
+          "channel": "CH02",
+          "net": "+3V3",
+          "min_v": 3.135,
+          "max_v": 3.465,
+          "nominal_v": 3.3
+        },
+        {
+          "id": "V_+5V",
+          "channel": "CH03",
+          "net": "+5V",
+          "min_v": 4.75,
+          "max_v": 5.25,
+          "nominal_v": 5.0
+        },
+        {
+          "id": "V_DVDD",
+          "channel": "CH04",
+          "net": "/RP2040/DVDD",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        }
+      ],
+      "phase": "during_program"
+    },
+    {
+      "id": "S5",
+      "name": "Signal levels (idle)",
+      "type": "voltage",
+      "power": "on",
+      "checks": [
+        {
+          "id": "V_in1",
+          "channel": "CH05",
+          "net": "in1",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15,
+          "firmware": "U6 pin 13 (GPIO10)"
+        },
+        {
+          "id": "V_in2",
+          "channel": "CH06",
+          "net": "in2",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15,
+          "firmware": "U6 pin 14 (GPIO11)"
+        },
+        {
+          "id": "V_in3",
+          "channel": "CH07",
+          "net": "in3",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15,
+          "firmware": "U6 pin 15 (GPIO12)"
+        },
+        {
+          "id": "V_in4",
+          "channel": "CH08",
+          "net": "in4",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15,
+          "firmware": "U6 pin 28 (GPIO17)"
+        },
+        {
+          "id": "V_in5",
+          "channel": "CH09",
+          "net": "in5",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15,
+          "firmware": "U6 pin 29 (GPIO18)"
+        },
+        {
+          "id": "V_in6",
+          "channel": "CH10",
+          "net": "in6",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15,
+          "firmware": "U6 pin 30 (GPIO19)"
+        },
+        {
+          "id": "V_in7",
+          "channel": "CH11",
+          "net": "in7",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15,
+          "firmware": "U6 pin 31 (GPIO20)"
+        }
+      ],
+      "phase": "after_program"
+    },
+    {
+      "id": "S9",
+      "name": "Remove power",
+      "type": "power",
+      "action": "off",
+      "phase": "end"
+    }
+  ],
+  "coverage": {
+    "nets_total": 108,
+    "nets_probed": 12,
+    "power_nets": 6,
+    "power_nets_probed": 5,
+    "untestable": [
+      {
+        "net": "+1V8",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/CC1",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/CC2",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/RP2040/QSPI_CLK",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/RP2040/QSPI_SD0",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/RP2040/QSPI_SD1",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/RP2040/QSPI_SD2",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/RP2040/QSPI_SD3",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/RP2040/RUN",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/RP2040/SWCLK",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/RP2040/SWDIO",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "/~{CRVRST}",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "boot_mode",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Caravel_CSB",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Caravel_D0",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Caravel_D1",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Caravel_SCK",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "cinc{slash}out3",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "ctrl_ena",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "ctrl_sel_inc",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "gpio",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "HK_CSB",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "HK_SCK",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "HK_SDI",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "HK_SDO",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "in0",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "mio33",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "mio35",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "mio37",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "mprj_io0",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "MUX_SEL",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(C3-Pad1)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(JP1-B)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(JP2-B)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(JP3-B)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(JP4-B)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(JP5-B)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(JP6-B)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(JP7-B)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "Net-(JP8-B)",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "out0",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "out1",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "out2",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "out3",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "out4",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "out5",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "out6",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "out7",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "project_clk",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "RP_proj_clk",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "RPIO29",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "SDI{slash}out0",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "SDO{slash}out1",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "uio0",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "uio1",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "uio2",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "uio3",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "uio4",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "uio5",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "uio6",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "uio7",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "usb_d+",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "usb_d-",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "usrclk2",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "xclk",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "~{crst}{slash}out2",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "~{ctrl_sel_rst}",
+        "reason": "no accessible pad on the top side"
+      },
+      {
+        "net": "~{project_rst}",
+        "reason": "no accessible pad on the top side"
+      }
+    ],
+    "percent": 11.1
+  },
+  "fixture_keepouts": [
+    {
+      "ref": "JP7",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.25,
+        "y_min": 115.47,
+        "x_max": 157.55,
+        "y_max": 119.97,
+        "width": 5.3,
+        "height": 4.5
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 82.64,
+        "y_min": 114.14,
+        "x_max": 85.76,
+        "y_max": 117.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 150.74,
+        "y_min": 114.94,
+        "x_max": 153.86,
+        "y_max": 118.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 109.84,
+        "y_min": 82.84,
+        "x_max": 112.96,
+        "y_max": 85.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 117.14,
+        "y_min": 77.34,
+        "x_max": 120.26,
+        "y_max": 80.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "JP1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.25,
+        "y_min": 100.47,
+        "x_max": 157.55,
+        "y_max": 104.97,
+        "width": 5.3,
+        "height": 4.5
+      },
+      "side": "top"
+    },
+    {
+      "ref": "MT3",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 55.8,
+        "y_min": 52.8,
+        "x_max": 64.7,
+        "y_max": 61.7,
+        "width": 8.9,
+        "height": 8.9
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 142.04,
+        "y_min": 109.94,
+        "x_max": 145.16,
+        "y_max": 113.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 138.54,
+        "y_min": 57.34,
+        "x_max": 141.66,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH8",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 68.84,
+        "x_max": 161.76,
+        "y_max": 71.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 55.64,
+        "y_min": 74.34,
+        "x_max": 58.76,
+        "y_max": 77.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 122.34,
+        "y_min": 57.34,
+        "x_max": 125.46,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 66.14,
+        "y_min": 78.24,
+        "x_max": 69.26,
+        "y_max": 81.36,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 98.84,
+        "y_min": 96.54,
+        "x_max": 101.96,
+        "y_max": 99.66,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH11",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 108.0,
+        "y_min": 132.14,
+        "x_max": 111.12,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 74.94,
+        "y_min": 84.14,
+        "x_max": 78.06,
+        "y_max": 87.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 117.14,
+        "y_min": 87.64,
+        "x_max": 120.26,
+        "y_max": 90.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 80.94,
+        "y_min": 112.44,
+        "x_max": 84.06,
+        "y_max": 115.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 125.84,
+        "y_min": 57.34,
+        "x_max": 128.96,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 117.14,
+        "y_min": 67.64,
+        "x_max": 120.26,
+        "y_max": 70.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 63.44,
+        "y_min": 113.84,
+        "x_max": 66.56,
+        "y_max": 116.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 95.34,
+        "y_min": 127.34,
+        "x_max": 98.46,
+        "y_max": 130.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH4",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 88.84,
+        "x_max": 161.76,
+        "y_max": 91.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH16",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 133.4,
+        "y_min": 132.14,
+        "x_max": 136.52,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.24,
+        "y_min": 105.54,
+        "x_max": 129.36,
+        "y_max": 108.66,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 138.44,
+        "y_min": 126.14,
+        "x_max": 141.56,
+        "y_max": 129.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 58.64,
+        "y_min": 123.94,
+        "x_max": 61.76,
+        "y_max": 127.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH17",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 138.48,
+        "y_min": 132.14,
+        "x_max": 141.6,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 65.24,
+        "y_min": 103.64,
+        "x_max": 68.36,
+        "y_max": 106.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 90.64,
+        "y_min": 127.34,
+        "x_max": 93.76,
+        "y_max": 130.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 103.74,
+        "y_min": 66.94,
+        "x_max": 106.86,
+        "y_max": 70.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 140.94,
+        "y_min": 95.44,
+        "x_max": 144.06,
+        "y_max": 98.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 121.54,
+        "y_min": 106.44,
+        "x_max": 124.66,
+        "y_max": 109.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 121.54,
+        "y_min": 109.44,
+        "x_max": 124.66,
+        "y_max": 112.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 103.04,
+        "y_min": 57.34,
+        "x_max": 106.16,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 105.04,
+        "y_min": 115.74,
+        "x_max": 108.16,
+        "y_max": 118.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH6",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 97.84,
+        "y_min": 132.14,
+        "x_max": 100.96,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 86.14,
+        "y_min": 76.14,
+        "x_max": 89.26,
+        "y_max": 79.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 58.34,
+        "y_min": 83.44,
+        "x_max": 61.46,
+        "y_max": 86.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 140.94,
+        "y_min": 89.84,
+        "x_max": 144.06,
+        "y_max": 92.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 90.44,
+        "y_min": 113.94,
+        "x_max": 93.56,
+        "y_max": 117.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 113.64,
+        "y_min": 119.74,
+        "x_max": 116.76,
+        "y_max": 122.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 80.94,
+        "y_min": 69.94,
+        "x_max": 84.06,
+        "y_max": 73.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 118.24,
+        "y_min": 57.34,
+        "x_max": 121.36,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "JP3",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.25,
+        "y_min": 105.47,
+        "x_max": 157.55,
+        "y_max": 109.97,
+        "width": 5.3,
+        "height": 4.5
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 55.84,
+        "y_min": 60.64,
+        "x_max": 58.96,
+        "y_max": 63.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH7",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 73.84,
+        "x_max": 161.76,
+        "y_max": 76.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH13",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 118.16,
+        "y_min": 132.14,
+        "x_max": 121.28,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 67.34,
+        "y_min": 61.14,
+        "x_max": 70.46,
+        "y_max": 64.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "JP8",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.25,
+        "y_min": 117.97,
+        "x_max": 157.55,
+        "y_max": 122.47,
+        "width": 5.3,
+        "height": 4.5
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 67.44,
+        "y_min": 127.74,
+        "x_max": 70.56,
+        "y_max": 130.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 135.64,
+        "y_min": 118.74,
+        "x_max": 138.76,
+        "y_max": 121.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 156.34,
+        "y_min": 106.34,
+        "x_max": 159.46,
+        "y_max": 109.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 77.94,
+        "y_min": 89.64,
+        "x_max": 81.06,
+        "y_max": 92.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 151.14,
+        "y_min": 89.84,
+        "x_max": 154.26,
+        "y_max": 92.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 62.14,
+        "y_min": 98.14,
+        "x_max": 65.26,
+        "y_max": 101.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 90.44,
+        "y_min": 106.54,
+        "x_max": 93.56,
+        "y_max": 109.66,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 141.14,
+        "y_min": 57.34,
+        "x_max": 144.26,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 145.04,
+        "y_min": 73.74,
+        "x_max": 148.16,
+        "y_max": 76.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.24,
+        "y_min": 100.34,
+        "x_max": 129.36,
+        "y_max": 103.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 95.14,
+        "y_min": 113.84,
+        "x_max": 98.26,
+        "y_max": 116.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 143.74,
+        "y_min": 126.14,
+        "x_max": 146.86,
+        "y_max": 129.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 121.54,
+        "y_min": 101.34,
+        "x_max": 124.66,
+        "y_max": 104.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 67.44,
+        "y_min": 119.84,
+        "x_max": 70.56,
+        "y_max": 122.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 90.14,
+        "y_min": 60.74,
+        "x_max": 93.26,
+        "y_max": 63.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "J7",
+      "height_mm": 9.3,
+      "height_source": "3D model",
+      "bbox": {
+        "x_min": 114.37,
+        "y_min": 107.15,
+        "x_max": 122.47,
+        "y_max": 116.05,
+        "width": 8.1,
+        "height": 8.9
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 89.34,
+        "y_min": 122.64,
+        "x_max": 92.46,
+        "y_max": 125.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 128.54,
+        "y_min": 57.34,
+        "x_max": 131.66,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "MT4",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.8,
+        "y_min": 52.8,
+        "x_max": 161.7,
+        "y_max": 61.7,
+        "width": 8.9,
+        "height": 8.9
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH3",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 93.84,
+        "x_max": 161.76,
+        "y_max": 96.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 78.54,
+        "y_min": 124.84,
+        "x_max": 81.66,
+        "y_max": 127.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 90.64,
+        "y_min": 100.04,
+        "x_max": 93.76,
+        "y_max": 103.16,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 83.94,
+        "y_min": 62.54,
+        "x_max": 87.06,
+        "y_max": 65.66,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 67.44,
+        "y_min": 83.24,
+        "x_max": 70.56,
+        "y_max": 86.36,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "MT2",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.8,
+        "y_min": 126.3,
+        "x_max": 161.7,
+        "y_max": 135.2,
+        "width": 8.9,
+        "height": 8.9
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH6",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 67.44,
+        "y_min": 132.24,
+        "x_max": 70.56,
+        "y_max": 135.36,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 89.44,
+        "y_min": 118.14,
+        "x_max": 92.56,
+        "y_max": 121.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.24,
+        "y_min": 110.84,
+        "x_max": 129.36,
+        "y_max": 113.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.14,
+        "y_min": 73.54,
+        "x_max": 129.26,
+        "y_max": 76.66,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 108.04,
+        "y_min": 57.34,
+        "x_max": 111.16,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 67.44,
+        "y_min": 87.24,
+        "x_max": 70.56,
+        "y_max": 90.36,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 65.24,
+        "y_min": 93.94,
+        "x_max": 68.36,
+        "y_max": 97.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 81.94,
+        "y_min": 64.74,
+        "x_max": 85.06,
+        "y_max": 67.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 94.84,
+        "y_min": 123.24,
+        "x_max": 97.96,
+        "y_max": 126.36,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH18",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 143.56,
+        "y_min": 132.14,
+        "x_max": 146.68,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH9",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 63.84,
+        "x_max": 161.76,
+        "y_max": 66.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "JP2",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.25,
+        "y_min": 102.97,
+        "x_max": 157.55,
+        "y_max": 107.47,
+        "width": 5.3,
+        "height": 4.5
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 111.54,
+        "y_min": 77.44,
+        "x_max": 114.66,
+        "y_max": 80.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.24,
+        "y_min": 86.64,
+        "x_max": 129.36,
+        "y_max": 89.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 55.64,
+        "y_min": 120.04,
+        "x_max": 58.76,
+        "y_max": 123.16,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 136.04,
+        "y_min": 57.34,
+        "x_max": 139.16,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 117.14,
+        "y_min": 113.84,
+        "x_max": 120.26,
+        "y_max": 116.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 63.44,
+        "y_min": 119.84,
+        "x_max": 66.56,
+        "y_max": 122.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 118.14,
+        "y_min": 126.64,
+        "x_max": 121.26,
+        "y_max": 129.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH14",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 123.24,
+        "y_min": 132.14,
+        "x_max": 126.36,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 67.24,
+        "y_min": 111.64,
+        "x_max": 70.36,
+        "y_max": 114.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 79.34,
+        "y_min": 114.04,
+        "x_max": 82.46,
+        "y_max": 117.16,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 63.54,
+        "y_min": 74.74,
+        "x_max": 66.66,
+        "y_max": 77.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 147.84,
+        "y_min": 109.94,
+        "x_max": 150.96,
+        "y_max": 113.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 111.44,
+        "y_min": 123.74,
+        "x_max": 114.56,
+        "y_max": 126.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 98.54,
+        "y_min": 91.64,
+        "x_max": 101.66,
+        "y_max": 94.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 117.14,
+        "y_min": 105.84,
+        "x_max": 120.26,
+        "y_max": 108.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 156.34,
+        "y_min": 111.44,
+        "x_max": 159.46,
+        "y_max": 114.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 74.64,
+        "y_min": 127.74,
+        "x_max": 77.76,
+        "y_max": 130.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 110.64,
+        "y_min": 57.34,
+        "x_max": 113.76,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 129.34,
+        "y_min": 59.44,
+        "x_max": 132.46,
+        "y_max": 62.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 63.39,
+        "y_min": 65.39,
+        "x_max": 66.51,
+        "y_max": 68.51,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH6",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 78.84,
+        "x_max": 161.76,
+        "y_max": 81.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 148.34,
+        "y_min": 77.84,
+        "x_max": 151.46,
+        "y_max": 80.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "JP5",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.25,
+        "y_min": 110.47,
+        "x_max": 157.55,
+        "y_max": 114.97,
+        "width": 5.3,
+        "height": 4.5
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 79.44,
+        "y_min": 110.84,
+        "x_max": 82.56,
+        "y_max": 113.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 150.24,
+        "y_min": 59.34,
+        "x_max": 153.36,
+        "y_max": 62.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 117.14,
+        "y_min": 91.84,
+        "x_max": 120.26,
+        "y_max": 94.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 117.14,
+        "y_min": 98.94,
+        "x_max": 120.26,
+        "y_max": 102.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 111.64,
+        "y_min": 113.84,
+        "x_max": 114.76,
+        "y_max": 116.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 78.94,
+        "y_min": 59.64,
+        "x_max": 82.06,
+        "y_max": 62.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH10",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 102.92,
+        "y_min": 132.14,
+        "x_max": 106.04,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 79.14,
+        "y_min": 99.64,
+        "x_max": 82.26,
+        "y_max": 102.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 75.14,
+        "y_min": 75.64,
+        "x_max": 78.26,
+        "y_max": 78.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.54,
+        "y_min": 120.94,
+        "x_max": 129.66,
+        "y_max": 124.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 103.84,
+        "x_max": 161.76,
+        "y_max": 106.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH2",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 98.84,
+        "x_max": 161.76,
+        "y_max": 101.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 107.94,
+        "y_min": 63.44,
+        "x_max": 111.06,
+        "y_max": 66.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.14,
+        "y_min": 82.04,
+        "x_max": 129.26,
+        "y_max": 85.16,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "JP6",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.25,
+        "y_min": 112.97,
+        "x_max": 157.55,
+        "y_max": 117.47,
+        "width": 5.3,
+        "height": 4.5
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 140.94,
+        "y_min": 101.54,
+        "x_max": 144.06,
+        "y_max": 104.66,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "J4",
+      "height_mm": 9.3,
+      "height_source": "3D model",
+      "bbox": {
+        "x_min": 93.52,
+        "y_min": 59.7,
+        "x_max": 143.32,
+        "y_max": 113.5,
+        "width": 49.8,
+        "height": 53.8
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 144.99,
+        "y_min": 109.94,
+        "x_max": 148.11,
+        "y_max": 113.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 146.74,
+        "y_min": 57.34,
+        "x_max": 149.86,
+        "y_max": 60.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 67.44,
+        "y_min": 91.04,
+        "x_max": 70.56,
+        "y_max": 94.16,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 106.94,
+        "y_min": 70.14,
+        "x_max": 110.06,
+        "y_max": 73.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 111.44,
+        "y_min": 102.64,
+        "x_max": 114.56,
+        "y_max": 105.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.14,
+        "y_min": 67.74,
+        "x_max": 129.26,
+        "y_max": 70.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 87.74,
+        "y_min": 59.64,
+        "x_max": 90.86,
+        "y_max": 62.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH5",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 158.64,
+        "y_min": 83.84,
+        "x_max": 161.76,
+        "y_max": 86.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 133.84,
+        "y_min": 59.44,
+        "x_max": 136.96,
+        "y_max": 62.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 63.04,
+        "y_min": 70.04,
+        "x_max": 66.16,
+        "y_max": 73.16,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 92.74,
+        "y_min": 91.44,
+        "x_max": 95.86,
+        "y_max": 94.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 63.64,
+        "y_min": 91.04,
+        "x_max": 66.76,
+        "y_max": 94.16,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.64,
+        "y_min": 61.24,
+        "x_max": 155.76,
+        "y_max": 64.36,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 72.54,
+        "y_min": 119.04,
+        "x_max": 75.66,
+        "y_max": 122.16,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "JP4",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 152.25,
+        "y_min": 107.97,
+        "x_max": 157.55,
+        "y_max": 112.47,
+        "width": 5.3,
+        "height": 4.5
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH15",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 128.32,
+        "y_min": 132.14,
+        "x_max": 131.44,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH12",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 113.08,
+        "y_min": 132.14,
+        "x_max": 116.2,
+        "y_max": 135.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 98.84,
+        "y_min": 101.44,
+        "x_max": 101.96,
+        "y_max": 104.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 55.64,
+        "y_min": 69.34,
+        "x_max": 58.76,
+        "y_max": 72.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 86.84,
+        "y_min": 65.74,
+        "x_max": 89.96,
+        "y_max": 68.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 63.54,
+        "y_min": 78.14,
+        "x_max": 66.66,
+        "y_max": 81.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 78.69,
+        "y_min": 61.94,
+        "x_max": 81.81,
+        "y_max": 65.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 151.14,
+        "y_min": 95.44,
+        "x_max": 154.26,
+        "y_max": 98.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 121.54,
+        "y_min": 103.94,
+        "x_max": 124.66,
+        "y_max": 107.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 117.14,
+        "y_min": 82.64,
+        "x_max": 120.26,
+        "y_max": 85.76,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 143.64,
+        "y_min": 83.54,
+        "x_max": 146.76,
+        "y_max": 86.66,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 156.34,
+        "y_min": 108.84,
+        "x_max": 159.46,
+        "y_max": 111.96,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 63.04,
+        "y_min": 59.34,
+        "x_max": 66.16,
+        "y_max": 62.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 150.74,
+        "y_min": 107.34,
+        "x_max": 153.86,
+        "y_max": 110.46,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 141.79,
+        "y_min": 118.74,
+        "x_max": 144.91,
+        "y_max": 121.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 86.34,
+        "y_min": 88.44,
+        "x_max": 89.46,
+        "y_max": 91.56,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "MT1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 55.8,
+        "y_min": 126.3,
+        "x_max": 64.7,
+        "y_max": 135.2,
+        "width": 8.9,
+        "height": 8.9
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 150.84,
+        "y_min": 73.54,
+        "x_max": 153.96,
+        "y_max": 76.66,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 82.64,
+        "y_min": 110.94,
+        "x_max": 85.76,
+        "y_max": 114.06,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 66.19,
+        "y_min": 52.74,
+        "x_max": 69.31,
+        "y_max": 55.86,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    },
+    {
+      "ref": "STITCH1",
+      "height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override)",
+      "bbox": {
+        "x_min": 126.24,
+        "y_min": 94.14,
+        "x_max": 129.36,
+        "y_max": 97.26,
+        "width": 3.12,
+        "height": 3.12
+      },
+      "side": "top"
+    }
+  ],
+  "plates": [
+    "top"
+  ],
+  "headers": null,
+  "probe_side_hint": null,
+  "stack": [],
+  "after_test": [],
+  "batch": {
+    "count": 4,
+    "cols": 2,
+    "rows": 2,
+    "spacing_mm": 10.0,
+    "source": "batch"
+  },
+  "program": {
+    "headers": [
+      {
+        "ref": "J7",
+        "value": "Conn_01x02",
+        "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Right",
+        "protocol": "swd",
+        "side": "top",
+        "why": "pins carry SWCLK, SWDIO",
+        "pitch_mm": 4.172,
+        "pins": [
+          {
+            "pad": "1",
+            "net": "/RP2040/SWDIO",
+            "signal": "SWDIO",
+            "probe": null
+          },
+          {
+            "pad": "2",
+            "net": "/RP2040/SWCLK",
+            "signal": "SWCLK",
+            "probe": null
+          }
+        ],
+        "missing": [
+          "1 (SWDIO)",
+          "2 (SWCLK)"
+        ],
+        "pogo": null,
+        "connector": "same"
+      }
+    ],
+    "connector": "same",
+    "command": [
+      "openocd",
+      "-f",
+      "interface/cmsis-dap.cfg",
+      "-c",
+      "adapter serial PROBE-{site}",
+      "-f",
+      "target/rp2040.cfg",
+      "-c",
+      "program firmware.elf verify reset exit"
+    ],
+    "timeout_s": 180.0
+  },
+  "firmware": {
+    "programmed": [
+      "U6"
+    ],
+    "firmware_nets": [
+      {
+        "net": "/RP2040/QSPI_CLK",
+        "why": "U6 pin 52 (QSPI_SCLK)"
+      },
+      {
+        "net": "/RP2040/QSPI_SD0",
+        "why": "U6 pin 53 (QSPI_SD0)"
+      },
+      {
+        "net": "/RP2040/QSPI_SD1",
+        "why": "U6 pin 55 (QSPI_SD1)"
+      },
+      {
+        "net": "/RP2040/QSPI_SD2",
+        "why": "U6 pin 54 (QSPI_SD2)"
+      },
+      {
+        "net": "/RP2040/QSPI_SD3",
+        "why": "U6 pin 51 (QSPI_SD3)"
+      },
+      {
+        "net": "/RP2040/RUN",
+        "why": "U6 pin 26 (RUN)"
+      },
+      {
+        "net": "/RP2040/SWCLK",
+        "why": "U6 pin 24 (SWCLK)"
+      },
+      {
+        "net": "/RP2040/SWDIO",
+        "why": "U6 pin 25 (SWD)"
+      },
+      {
+        "net": "boot_mode",
+        "why": "U6 pin 56 (QSPI_SS)"
+      },
+      {
+        "net": "cinc{slash}out3",
+        "why": "U6 pin 11 (GPIO8)"
+      },
+      {
+        "net": "ctrl_ena",
+        "why": "U6 pin 8 (GPIO6)"
+      },
+      {
+        "net": "HK_CSB",
+        "why": "U6 pin 3 (GPIO1)"
+      },
+      {
+        "net": "HK_SCK",
+        "why": "U6 pin 4 (GPIO2)"
+      },
+      {
+        "net": "in0",
+        "why": "U6 pin 12 (GPIO9)"
+      },
+      {
+        "net": "in1",
+        "why": "U6 pin 13 (GPIO10)"
+      },
+      {
+        "net": "in2",
+        "why": "U6 pin 14 (GPIO11)"
+      },
+      {
+        "net": "in3",
+        "why": "U6 pin 15 (GPIO12)"
+      },
+      {
+        "net": "in4",
+        "why": "U6 pin 28 (GPIO17)"
+      },
+      {
+        "net": "in5",
+        "why": "U6 pin 29 (GPIO18)"
+      },
+      {
+        "net": "in6",
+        "why": "U6 pin 30 (GPIO19)"
+      },
+      {
+        "net": "in7",
+        "why": "U6 pin 31 (GPIO20)"
+      },
+      {
+        "net": "Net-(C1-Pad2)",
+        "why": "through R12 from through R41 from U6 pin 2 (GPIO0)"
+      },
+      {
+        "net": "Net-(C30-Pad1)",
+        "why": "through R37 from U6 pin 21 (XOUT)"
+      },
+      {
+        "net": "Net-(R13-Pad1)",
+        "why": "through R13 from U6 pin 7 (GPIO5)"
+      },
+      {
+        "net": "Net-(U6-XIN)",
+        "why": "U6 pin 20 (XIN)"
+      },
+      {
+        "net": "Net-(U6-XOUT)",
+        "why": "U6 pin 21 (XOUT)"
+      },
+      {
+        "net": "out4",
+        "why": "U6 pin 16 (GPIO13)"
+      },
+      {
+        "net": "out5",
+        "why": "U6 pin 17 (GPIO14)"
+      },
+      {
+        "net": "out6",
+        "why": "U6 pin 18 (GPIO15)"
+      },
+      {
+        "net": "out7",
+        "why": "U6 pin 27 (GPIO16)"
+      },
+      {
+        "net": "project_clk",
+        "why": "through R41 from U6 pin 2 (GPIO0)"
+      },
+      {
+        "net": "RP_proj_clk",
+        "why": "U6 pin 2 (GPIO0)"
+      },
+      {
+        "net": "RPIO29",
+        "why": "U6 pin 41 (GPIO29_ADC3)"
+      },
+      {
+        "net": "SDI{slash}out0",
+        "why": "U6 pin 5 (GPIO3)"
+      },
+      {
+        "net": "SDO{slash}out1",
+        "why": "U6 pin 6 (GPIO4)"
+      },
+      {
+        "net": "uio0",
+        "why": "U6 pin 32 (GPIO21)"
+      },
+      {
+        "net": "uio1",
+        "why": "U6 pin 34 (GPIO22)"
+      },
+      {
+        "net": "uio2",
+        "why": "U6 pin 35 (GPIO23)"
+      },
+      {
+        "net": "uio3",
+        "why": "U6 pin 36 (GPIO24)"
+      },
+      {
+        "net": "uio4",
+        "why": "U6 pin 37 (GPIO25)"
+      },
+      {
+        "net": "uio5",
+        "why": "U6 pin 38 (GPIO26_ADC0)"
+      },
+      {
+        "net": "uio6",
+        "why": "U6 pin 39 (GPIO27_ADC1)"
+      },
+      {
+        "net": "uio7",
+        "why": "U6 pin 40 (GPIO28_ADC2)"
+      },
+      {
+        "net": "usb_d+",
+        "why": "U6 pin 47 (USB_DP)"
+      },
+      {
+        "net": "usb_d-",
+        "why": "U6 pin 46 (USB_DM)"
+      },
+      {
+        "net": "~{crst}{slash}out2",
+        "why": "U6 pin 9 (GPIO7)"
+      },
+      {
+        "net": "~{project_rst}",
+        "why": "U6 pin 7 (GPIO5)"
+      }
+    ]
+  },
+  "warnings": [
+    "only 1 of 2 supply probes placed for VBUS",
+    "programming header J7: no probe fits pin(s) 1 (SWDIO), 2 (SWCLK); program through test points on those nets or probe the other side",
+    "programming header J7 is fitted on the probed side: the pogo pins land on its pads, under the connector. Leave it unfitted in production (DNP) or probe from the other side"
+  ],
+  "timing": {
+    "assumptions": {
+      "board_handling_s": 8.0,
+      "serial_entry_s": 3.0,
+      "visual_s": 15.0,
+      "short_check_s": 0.5,
+      "read_s": 0.05,
+      "bus_s": 3.0,
+      "place_part_s": 6.0,
+      "solder_joint_s": 2.5,
+      "jig_cycle_s": 45.0,
+      "program_s": 25.0
+    },
+    "batch": 4,
+    "test": {
+      "one_board_s": 54.5,
+      "sequential_s": 218.0,
+      "batch_s": 142.4,
+      "per_board_s": 35.6,
+      "saved_s": 75.6,
+      "timeline": [
+        {
+          "site": 1,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 0.0,
+              "end": 28.8
+            },
+            {
+              "phase": "programming",
+              "start": 115.2,
+              "end": 140.2
+            },
+            {
+              "phase": "checks while programming",
+              "start": 115.2,
+              "end": 115.4
+            },
+            {
+              "phase": "checks with firmware",
+              "start": 140.2,
+              "end": 140.8
+            }
+          ]
+        },
+        {
+          "site": 2,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 28.8,
+              "end": 57.6
+            },
+            {
+              "phase": "programming",
+              "start": 115.2,
+              "end": 140.2
+            },
+            {
+              "phase": "checks while programming",
+              "start": 115.4,
+              "end": 115.5
+            },
+            {
+              "phase": "checks with firmware",
+              "start": 140.8,
+              "end": 141.3
+            }
+          ]
+        },
+        {
+          "site": 3,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 57.6,
+              "end": 86.4
+            },
+            {
+              "phase": "programming",
+              "start": 115.2,
+              "end": 140.2
+            },
+            {
+              "phase": "checks while programming",
+              "start": 115.5,
+              "end": 115.7
+            },
+            {
+              "phase": "checks with firmware",
+              "start": 141.3,
+              "end": 141.9
+            }
+          ]
+        },
+        {
+          "site": 4,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 86.4,
+              "end": 115.2
+            },
+            {
+              "phase": "programming",
+              "start": 115.2,
+              "end": 140.2
+            },
+            {
+              "phase": "checks while programming",
+              "start": 115.7,
+              "end": 115.8
+            },
+            {
+              "phase": "checks with firmware",
+              "start": 141.9,
+              "end": 142.4
+            }
+          ]
+        }
+      ],
+      "phases_s": {
+        "unpowered": 17.0,
+        "power": 0.8,
+        "program": 25.0,
+        "during_program": 0.2,
+        "after_program": 0.4,
+        "end": 0.2
+      }
+    },
+    "assembly": {
+      "per_board_s": 326.5,
+      "batch_s": 1306.0,
+      "parts": 14,
+      "joints": 88,
+      "jig_loads": 2,
+      "boards_per_jig": 2
+    },
+    "per_board_s": 362.1,
+    "by_batch_size": [
+      {
+        "boards": 1,
+        "test_per_board_s": 54.3,
+        "assembly_per_board_s": 349.0,
+        "per_board_s": 403.3
+      },
+      {
+        "boards": 2,
+        "test_per_board_s": 41.8,
+        "assembly_per_board_s": 326.5,
+        "per_board_s": 368.3
+      },
+      {
+        "boards": 3,
+        "test_per_board_s": 37.7,
+        "assembly_per_board_s": 334.0,
+        "per_board_s": 371.7
+      },
+      {
+        "boards": 4,
+        "test_per_board_s": 35.6,
+        "assembly_per_board_s": 326.5,
+        "per_board_s": 362.1
+      },
+      {
+        "boards": 5,
+        "test_per_board_s": 34.4,
+        "assembly_per_board_s": 331.0,
+        "per_board_s": 365.4
+      },
+      {
+        "boards": 6,
+        "test_per_board_s": 33.5,
+        "assembly_per_board_s": 326.5,
+        "per_board_s": 360.0
+      },
+      {
+        "boards": 7,
+        "test_per_board_s": 32.9,
+        "assembly_per_board_s": 329.7,
+        "per_board_s": 362.6
+      },
+      {
+        "boards": 8,
+        "test_per_board_s": 32.5,
+        "assembly_per_board_s": 326.5,
+        "per_board_s": 359.0
+      }
+    ],
+    "suggested_batch": 2,
+    "note": "Estimates; set your own durations in 'timing' in pcbtestkit.json. The runner records the real ones in every result file."
+  }
+}

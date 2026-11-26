@@ -17,13 +17,18 @@ Shots, in production order (two-jig workflow, the default):
   pogo    the pogo pins drop into the fixture PCB
   press   the finished board slides over the fixture and lowers onto the pins
 Single-jig workflow: print, load (parts into the jig), slide (PCB onto them) and lift instead of print2 .. lift2.
+Boards with hand-soldered parts on both sides: the jig shots run again for the second side's jig set, with the
+board turned over (shot names get the side, e.g. place2_bottom).
 
 Two stages hold still while things move over them: a thin plate under the jig (jig shots) and the fixture
 PCB (fixture shots). The moving PCB is the DUT exported once as VRML. The hand-soldered parts in the jig
-are placed from the DUT's own 3D models through the same flip that turns the PCB over onto the jig.
+are placed from the DUT's own 3D models through the same flip that turns the PCB over onto the jig. A jig set
+for the bottom side is shown on the board turned over (pcbtestkit.sides.view): its geometry is the top-side
+case, and only the exported DUT is turned with it.
 """
 from __future__ import annotations
 
+import hashlib
 import math
 import os
 import re
@@ -32,7 +37,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from . import kicad_writer as W
+from .kicad_cli import sexpr_path
 from .sexpr import dumps, fmt_num
+from .sides import view
 from .visuals import Renderer, _block_end, cylinder, footprint_spans, hide_models, model_footprint, read_stl
 
 ISO = -38.0                 # camera tilt (deg) used by all shots
@@ -342,6 +349,85 @@ def iron_wrl(tilt_deg: float = 38.0, yaw_deg: float = 35.0) -> str:
     return "".join(out)
 
 
+# test shot: the copper of the nets being tested glows (colour by phase)
+# (strong colours that stand out on green, blue, red, black and white solder mask)
+GLOW = {"unpowered": (1.0, 0.42, 0.0), "power": (1.0, 0.12, 0.08), "program": (1.0, 0.2, 0.95),
+        "during_program": (0.2, 1.0, 0.25), "after_program": (1.0, 0.95, 0.15), "powered": (0.2, 1.0, 0.25)}
+GLOW_MIN_W = 0.6            # half-width (mm) of a lit track at least: thin tracks must still show in a wide shot
+GLOW_PAD_GROW = 0.3         # lit pads grow by this much (mm) all round
+
+
+def glow_wrl(board, nets, col, t: float, side: str = "top", level: float = 1.0, outline: bool = False) -> str:
+    """The copper of ``nets`` on one side (tracks, pads, vias) as thin strips just above the solder mask that give
+    off light, in the exported DUT's frame (origin at the board centre, z = 0 at mid-thickness). outline=True also
+    lights the board's edge, so the board being tested stands out in a wide shot."""
+    nets = set(nets)
+    bb = board.outline_bbox()
+    cx, cy = bb.cx, bb.cy
+    lay = "F.Cu" if side == "top" else "B.Cu"
+    z = (t / 2 + 0.045) * (1 if side == "top" else -1)
+    verts: List[Tuple[float, float, float]] = []
+    faces: List[Tuple[int, ...]] = []
+
+    up = 1.0 if side == "top" else -1.0
+
+    def poly(pts) -> None:
+        # KiCad's ray tracer draws a face only from the side its winding points to: every face points away from
+        # the board, so it shows from above the copper it lights (also once a bottom-up board is turned over)
+        q = [(x - cx, -(y - cy), z) for x, y in pts]
+        area = sum(q[i][0] * q[(i + 1) % len(q)][1] - q[(i + 1) % len(q)][0] * q[i][1] for i in range(len(q)))
+        if area * up < 0:
+            q.reverse()
+        b0 = len(verts)
+        verts.extend(q)
+        faces.append(tuple(range(b0, b0 + len(q))))
+
+    def disk(x: float, y: float, r: float, n: int = 10) -> None:
+        poly([(x + r * math.cos(2 * math.pi * k / n), y + r * math.sin(2 * math.pi * k / n)) for k in range(n)])
+
+    for tr in board.tracks:
+        if tr.net in nets and tr.layer == lay:
+            w = max(GLOW_MIN_W, tr.width / 2)
+            for x1, y1, x2, y2 in tr.segments():
+                L = math.hypot(x2 - x1, y2 - y1)
+                if L < 1e-6:
+                    continue
+                nx, ny = -(y2 - y1) / L * w, (x2 - x1) / L * w
+                poly([(x1 + nx, y1 + ny), (x2 + nx, y2 + ny), (x2 - nx, y2 - ny), (x1 - nx, y1 - ny)])
+                disk(x1, y1, w, 8)
+                disk(x2, y2, w, 8)
+    for fp in board.footprints:
+        for pd in fp.pads:
+            if pd.net in nets and pd.on_copper(side):
+                pts = pd.polygon()
+                mx, my = sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)
+                grown = []
+                for x, y in pts:
+                    d = math.hypot(x - mx, y - my) or 1.0
+                    grown.append((x + (x - mx) / d * GLOW_PAD_GROW, y + (y - my) / d * GLOW_PAD_GROW))
+                poly(grown)
+    for v in board.vias:
+        if v.net in nets:
+            disk(v.x, v.y, v.size / 2)
+    if outline:
+        for sg in board.edge_segs:
+            x1, y1, x2, y2 = sg[0], sg[1], sg[2], sg[3]
+            L = math.hypot(x2 - x1, y2 - y1)
+            if L < 1e-6:
+                continue
+            nx, ny = -(y2 - y1) / L * 0.9, (x2 - x1) / L * 0.9
+            poly([(x1 + nx, y1 + ny), (x2 + nx, y2 + ny), (x2 - nx, y2 - ny), (x1 - nx, y1 - ny)])
+    if not faces:
+        return "#VRML V2.0 utf8\n"
+    pts = ",\n".join("%.4f %.4f %.4f" % (x * _S, y * _S, zz * _S) for x, y, zz in verts)
+    e = [min(1.0, c * level) for c in col]
+    col = [min(1.0, 0.6 * c + 0.4 * level) for c in col]       # a light core: the strip reads as glowing
+    return ("#VRML V2.0 utf8\nShape { appearance Appearance { material Material { diffuseColor %.3f %.3f %.3f "
+            "emissiveColor %.3f %.3f %.3f specularColor 0 0 0 shininess 0.05 } }\n geometry IndexedFaceSet { solid FALSE "
+            "coord Coordinate { point [\n%s ] }\n coordIndex [\n%s ] } }\n" % (col[0], col[1], col[2], e[0], e[1], e[2], pts,
+                                                                          _faces_txt(faces)))
+
+
 # --------------------------------------------------------------------------- #
 # frames and rendering
 # --------------------------------------------------------------------------- #
@@ -380,26 +466,55 @@ def _render_job(rd: Renderer, job: Dict[str, Any], tmp: str, key: str) -> bool:
                 pass
 
 
+class Cancelled(Exception):
+    """The video was cancelled (frames rendered so far are kept and reused by the next run)."""
+
+
+def default_workers() -> int:
+    """Frames rendered at the same time. Each kicad-cli call spends about 0.5 s starting and loading the scene
+    before the (multi-threaded) ray tracer runs, so several at once keep every core busy; more than one per core
+    gains nothing (measured on 8 cores: 1 worker 0.82 s/frame, 4: 0.49, 8: 0.42, 12: 0.43)."""
+    return max(2, min(12, os.cpu_count() or 4))
+
+
 def render_shots(shots: Sequence[Shot], rd: Renderer, workers: int = 0,
-                 progress: Optional[Callable[[int, int], None]] = None) -> Dict[str, Any]:
+                 progress: Optional[Callable[[int, int], None]] = None, resume: bool = False,
+                 cancel: Optional[Any] = None) -> Dict[str, Any]:
+    """Render every frame of ``shots`` with kicad-cli, ``workers`` at a time. resume=True keeps frames already on
+    disk (the caller has checked they belong to the same board and settings). ``cancel`` (anything with is_set())
+    stops it: Cancelled is raised once the frames in progress are done."""
     jobs = [(s, j) for s in shots for j in s.jobs]
     total = len(jobs)
-    workers = workers or max(2, min(8, (os.cpu_count() or 4) - 2))
+    workers = workers or default_workers()
     tmp = os.path.join(rd.scene_dir, "anim_tmp")
     os.makedirs(tmp, exist_ok=True)
     t0 = time.time()
     results = [False] * total
+    todo = []
+    for i, (shot, job) in enumerate(jobs):
+        if resume and os.path.exists(job["png"]) and os.path.getsize(job["png"]) > 0:
+            results[i] = True
+        else:
+            todo.append(i)
+    kept = total - len(todo)
+    if progress and kept:
+        progress(kept, total)
     # Workers only run kicad-cli; progress is reported from this (the caller's) thread, so a GUI progress
     # dialog can be updated safely.
+    stopped = False
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        futs = {ex.submit(_render_job, rd, job, tmp, "f%05d" % i): i for i, (shot, job) in enumerate(jobs)}
+        futs = {ex.submit(_render_job, rd, jobs[i][1], tmp, "f%05d" % i): i for i in todo}
         for k, fut in enumerate(as_completed(futs)):
             try:
                 results[futs[fut]] = bool(fut.result())
             except Exception as exc:  # a failed frame is dropped, the shot still plays
                 rd.log.append("animation: frame failed (%r)" % exc)
             if progress:
-                progress(k + 1, total)
+                progress(kept + k + 1, total)
+            if cancel is not None and cancel.is_set() and not stopped:
+                stopped = True
+                for f in futs:
+                    f.cancel()
     for (shot, job), ok in zip(jobs, results):
         if ok:
             shot.files.append(job["png"])
@@ -407,16 +522,47 @@ def render_shots(shots: Sequence[Shot], rd: Renderer, workers: int = 0,
         os.rmdir(tmp)
     except OSError:
         pass
-    return {"frames": total, "rendered": sum(results), "seconds": round(time.time() - t0, 1), "workers": workers}
+    if stopped:
+        raise Cancelled("cancelled after %d of %d frames" % (sum(results), total))
+    return {"frames": total, "rendered": sum(results) - kept, "kept": kept, "seconds": round(time.time() - t0, 1),
+            "workers": workers}
 
 
 # --------------------------------------------------------------------------- #
 # the stage: everything the shots share
 # --------------------------------------------------------------------------- #
+def later_parts(jig: Optional[Dict[str, Any]], key: Optional[str] = None) -> List[str]:
+    """Hand-soldered parts of the passes after the one of jig ``key`` (default: the top-level jig's own pass):
+    they are not on the board yet while that pass is shown."""
+    passes = (jig or {}).get("passes") or []
+    key = key or (jig or {}).get("key")
+    mine = next((p["pass"] for p in passes if key and p.get("jig") == key), None)
+    if mine is None:
+        return []
+    return [r for p in passes if p.get("process") == "hand" and p["pass"] > mine for r in (p.get("parts") or [])]
+
+
+def later_jig_sets(jig: Optional[Dict[str, Any]]) -> List[Tuple[Dict[str, Any], Dict[str, Any]]]:
+    """(pass, jig) of every hand-solder pass after the first, in assembly order (boards with parts on both sides)."""
+    out = []
+    for p in (jig or {}).get("passes") or []:
+        key = p.get("jig")
+        if p.get("process") == "hand" and key and key != jig.get("key"):
+            ej = (jig.get("extra") or {}).get(key)
+            if ej:
+                out.append((p, ej))
+    return out
+
+
 class Stage:
+    """Everything the shots share. The jig shots see the board with the jig's side up: ``self.vb`` / ``self.vbb``
+    are the board as the jig sees it (turned over for a bottom-side jig set), ``self.b`` / ``self.bb`` the real one
+    (board and fixture shots, the exported DUT). ``tag`` is added to the shot's file names (a second jig set);
+    ``later`` are parts fitted in later passes, left off the board in the jig shots."""
+
     def __init__(self, design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]], jig: Optional[Dict[str, Any]],
                  paths: Dict[str, str], rd: Renderer, out_dir: str, fps: float = 30.0, size: Tuple[int, int] = (1280, 720),
-                 quality: str = "basic"):
+                 quality: str = "basic", tag: str = "", later: Optional[Sequence[str]] = None):
         self.design, self.plan, self.fixture, self.jig, self.paths, self.rd = design, plan, fixture, jig, paths, rd
         self.out = out_dir
         os.makedirs(out_dir, exist_ok=True)
@@ -425,11 +571,18 @@ class Stage:
         self.b, self.bb, self.t = b, b.outline_bbox(), float(b.thickness)
         self.proj = os.path.dirname(os.path.abspath(b.path))
         with open(b.path, "r", encoding="utf-8") as fh:
-            self.dut_text = fh.read().replace("${KIPRJMOD}", self.proj)
+            self.dut_text = fh.read().replace("${KIPRJMOD}", sexpr_path(self.proj))
         self.big = max(self.bb.w, self.bb.h)
         self.log: List[str] = []
+        self.side = "bottom" if str((jig or {}).get("side") or "top") == "bottom" else "top"
+        self.flipped = self.side == "bottom"
+        self.vb = view(design, self.side).board
+        self.vbb = self.vb.outline_bbox()
+        self.tag = tag
         parts = (jig or {}).get("parts_to_place") or []
-        self.jig_parts = [r for r in parts if r in b.by_ref and b.by_ref[r].side == "top" and self._models(b.by_ref[r])]
+        vb = self.vb
+        self.jig_parts = [r for r in parts if r in vb.by_ref and vb.by_ref[r].side == "top" and self._models(vb.by_ref[r])]
+        self.later = [r for r in (later_parts(jig) if later is None else later) if r not in self.jig_parts]
         self._wrl: Dict[str, Optional[str]] = {}
 
     # -- helpers ---------------------------------------------------------------
@@ -450,14 +603,32 @@ class Stage:
         return max(2, int(round(seconds * self.fps)))
 
     def png(self, shot: str, i: int) -> str:
-        return os.path.join(self.out, "%s_%04d.png" % (shot, i))
+        return os.path.join(self.out, "%s%s_%04d.png" % (shot, self.tag, i))
+
+    def scene_file(self, name: str) -> str:
+        """A file shared by the frames of this stage's shots (``tag`` keeps two jig sets apart)."""
+        return os.path.join(self.rd.scene_dir, "%s%s.wrl" % (name, self.tag))
+
+    def bare_wrl(self) -> Optional[str]:
+        """The board as it comes to this jig: without the parts the jig holds and those of later passes."""
+        return self.dut_wrl(list(self.jig_parts) + list(self.later))
+
+    def done_wrl(self) -> Optional[str]:
+        """The board once this pass is soldered (later passes' parts still missing)."""
+        return self.dut_wrl(self.later) if self.later else self.dut_wrl()
+
+    def dut_xf(self) -> "Xf":
+        """D <- the exported DUT model (origin at mid-thickness, real top side up). For a bottom-side jig set D is
+        the board turned over, so the model turns with it."""
+        xf = Xf.T(0, 0, -self.t / 2)
+        return xf * Xf.Rx(math.pi) if self.flipped else xf
 
     def dut_wrl(self, without: Sequence[str] = ()) -> Optional[str]:
         """The DUT exported as VRML (origin = board centre, z = 0 at mid-thickness), optionally without some parts."""
         key = ",".join(sorted(without))
         if key in self._wrl:
             return self._wrl[key]
-        name = "anim_dut_bare" if without else "anim_dut"
+        name = ("anim_dut_" + hashlib.sha1(key.encode()).hexdigest()[:10]) if without else "anim_dut"
         wrl = os.path.join(self.rd.scene_dir, name + ".wrl")
         done = os.path.join(self.rd.scene_dir, "dut.wrl")          # written by visuals.build_visuals
         if without or not os.path.exists(done):
@@ -486,13 +657,13 @@ class Stage:
         jig = self.jig
         mesh = self._render_meshes()[0]
         x0, y0, _, _ = jig["board_bbox_in_jig_mm"]
-        ox, oy = self.bb.x0 - x0, self.bb.y0 - y0
+        ox, oy = self.vbb.x0 - x0, self.vbb.y0 - y0
         jx0, jy0, jx1, jy1 = mesh.bbox
         # the plate sits just inside the jig footprint, so it frames the camera without being seen
         plate = [W.gr_rect(ox + jx0 + 1.0, oy - jy1 + 1.0, ox + jx1 - 1.0, oy - jy0 - 1.0)]
         text = W.board([], plate, thickness=0.2)
         end = text.rstrip().rfind(")")
-        self._jig_wrl = os.path.join(self.rd.scene_dir, "anim_jig.wrl")
+        self._jig_wrl = self.scene_file("anim_jig")
         with open(self._jig_wrl, "w", encoding="ascii") as fh:
             fh.write(mesh.wrl())
         self._jig_stage = (text[:end], text[end:], ox, oy, mesh)
@@ -511,9 +682,12 @@ class Stage:
         items = [model_footprint("JIG", ox, oy, wrl)]
         support = float(self.jig["support_height_mm"])
         if dut:
-            items.append(model_footprint("DUT", self.bb.cx + dut.get("dx", 0.0), 2 * oy - self.bb.cy, dut["wrl"],
+            rx = dut.get("rx", 180.0)                   # 180: the jig's side faces down
+            if self.flipped:                            # the exported DUT is the real board: bottom side down = 0
+                rx = (rx + 180.0) % 360.0
+            items.append(model_footprint("DUT", self.vbb.cx + dut.get("dx", 0.0), 2 * oy - self.vbb.cy, dut["wrl"],
                                          offset=(0.0, 0.0, support + self.t / 2 + dut.get("lift", 0.0)),
-                                         rotate=(dut.get("rx", 180.0), 0.0, 0.0)))
+                                         rotate=(rx, 0.0, 0.0)))
         body = ["\t" + dumps(it, 1).lstrip() + "\n" for it in items]
         for ref, lift in (parts_lift or {}).items():
             body += [t.replace(_ZMARK, "%.4f" % (z0 + support + lift)) for t, z0 in self.part_in_jig(ref, oy)]
@@ -529,7 +703,7 @@ class Stage:
         cache = self.__dict__.setdefault("_part_txt", {})
         if ref in cache:
             return cache[ref]
-        fp = self.b.by_ref[ref]
+        fp = self.vb.by_ref[ref]
         out = []
         for k, m in enumerate(self._models(fp)):
             rot = kicad_angles(_mul(FLIP_X, kicad_rotation(m.rotate)))
@@ -552,7 +726,7 @@ class Stage:
         return s
 
     def machine_parts(self) -> List[Any]:
-        jp = set(self.jig_parts)
+        jp = set(self.jig_parts) | set(self.later)
         fps = [fp for fp in self.b.footprints if fp.ref and fp.side == "top" and fp.ref not in jp and self._models(fp)]
         fps.sort(key=lambda fp: (round((fp.y - self.bb.y0) / max(8.0, self.bb.h / 6)), fp.x))
         return fps
@@ -561,13 +735,13 @@ class Stage:
         parts = self.machine_parts()
         if not parts:
             return None
-        tpl = Template(self.dut_text, [fp.ref for fp in parts] + self.jig_parts)
+        tpl = Template(self.dut_text, [fp.ref for fp in parts] + self.jig_parts + self.later)
         s = Shot("place", self.fps, hold=0.8)
         s.meta = {"parts": [fp.ref for fp in parts], "smd": sum(1 for fp in parts if "smd" in fp.attrs)}
         n = self.n(min(5.0, 2.5 + 0.035 * len(parts)))
         hmax = max(15.0, min(60.0, 0.35 * self.big))
         span = min(0.45, max(0.12, 6.0 / max(1, len(parts))))
-        hidden = {r: (0.0, True) for r in self.jig_parts}
+        hidden = {r: (0.0, True) for r in self.jig_parts + self.later}
         for i in range(n):
             t = i / float(n - 1)
             edits = dict(hidden)
@@ -610,7 +784,7 @@ class Stage:
         if not self._jig_ok() or not self.jig_parts:
             return None
         s = Shot("load", self.fps, hold=0.6)
-        parts = sorted(self.jig_parts, key=lambda r: (self.b.by_ref[r].x, self.b.by_ref[r].y))
+        parts = sorted(self.jig_parts, key=lambda r: (self.vb.by_ref[r].x, self.vb.by_ref[r].y))
         s.meta = {"parts": parts}
         n = self.n(min(4.5, 2.5 + 0.03 * len(parts)))
         hmax = max(20.0, min(50.0, 0.3 * self.big))
@@ -629,7 +803,7 @@ class Stage:
     def shot_slide(self, seconds: float = 3.6) -> Optional[Shot]:
         if not self._jig_ok():
             return None
-        wrl = self.dut_wrl(self.jig_parts)
+        wrl = self.bare_wrl()
         if not wrl:
             return None
         s = Shot("slide", self.fps, hold=1.2)
@@ -648,7 +822,7 @@ class Stage:
     def shot_lift(self, seconds: float = 3.2) -> Optional[Shot]:
         if not self._jig_ok():
             return None
-        wrl = self.dut_wrl()
+        wrl = self.done_wrl()
         if not wrl:
             return None
         s = Shot("lift", self.fps, hold=1.0)
@@ -680,7 +854,7 @@ class Stage:
         if getattr(self, "_two", None) is not None:
             return self._two
         jig, pj = self.jig, self.jig["placement"]
-        bb, t = self.bb, self.t
+        bb, t = self.vbb, self.t
         cx, cy = bb.cx, bb.cy
         x0b, y0b = jig["board_bbox_in_jig_mm"][0], jig["board_bbox_in_jig_mm"][1]
         oxb, oyb = bb.x0 - x0b, bb.y0 - y0b                          # holding jig: X = bx - oxb, Y = by - oyb
@@ -689,10 +863,14 @@ class Stage:
         B_D = Xf.T(cx - oxb, cy - oyb, support) * Xf.Rx(math.pi)     # D -> holding jig frame (PCB top down)
         A_D = Xf.T(cx - axa, aya - cy, rest + t)                    # D -> placement jig frame (PCB top up)
         final = B_D                                                 # world == holding jig frame
-        up = Xf.T(final.t[0], final.t[1], rest + t)                  # PCB top up, placement jig on the bench
+        # PCB top up, placement jig on the bench. A batch turns over about its middle (c, in D of the first board),
+        # so the placement jig before and the holding jig after lie on the same spot; c = 0 for a single board.
+        offs = [o.t for o in self.boards()]
+        c = (sum(o[0] for o in offs) / len(offs), sum(o[1] for o in offs) / len(offs), 0.0)
+        fc = final.apply(c)
+        up = Xf.T(fc[0] - c[0], fc[1] - c[1], rest + t)
         mesh_b, mesh_a = self._render_meshes()
-        sd = self.rd.scene_dir
-        wa, wb = os.path.join(sd, "anim_jig_place.wrl"), os.path.join(sd, "anim_jig_hold.wrl")
+        wa, wb = self.scene_file("anim_jig_place"), self.scene_file("anim_jig_hold")
         for path, m in ((wa, mesh_a), (wb, mesh_b)):
             with open(path, "w", encoding="ascii") as fh:
                 fh.write(m.wrl())
@@ -707,22 +885,22 @@ class Stage:
         # parts in D, solder joints, iron
         parts = []
         for ref in self.jig_parts:
-            fp = self.b.by_ref[ref]
+            fp = self.vb.by_ref[ref]
             for k, m in enumerate(self._models(fp)):
                 xf = Xf.T(fp.x - cx, -(fp.y - cy), 0.0) * Xf.Rz(math.radians(fp.angle)) * \
                     Xf.T(*m.offset) * Xf(kicad_rotation(m.rotate))
                 parts.append(("P_%s_%d" % (ref, k), m.path.replace("${KIPRJMOD}", self.proj), xf, tuple(m.scale), ref))
         pads = []
         for ref in self.jig_parts:
-            for pd in self.b.by_ref[ref].pads:
+            for pd in self.vb.by_ref[ref].pads:
                 if pd.drill_w > 0 and pd.has_copper:
                     r = max(0.5, min(1.6, 0.85 * max(pd.w, pd.h) / 2.0))
                     pads.append((pd.x - cx, -(pd.y - cy), r))
         pads.sort(key=lambda p: (round(-p[1] / 6.0), p[0] if int(round(-p[1] / 6.0)) % 2 == 0 else -p[0]))
-        iron = os.path.join(sd, "anim_iron.wrl")
+        iron = self.scene_file("anim_iron")
         with open(iron, "w", encoding="ascii") as fh:
             fh.write(iron_wrl())
-        joints_all = os.path.join(sd, "anim_joints.wrl")
+        joints_all = self.scene_file("anim_joints")
         with open(joints_all, "w", encoding="ascii") as fh:
             fh.write(joints_wrl(pads, t))
         self._two = {"B_D": B_D, "A_D": A_D, "final": final, "up": up, "wa": wa, "wb": wb, "mesh_a": mesh_a, "mesh_b": mesh_b,
@@ -731,8 +909,8 @@ class Stage:
         return self._two
 
     def _render_meshes(self):
-        """Both jigs as light render meshes, rebuilt from the same design at 0.5 mm (invisible at video size);
-        falls back to the printed STLs."""
+        """Both jigs of this stage's side as light render meshes, rebuilt from the same design at 0.5 mm (invisible
+        at video size); falls back to the printed STLs."""
         from .jig import build_jigs
         jc = self.design.cfg["jig"]
         old = jc.get("resolution_mm")
@@ -740,8 +918,9 @@ class Stage:
             jc["resolution_mm"] = max(0.5, float(old or 0.25))
             grids: Dict[str, Dict[str, Any]] = {}
             build_jigs(self.design, grids=grids)
-            hold = JigMesh.from_grid(grids["holding"])
-            place_ = JigMesh.from_grid(grids["placement"]) if grids.get("placement", {}).get("H") else None
+            g = grids.get(self.side) or grids                   # this jig set's side ("holding" = the first pass)
+            hold = JigMesh.from_grid(g["holding"])
+            place_ = JigMesh.from_grid(g["placement"]) if g.get("placement", {}).get("H") else None
         except Exception as exc:  # pragma: no cover - the STLs always work
             self.log.append("animation: render meshes failed (%r); using the STLs" % exc)
             hold, place_ = JigMesh(self.paths["jig_stl"]), None
@@ -755,28 +934,41 @@ class Stage:
         head, close = plate or self.two()["plate"]
         return head + "".join("\t" + dumps(it, 1).lstrip() + "\n" for it in items) + close
 
+    def boards(self) -> List[Xf]:
+        """D0 <- Dk for every board of a batch the jigs hold (board k is shifted by its jig offset; the jigs are
+        tiled so that all of them close over every board). One identity for a single board."""
+        j = self.jig or {}
+        # the first pass's holding jig keeps the batch summary; the offsets are the same in its placement jig
+        offs = (j.get("batch") or {}).get("board_offsets_mm") or \
+            ((j.get("placement") or {}).get("batch") or {}).get("board_offsets_mm") or [[0.0, 0.0]]
+        return [Xf.T(float(o[0]), -float(o[1]), 0.0) for o in offs]
+
     def stack_items(self, pose: Xf, a: Optional[Xf] = None, b: Optional[Xf] = None, parts_lift: Optional[Dict[str, float]] = None,
                     pcb_lift: float = 0.0, pcb: bool = True, parts: bool = True, seated: bool = False) -> List[list]:
-        """Everything that rides with the PCB at pose (world <- D); a/b = extra world motion of each jig
-        (None = jig not shown). seated=True: the parts sit on the PCB, so the whole assembled board is one
-        exported model (one file for KiCad to load instead of the bare board plus every part model)."""
+        """Everything that rides with the PCB(s) at pose (world <- D of the first board); a/b = extra world motion of
+        each jig (None = jig not shown). seated=True: the parts sit on the PCB, so the whole assembled board is one
+        exported model (one file for KiCad to load instead of the bare board plus every part model). Every board
+        of a batch the jigs hold rides along."""
         tw = self.two()
         items = []
         if a is not None:
             items.append(place("JIG_A", tw["wa"], a * pose * tw["A_D"].inv()))
         if b is not None:
             items.append(place("JIG_B", tw["wb"], b * pose * tw["B_D"].inv()))
-        if seated and self.dut_wrl():
-            items.append(place("DUT", self.dut_wrl() or "", pose * Xf.T(0, 0, -self.t / 2)))
-            return items
-        if pcb:
-            items.append(place("DUT", self.dut_wrl(self.jig_parts) or "", Xf.T(0, 0, pcb_lift) * pose * Xf.T(0, 0, -self.t / 2)))
-        if parts:
-            for name, path, xf, scale, ref in tw["parts"]:
-                lift = (parts_lift or {}).get(ref, 0.0)
-                if lift is None:
-                    continue
-                items.append(place(name, path, Xf.T(0, 0, lift) * pose * xf, scale))
+        for k, off in enumerate(self.boards()):
+            sfx = "" if k == 0 else "_%d" % (k + 1)
+            pk = pose * off
+            if seated and self.done_wrl():
+                items.append(place("DUT" + sfx, self.done_wrl() or "", pk * self.dut_xf()))
+                continue
+            if pcb:
+                items.append(place("DUT" + sfx, self.bare_wrl() or "", Xf.T(0, 0, pcb_lift) * pk * self.dut_xf()))
+            if parts:
+                for name, path, xf, scale, ref in tw["parts"]:
+                    lift = (parts_lift or {}).get(ref, 0.0)
+                    if lift is None:
+                        continue
+                    items.append(place(name + sfx, path, Xf.T(0, 0, lift) * pk * xf, scale))
         return items
 
     def _print2_layout(self):
@@ -799,7 +991,7 @@ class Stage:
     def step_stills(self) -> Optional[Shot]:
         """One still per step of the two-jig workflow for the production guide, from the same scenes as the video:
         jig2_print, jig2_fit, jig2_cover, jig2_unload and jig2_solder (PNG names in ``self.out``)."""
-        if not self.two_ok() or not self.dut_wrl(self.jig_parts):
+        if not self.two_ok() or not self.bare_wrl():
             return None
         tw = self.two()
         s = Shot("steps", self.fps)
@@ -872,10 +1064,10 @@ class Stage:
         return s
 
     def shot_place2(self) -> Optional[Shot]:
-        if not self.two_ok() or not self.dut_wrl(self.jig_parts):
+        if not self.two_ok() or not self.bare_wrl():
             return None
         tw = self.two()
-        parts = sorted(self.jig_parts, key=lambda r: (self.b.by_ref[r].x, self.b.by_ref[r].y))
+        parts = sorted(self.jig_parts, key=lambda r: (self.vb.by_ref[r].x, self.vb.by_ref[r].y))
         s = Shot("place2", self.fps, hold=0.6)
         s.meta = {"parts": parts}
         n = self.n(min(4.5, 3.0 + 0.025 * len(parts)))
@@ -913,9 +1105,10 @@ class Stage:
         tw = self.two()
         u, f = tw["up"].t, tw["final"].t
         # bounding corners of the whole stack in D, to keep it off the bench while it turns
-        half = tw["stack"][0] / 2.0 + 2.0
+        ys = [o.t[1] for o in self.boards()]
+        half = (tw["stack"][0] - (max(ys) - min(ys))) / 2.0 + 2.0
         zlo, zhi = -(tw["rest"] + self.t), tw["support"] + 2.0
-        corners = [(0.0, y, z) for y in (-half, half) for z in (zlo, zhi)]
+        corners = [(0.0, y, z) for y in (min(ys) - half, max(ys) + half) for z in (zlo, zhi)]
         s = Shot("flip", self.fps, hold=0.4)
         n = self.n(seconds)
         for i in range(n):
@@ -991,7 +1184,8 @@ class Stage:
                 if sub:
                     path = prefix + "_joints.wrl"
                     files[path] = joints_wrl(sub, self.t)
-                    items.append(place("JOINTS", path, tw["final"]))
+                    for k, off in enumerate(self.boards()):
+                        items.append(place("JOINTS" + ("" if k == 0 else "_%d" % (k + 1)), path, tw["final"] * off))
                 items.append(place("IRON", tw["iron"], Xf.T(*tip)))
                 return self.scene2(items), files
             s.add(self.png("solder", i), self.cam(30 + 6 * smooth(t), zoom=0.95), make=make)
@@ -1000,24 +1194,26 @@ class Stage:
     def shot_lift2(self, seconds: float = 3.2) -> Optional[Shot]:
         if not self.two_ok():
             return None
-        wrl = self.dut_wrl()
+        wrl = self.done_wrl()
         if not wrl:
             return None
         tw = self.two()
         s = Shot("lift2", self.fps, hold=1.0)
         n = self.n(seconds)
         top = self.bb.h / 2 + 8.0
-        mid = tw["final"].apply((0.0, 0.0, -self.t / 2))
         mb = tw["mesh_b"].bbox
         reach = tw["support"] + top + self.bb.h / 2
         zoom = 0.72 * min(1.0, 0.7 * max(mb[2] - mb[0], mb[3] - mb[1]) / max(1.0, reach))
+        mids = [(tw["final"] * off).apply((0.0, 0.0, -self.t / 2)) for off in self.boards()]
         for i in range(n):
             t = i / float(n - 1)
             up_, turn = smooth(phase(t, 0.0, 0.45)), smooth(phase(t, 0.35, 0.95))
-            pose = Xf.T(mid[0], mid[1], mid[2] + top * up_) * Xf.Rx(math.pi * (1 - turn)) * Xf.T(0, 0, self.t / 2)
             follow = 0.5 * reach * smooth(phase(t, 0.05, 0.6))
-            items = [place("JIG_B", tw["wb"], Xf()), place("DUT", wrl, pose * Xf.T(0, 0, -self.t / 2)),
-                     place("JOINTS", tw["joints"], pose)]
+            items = [place("JIG_B", tw["wb"], Xf())]
+            for k, m in enumerate(mids):
+                sfx = "" if k == 0 else "_%d" % (k + 1)
+                pose = Xf.T(m[0], m[1], m[2] + top * up_) * Xf.Rx(math.pi * (1 - turn)) * Xf.T(0, 0, self.t / 2)
+                items += [place("DUT" + sfx, wrl, pose * self.dut_xf()), place("JOINTS" + sfx, tw["joints"], pose)]
             s.add(self.png("lift2", i), self.cam(32 + 10 * smooth(t), zoom=zoom, rise=follow),
                   make=lambda prefix, it=items: (self.scene2(it), {}))
         return s
@@ -1030,7 +1226,7 @@ class Stage:
         if getattr(self, "_fx_tpl", None) is None:
             path = self.paths["fixture"]
             with open(path, "r", encoding="utf-8") as fh:
-                text = fh.read().replace("${KIPRJMOD}", os.path.dirname(os.path.abspath(path)))
+                text = fh.read().replace("${KIPRJMOD}", sexpr_path(os.path.dirname(os.path.abspath(path))))
             pogo = [ref for s_, e_, ref in footprint_spans(text) if re.search(r'\(model\s+"[^"]*pogo', text[s_:e_])]
             self._fx_tpl = Template(text, pogo)
         return self._fx_tpl
@@ -1068,6 +1264,123 @@ class Stage:
                   make=lambda prefix, e=edits: (tpl.text(e), {}))
         return s
 
+    def test_events(self) -> List[Dict[str, Any]]:
+        """The runner's batch flow as a timeline: what is tested on which board, with the nets that light up. While
+        the boards are programmed, the programming nets of every board glow underneath the checks of each board."""
+        plan = self.plan
+        sites = [int(st["site"]) for st in (self.fixture or {}).get("sites") or []] or [1]
+        main_gnd = plan.get("main_ground")
+        by: Dict[str, List[Dict[str, Any]]] = {}
+        for st in plan.get("sequence") or []:
+            by.setdefault(st.get("phase") or "powered", []).append(st)
+
+        def nets_of(sts) -> List[str]:
+            out: List[str] = []
+            for st in sts:
+                if st.get("type") == "power" and st.get("action") != "off":
+                    out += [(plan.get("supply") or {}).get("net") or ""]
+                elif st.get("type") == "program":
+                    out += [p["net"] for h in (plan.get("program") or {}).get("headers") or [] for p in h.get("pins") or []
+                            if p.get("net")]
+                elif st.get("type") == "bus":
+                    out += list((st.get("signals") or {}).values())
+                for c in st.get("checks") or []:
+                    if c.get("net"):
+                        out.append(c["net"])
+            grounds = set(self.design.nets_of_kind("ground"))      # the reference, not what is tested
+            return sorted({n for n in out if n and n not in grounds})
+
+        def ids(sts) -> List[str]:
+            return [st["id"] for st in sts]
+        ev: List[Dict[str, Any]] = []
+        for k in sites:
+            sts = [st for st in by.get("unpowered") or [] if st.get("type") == "resistance"]
+            if sts:
+                ev.append({"phase": "unpowered", "sites": [k], "steps": ids(sts), "nets": nets_of(sts), "seconds": 0.7,
+                           "label": "Board %d: short check, unpowered" % k})
+        for k in sites:
+            if by.get("power"):
+                ev.append({"phase": "power", "sites": [k], "steps": ids(by["power"]), "nets": nets_of(by["power"]),
+                           "seconds": 0.6, "label": "Board %d: power up, supply voltage and current" % k})
+        prog = by.get("program") or []
+        under = {"phase": "program", "sites": sites, "nets": nets_of(prog)} if prog else None
+        during = by.get("during_program") or []
+        if prog and not during:
+            ev.append({"phase": "program", "sites": sites, "steps": ids(prog), "nets": nets_of(prog), "seconds": 2.4,
+                       "label": "Programming all %d boards at the same time" % len(sites)})
+        for k in sites:
+            if during:
+                ev.append({"phase": "during_program", "sites": [k], "steps": ids(during), "nets": nets_of(during),
+                           "seconds": max(0.8, 2.4 / len(sites)), "under": under,
+                           "label": ("Board %d: checks that need no firmware, while all boards are programmed" % k) if prog
+                           else "Board %d: rail and signal levels" % k})
+        for k in sites:
+            sts = (by.get("after_program") or []) + (by.get("powered") or [])
+            if sts:
+                ev.append({"phase": "after_program" if prog else "powered", "sites": [k], "steps": ids(sts),
+                           "nets": nets_of(sts), "seconds": 0.9,
+                           "label": "Board %d: checks with the firmware running" % k if prog else "Board %d: checks" % k})
+        return ev
+
+    def shot_test(self) -> Optional[Shot]:
+        """The boards on the fixture while the runner tests the batch: the copper of what is measured lights up,
+        board by board, the programming nets of every board while they are programmed (meta: the timeline)."""
+        if not self._fixture_ok():
+            return None
+        wrl = self.dut_wrl()
+        if not wrl:
+            return None
+        events = self.test_events()
+        if not events:
+            return None
+        from .testplan import fixture_side
+        side = "bottom" if fixture_side(self.plan) == "top" else "top"
+        rotate = (0.0, 180.0, 0.0) if side == "bottom" else (0.0, 0.0, 0.0)
+        clear = float(self.plan["pogo"].get("probe_clearance_mm", 6.0))
+        offsets = {int(st["site"]): st["offset"] for st in self.fixture.get("sites") or [{"site": 1, "offset": [0.0, 0.0]}]}
+        cache: Dict[str, str] = {}
+
+        def glow(nets, phase, level) -> str:
+            key = "%s|%s|%.1f" % (",".join(nets), phase, level)
+            if key not in cache:
+                path = self.scene_file("anim_glow_%s" % hashlib.sha1(key.encode()).hexdigest()[:10])
+                with open(path, "w", encoding="ascii", errors="replace") as fh:
+                    fh.write(glow_wrl(self.b, nets, GLOW.get(phase, (1, 1, 1)), self.t, side, level, outline=True))
+                cache[key] = path
+            return cache[key]
+
+        def glows(k, nets, phase, level, tag) -> list:
+            ddx, ddy = offsets.get(k, [0.0, 0.0])
+            return [model_footprint("GLOW_%s_%d" % (tag, k), self.bb.cx + ddx, self.bb.cy + ddy, glow(nets, phase, level),
+                                    offset=(0.0, 0.0, clear + self.t / 2), rotate=rotate)]
+        tpl = self.fixture_template()
+        seated = self.fixture_duts(wrl, 0.0)
+        # kicad-cli's pan is in centimetres; about 0.013 of the fixture's width moves it a seventh of the frame left
+        pan_x = -0.013 * float(((self.fixture or {}).get("outline") or {}).get("width") or 4.0 * self.bb.w)
+        s = Shot("test", self.fps, hold=1.2)
+        total = sum(self.n(e["seconds"]) for e in events)
+        f = 0
+        meta = []
+        for e in events:
+            n = self.n(e["seconds"])
+            meta.append({"label": e["label"], "phase": e["phase"], "sites": e["sites"], "steps": e.get("steps", []),
+                         "f0": f, "f1": f + n - 1, "under": bool(e.get("under"))})
+            for i in range(n):
+                lvl = round(0.75 + 0.25 * math.sin(math.pi * i / max(1, n - 1)), 1)
+                items = list(seated)
+                if e.get("under"):
+                    for k in e["under"]["sites"]:
+                        items += glows(k, e["under"]["nets"], "program", round(0.5 + 0.3 * lvl, 1), "P")
+                for k in e["sites"]:
+                    items += glows(k, e["nets"], e["phase"], lvl, "E")
+                g = (f + i) / float(max(1, total - 1))
+                cam = self.cam(22 + 26 * smooth(g), zoom=0.95, tilt=ISO - 14)
+                cam["pan"] = "%.3f,0,0" % pan_x          # the runner's output covers the right of the frame
+                s.add(self.png("test", f + i), cam, make=lambda prefix, it=items: (tpl.text(None, it), {}))
+            f += n
+        s.meta = {"events": meta, "sites": len(offsets)}
+        return s
+
     def shot_press(self, seconds: float = 3.6) -> Optional[Shot]:
         if not self._fixture_ok():
             return None
@@ -1088,15 +1401,22 @@ class Stage:
         return s
 
 
-SHOTS = ("orbit", "place", "print", "load", "slide", "lift", "pogo", "press")              # single-jig workflow
-SHOTS_TWO_JIG = ("orbit", "place", "print2", "place2", "cover", "flip", "unload", "solder", "lift2", "pogo", "press")
+ANIM_REV = 2               # bumped when the shots change: frames kept from an older run are rendered again
+SHOTS = ("orbit", "place", "print", "load", "slide", "lift", "pogo", "press", "test")      # single-jig workflow
+SHOTS_TWO_JIG = ("orbit", "place", "print2", "place2", "cover", "flip", "unload", "solder", "lift2", "pogo", "press",
+                 "test")
+JIG_SHOTS = ("print", "load", "slide", "lift")                    # a later jig set (named <shot>_<side>)
+JIG_SHOTS_TWO_JIG = ("print2", "place2", "cover", "flip", "unload", "solder", "lift2")
 
 
 def build_shots(design, plan, fixture, jig, paths, visuals_dir: str, fps: float = 30.0, size=(1280, 720),
-                quality: str = "basic", workers: int = 0, only: Optional[Sequence[str]] = None,
-                progress: Optional[Callable[[int, int], None]] = None) -> Dict[str, Any]:
+                quality: str = "standard", workers: int = 0, only: Optional[Sequence[str]] = None,
+                progress: Optional[Callable[[int, int], None]] = None, resume: bool = False,
+                cancel: Optional[Any] = None) -> Dict[str, Any]:
     """Render every shot that applies to this board into <visuals_dir>/scenes/anim.
 
+    The first hand-solder pass's jig set gets the plain shot names; every later pass (hand-soldered parts on the
+    other side) gets the jig shots again as <shot>_<side>, e.g. "place2_bottom".
     Returns {"shots": {name: {"images", "fps", "hold", "meta"}}, "stats", "log"}.
     """
     rd = Renderer(visuals_dir, size[0], size[1], quality=quality)
@@ -1104,20 +1424,34 @@ def build_shots(design, plan, fixture, jig, paths, visuals_dir: str, fps: float 
     if not rd.available:
         rd.log.append("animation: kicad-cli not found")
         return res
-    st = Stage(design, plan, fixture, jig, paths, rd, os.path.join(rd.scene_dir, "anim"), fps, size, quality)
-    shots: List[Shot] = []
+    anim_dir = os.path.join(rd.scene_dir, "anim")
+    st = Stage(design, plan, fixture, jig, paths, rd, anim_dir, fps, size, quality)
     two = str((jig or {}).get("workflow", "")) == "two_jig" and st.two_ok()
-    for name in (only or (SHOTS_TWO_JIG if two else SHOTS)):
+    todo = [(st, name, name) for name in (only or (SHOTS_TWO_JIG if two else SHOTS))]
+    stages = [st]
+    for p, ej in later_jig_sets(jig):
+        key = p["jig"]
+        ep = dict(paths, jig_stl=paths.get("jig_%s_stl" % key), jig_place_stl=paths.get("jig_%s_place_stl" % key))
+        est = Stage(design, plan, fixture, ej, ep, rd, anim_dir, fps, size, quality, tag="_" + p["side"],
+                    later=later_parts(jig, key))
+        stages.append(est)
+        etwo = str(ej.get("workflow", "")) == "two_jig" and est.two_ok()
+        for name in (JIG_SHOTS_TWO_JIG if etwo else JIG_SHOTS):
+            if only is None or name + est.tag in only:
+                todo.append((est, name, name + est.tag))
+    shots: List[Shot] = []
+    for stage, name, key in todo:
         try:
-            sh = getattr(st, "shot_" + name)()
+            sh = getattr(stage, "shot_" + name)()
         except Exception as exc:  # one broken shot must not cost the whole video
-            st.log.append("animation: shot %s skipped (%r)" % (name, exc))
+            stage.log.append("animation: shot %s skipped (%r)" % (key, exc))
             sh = None
         if sh is not None and sh.jobs:
+            sh.name = key
             shots.append(sh)
-    res["stats"] = render_shots(shots, rd, workers, progress)
+    res["stats"] = render_shots(shots, rd, workers, progress, resume=resume, cancel=cancel)
     for sh in shots:
         if sh.files:
             res["shots"][sh.name] = {"images": sh.files, "fps": sh.fps, "hold": sh.hold, "meta": sh.meta}
-    res["log"] = rd.log + st.log
+    res["log"] = rd.log + [line for stage in stages for line in stage.log]
     return res

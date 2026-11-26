@@ -102,12 +102,20 @@ class MainDialog(wx.Dialog):
                   ("fixture", "Pogo-pin fixture board (.kicad_pcb)"), ("jig", "Solder jig (STL + OpenSCAD)"),
                   ("report", "HTML report"), ("runner", "Raspberry Pi / MCU test runner bundle"),
                   ("guide", "Visual usage guide (HTML)"), ("visuals", "3D renders in the guide (about a minute)"),
-                  ("video", "Explainer video MP4 with 3D animation (needs ffmpeg, about 10 minutes)")]
+                  ("video", "Explainer video MP4 with 3D animation (needs ffmpeg; renders in the background)")]
         for k, lab in labels:
             cb = wx.CheckBox(p, label=lab)
             cb.SetValue(bool(cfg["outputs"].get(k, True)))
             box.Add(cb, 0, wx.ALL, 3)
             self.outs[k] = cb
+        # how much ray tracing the video's 3D animation gets (seconds per frame on an 8-core laptop)
+        self.vq_opts = [("basic", "Video: basic (flat, fastest)"), ("standard", "Video: standard ray tracing (shadows)"),
+                        ("best", "Video: best (adds anti-aliasing, 2x slower)"), ("high", "Video: KiCad high (6x slower)")]
+        self.video_quality = wx.Choice(p, choices=[lab for _, lab in self.vq_opts])
+        vq = str((cfg.get("video") or {}).get("quality") or "standard")
+        keys = [k for k, _ in self.vq_opts]
+        self.video_quality.SetSelection(keys.index(vq) if vq in keys else 1)
+        box.Add(self.video_quality, 0, wx.LEFT | wx.BOTTOM, 24)
         self.kicad_checks = wx.CheckBox(p, label="Include KiCad DRC / ERC (kicad-cli)")
         self.kicad_checks.SetValue(bool(cfg["analysis"].get("run_kicad_drc", True)))
         box.Add(self.kicad_checks, 0, wx.ALL, 3)
@@ -160,6 +168,20 @@ class MainDialog(wx.Dialog):
         except Exception:  # detection must never stop the dialog
             found = []
         self.prog_found = ", ".join("%s (%s)" % (h["ref"], h["protocol"]) for h in found) or "none found"
+        # the tester the fixture plugs into (pcbtestkit facilities list / your own facility files)
+        try:
+            from ..pcbtestkit.facility import load_facilities
+            facs = load_facilities(cfg, self.design.project_dir)[0]
+        except Exception:  # a broken facility file must never stop the dialog
+            facs = {}
+        cur = cfg.get("facility") if isinstance(cfg.get("facility"), str) else "raspberry-pi"
+        self.fac_ids = sorted(facs) or ["raspberry-pi"]
+        if cur not in self.fac_ids:
+            self.fac_ids.append(cur)
+        self.facility = wx.Choice(p, choices=[(facs[k].get("name") or k) if k in facs else k for k in self.fac_ids])
+        self.facility.SetSelection(self.fac_ids.index(cur))
+        self.facility.SetToolTip("Your tester: its connector, plate, buses and runner driver. Add your own with "
+                                 "'pcbtestkit facilities template' in ~/.pcbtestkit/facilities.")
         self.route_fx = wx.CheckBox(p, label="tracks and vias, KiCad's default rules")
         self.route_fx.SetValue(bool(fx.get("route", True)))
         sup = self.design.supply()
@@ -177,6 +199,7 @@ class MainDialog(wx.Dialog):
                          ("Supply current limit (A)", self.sup_i), ("Max idle current (A, empty = no check)", self.idle_max),
                          ("Min idle current (A, empty = no check)", self.idle_min),
                          ("Fixture outline", self.outline),
+                         ("Test facility (the tester it plugs into)", self.facility),
                          ("Boards per batch (fixture sites, jig positions)", self.batch_n),
                          ("Batch columns (0 = automatic)", self.batch_cols),
                          ("Route the fixture board", self.route_fx),
@@ -507,6 +530,9 @@ class MainDialog(wx.Dialog):
         fx["outline"] = self.outline.GetStringSelection()
         fx["panel"] = {"cols": 1, "rows": 1, "spacing_mm": float((fx.get("panel") or {}).get("spacing_mm", 10.0))}
         u.setdefault("batch", {}).update({"count": self.batch_n.GetValue(), "cols": self.batch_cols.GetValue()})
+        u.setdefault("video", {})["quality"] = self.vq_opts[max(0, self.video_quality.GetSelection())][0]
+        if not isinstance(u.get("facility"), dict):          # an inline definition stays as it is
+            u["facility"] = self.fac_ids[max(0, self.facility.GetSelection())]
         fx["route"] = self.route_fx.GetValue()
         import shlex
         pr = u.setdefault("program", {})
@@ -569,9 +595,11 @@ class MainDialog(wx.Dialog):
         prog = wx.ProgressDialog("PCB TestKit", "Starting...", 100, self, wx.PD_APP_MODAL | wx.PD_AUTO_HIDE)
         try:
             d = Design.load(self.board_path)
+            # the video renders in a background job afterwards (its own progress window), so KiCad stays usable
+            want_video = bool((d.cfg.get("outputs") or {}).get("video"))
             res = run_pipeline(d, out_dir=self.out_dir.GetPath(),
                                progress=lambda m, f: prog.Update(min(99, int(f * 100)), m),
-                               include_kicad=self.kicad_checks.GetValue())
+                               include_kicad=self.kicad_checks.GetValue(), outputs={"video": False})
         except Exception:
             prog.Destroy()
             wx.MessageBox(traceback.format_exc(), "PCB TestKit - error", wx.ICON_ERROR)
@@ -593,7 +621,16 @@ class MainDialog(wx.Dialog):
         else:
             nxt = "No fixture: the guide lists the test points and limits for a manual test."
         vid = res.get("video")
-        if vid and vid.get("ok"):
+        if want_video:
+            from ..pcbtestkit.video_job import launch
+            job = launch(self.board_path, res["out_dir"])
+            if job.get("ok"):
+                nxt += ("\n\nThe explainer video is being rendered in the background%s; KiCad stays usable. It appears "
+                        "as %s-explainer.mp4 when it is done." % (" (see its progress window)" if job.get("window") else
+                                                                 " (progress: visuals/video-job.log)", d.board.name))
+            else:
+                nxt += "\n\nThe video was not started: %s" % job.get("reason")
+        elif vid and vid.get("ok"):
             nxt += "\n\nVideo: %s" % os.path.basename(vid["path"])
         elif vid:
             nxt += ("\n\nThe video could NOT be made: %s\nThe whole error is in %s. The frames rendered so far are kept "

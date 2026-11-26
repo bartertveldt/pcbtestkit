@@ -1,0 +1,9 @@
+{
+ "schema": "pcbtestkit-facility/1",
+ "id": "raspberry-pi",
+ "name": "Raspberry Pi + ADC (built-in)",
+ "description": "PCB TestKit's own tester: the fixture gets a generated 2 x N header (GND, then one pin per measured net) and a power terminal; the runner reads ADS1115 / MCP3008 ADCs or an MCU over serial and switches the board's supply with a GPIO. Channel count and input range follow testplan.max_channels and testplan.adc_max_v.",
+ "analog": {},
+ "power": {"outputs": 1, "switched": true},
+ "buses": {}
+}

@@ -56,6 +56,18 @@ class FixtureBuilder:
         self.drill = float(pogo["drill_mm"])
         self.pad_d = float(pogo.get("pad_mm") or round(self.drill + float(design.cfg["pogo"]["pad_extra"]), 3))
         self.pitch = float(pogo.get("min_spacing_mm") or pogo["pitch_mm"])
+        # the test facility: a fixed plate, fixed holes and fixed connector(s) replace the generated ones
+        from .facility import connectors as fac_connectors, facility_for
+        self.fac = facility_for(design)
+        fp_ = plan.get("facility") or {}
+        primary = not plan.get("plate") or plan["plate"] == (plan.get("plates") or [plan["plate"]])[0]
+        self.fac_conns = list(zip(fac_connectors(self.fac), fp_.get("connectors") or [])) if primary else []
+        self.fac_fixture = (self.fac.get("fixture") or {}) if primary else {}
+        self.site_nets: Dict[int, Dict[str, str]] = {}
+        self.site_sigs: Dict[int, List[str]] = {}       # central connector: each board's signals, in pin order
+        self.central = False
+        self.central_pins: List[Dict[str, Any]] = []
+        self.fac_refs: List[Dict[str, Any]] = []
 
     # ------------------------------------------------------------------ #
     def net(self, name: str) -> Tuple[int, str]:
@@ -111,6 +123,36 @@ class FixtureBuilder:
                                       "TEST_IO", items, angle=90, attr=("through_hole",), ref_pos=(4.8, 2.54 * (rows - 1) / 2.0),
                                       models=["${KICAD8_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/"
                                               "PinHeader_2x%02d_P2.54mm_Vertical.wrl" % rows]))
+        return ref
+
+    def facility_connector(self, c: Dict[str, Any], x: float, y: float, sigs: Dict[int, str], nets: Dict[str, str]) -> str:
+        """The test facility's interface connector, pin 1 at (x, y): its own grid, numbering, rotation and pin map;
+        each pin on the net of the signal the test plan gave it."""
+        from .facility import pin_count, pin_xy
+        p = float(c.get("pitch_mm", 2.54))
+        pad_d = float(c.get("pad_mm") or round(min(1.7, 0.67 * p), 2))
+        drill = float(c.get("drill_mm") or round(min(1.0, 0.4 * p), 2))
+        ang = float(c.get("angle", 0) or 0)
+        pts = [pin_xy(c, n) for n in range(1, pin_count(c) + 1)]
+        x0, y0 = min(q[0] for q in pts), min(q[1] for q in pts)
+        x1, y1 = max(q[0] for q in pts), max(q[1] for q in pts)
+        ref = self.ref("J")
+        items = [W.fp_rect(x0 - p / 2 - 0.5, y0 - p / 2 - 0.5, x1 + p / 2 + 0.5, y1 + p / 2 + 0.5, CRT, 0.05),
+                 W.fp_rect(x0 - p / 2, y0 - p / 2, x1 + p / 2, y1 + p / 2, FAB, 0.1)]
+        for n, (px, py) in enumerate(pts, 1):
+            fn = c["pins"].get(str(n), "NC")
+            sig = sigs.get(n, "NC")
+            net = nets.get(sig) if sig != "NC" else None
+            items.append(W.pad(str(n), "thru_hole", "rect" if n == 1 else "oval", px, py, pad_d, pad_d, THT, drill=drill,
+                               net=self.net(net) if net else None, angle=ang, pinfunction=fn, pintype="passive"))
+            if sig != "NC" or fn != "NC":
+                items.append(W.fp_text((sig if sig not in ("NC", "GND") else fn)[:8], px, py + (-p / 2 - 0.4 if py <= y0 else p / 2 + 0.4),
+                                       FAB, 0.4))
+        self.items.append(W.footprint(c.get("footprint") or "PCBTestKit:Facility_%dx%02d_P%.2fmm" % (
+                                          int(c.get("pins_across", 2)), int(c["pins_along"]), p), x, y, ref,
+                                      c.get("name", "TESTER"), items, angle=ang, attr=("through_hole",),
+                                      ref_pos=((x0 + x1) / 2, y0 - p / 2 - 1.5), models=[c["model"]] if c.get("model") else (),
+                                      extra_props={"Facility": self.fac["id"]}))
         return ref
 
     def terminal(self, x, y, vin: str, gnd: str) -> str:
@@ -404,14 +446,34 @@ class FixtureBuilder:
                 outline_mode = "rect"
                 self._block_w = None
                 bw, bh = lay0["w"], lay0["h"]
-        site_w = max(self.bb.w + 2 * margin, bw + 18.0)
-        site_h = self.bb.h + 2 * margin + (0.0 if outline_mode == "outline" else bh + 7.0)
+        # A batch gets ONE connector, in a band across the middle of the fixture, for every board's channels, supply
+        # and programming lines: the boards sit on both sides of it with their dividers on the side facing it, so
+        # every board's traces run about as far. fixture.batch_connector "per_site": a header per board instead.
+        central = (nsite > 1 and not self.fac_conns and outline_mode == "rect" and not self.plan.get("plate")
+                   and str(fx.get("batch_connector", "central")) == "central")
+        self.central = central
+        div_h = lay0["div_rows"] * self.DIV_PITCH_Y + 3.0
+        band_h = 16.0
+        r0 = rows // 2 - 1 if rows >= 2 else 0          # the band runs below this row
+        if central:
+            slot_w = (6.0 + max(x for _, x in lay0["slots"])) if lay0["slots"] else 0.0
+            site_w = max(self.bb.w + 2 * margin, slot_w + 18.0)
+            site_h = self.bb.h + 2 * margin + div_h + 2.0
+        else:
+            site_w = max(self.bb.w + 2 * margin, bw + 18.0)
+            site_h = self.bb.h + 2 * margin + (0.0 if outline_mode == "outline" else bh + 7.0)
         if nsite > 1:       # site pitch on the router's 0.254 mm grid, so every site's header pins are on it
             site_w = math.ceil((site_w + spacing) / 0.254 - 1e-9) * 0.254 - spacing
             site_h = math.ceil((site_h + spacing) / 0.254 - 1e-9) * 0.254 - spacing
         fx0, fy0 = self.bb.x0 - margin, self.bb.y0 - margin
         fx1 = fx0 + cols * site_w + (cols - 1) * spacing
-        fy1 = fy0 + rows * site_h + (rows - 1) * spacing
+        fy1 = fy0 + rows * site_h + (rows - 1) * spacing + ((band_h + spacing) if central else 0.0)
+        band_y0 = fy0 + ((r0 + 1) * (site_h + spacing) if rows >= 2 else site_h + spacing)
+        nat = BBox(fx0, fy0, fx1, fy1)                  # what the boards and their connector blocks need
+        plate = self.fac_fixture.get("plate_mm")
+        if plate and outline_mode != "rect":
+            self.warnings.append("facility %s has a fixed plate: rectangular fixture instead of the DUT outline" % self.fac["id"])
+            outline_mode = "rect"
         sites = []
         for j in range(rows):
             for i in range(cols):
@@ -419,7 +481,20 @@ class FixtureBuilder:
                 if k > nsite:                           # a batch that does not fill the last row
                     continue
                 dx, dy = i * (site_w + spacing), j * (site_h + spacing)
-                if inside_xy:
+                if central:
+                    top = fy0 + j * (site_h + spacing) + ((band_h + spacing) if (rows >= 2 and j > r0) else 0.0)
+                    # dividers on the board's edge towards the connector: at the end nearest the centre line
+                    wblk = (max(x for _, x in lay0["slots"]) + 8.0) if lay0["slots"] else 10.0
+                    scx, fcx = fx0 + dx + site_w / 2.0, (fx0 + fx1) / 2.0
+                    bx = (fx0 + dx + site_w - wblk if scx < fcx - 1.0 else fx0 + dx + 2.0 if scx > fcx + 1.0
+                          else scx - wblk / 2.0)
+                    if rows >= 2 and j > r0:            # below the band: dividers on top, facing the connector
+                        dy = top + div_h + 2.0 - fy0
+                        by = top + 1.0
+                    else:                               # above it: dividers under the board
+                        dy = top - fy0
+                        by = self.bb.y1 + margin + 1.0 + dy
+                elif inside_xy:
                     bx, by = inside_xy
                 else:
                     bx, by = self.bb.x0 - margin + 9.0 + dx, self.bb.y1 + margin + 4.0 + dy
@@ -430,6 +505,41 @@ class FixtureBuilder:
                     limit = BBox(fx0 + dx, fy0 + dy, fx0 + dx + site_w, self.bb.y1 + margin + dy)
                     lsegs = None
                 sites.append(self._site(k, nsite, dx, dy, bx, by, limit, lsegs))
+        if central:
+            self.central_header(band_y0, band_h, fx0, fx1, sites)
+        origin = (fx0, fy0)                             # the facility's coordinates start here (plate top-left)
+        if plate:
+            free = self._plate_free(float(plate[0]), float(plate[1]))
+            if nat.w > free.w + 0.01 or nat.h > free.h + 0.01:
+                fits = [c for c in range(1, nsite + 1)
+                        if c * site_w + (c - 1) * spacing <= free.w and
+                        math.ceil(nsite / float(c)) * site_h + (math.ceil(nsite / float(c)) - 1) * spacing <= free.h]
+                self.warnings.append("the board%s (%.0f x %.0f mm with %s connector block) do%s not fit the %.0f x %.0f mm free "
+                                     "area of facility %s's %.0f x %.0f mm plate%s" % (
+                                         "s" if nsite > 1 else "", nat.w, nat.h, "their" if nsite > 1 else "its",
+                                         "" if nsite > 1 else "es", free.w, free.h, self.fac["id"], float(plate[0]),
+                                         float(plate[1]), "; batch.cols = %d fits" % fits[0] if fits and fits[0] != cols else ""))
+            origin = (round(nat.cx - free.cx, 3), round(nat.cy - free.cy, 3))
+            fx0, fy0 = origin
+            fx1, fy1 = fx0 + float(plate[0]), fy0 + float(plate[1])
+        for c, cp in self.fac_conns:                    # the facility's connectors at their fixed places
+            nets = self.site_nets.get(int(cp.get("site", 1)))
+            if nets is None:
+                continue
+            ref = self.facility_connector(c, origin[0] + float(c["at_mm"][0]), origin[1] + float(c["at_mm"][1]),
+                                          {q["pin"]: q["signal"] for q in cp["pins"]}, nets)
+            self.fac_refs.append({"ref": ref, "name": c.get("name", "TESTER"), "site": int(cp.get("site", 1))})
+            for st in sites:
+                if st["site"] == int(cp.get("site", 1)) and st["header"] is None:
+                    st["header"] = ref
+            for cm in self.channel_map:
+                if cm["site"] == int(cp.get("site", 1)) and cm["header"] is None:
+                    cm["header"] = ref
+            if not plate:                               # no fixed plate: the outline grows to take the connector
+                cb = self._occupied()[-1]
+                fx0, fy0, fx1, fy1 = min(fx0, cb.x0 - 2), min(fy0, cb.y0 - 2), max(fx1, cb.x1 + 2), max(fy1, cb.y1 + 2)
+            elif not BBox(fx0, fy0, fx1, fy1).contains(self._occupied()[-1].cx, self._occupied()[-1].cy):
+                self.warnings.append("facility connector %s lies outside the facility's plate" % c.get("name", "TESTER"))
         if outline_mode == "outline":
             for sg in self.b.edge_segs:
                 self.items.append(W.gr_line(self.mx(sg[0]), sg[1], self.mx(sg[2]), sg[3], "Edge.Cuts", 0.1))
@@ -437,7 +547,15 @@ class FixtureBuilder:
         else:
             self.items.append(W.gr_rect(fx0, fy0, fx1, fy1, "Edge.Cuts", 0.1))
             ob = BBox(fx0, fy0, fx1, fy1)
-        if fx.get("mounting_holes", True) and outline_mode == "rect":
+        if self.fac_fixture.get("holes"):               # the facility's own mounting holes, where its fixture mounts
+            for h in self.fac_fixture["holes"]:
+                hx, hy = origin[0] + float(h["at_mm"][0]), origin[1] + float(h["at_mm"][1])
+                d = float(h.get("d_mm", 3.2))
+                if any(math.hypot(hx - px, hy - py) < d / 2 + 1.5 for px, py in self.pogo_xy):
+                    self.warnings.append("facility mounting hole at (%.1f, %.1f) mm on the plate is next to a probe: move "
+                                         "the board on the plate or check" % tuple(h["at_mm"]))
+                self.hole(hx, hy, d, h.get("label", "MOUNT"))
+        elif fx.get("mounting_holes", True) and outline_mode == "rect":
             d = float(fx.get("mounting_hole_d_mm", 3.2))
             for hx, hy in ((fx0 + 4, fy0 + 4), (fx1 - 4, fy0 + 4), (fx0 + 4, fy1 - 4), (fx1 - 4, fy1 - 4)):
                 if any(math.hypot(hx - px, hy - py) < d / 2 + 2.5 for px, py in self.pogo_xy):
@@ -460,9 +578,69 @@ class FixtureBuilder:
             self.route()
         text = W.board(self.nets, self.items, thickness=1.6, title="Test fixture for " + self.b.name,
                        rev=self.b.title_block.get("rev", ""), comment="Generated by PCB TestKit")
-        return {"kicad_pcb": text, "sites": sites, "warnings": self.warnings, "channel_map": self.channel_map,
-                "outline_mode": outline_mode, "outline": ob.as_dict(2), "pogo_count": len(self.pogo_xy),
-                "nets": len(self.nets), "routing": self.routing, "batch": blay}
+        res = {"kicad_pcb": text, "sites": sites, "warnings": self.warnings, "channel_map": self.channel_map,
+               "outline_mode": outline_mode, "outline": ob.as_dict(2), "pogo_count": len(self.pogo_xy),
+               "nets": len(self.nets), "routing": self.routing, "batch": blay}
+        if self.fac_refs or plate:
+            res["facility"] = {"id": self.fac["id"], "connectors": self.fac_refs, "plate_mm": plate}
+        if central:
+            res["central_header"] = {"ref": sites[0]["header"] if sites else None, "pins": self.central_pins}
+        return res
+
+    def central_header(self, band_y0: float, band_h: float, fx0: float, fx1: float, sites: List[Dict[str, Any]]) -> str:
+        """The batch's one connector: a 2 x N header centred in the band, GND first and every ten pins, then for
+        each board its supply, channels and programming lines (labelled "S2 CH03")."""
+        pins: List[Tuple[int, str, str]] = [(1, "GND", "GND")]
+        where: Dict[Tuple[int, str], int] = {}
+        num = 1
+        for k in sorted(self.site_sigs):
+            for sig in self.site_sigs[k]:
+                num += 1
+                if num % 10 == 0:
+                    pins.append((num, "GND", "GND"))
+                    num += 1
+                pins.append((num, self.site_nets[k][sig], "S%d %s" % (k, sig)))
+                where[(k, sig)] = num
+        num += 1
+        pins.append((num, "GND", "GND"))
+        if num % 2:
+            num += 1
+            pins.append((num, "", "NC"))
+        ncol = len(pins) // 2
+        cx = (fx0 + fx1) / 2.0
+        hx = round((cx - 2.54 * (ncol - 1) / 2.0) / 0.254) * 0.254
+        hy = round((band_y0 + band_h / 2.0 + 1.27) / 0.254) * 0.254
+        self._grid_origin = (hx, hy)                    # the router aligns its grid to these pins
+        ref = self.header(hx, hy, pins)
+        for cm in self.channel_map:
+            cm["header"] = ref
+            cm["pin"] = where.get((cm["site"], cm["channel"]), cm["pin"])
+        for st in sites:
+            st["header"] = ref
+        self.central_pins = []
+        for n, net, label in pins:
+            site, _, sig = label.partition(" ")
+            self.central_pins.append({"pin": n, "site": int(site[1:]) if sig else None, "signal": sig or label, "net": net})
+        if 2.54 * (ncol - 1) + 6.0 > fx1 - fx0:
+            self.warnings.append("the batch connector (2 x %d pins) is wider than the fixture (%.0f mm); use fewer "
+                                 "channels or fixture.batch_connector: per_site" % (ncol, fx1 - fx0))
+        return ref
+
+    def _plate_free(self, pw: float, ph: float) -> BBox:
+        """The part of the facility's plate (plate coordinates) its connectors leave for the boards and their
+        connector blocks, which are centred in it."""
+        from .facility import pin_count, pin_xy
+        free = BBox(0.0, 0.0, pw, ph)
+        for c, _cp in self.fac_conns:
+            pts = [pin_xy(c, n) for n in range(1, pin_count(c) + 1)]
+            a = math.radians(float(c.get("angle", 0) or 0))
+            ys = [float(c["at_mm"][1]) + px * -math.sin(a) + py * math.cos(a) for px, py in pts]
+            band = (min(ys) - 4.0, max(ys) + 4.0)
+            if band[0] > ph / 2:
+                free = BBox(free.x0, free.y0, free.x1, min(free.y1, band[0]))
+            elif band[1] < ph / 2:
+                free = BBox(free.x0, max(free.y0, band[1]), free.x1, free.y1)
+        return free
 
     def route(self) -> None:
         """Route the placed board with the built-in router and add its tracks and vias."""
@@ -593,7 +771,7 @@ class FixtureBuilder:
         div_y = by + 1.0
         hdr_y = by + lay["div_rows"] * self.DIV_PITCH_Y + 2.54 + 1.0
         hx = bx + 2.0
-        if self._grid_origin is None:          # header pin 1: the router aligns its grid to the 2.54 mm pins
+        if self._grid_origin is None and not self.central:   # header pin 1: the router aligns its grid to the pins
             self._grid_origin = (hx, hdr_y + 2.54)
         pins: List[Tuple[int, str, str]] = []
         col = 0
@@ -622,18 +800,45 @@ class FixtureBuilder:
                 pins.append((h["pin"], src, sig))
             self.channel_map.append({"site": k, "channel": sig, "header": None, "pin": h["pin"], "dut_net": probe["net"],
                                      "divider_ratio": div["ratio"] if div else 1.0})
-        href = self.header(hx, hdr_y + 2.54, pins)
-        for cm in self.channel_map:
-            if cm["site"] == k and cm["header"] is None:
-                cm["header"] = href
+        href = None
+        if self.central:        # the batch's one connector in the middle takes this board's nets (placed later)
+            nets = {"VIN": vin}
+            order = ["VIN"] if sup.get("net") else []
+            for _num, net, label in pins:
+                if net and label not in ("GND", "NC"):
+                    nets[label] = net
+                    order.append(label)
+            for hd in self.prog_headers():
+                for pin in hd["pins"]:
+                    fnet = self.fixture_net(pin.get("net", ""), pre)
+                    sig = str(pin.get("signal") or pin.get("pad"))
+                    if fnet and fnet not in ("GND", vin) and sig not in nets:
+                        nets[sig] = fnet
+                        order.append(sig)
+            self.site_nets[k] = nets
+            self.site_sigs[k] = order
+        elif self.fac_conns:    # the facility's fixed connector takes these nets (placed once the plate is known)
+            nets = {"GND": gnd, "VIN": vin}
+            nets.update({label: net for _num, net, label in pins if net and label not in ("GND", "NC")})
+            for b in (self.plan.get("facility") or {}).get("bus_checks") or []:
+                if b["via"] == "fixture":
+                    nets.update({sig: pre + "TP_" + _safe(net) for sig, net in b["signals"].items()})
+            self.site_nets[k] = nets
+        else:
+            href = self.header(hx, hdr_y + 2.54, pins)
+            for cm in self.channel_map:
+                if cm["site"] == k and cm["header"] is None:
+                    cm["header"] = href
         tref = None
         cursor = hx + 2.54 * (len(pins) // 2) + 3.0
-        if sup.get("net") and (not self.plan.get("plate") or any(p["role"] == "supply" for p in self.plan["probes"])):
+        fac_vin = any(q["signal"] == "VIN" for _c, cp in self.fac_conns for q in cp["pins"])
+        if sup.get("net") and not fac_vin and not self.central and (
+                not self.plan.get("plate") or any(p["role"] == "supply" for p in self.plan["probes"])):
             tx = hx + 2.54 * (len(pins) // 2) + 5.0
             tref = self.terminal(tx, hdr_y + 1.27, vin, gnd)
             cursor = tx + 7.9 + 3.0
         progs = []
-        for hd in self.prog_headers():               # one programming connector per header and board
+        for hd in ([] if self.central else self.prog_headers()):   # one programming connector per header and board
             pc = self.prog_connector(cursor, hdr_y + 1.27, hd, pre, k)
             progs.append(pc)
             cursor += self._prog_shape(hd)["box"].w + 4.0
@@ -748,11 +953,14 @@ def probe_points_csv(plan: Dict[str, Any]) -> str:
 def probes_csv(plan: Dict[str, Any], fixture: Dict[str, Any]) -> str:
     lines = ["site,probe,dut_net,role,x_mm,y_mm,drill_mm,tip,channel,header_pin,divider_ratio"]
     by_id = {p["id"]: p for p in plan["probes"]}
+    # the pin each site's channel lands on (the batch's one connector numbers them per site)
+    pin_of = {(cm["site"], cm["channel"]): cm["pin"] for cm in fixture.get("channel_map") or []}
     for s in fixture["sites"]:
         for pr in s["probes"]:
             p = by_id[pr["probe"]]
             ratio = p["divider"]["ratio"] if p.get("divider") else (1.0 if p.get("channel") else "")
+            pin = pin_of.get((s["site"], p.get("channel")), p.get("header_pin")) if p.get("channel") else p.get("header_pin")
             lines.append("%d,%s,%s,%s,%.4f,%.4f,%.2f,%s,%s,%s,%s" % (
                 s["site"], p["id"], '"%s"' % p["net"], p["role"], pr["x"], pr["y"], plan["pogo"]["drill_mm"], p["tip"],
-                p.get("channel") or "", p.get("header_pin") or "", ratio))
+                p.get("channel") or "", pin or "", ratio))
     return "\n".join(lines) + "\n"

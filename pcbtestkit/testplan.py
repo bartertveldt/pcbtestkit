@@ -78,7 +78,16 @@ class Planner:
     def __init__(self, design: Design, side: Optional[str] = None):
         self.d = design
         self.b = design.board
-        self.tp = design.cfg["testplan"]
+        # the tester the fixture plugs into decides how many channels there are and their input range
+        from .facility import analog_limits, facility_for
+        self.fac = facility_for(design)
+        self.tp = dict(design.cfg["testplan"])
+        n_in, v_in = analog_limits(self.fac)
+        if n_in is not None:
+            self.tp["max_channels"] = min(int(self.tp["max_channels"]), n_in)
+        if v_in is not None:
+            self.tp["adc_max_v"] = v_in
+        self.buses: List[Dict[str, Any]] = []
         self.pogo = design.cfg["pogo"]
         self.side = side or self.tp["probe_side"]
         if self.side not in ("top", "bottom", "both"):
@@ -268,6 +277,17 @@ class Planner:
         plan += [(n, "measure", 1) for n in signals]
         for n in exclude:
             skipped.setdefault(n, "excluded in config")
+        # buses the facility takes through the fixture: one probe per bus net, wired to the facility's connector
+        from .facility import buses_for
+        self.buses = buses_for(self.d, self.fac)
+        bus_net = {net for b in self.buses if b["via"] == "fixture" for net in b["signals"].values()}
+        if bus_net:
+            plan = [e for e in plan if e[0] not in bus_net or e[1] in ("supply", "ground")]
+            done = {e[0] for e in plan}
+            for net in sorted(bus_net, key=C.natural_key):
+                if net not in done:
+                    plan.append((net, "bus", 1))
+                skipped.pop(net, None)
         return plan, skipped, supply, main_gnd
 
     def build(self) -> Dict[str, Any]:
@@ -348,9 +368,17 @@ class Planner:
         else:
             plates = list(self.sides)
             header = _header(chosen)
+        for b in self.buses:                 # which probe carries each bus signal
+            b["probes"] = {}
+            for sig, net in b["signals"].items():
+                pp = next((q for q in chosen if q.net == net), None)
+                b["probes"][sig] = pp.id if pp else None
+                if pp is None and b["via"] == "fixture":
+                    self.warnings.append("%s bus: %s (%s) has no probe, so the %s check cannot run through the fixture"
+                                         % (b["bus"].upper(), sig, net, b["bus"].upper()))
         return {"points": chosen, "untestable": untestable, "skipped": skipped, "supply": supply,
                 "main_ground": main_gnd, "header": header, "headers": headers, "plates": plates, "candidates": cands,
-                "program": program}
+                "program": program, "buses": self.buses}
 
     # ------------------------------------------------------------------ #
     def _program(self, cands: Dict[str, List[Candidate]], chosen: List[ProbePoint]) -> List[Dict[str, Any]]:
@@ -499,6 +527,9 @@ def _side_eval(r: Dict[str, Any], design: Design) -> Dict[str, Any]:
     return ev
 
 
+BUS_NAMES = {"can": "CAN", "usb": "USB", "ethernet": "Ethernet", "uart": "UART", "i2c": "I2C", "rs485": "RS-485"}
+
+
 def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
     side_cfg = design.cfg["testplan"].get("probe_side", "auto")
     side_note = ""
@@ -521,7 +552,7 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
         r = pl.build()
         both_reaches = []
     points: List[ProbePoint] = r["points"]
-    tp = design.cfg["testplan"]
+    tp = pl.tp                              # with the facility's channel count and input range
     sup = r["supply"]
     by_net = {}
     for p in points:
@@ -585,6 +616,14 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
             sigs.append(chk)
     if sigs:
         steps.append({"id": "S5", "name": "Signal levels (idle)", "type": "voltage", "power": "on", "checks": sigs})
+    for i, b in enumerate(r.get("buses") or [], 1):       # the facility's buses the board has
+        st = {"id": "SB%d" % i, "name": "%s bus" % BUS_NAMES.get(b["bus"], b["bus"]), "type": "bus", "power": "on",
+              "bus": b["bus"], "via": b["via"], "signals": b["signals"], "check": b.get("check") or {}}
+        if b["via"] == "cable":
+            st["prompt"] = b.get("note") or "Connect the tester's %s cable to the board" % BUS_NAMES.get(b["bus"], b["bus"])
+        elif not all(b.get("probes", {}).values()):
+            st["unavailable"] = "not every %s net has a probe" % b["bus"].upper()
+        steps.append(st)
     for i, cs in enumerate(tp.get("custom_steps") or [], 1):
         st = json.loads(json.dumps(cs))
         st.setdefault("id", "C%d" % i)
@@ -598,6 +637,11 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
         steps.append(st)
     if sup.get("net"):
         steps.append({"id": "S9", "name": "Remove power", "type": "power", "action": "off"})
+    # phases: what needs the firmware runs after programming, the rest while the programmers run (pcbtestkit.phases)
+    from .phases import firmware_nets, phase_sequence, summary as fw_summary, targets as fw_targets
+    prog_parts = fw_targets(design, r.get("program") or [])
+    fw = firmware_nets(design, prog_parts)
+    steps = phase_sequence(steps, fw, any(st.get("type") == "program" for st in steps))
 
     total_nets = [n for n, pads in design.board.pads_by_net().items() if not C.is_unconnected(n) and len(pads) >= 2]
     tested = {p.net for p in points}
@@ -613,6 +657,33 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
     from .stack import brief
     bb = design.board.outline_bbox()
     batch = batch_layout(design.cfg, bb.w, bb.h)
+    # the facility's fixed connector(s): what each pin carries; the plan's header is then that connector
+    from .facility import assign_pins, connectors as fac_connectors, summary as fac_summary
+    fac_plan = fac_summary(pl.fac)
+    fac_plan["bus_checks"] = [{k: b[k] for k in ("bus", "via", "signals", "probes") if k in b} for b in r.get("buses") or []]
+    fac_plan["connectors"] = []
+    if fac_connectors(pl.fac):
+        if pl.side == "both":
+            pl.warnings.append("facility %s: its connector goes on the %s fixture plate only" % (
+                pl.fac["id"], (r.get("plates") or ["bottom"])[0]))
+        fac_plan["connectors"] = assign_pins(pl.fac, [p.channel for p in points if p.channel], bool(sup.get("net")),
+                                             r.get("buses") or [])
+        first = fac_plan["connectors"][0]
+        sig_net = {p.channel: p.net for p in points if p.channel}
+        sig_net.update({sig: net for b in r.get("buses") or [] if b["via"] == "fixture" for sig, net in b["signals"].items()})
+        r["header"] = [dict({"pin": q["pin"], "signal": q["signal"], "function": q["function"]},
+                            **({"net": sig_net[q["signal"]]} if q["signal"] in sig_net else {})) for q in first["pins"]]
+        pin_of = {q["signal"]: q["pin"] for q in first["pins"]}
+        bus_sig = {net: sig for b in r.get("buses") or [] for sig, net in b["signals"].items()}
+        for p in points:
+            p.header_pin = pin_of.get(p.channel) if p.channel else pin_of.get(bus_sig.get(p.net, ""))
+        sites = {c["site"] for c in fac_plan["connectors"]}
+        if batch["count"] > len(sites):
+            pl.warnings.append("facility %s has a connector for %d board(s); the batch has %d: the other sites get no "
+                               "connector" % (pl.fac["id"], len(sites), batch["count"]))
+    if fac_plan.get("max_sites") and batch["count"] > fac_plan["max_sites"]:
+        pl.warnings.append("facility %s tests at most %d board(s) per fixture; the batch has %d" % (
+            pl.fac["id"], fac_plan["max_sites"], batch["count"]))
     program = None
     if prog_headers:
         conns = []
@@ -633,6 +704,7 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
                  "drill_mm": pl.drill, "pad_mm": pl.pad_d, "min_spacing_mm": pl.pitch,
                  "min_target_mm": pl.min_target, "probe_clearance_mm": tp["probe_clearance_mm"]},
         "adc": {"max_input_v": float(tp["adc_max_v"])},
+        "facility": fac_plan,
         "supply": sup,
         "main_ground": main_gnd,
         "probes": [asdict(p) for p in points],
@@ -648,6 +720,7 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
                        if st["valid"] and not st["fitted_at_test"]],
         "batch": batch,
         "program": program,
+        "firmware": fw_summary(fw, prog_parts),
         "warnings": pl.warnings + ["stacked board %s: %s" % (st["name"], pr) for st in pl.stacks for pr in st["problems"]],
     }
 

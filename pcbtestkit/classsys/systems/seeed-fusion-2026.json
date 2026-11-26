@@ -1,0 +1,204 @@
+{
+ "id": "seeed-fusion-2026",
+ "name": "Seeed Fusion PCB (standard FR4 specification)",
+ "short": "Seeed Fusion",
+ "vendor": "Seeed Studio",
+ "kind": "fab-capability",
+ "status": "verified",
+ "source": "https://support.seeed.cc/portal/en/kb/articles/fusion-pcb-specification",
+ "verified": "2026-11-25",
+ "notes": [
+  "The FR4 table of the standard specification (page content updated 2026-11-20). Trace/spacing depends on the copper weight: 4/4 mil at 1 oz, 10/10 mil at 2 oz, 15/15 mil at 3 oz; inner layers of a 4-layer board 0.15 mm (6 mil).",
+  "The page states 1-6 layers for this service; its thickness table also lists 8-16 layer builds, which are not checked here (see the advanced specification).",
+  "Largest holes: plated 5.8 mm (larger not guaranteed), non-plated 6.3 mm (larger are milled). The check uses 6.3 mm for every round hole.",
+  "Solder mask dam: 3.5 mil green, 5 mil white/black, 4 mil other colours.",
+  "Not stated and therefore not checked: via pad diameter, aspect ratio, surcharge thresholds."
+ ],
+ "hole_basis": {
+  "pth_offset": 0.0,
+  "npth_offset": 0.0,
+  "ring": "finished",
+  "hole_clearance": "finished"
+ },
+ "dimensions": [
+  {
+   "id": "copper",
+   "label": "Copper weight",
+   "choose": "cheapest",
+   "monotonic": false,
+   "levels": [
+    {
+     "id": "1oz",
+     "aliases": [
+      "35um"
+     ],
+     "label": "1 oz (35 um)",
+     "limits": {
+      "copper_max_um": 35,
+      "track_outer": "4mil",
+      "gap_outer": "4mil",
+      "track_inner": {
+       "value": "0.15mm",
+       "note": "inner layers of a 4-layer board"
+      },
+      "gap_inner": {
+       "value": "0.15mm",
+       "note": "inner layers of a 4-layer board"
+      }
+     }
+    },
+    {
+     "id": "2oz",
+     "aliases": [
+      "70um"
+     ],
+     "label": "2 oz (70 um)",
+     "limits": {
+      "copper_max_um": 70,
+      "track": "10mil",
+      "gap": "10mil"
+     }
+    },
+    {
+     "id": "3oz",
+     "aliases": [
+      "105um"
+     ],
+     "label": "3 oz (105 um)",
+     "limits": {
+      "copper_max_um": 105,
+      "track": "15mil",
+      "gap": "15mil"
+     }
+    }
+   ]
+  }
+ ],
+ "always": {
+  "drill_via": "0.2mm",
+  "drill_pth": "0.2mm",
+  "drill_npth": "0.2mm",
+  "drill_max": {
+   "value": "6.3mm",
+   "note": "non-plated; plated holes over 5.8 mm are not guaranteed"
+  },
+  "ring_via": "0.1mm",
+  "ring_pth": "0.152mm",
+  "hole_to_hole_via": {
+   "value": "0.3mm",
+   "note": "vias"
+  },
+  "hole_to_hole_pth": {
+   "value": "0.45mm",
+   "note": "plated through-holes, to prevent ion migration"
+  },
+  "hole_to_copper_inner_via": "0.2mm",
+  "hole_to_copper_inner_pth": "0.2mm",
+  "copper_to_edge": "0.3mm",
+  "layers_max": 6,
+  "thickness_min": "0.6mm",
+  "thickness_max": "3mm",
+  "board_size_min": "10mm",
+  "board_size_max": "500mm",
+  "silk_line": "4mil",
+  "silk_text_height": "23mil",
+  "mask_web": [
+   {
+    "when": {
+     "mask_color": {
+      "in": [
+       "white",
+       "black"
+      ]
+     }
+    },
+    "value": "5mil"
+   },
+   {
+    "when": {
+     "mask_color": {
+      "in": [
+       "green"
+      ]
+     }
+    },
+    "value": "3.5mil"
+   },
+   {
+    "value": "4mil"
+   }
+  ]
+ },
+ "tests": [
+  {
+   "name": "ordinary 1 oz board",
+   "measured": {
+    "copper_max_um": 35,
+    "track_outer": 0.15,
+    "gap_outer": 0.15,
+    "drill_via": 0.3,
+    "ring_via_outer": 0.15
+   },
+   "context": {
+    "layers": 2
+   },
+   "expect": {
+    "required": "1oz",
+    "fits": true
+   }
+  },
+  {
+   "name": "6 mil tracks on 2 oz copper are too fine",
+   "measured": {
+    "copper_max_um": 70,
+    "track_outer": 0.1524
+   },
+   "context": {},
+   "expect": {
+    "fits": false
+   }
+  },
+  {
+   "name": "10 mil on 2 oz",
+   "measured": {
+    "copper_max_um": 70,
+    "track_outer": 0.254,
+    "gap_outer": 0.254
+   },
+   "context": {},
+   "expect": {
+    "required": "2oz",
+    "fits": true
+   }
+  },
+  {
+   "name": "3.5 mil track is below the table",
+   "measured": {
+    "copper_max_um": 35,
+    "track_outer": 0.0889
+   },
+   "context": {},
+   "expect": {
+    "fits": false
+   }
+  },
+  {
+   "name": "0.15 mm via is below the minimum",
+   "measured": {
+    "drill_via": 0.15
+   },
+   "expect": {
+    "fits": false
+   }
+  },
+  {
+   "name": "8 layers is beyond this service",
+   "measured": {
+    "layers_max": 8
+   },
+   "expect": {
+    "fits": false
+   }
+  }
+ ]
+}

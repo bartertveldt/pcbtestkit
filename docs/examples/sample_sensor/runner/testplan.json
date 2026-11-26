@@ -37,6 +37,18 @@
   "adc": {
     "max_input_v": 3.3
   },
+  "facility": {
+    "id": "raspberry-pi",
+    "name": "Raspberry Pi + ADC (built-in)",
+    "analog_inputs": null,
+    "max_input_v": null,
+    "buses": {},
+    "plate_mm": null,
+    "connectors": [],
+    "max_sites": null,
+    "driver": false,
+    "bus_checks": []
+  },
   "supply": {
     "net": "VIN_12V",
     "voltage": 12.0,
@@ -324,7 +336,8 @@
             "C7"
           ]
         }
-      ]
+      ],
+      "phase": "unpowered"
     },
     {
       "id": "S2",
@@ -355,7 +368,8 @@
           "min_ohm": 100.0
         }
       ],
-      "note": "Needs the source-resistor circuit described in runner/README; skipped otherwise."
+      "note": "Needs the source-resistor circuit described in runner/README; skipped otherwise.",
+      "phase": "unpowered"
     },
     {
       "id": "S3",
@@ -379,7 +393,8 @@
           "min_v": 11.4,
           "max_v": 12.6
         }
-      ]
+      ],
+      "phase": "power"
     },
     {
       "id": "S4",
@@ -403,7 +418,8 @@
           "max_v": 5.25,
           "nominal_v": 5.0
         }
-      ]
+      ],
+      "phase": "powered"
     },
     {
       "id": "S5",
@@ -429,13 +445,15 @@
           "learn": true,
           "learn_tolerance_v": 0.15
         }
-      ]
+      ],
+      "phase": "powered"
     },
     {
       "id": "S9",
       "name": "Remove power",
       "type": "power",
-      "action": "off"
+      "action": "off",
+      "phase": "end"
     }
   ],
   "coverage": {
@@ -487,5 +505,115 @@
     "source": "single board"
   },
   "program": null,
-  "warnings": []
+  "firmware": {
+    "programmed": [],
+    "firmware_nets": []
+  },
+  "warnings": [],
+  "timing": {
+    "assumptions": {
+      "board_handling_s": 8.0,
+      "serial_entry_s": 3.0,
+      "visual_s": 15.0,
+      "short_check_s": 0.5,
+      "read_s": 0.05,
+      "bus_s": 3.0,
+      "place_part_s": 6.0,
+      "solder_joint_s": 2.5,
+      "jig_cycle_s": 45.0,
+      "program_s": 30.0
+    },
+    "batch": 1,
+    "test": {
+      "one_board_s": 28.7,
+      "sequential_s": 28.7,
+      "batch_s": 28.7,
+      "per_board_s": 28.7,
+      "saved_s": 0.0,
+      "timeline": [
+        {
+          "site": 1,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 0.0,
+              "end": 28.3
+            },
+            {
+              "phase": "checks",
+              "start": 28.3,
+              "end": 28.7
+            }
+          ]
+        }
+      ],
+      "phases_s": {
+        "unpowered": 16.5,
+        "power": 0.8,
+        "powered": 0.2,
+        "end": 0.2
+      }
+    },
+    "assembly": {
+      "per_board_s": 107.5,
+      "batch_s": 107.5,
+      "parts": 5,
+      "joints": 13,
+      "jig_loads": 1,
+      "boards_per_jig": 1
+    },
+    "per_board_s": 136.2,
+    "by_batch_size": [
+      {
+        "boards": 1,
+        "test_per_board_s": 28.7,
+        "assembly_per_board_s": 107.5,
+        "per_board_s": 136.2
+      },
+      {
+        "boards": 2,
+        "test_per_board_s": 28.7,
+        "assembly_per_board_s": 107.5,
+        "per_board_s": 136.2
+      },
+      {
+        "boards": 3,
+        "test_per_board_s": 28.7,
+        "assembly_per_board_s": 107.5,
+        "per_board_s": 136.2
+      },
+      {
+        "boards": 4,
+        "test_per_board_s": 28.7,
+        "assembly_per_board_s": 107.5,
+        "per_board_s": 136.2
+      },
+      {
+        "boards": 5,
+        "test_per_board_s": 28.7,
+        "assembly_per_board_s": 107.5,
+        "per_board_s": 136.2
+      },
+      {
+        "boards": 6,
+        "test_per_board_s": 28.7,
+        "assembly_per_board_s": 107.5,
+        "per_board_s": 136.2
+      },
+      {
+        "boards": 7,
+        "test_per_board_s": 28.7,
+        "assembly_per_board_s": 107.5,
+        "per_board_s": 136.2
+      },
+      {
+        "boards": 8,
+        "test_per_board_s": 28.7,
+        "assembly_per_board_s": 107.5,
+        "per_board_s": 136.2
+      }
+    ],
+    "suggested_batch": 1,
+    "note": "Estimates; set your own durations in 'timing' in pcbtestkit.json. The runner records the real ones in every result file."
+  }
 }

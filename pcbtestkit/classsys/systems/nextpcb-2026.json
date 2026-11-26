@@ -1,0 +1,241 @@
+{
+ "id": "nextpcb-2026",
+ "name": "NextPCB standard PCB capabilities",
+ "short": "NextPCB",
+ "vendor": "NextPCB",
+ "kind": "fab-capability",
+ "status": "verified",
+ "source": "https://www.nextpcb.com/pcb-capabilities",
+ "verified": "2026-11-25",
+ "notes": [
+  "The standard capability table (rigid FR-4, 1-32 layers). Trace/spacing: outer 3/3 mil at 1 oz and 5.5/5.5 mil at 2 oz; inner 2.5/3 mil at 0.5 oz (inner 1 and 2 oz are not stated, so inner layers are only checked against the 0.5 oz values).",
+  "Smallest mechanical drill 0.15 mm, only for boards up to 1.2 mm thick; the page lists plated holes from 0.2 mm otherwise.",
+  "Annular ring 3.5 mil at 1 oz, 4.5 mil at 2 oz; production enlarges the ring by 0.2 mm.",
+  "Largest board: 1500 x 600 mm (1-2 layers), 1500 x 500 mm (4 layers), 500 x 400 mm (6+ layers); only the longer side is checked.",
+  "Not stated and therefore not checked: aspect ratio, surcharges between standard and advanced service (a separate Advanced PCB page exists)."
+ ],
+ "hole_basis": {
+  "pth_offset": 0.0,
+  "npth_offset": 0.0,
+  "ring": "finished",
+  "hole_clearance": "finished"
+ },
+ "dimensions": [
+  {
+   "id": "copper",
+   "label": "Outer copper weight",
+   "choose": "cheapest",
+   "monotonic": false,
+   "levels": [
+    {
+     "id": "1oz",
+     "aliases": [
+      "35um"
+     ],
+     "label": "1 oz (35 um) outer",
+     "limits": {
+      "copper_max_um": 35,
+      "track_outer": "3mil",
+      "gap_outer": "3mil",
+      "ring": "3.5mil",
+      "track_inner": {
+       "value": "2.5mil",
+       "note": "0.5 oz inner copper"
+      },
+      "gap_inner": {
+       "value": "3mil",
+       "note": "0.5 oz inner copper"
+      }
+     }
+    },
+    {
+     "id": "2oz",
+     "aliases": [
+      "70um"
+     ],
+     "label": "2 oz (70 um) outer",
+     "limits": {
+      "copper_max_um": 70,
+      "track_outer": "5.5mil",
+      "gap_outer": "5.5mil",
+      "ring": "4.5mil"
+     }
+    }
+   ]
+  }
+ ],
+ "always": {
+  "drill_plated": [
+   {
+    "when": {
+     "thickness_mm": {
+      "max": 1.2
+     }
+    },
+    "value": "0.15mm",
+    "note": "0.15 mm only up to 1.2 mm board thickness"
+   },
+   {
+    "value": "0.2mm"
+   }
+  ],
+  "drill_npth": "0.4mm",
+  "drill_max": "6.5mm",
+  "slot_plated": "0.5mm",
+  "slot_npth": "0.5mm",
+  "hole_to_hole_via": {
+   "value": "8mil",
+   "note": "via to via, same net"
+  },
+  "hole_to_hole_diffnet": "12mil",
+  "hole_to_copper_via": "7mil",
+  "hole_to_copper_pth": "9mil",
+  "hole_to_copper_npth": "8mil",
+  "copper_to_edge": [
+   {
+    "when": {
+     "edge_process": {
+      "in": [
+       "vscore"
+      ]
+     }
+    },
+    "value": "0.4mm"
+   },
+   {
+    "value": "0.2mm"
+   }
+  ],
+  "layers_max": 32,
+  "thickness_allowed": [
+   0.6,
+   0.8,
+   1.0,
+   1.2,
+   1.6,
+   2.0,
+   2.5,
+   3.0,
+   3.2
+  ],
+  "board_size_min": "10mm",
+  "board_size_max": [
+   {
+    "when": {
+     "layers": {
+      "max": 4
+     }
+    },
+    "value": "1500mm"
+   },
+   {
+    "value": "500mm"
+   }
+  ],
+  "silk_line": {
+   "value": "5mil",
+   "note": "screen printing; printer printing allows 3 mil"
+  },
+  "silk_text_height": {
+   "value": "30mil",
+   "note": "screen printing; printer printing allows 24 mil"
+  },
+  "mask_web": [
+   {
+    "when": {
+     "mask_color": {
+      "in": [
+       "white",
+       "black"
+      ]
+     }
+    },
+    "value": "5mil"
+   },
+   {
+    "when": {
+     "mask_color": {
+      "in": [
+       "green"
+      ]
+     }
+    },
+    "value": "3.5mil"
+   },
+   {
+    "value": "4mil"
+   }
+  ]
+ },
+ "tests": [
+  {
+   "name": "ordinary 1 oz board",
+   "measured": {
+    "copper_max_um": 35,
+    "thickness_allowed": 1.6,
+    "track_outer": 0.15,
+    "gap_outer": 0.15,
+    "drill_via": 0.3,
+    "ring_via_outer": 0.15
+   },
+   "context": {
+    "copper_um": 35,
+    "thickness_mm": 1.6,
+    "layers": 2
+   },
+   "expect": {
+    "required": "1oz",
+    "fits": true
+   }
+  },
+  {
+   "name": "0.15 mm via on a 1.6 mm board",
+   "measured": {
+    "thickness_allowed": 1.6,
+    "drill_via": 0.15
+   },
+   "context": {
+    "thickness_mm": 1.6
+   },
+   "expect": {
+    "fits": false
+   }
+  },
+  {
+   "name": "0.15 mm via on a 1.0 mm board",
+   "measured": {
+    "thickness_allowed": 1.0,
+    "drill_via": 0.15
+   },
+   "context": {
+    "thickness_mm": 1.0
+   },
+   "expect": {
+    "fits": true
+   }
+  },
+  {
+   "name": "4 mil on 2 oz outer copper",
+   "measured": {
+    "copper_max_um": 70,
+    "track_outer": 0.1016
+   },
+   "context": {},
+   "expect": {
+    "fits": false
+   }
+  },
+  {
+   "name": "1.4 mm thick is not offered",
+   "measured": {
+    "thickness_allowed": 1.4
+   },
+   "context": {
+    "thickness_mm": 1.4
+   },
+   "expect": {
+    "fits": false
+   }
+  }
+ ]
+}

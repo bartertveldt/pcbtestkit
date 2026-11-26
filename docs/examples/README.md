@@ -1,6 +1,6 @@
 # Example outputs
 
-Complete PCB TestKit exports for three boards, generated with:
+Complete PCB TestKit exports for four boards, generated with `tools/regen_examples.py`, which runs:
 
 ```bash
 python3 -m pcbtestkit run <board>.kicad_pcb --video
@@ -10,6 +10,7 @@ python3 -m pcbtestkit run <board>.kicad_pcb --video
 |---|---|---|
 | `sample_sensor/` | The bundled sample (60 × 45 mm, 2 layers) | It has seeded weak points. Its 0.45/0.30 mm vias leave a 0.025 mm ring on the drill tool, which is finer than any Eurocircuits pool class. The report shows what to widen and which other fabs accept the board as drawn. The probes use the bottom test pads, and the jig holds 5 THT parts. The fixture is routed (26 connections, 10 vias). |
 | `pic_programmer/` | KiCad demo *pic_programmer* (2 layers, through-hole) | It needs only Eurocircuits class 3A. The jig holds 55 hand-soldered parts. The fixture is routed (51 connections, 34 vias). |
+| `tiny_tapeout/` | KiCad demo *tiny_tapeout* (Tiny Tapeout demo board: RP2040, 104 × 81 mm, 4 layers) | **The showcase.** A batch of four boards: one fixture with four sites around one connector in the middle, jigs that hold two boards each (two sets for the printer bed), and a runner that programs all four RP2040s over SWD at the same time (`program.command` with a probe per board) while it measures the rails, then the checks that need the firmware. The guide has the production timing (timeline per board, time per board by batch size). The video shows every step, ending with the batch on the fixture and the tested copper lighting up next to the runner's output. Settings: `SHOWCASE` in `tools/regen_examples.py`. |
 | `video/` | KiCad demo *video* (312 mm PCI card, 4 layers) | It needs Eurocircuits class 4B. The class overview shows that its zone fills come within 0.011 mm of the edge, which JLCPCB, OSH Park and Würth flag. The fixture has 32 measurement channels, each divider pair above its own header pin, and is routed (134 connections, 128 vias). |
 
 ## How to use the outputs

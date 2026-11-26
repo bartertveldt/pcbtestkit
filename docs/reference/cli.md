@@ -13,6 +13,7 @@ Run `pcbtestkit <command> --help` for the same text. Without a pip install use `
 | `tools` | list agent tools (--brief) or export their definitions |
 | `guide` | print the agent quick reference (cheapest way for an AI to use this CLI) |
 | `classes` | technology-class systems: list, show, check a board, validate, template |
+| `facilities` | test facilities (your tester: connector, buses, driver): list, show, validate, template |
 | `mcp` | run the MCP stdio server |
 
 ## `pcbtestkit run`
@@ -23,11 +24,12 @@ full export
 pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
                       [--fab {standard,advanced,conservative}] [--class-system CLASS_SYSTEM]
                       [--tech-class TECH_CLASS] [--check-class SYSTEM[:CLASS]] [--no-kicad]
-                      [--json] [--out OUT] [--panel PANEL] [--batch BATCH]
+                      [--json] [--out OUT] [--panel PANEL] [--batch BATCH] [--facility FACILITY]
                       [--program-connector {same,swd10,jtag20,avr_isp6,pic_icsp6,pins}]
                       [--outline {rect,outline}] [--jig-parts JIG_PARTS] [--no-fixture]
                       [--no-route] [--no-jig] [--no-runner] [--no-visuals] [--video]
-                      [--video-fps VIDEO_FPS] [--video-stills] [-q]
+                      [--video-fps VIDEO_FPS] [--video-stills]
+                      [--video-quality {basic,standard,best,high}] [--background] [-q]
                       project
 ```
 
@@ -45,6 +47,7 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
 | `--out` | output folder (default <project>/production_test) |
 | `--panel` | fixture sites, e.g. 2x2 |
 | `--batch` | boards per batch: one fixture site per board, jigs that hold them all |
+| `--facility` | test facility the fixture plugs into (pcbtestkit facilities list), default raspberry-pi |
 | `--program-connector` | programming connector per board on the fixture (default: a copy of the board's header) (one of: same, swd10, jtag20, avr_isp6, pic_icsp6, pins) |
 | `--outline` | (one of: rect, outline) |
 | `--jig-parts` | comma separated refs (default: all THT) |
@@ -56,6 +59,8 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
 | `--video` | also render the explainer video: real 3D animation rendered with KiCad (needs ffmpeg; several minutes) |
 | `--video-fps` | frame rate of the video's motion shots (default 24) |
 | `--video-stills` | quick video from stills only, without the 3D animation |
+| `--video-quality` | ray tracing of the motion shots (default standard: shadows and ambient occlusion) (one of: basic, standard, best, high) |
+| `--background` | with --video: make everything else now and render the video in a background job (progress window) |
 | `-q`, `--quiet` |  |
 
 ## `pcbtestkit analyze`
@@ -174,6 +179,21 @@ pcbtestkit classes [-h] [--class CLS] [--system SYSTEM] [--target TARGET_CLASS]
 | `--out` | output file (template) |
 | `--json` |  |
 
+## `pcbtestkit facilities`
+
+test facilities (your tester: connector, buses, driver): list, show, validate, template
+
+```text
+pcbtestkit facilities [-h] [--out OUT] [--json] {list,show,validate,template} [target ...]
+```
+
+| Argument | Meaning |
+|---|---|
+| `action` | (one of: list, show, validate, template) |
+| `target` | facility id (show) or facility.json files (validate) |
+| `--out` | folder to write facility.json and driver.py to (template) |
+| `--json` |  |
+
 ## `pcbtestkit mcp`
 
 run the MCP stdio server
@@ -186,4 +206,4 @@ pcbtestkit mcp [-h] [--project PROJECT] [--read-only] [--profile {full,core,read
 |---|---|
 | `--project` | board or project to open at start (open_project can switch later) |
 | `--read-only` | refuse every write tool |
-| `--profile` | tools to expose: full (31), core (16, about half the tokens), readonly (one of: full, core, readonly; default: full) |
+| `--profile` | tools to expose: full (34), core (16, about half the tokens), readonly (one of: full, core, readonly; default: full) |

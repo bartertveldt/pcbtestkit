@@ -2,8 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, "feature/**"]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
@@ -43,6 +44,74 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Class systems validate
         run: python -m pcbtestkit classes validate
+
+  kicad-windows:
+    # renders, the 3D animation, captions and the MP4 with a real KiCad on Windows (KiCad and ffmpeg from Chocolatey),
+    # in the foreground and as the background job without a window
+    name: KiCad renders and video (Windows)
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install KiCad and ffmpeg
+        run: choco install kicad ffmpeg -y --no-progress
+      - name: Sample board with a short, quick video
+        shell: bash
+        run: |
+          python examples/make_sample.py
+          echo '{"video": {"fps": 4, "quality": "basic"}}' > examples/sample_sensor/pcbtestkit.json
+      - name: Renders, 3D animation and video
+        run: python -m pcbtestkit run examples/sample_sensor/sample_sensor.kicad_pcb --out out --no-kicad --video
+      - name: The background job (no window) makes the video again from kept stills
+        run: python -m pcbtestkit.video_job examples/sample_sensor --out out --no-window
+      - name: The video is there
+        run: python -c "import os, sys; p = 'out/sample_sensor-explainer.mp4'; print(p, os.path.getsize(p)); sys.exit(os.path.getsize(p) < 100000)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-video
+          path: |
+            out/*.mp4
+            out/*-guide.html
+            out/*-video-error.txt
+            out/visuals/*.png
+            out/visuals/video-job.*
+
+  kicad-linux:
+    # the same on Linux in KiCad's own image
+    name: KiCad renders and video (Linux, KiCad image)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    container:
+      image: kicad/kicad:10.0
+      options: --user root
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg and a virtual display for the captions (wxPython)
+        run: apt-get update && apt-get install -y --no-install-recommends ffmpeg xvfb xauth
+      - name: Sample board with a short, quick video
+        run: |
+          python3 examples/make_sample.py
+          echo '{"video": {"fps": 4, "quality": "basic"}}' > examples/sample_sensor/pcbtestkit.json
+      - name: Renders, 3D animation and video
+        run: python3 -m pcbtestkit run examples/sample_sensor/sample_sensor.kicad_pcb --out out --no-kicad --video
+      - name: The background job (no window) makes the video again from kept stills
+        run: python3 -m pcbtestkit.video_job examples/sample_sensor --out out --no-window
+      - name: The video is there
+        run: python3 -c "import os, sys; p = 'out/sample_sensor-explainer.mp4'; print(p, os.path.getsize(p)); sys.exit(os.path.getsize(p) < 100000)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: linux-video
+          path: |
+            out/*.mp4
+            out/*-guide.html
+            out/*-video-error.txt
+            out/visuals/*.png
+            out/visuals/video-job.*
 
   package:
     runs-on: ubuntu-latest

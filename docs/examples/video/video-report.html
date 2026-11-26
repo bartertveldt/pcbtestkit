@@ -14,7 +14,7 @@ th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertic
 .wrap{overflow-x:auto}.small{font-size:12px}code{font-size:12px}.svgbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px}
 details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;border-radius:8px;border:1px solid var(--line)}
 </style></head><body><main>
-<h1>KiCad demo rev 1.A</h1><div class='muted'>video &middot; generated 2026-11-25T15:03:23 &middot; PCB TestKit 1.1.0</div>
+<h1>KiCad demo rev 1.A</h1><div class='muted'>video &middot; generated 2026-11-26T08:46:06 &middot; PCB TestKit 1.1.0</div>
 <div class='cards'>
 <div class='card'><span class='muted'>Readiness</span><b>not ready</b><span class='muted'>score 29/100</span></div>
 <div class='card'><span class='muted'>critical</span><b style='color:#d13438'>1</b></div>
@@ -22,6 +22,7 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <div class='card'><span class='muted'>minor</span><b style='color:#c9a400'>10</b></div>
 <div class='card'><span class='muted'>info</span><b style='color:#5b7fa6'>3</b></div>
 <div class='card'><span class='muted'>Test coverage</span><b>8.9%</b><span class='muted'>33/371 nets, 5/5 power</span></div>
+<div class='card'><span class='muted'>Per board (batch of 1)</span><b>43:11</b><span class='muted'>assemble, program, test</span></div>
 </div>
 <div class='muted small'>Board 312.0 x 106.7 mm, 4 copper layers, 1.60 mm thick, 189 components (40 SMD top, 103 SMD bottom, 45 THT).</div>
 <h2>Technology class</h2>
@@ -46,12 +47,16 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <div class='muted small'>Class driven by: ring_via_outer 0.15 (pattern 3 needs 0.200); ring_via_inner 0.15 (pattern 3 needs 0.200); track_outer 0.2 (pattern 3 needs 0.250); gap_outer 0.1995 (pattern 3 needs 0.250); track_inner 0.2 (pattern 3 needs 0.250); gap_inner 0.2 (pattern 3 needs 0.250); drill_via 0.4 (drill A needs 0.500)</div>
 <h3>Which class systems fit this board</h3><div class='wrap'><table><tr><th>System</th><th>Needs</th><th>Fits</th><th>Blocked by</th></tr>
 <tr><td>AISLER design rules (all published stack-ups) <span class='muted small'>(verified)</span></td><td>-</td><td><b style='color:#e8710a'>&#10007;</b></td><td class='small'>copper to board edge, component hole annular ring (inner), component hole annular ring (outer), surface finish</td></tr>
+<tr><td>ALLPCB standard PCB capability <span class='muted small'>(verified)</span></td><td>standard</td><td><b style='color:#e8710a'>&#10007;</b></td><td class='small'>copper to board edge</td></tr>
 <tr><td>Eurocircuits pattern + drill classes <span class='muted small'>(verified)</span></td><td>4B</td><td>&#10003;</td><td class='small'></td></tr>
 <tr><td>IPC-2221 conductor spacing by voltage (Table 6-1) <span class='muted small'>(secondary)</span></td><td>B2</td><td>&#10003;</td><td class='small'></td></tr>
 <tr><td>IPC-6012 performance class: annular ring and plating <span class='muted small'>(partial)</span></td><td>2</td><td>&#10003;</td><td class='small'></td></tr>
 <tr><td>JLCPCB rigid PCB capabilities <span class='muted small'>(verified)</span></td><td>standard</td><td><b style='color:#e8710a'>&#10007;</b></td><td class='small'>copper to board edge</td></tr>
+<tr><td>Multi-CB design parameters (35 um copper) <span class='muted small'>(verified)</span></td><td>standard</td><td><b style='color:#e8710a'>&#10007;</b></td><td class='small'>copper to board edge</td></tr>
+<tr><td>NextPCB standard PCB capabilities <span class='muted small'>(verified)</span></td><td>1oz</td><td><b style='color:#e8710a'>&#10007;</b></td><td class='small'>copper to board edge</td></tr>
 <tr><td>OSH Park services <span class='muted small'>(verified)</span></td><td>4-layer</td><td><b style='color:#e8710a'>&#10007;</b></td><td class='small'>copper to board edge</td></tr>
 <tr><td>PCBWay standard PCB capabilities <span class='muted small'>(verified)</span></td><td>standard</td><td>&#10003;</td><td class='small'></td></tr>
+<tr><td>Seeed Fusion PCB (standard FR4 specification) <span class='muted small'>(verified)</span></td><td>1oz</td><td><b style='color:#e8710a'>&#10007;</b></td><td class='small'>copper to board edge</td></tr>
 <tr><td>Wurth Elektronik BASIC design rules <span class='muted small'>(verified)</span></td><td>standard</td><td><b style='color:#e8710a'>&#10007;</b></td><td class='small'>copper to board edge</td></tr>
 </table></div>
 <h2>Weak points</h2><div class='wrap'><table><tr><th>#</th><th>Severity</th><th>Finding</th><th>Why it matters / what to do</th><th>Parts / nets</th></tr>
