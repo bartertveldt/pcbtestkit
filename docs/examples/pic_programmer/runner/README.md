@@ -49,7 +49,8 @@ a 74HC4067 multiplexer. Configure the pins at the top of the file.
 
 ## Batches (several boards per fixture)
 
-A batch fixture has one site per board, each with its own header and power terminal. `test` asks the serial number
+A batch fixture has one site per board, all wired to one connector in the middle (each board's supply, channels
+and programming lines on its own pins; `fixture.batch_connector: per_site` gives a header per board). `test` asks the serial number
 of every board, then follows the test plan's phases:
 
 1. every board: visual and unpowered short check, then power-up with the supply checks;

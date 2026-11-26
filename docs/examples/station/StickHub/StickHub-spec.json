@@ -1,0 +1,4497 @@
+{
+  "schema": "pcbtestkit/spec@1",
+  "generator": "PCB TestKit 1.1.1",
+  "generated": "2026-11-26T16:27:12",
+  "source": {
+    "board": "StickHub.kicad_pcb",
+    "schematic": "StickHub.kicad_sch",
+    "file_format_version": 20250907,
+    "generator": "pcbnew 9.99"
+  },
+  "board": {
+    "name": "StickHub",
+    "title": "",
+    "revision": "",
+    "date": "",
+    "company": "",
+    "outline_mm": {
+      "x_min": 141.75,
+      "y_min": 80.0,
+      "x_max": 158.25,
+      "y_max": 120.0,
+      "width": 16.5,
+      "height": 40.0
+    },
+    "area_mm2": 660.0,
+    "thickness_mm": 1.6,
+    "copper_layers": 2,
+    "layer_names": [
+      "F.Cu",
+      "B.Cu"
+    ],
+    "copper_thickness_um": 35.0,
+    "finish": "None",
+    "stackup": [
+      {
+        "name": "F.SilkS",
+        "type": "Top Silk Screen",
+        "thickness": 0.0
+      },
+      {
+        "name": "F.Paste",
+        "type": "Top Solder Paste",
+        "thickness": 0.0
+      },
+      {
+        "name": "F.Mask",
+        "type": "Top Solder Mask",
+        "thickness": 0.01
+      },
+      {
+        "name": "F.Cu",
+        "type": "copper",
+        "thickness": 0.035
+      },
+      {
+        "name": "dielectric 1",
+        "type": "core",
+        "thickness": 1.51,
+        "material": "FR4"
+      },
+      {
+        "name": "B.Cu",
+        "type": "copper",
+        "thickness": 0.035
+      },
+      {
+        "name": "B.Mask",
+        "type": "Bottom Solder Mask",
+        "thickness": 0.01
+      },
+      {
+        "name": "B.Paste",
+        "type": "Bottom Solder Paste",
+        "thickness": 0.0
+      },
+      {
+        "name": "B.SilkS",
+        "type": "Bottom Silk Screen",
+        "thickness": 0.0
+      }
+    ]
+  },
+  "technology": {
+    "system": "eurocircuits-2024",
+    "name": "Eurocircuits pattern + drill classes",
+    "status": "verified",
+    "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+    "required": {
+      "class": null,
+      "fits": false,
+      "services": null,
+      "levels": {
+        "pattern": null,
+        "drill": "C"
+      },
+      "beyond": [
+        "pattern"
+      ]
+    },
+    "ordered": null,
+    "layers": 2,
+    "thickness_mm": 1.6,
+    "base_copper_um": 35.0,
+    "finish": null,
+    "short_count": 0,
+    "microvias": 0,
+    "primary": {
+      "system": "eurocircuits-2024",
+      "name": "Eurocircuits pattern + drill classes",
+      "status": "verified",
+      "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+      "verified": "2026-11-19",
+      "category": "manufacturing",
+      "context": {
+        "layers": 2,
+        "copper_um": 35.0,
+        "thickness_mm": 1.6,
+        "board_w_mm": 16.5,
+        "board_h_mm": 40.0,
+        "mask_color": "green",
+        "edge_process": "routed"
+      },
+      "measured": {
+        "aspect_ratio": 4.0,
+        "drill_via": 0.3,
+        "gap_outer": 0.1491,
+        "microvias": 0.0,
+        "ring_via_outer": 0.05,
+        "thickness_max": 1.6,
+        "track_outer": 0.15
+      },
+      "required": {
+        "levels": {
+          "pattern": null,
+          "drill": "C"
+        },
+        "fits": false,
+        "class": null,
+        "beyond": [
+          "pattern"
+        ],
+        "drivers": [
+          {
+            "dimension": "pattern",
+            "level": "9",
+            "metric": "ring_via_outer",
+            "measured": 0.05,
+            "limit": 0.1
+          },
+          {
+            "dimension": "drill",
+            "level": "B",
+            "metric": "drill_via",
+            "measured": 0.3,
+            "limit": 0.35
+          }
+        ]
+      },
+      "process": {
+        "ok": true,
+        "violations": {}
+      }
+    },
+    "checks": [],
+    "overview": [
+      {
+        "system": "aisler-2025",
+        "name": "AISLER design rules (all published stack-ups)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "2L-35um-ENIG",
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "allpcb-2026",
+        "name": "ALLPCB standard PCB capability",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)",
+          "hole gap between different nets",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "eurocircuits-2024",
+        "name": "Eurocircuits pattern + drill classes",
+        "kind": "fab-classes",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)",
+          "via hole (finished)"
+        ],
+        "services": []
+      },
+      {
+        "system": "ipc-2221-voltage",
+        "name": "IPC-2221 conductor spacing by voltage (Table 6-1)",
+        "kind": "standard",
+        "status": "secondary",
+        "class": "B2",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "ipc-6012-ring",
+        "name": "IPC-6012 performance class: annular ring and plating",
+        "kind": "standard",
+        "status": "partial",
+        "class": "2",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "jlcpcb-2026",
+        "name": "JLCPCB rigid PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "multicb-2026",
+        "name": "Multi-CB design parameters (35 um copper)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "nextpcb-2026",
+        "name": "NextPCB standard PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "1oz",
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "oshpark-2026",
+        "name": "OSH Park services",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper",
+          "copper to board edge",
+          "outer copper gap",
+          "outer track width"
+        ],
+        "services": []
+      },
+      {
+        "system": "pcbway-standard-2026",
+        "name": "PCBWay standard PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)"
+        ],
+        "services": []
+      },
+      {
+        "system": "seeed-fusion-2026",
+        "name": "Seeed Fusion PCB (standard FR4 specification)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "1oz",
+        "fits": false,
+        "blockers": [
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "wurth-basic-2022",
+        "name": "Wurth Elektronik BASIC design rules",
+        "kind": "fab-classes",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "hole-to-hole gap",
+          "copper to board edge",
+          "outer copper gap",
+          "via annular ring (outer)"
+        ],
+        "services": []
+      }
+    ]
+  },
+  "manufacturing": {
+    "fab_profile": "standard",
+    "fab_limits": {
+      "min_track": 0.127,
+      "min_clearance": 0.127,
+      "min_drill": 0.3,
+      "min_via_annular": 0.1,
+      "min_tht_annular": 0.15,
+      "min_edge_clearance": 0.3,
+      "min_hole_to_hole": 0.25,
+      "max_aspect_ratio": 8.0,
+      "warn_factor": 1.25,
+      "source": "fab profile standard"
+    },
+    "project_rules": {
+      "max_error": 0.005,
+      "min_clearance": 0.15,
+      "min_connection": 0.0,
+      "min_copper_edge_clearance": 0.0,
+      "min_groove_width": 0.0,
+      "min_hole_clearance": 0.0,
+      "min_hole_to_hole": 0.25,
+      "min_microvia_diameter": 0.2,
+      "min_microvia_drill": 0.1,
+      "min_resolved_spokes": 2.0,
+      "min_silk_clearance": 0.0,
+      "min_text_height": 0.4,
+      "min_text_thickness": 0.1,
+      "min_through_hole_diameter": 0.25,
+      "min_track_width": 0.15,
+      "min_via_annular_width": 0.1,
+      "min_via_annulus": 0.049999999999999996,
+      "min_via_diameter": 0.5,
+      "solder_mask_to_copper_clearance": 0.0
+    },
+    "netclasses": [
+      {
+        "name": "Default",
+        "clearance": 0.15,
+        "track_width": 0.15,
+        "via_diameter": 0.5,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.15,
+        "diff_pair_gap": 0.15
+      }
+    ],
+    "measured": {
+      "min_track_width_mm": 0.15,
+      "min_via_drill_mm": 0.3,
+      "min_via_annular_mm": 0.1,
+      "min_tht_annular_mm": null,
+      "min_hole_mm": 0.3,
+      "max_via_aspect_ratio": 5.33,
+      "min_pad_via_edge_clearance_mm": -1.96,
+      "via_count": 87,
+      "plated_holes": 87,
+      "non_plated_holes": 1,
+      "drill_histogram_mm": {
+        "0.30": 81,
+        "0.40": 6,
+        "4.00": 1
+      },
+      "track_count": 1293,
+      "zone_count": 5
+    }
+  },
+  "assembly": {
+    "component_count": 94,
+    "smd_top": 35,
+    "smd_bottom": 51,
+    "tht": 1,
+    "dnp": [],
+    "components": [
+      {
+        "ref": "C1",
+        "value": "1uF 10V",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 156.023,
+        "y": 94.995,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C2",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 144.179,
+        "y": 96.586,
+        "rotation": 135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "Net-(U1-VBUS_SENSE)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C3",
+        "value": "10uF 6.3V",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 156.553,
+        "y": 95.525,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+3.3V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C4",
+        "value": "10uF 6.3V",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 148.8,
+        "y": 105.3,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+1V8",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C5",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 148.3,
+        "y": 104.8,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+3.3V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C6",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 146.05,
+        "y": 102.55,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+3.3V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C7",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 144.563,
+        "y": 101.048,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+3.3V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C8",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 155.75,
+        "y": 101.6,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+3.3V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C9",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 146.3,
+        "y": 94.464,
+        "rotation": 135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+3.3V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C10",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 154.639,
+        "y": 103.346,
+        "rotation": -45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+3.3V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C11",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 154.962,
+        "y": 93.934,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+1V8",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C12",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 153.55,
+        "y": 104.35,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+1V8",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C13",
+        "value": "0.1uF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 147.3,
+        "y": 103.8,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+1V8",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C14",
+        "value": "0.1uF 100V",
+        "footprint": "footprints:2012_C",
+        "side": "top",
+        "x": 150.0,
+        "y": 107.5,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "NM0805B104K101CEDN",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C15",
+        "value": "0.1uF 100V",
+        "footprint": "footprints:2012_C",
+        "side": "top",
+        "x": 150.0,
+        "y": 102.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "NM0805B104K101CEDN",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C16",
+        "value": "0.1uF 100V",
+        "footprint": "footprints:2012_C",
+        "side": "top",
+        "x": 150.0,
+        "y": 100.5,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "NM0805B104K101CEDN",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C17",
+        "value": "0.1uF 100V",
+        "footprint": "footprints:2012_C",
+        "side": "top",
+        "x": 150.0,
+        "y": 94.95,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "NM0805B104K101CEDN",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C18",
+        "value": "0.1uF 100V",
+        "footprint": "footprints:2012_C",
+        "side": "top",
+        "x": 150.0,
+        "y": 93.5,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "NM0805B104K101CEDN",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C19",
+        "value": "0.1uF 100V",
+        "footprint": "footprints:2012_C",
+        "side": "top",
+        "x": 150.0,
+        "y": 88.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "NM0805B104K101CEDN",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C20",
+        "value": "0.1uF 100V",
+        "footprint": "footprints:2012_C",
+        "side": "top",
+        "x": 150.0,
+        "y": 86.5,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "NM0805B104K101CEDN",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C21",
+        "value": "0.1uF 100V",
+        "footprint": "footprints:2012_C",
+        "side": "bottom",
+        "x": 157.25,
+        "y": 102.5,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "NM0805B104K101CEDN",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "VIN",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C22",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 153.75,
+        "y": 107.0,
+        "rotation": 135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C23",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 149.079,
+        "y": 89.229,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C24",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 149.786,
+        "y": 89.936,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C25",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 150.493,
+        "y": 90.643,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C26",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 151.2,
+        "y": 91.35,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C27",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 151.907,
+        "y": 92.057,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C28",
+        "value": "15nF",
+        "footprint": "footprints:1005_C",
+        "side": "bottom",
+        "x": 152.5,
+        "y": 107.75,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "Net-(U2-CAP)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C29",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 144.15,
+        "y": 106.7,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C30",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 145.15,
+        "y": 106.7,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C31",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 143.15,
+        "y": 106.7,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C32",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 142.65,
+        "y": 104.6,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C33",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 143.65,
+        "y": 104.6,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C34",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 152.807,
+        "y": 89.757,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C35",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 152.1,
+        "y": 89.05,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C36",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 151.393,
+        "y": 88.343,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C37",
+        "value": "22uF 10V",
+        "footprint": "footprints:1608_C",
+        "side": "bottom",
+        "x": 150.686,
+        "y": 87.636,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.8,
+        "height_source": "3D model",
+        "mpn": "GRM188R61A226ME15D",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C38",
+        "value": "330uF 10V",
+        "footprint": "footprints:CP_Elec_6.3x11_Board_Edge_Mirrored",
+        "side": "bottom",
+        "x": 155.0,
+        "y": 80.0,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 3.5,
+        "height_source": "3D model",
+        "rated_voltage_v": 10.0,
+        "polarized": true,
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "D1",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 150.4,
+        "y": 105.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U1D-"
+        }
+      },
+      {
+        "ref": "D2",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 150.4,
+        "y": 103.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U1D+"
+        }
+      },
+      {
+        "ref": "D3",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 150.4,
+        "y": 98.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U2D-"
+        }
+      },
+      {
+        "ref": "D4",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 150.4,
+        "y": 96.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U2D+"
+        }
+      },
+      {
+        "ref": "D5",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 150.4,
+        "y": 91.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U3D-"
+        }
+      },
+      {
+        "ref": "D6",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 150.4,
+        "y": 89.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U3D+"
+        }
+      },
+      {
+        "ref": "D7",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 150.4,
+        "y": 84.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U4D-"
+        }
+      },
+      {
+        "ref": "D8",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 150.4,
+        "y": 82.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U4D+"
+        }
+      },
+      {
+        "ref": "D9",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 149.6,
+        "y": 103.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U5D-"
+        }
+      },
+      {
+        "ref": "D10",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 149.6,
+        "y": 105.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U5D+"
+        }
+      },
+      {
+        "ref": "D11",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 149.6,
+        "y": 96.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U6D-"
+        }
+      },
+      {
+        "ref": "D12",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 149.6,
+        "y": 98.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U6D+"
+        }
+      },
+      {
+        "ref": "D13",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 149.6,
+        "y": 89.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U7D-"
+        }
+      },
+      {
+        "ref": "D14",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "top",
+        "x": 149.6,
+        "y": 91.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/U7D+"
+        }
+      },
+      {
+        "ref": "D15",
+        "value": "USB",
+        "footprint": "footprints:Duo_LED_1.6x0.8_Kingbright_APHB1608LZGKSURKC",
+        "side": "top",
+        "x": 147.153,
+        "y": 86.15,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.43,
+        "height_source": "3D model",
+        "mpn": "APHB1608SGEC",
+        "polarized": true,
+        "pins": {
+          "GA": "Net-(D15-1)",
+          "GK": "/LC",
+          "RA": "/LC",
+          "RK": "Net-(D15-1)"
+        }
+      },
+      {
+        "ref": "D16",
+        "value": "USB",
+        "footprint": "footprints:Duo_LED_1.6x0.8_Kingbright_APHB1608LZGKSURKC",
+        "side": "top",
+        "x": 147.153,
+        "y": 84.75,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.43,
+        "height_source": "3D model",
+        "mpn": "APHB1608SGEC",
+        "polarized": true,
+        "pins": {
+          "GA": "Net-(D16-1)",
+          "GK": "/LC",
+          "RA": "/LC",
+          "RK": "Net-(D16-1)"
+        }
+      },
+      {
+        "ref": "D17",
+        "value": "USB",
+        "footprint": "footprints:Duo_LED_1.6x0.8_Kingbright_APHB1608LZGKSURKC",
+        "side": "top",
+        "x": 147.153,
+        "y": 83.35,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.43,
+        "height_source": "3D model",
+        "mpn": "APHB1608SGEC",
+        "polarized": true,
+        "pins": {
+          "GA": "Net-(D17-1)",
+          "GK": "/LC",
+          "RA": "/LC",
+          "RK": "Net-(D17-1)"
+        }
+      },
+      {
+        "ref": "D18",
+        "value": "USB",
+        "footprint": "footprints:Duo_LED_1.6x0.8_Kingbright_APHB1608LZGKSURKC",
+        "side": "top",
+        "x": 147.153,
+        "y": 81.95,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.43,
+        "height_source": "3D model",
+        "mpn": "APHB1608SGEC",
+        "polarized": true,
+        "pins": {
+          "GA": "Net-(D18-1)",
+          "GK": "/LC",
+          "RA": "/LC",
+          "RK": "Net-(D18-1)"
+        }
+      },
+      {
+        "ref": "D19",
+        "value": "USB",
+        "footprint": "footprints:Duo_LED_1.6x0.8_Kingbright_APHB1608LZGKSURKC",
+        "side": "top",
+        "x": 145.153,
+        "y": 86.15,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.43,
+        "height_source": "3D model",
+        "mpn": "APHB1608SGEC",
+        "polarized": true,
+        "pins": {
+          "GA": "Net-(D19-1)",
+          "GK": "/LC",
+          "RA": "/LC",
+          "RK": "Net-(D19-1)"
+        }
+      },
+      {
+        "ref": "D20",
+        "value": "USB",
+        "footprint": "footprints:Duo_LED_1.6x0.8_Kingbright_APHB1608LZGKSURKC",
+        "side": "top",
+        "x": 145.153,
+        "y": 84.75,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.43,
+        "height_source": "3D model",
+        "mpn": "APHB1608SGEC",
+        "polarized": true,
+        "pins": {
+          "GA": "Net-(D20-1)",
+          "GK": "/LC",
+          "RA": "/LC",
+          "RK": "Net-(D20-1)"
+        }
+      },
+      {
+        "ref": "D21",
+        "value": "USB",
+        "footprint": "footprints:Duo_LED_1.6x0.8_Kingbright_APHB1608LZGKSURKC",
+        "side": "top",
+        "x": 145.153,
+        "y": 83.35,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.43,
+        "height_source": "3D model",
+        "mpn": "APHB1608SGEC",
+        "polarized": true,
+        "pins": {
+          "GA": "Net-(D21-1)",
+          "GK": "/LC",
+          "RA": "/LC",
+          "RK": "Net-(D21-1)"
+        }
+      },
+      {
+        "ref": "D22",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "bottom",
+        "x": 147.1,
+        "y": 107.2,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/D-"
+        }
+      },
+      {
+        "ref": "D23",
+        "value": "TVS",
+        "footprint": "footprints:D_0402",
+        "side": "bottom",
+        "x": 146.25,
+        "y": 107.2,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "AR0521P1",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "/D+"
+        }
+      },
+      {
+        "ref": "D24",
+        "value": "5V",
+        "footprint": "footprints:D_0402",
+        "side": "bottom",
+        "x": 155.9,
+        "y": 103.1,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "D5V0H1B2LP-7B",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "VIN"
+        }
+      },
+      {
+        "ref": "D25",
+        "value": "5V",
+        "footprint": "footprints:D_0402",
+        "side": "bottom",
+        "x": 149.15,
+        "y": 87.65,
+        "rotation": 45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.37,
+        "height_source": "3D model",
+        "mpn": "D5V0H1B2LP-7B",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "+5V"
+        }
+      },
+      {
+        "ref": "H1",
+        "value": "Strap",
+        "footprint": "footprints:Plain_Hole_3mm",
+        "side": "top",
+        "x": 150.0,
+        "y": 109.25,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "pins": {}
+      },
+      {
+        "ref": "J1",
+        "value": "HOST",
+        "footprint": "footprints:USB_A_PCB_traces_small",
+        "side": "top",
+        "x": 150.0,
+        "y": 120.0,
+        "rotation": 90.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 7.0,
+        "height_source": "typical height for USB_A",
+        "pins": {
+          "1": "Net-(J1-Pin_1)",
+          "2": "/D-",
+          "3": "/D+",
+          "4": "GND"
+        }
+      },
+      {
+        "ref": "J2",
+        "value": "USB1",
+        "footprint": "footprints:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+        "side": "top",
+        "x": 153.85,
+        "y": 104.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.96,
+        "height_source": "3D model",
+        "mpn": "SM04B-SRSS-TB(LF)(SN) ",
+        "pins": {
+          "1": "+5V",
+          "2": "/U1D-",
+          "3": "/U1D+",
+          "4": "GND",
+          "MP": "GND"
+        }
+      },
+      {
+        "ref": "J3",
+        "value": "USB2",
+        "footprint": "footprints:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+        "side": "top",
+        "x": 153.85,
+        "y": 97.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.96,
+        "height_source": "3D model",
+        "mpn": "SM04B-SRSS-TB(LF)(SN) ",
+        "pins": {
+          "1": "+5V",
+          "2": "/U2D-",
+          "3": "/U2D+",
+          "4": "GND",
+          "MP": "GND"
+        }
+      },
+      {
+        "ref": "J4",
+        "value": "USB3",
+        "footprint": "footprints:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+        "side": "top",
+        "x": 153.85,
+        "y": 90.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.96,
+        "height_source": "3D model",
+        "mpn": "SM04B-SRSS-TB(LF)(SN) ",
+        "pins": {
+          "1": "+5V",
+          "2": "/U3D-",
+          "3": "/U3D+",
+          "4": "GND",
+          "MP": "GND"
+        }
+      },
+      {
+        "ref": "J5",
+        "value": "USB4",
+        "footprint": "footprints:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+        "side": "top",
+        "x": 153.85,
+        "y": 83.75,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.96,
+        "height_source": "3D model",
+        "mpn": "SM04B-SRSS-TB(LF)(SN) ",
+        "pins": {
+          "1": "+5V",
+          "2": "/U4D-",
+          "3": "/U4D+",
+          "4": "GND",
+          "MP": "GND"
+        }
+      },
+      {
+        "ref": "J6",
+        "value": "USB5",
+        "footprint": "footprints:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+        "side": "top",
+        "x": 146.15,
+        "y": 104.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.96,
+        "height_source": "3D model",
+        "mpn": "SM04B-SRSS-TB(LF)(SN) ",
+        "pins": {
+          "1": "+5V",
+          "2": "/U5D-",
+          "3": "/U5D+",
+          "4": "GND",
+          "MP": "GND"
+        }
+      },
+      {
+        "ref": "J7",
+        "value": "USB6",
+        "footprint": "footprints:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+        "side": "top",
+        "x": 146.15,
+        "y": 97.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.96,
+        "height_source": "3D model",
+        "mpn": "SM04B-SRSS-TB(LF)(SN) ",
+        "pins": {
+          "1": "+5V",
+          "2": "/U6D-",
+          "3": "/U6D+",
+          "4": "GND",
+          "MP": "GND"
+        }
+      },
+      {
+        "ref": "J8",
+        "value": "USB7",
+        "footprint": "footprints:JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+        "side": "top",
+        "x": 146.15,
+        "y": 90.75,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.96,
+        "height_source": "3D model",
+        "mpn": "SM04B-SRSS-TB(LF)(SN) ",
+        "pins": {
+          "1": "+5V",
+          "2": "/U7D-",
+          "3": "/U7D+",
+          "4": "GND",
+          "MP": "GND"
+        }
+      },
+      {
+        "ref": "J9",
+        "value": "EXTGND",
+        "footprint": "footprints:1P-1.5x1.5",
+        "side": "bottom",
+        "x": 157.25,
+        "y": 100.25,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "JP1",
+        "value": "EXTPWR",
+        "footprint": "footprints:JP-2_1.5x1.5",
+        "side": "bottom",
+        "x": 157.25,
+        "y": 105.9,
+        "rotation": 90.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "pins": {
+          "1": "Net-(J1-Pin_1)",
+          "2": "VIN"
+        }
+      },
+      {
+        "ref": "LOGO1",
+        "value": "Logo",
+        "footprint": "footprints:Creative_Commons_CC_Mask",
+        "side": "bottom",
+        "x": 149.4,
+        "y": 98.6,
+        "rotation": 180.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "pins": {}
+      },
+      {
+        "ref": "LOGO2",
+        "value": "Logo",
+        "footprint": "footprints:Creative_Commons_BY_Mask",
+        "side": "bottom",
+        "x": 150.9,
+        "y": 98.6,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "pins": {}
+      },
+      {
+        "ref": "LOGO3",
+        "value": "Logo",
+        "footprint": "footprints:Creative_Commons_NC_Mask",
+        "side": "bottom",
+        "x": 149.4,
+        "y": 97.1,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "pins": {}
+      },
+      {
+        "ref": "LOGO4",
+        "value": "Logo",
+        "footprint": "footprints:Creative_Commons_SA_Mask",
+        "side": "bottom",
+        "x": 150.9,
+        "y": 97.1,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "pins": {}
+      },
+      {
+        "ref": "R1",
+        "value": "10k",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 145.77,
+        "y": 94.995,
+        "rotation": -45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF1002TCE",
+        "pins": {
+          "1": "+5V",
+          "2": "Net-(U1-VBUS_SENSE)"
+        }
+      },
+      {
+        "ref": "R2",
+        "value": "100k",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 144.709,
+        "y": 96.055,
+        "rotation": 135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "pins": {
+          "1": "Net-(U1-VBUS_SENSE)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R3",
+        "value": "100k",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 145.24,
+        "y": 95.525,
+        "rotation": -45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "pins": {
+          "1": "+3.3V",
+          "2": "Net-(U1-EXT_RST#)"
+        }
+      },
+      {
+        "ref": "R4",
+        "value": "100k",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 147.361,
+        "y": 93.404,
+        "rotation": -45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "pins": {
+          "1": "+3.3V",
+          "2": "Net-(U1-TEST3#)"
+        }
+      },
+      {
+        "ref": "R5",
+        "value": "100k",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 146.831,
+        "y": 93.934,
+        "rotation": -45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF1003TCE",
+        "pins": {
+          "1": "+3.3V",
+          "2": "Net-(U1-TEST1#)"
+        }
+      },
+      {
+        "ref": "R6",
+        "value": "2.7k",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 147.8,
+        "y": 104.3,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF2701TCE",
+        "pins": {
+          "1": "Net-(U1-REXT)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R7",
+        "value": "470",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 153.371,
+        "y": 92.343,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF4700TCE",
+        "pins": {
+          "1": "Net-(D15-1)",
+          "2": "/LED1"
+        }
+      },
+      {
+        "ref": "R8",
+        "value": "470",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 153.902,
+        "y": 92.873,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF4700TCE",
+        "pins": {
+          "1": "Net-(D16-1)",
+          "2": "/LED2"
+        }
+      },
+      {
+        "ref": "R9",
+        "value": "470",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 154.432,
+        "y": 93.404,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF4700TCE",
+        "pins": {
+          "1": "Net-(D17-1)",
+          "2": "/LED3"
+        }
+      },
+      {
+        "ref": "R10",
+        "value": "470",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 155.493,
+        "y": 94.464,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF4700TCE",
+        "pins": {
+          "1": "Net-(D18-1)",
+          "2": "/LED4"
+        }
+      },
+      {
+        "ref": "R11",
+        "value": "470",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 148.952,
+        "y": 91.813,
+        "rotation": -45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF4700TCE",
+        "pins": {
+          "1": "Net-(D19-1)",
+          "2": "/LED5"
+        }
+      },
+      {
+        "ref": "R12",
+        "value": "470",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 148.422,
+        "y": 92.343,
+        "rotation": -45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF4700TCE",
+        "pins": {
+          "1": "Net-(D20-1)",
+          "2": "/LED6"
+        }
+      },
+      {
+        "ref": "R13",
+        "value": "470",
+        "footprint": "footprints:R_1005_C",
+        "side": "bottom",
+        "x": 147.891,
+        "y": 92.873,
+        "rotation": -45.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "0402WGF4700TCE",
+        "pins": {
+          "1": "Net-(D21-1)",
+          "2": "/LED7"
+        }
+      },
+      {
+        "ref": "U1",
+        "value": "MaxLinear_XR22417-48",
+        "footprint": "footprints:LQFP-48_7x7mm_P0.5mm",
+        "side": "bottom",
+        "x": 150.75,
+        "y": 98.75,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.5,
+        "height_source": "3D model",
+        "mpn": "XR22417CV48TR-F",
+        "pins": {
+          "1": "/LC",
+          "2": "unconnected-(U1-TEST#{slash}SDA-Pad2)",
+          "3": "/LED1",
+          "4": "/LED2",
+          "5": "/LED3",
+          "6": "+1V8",
+          "7": "/LED4",
+          "8": "+5V",
+          "9": "+3.3V",
+          "10": "GND",
+          "11": "/U4D-",
+          "12": "/U4D+",
+          "13": "/U3D-",
+          "14": "/U3D+",
+          "15": "+3.3V",
+          "16": "/U2D-",
+          "17": "/U2D+",
+          "18": "/U1D-",
+          "19": "/U1D+",
+          "20": "+3.3V",
+          "21": "+1V8",
+          "22": "/XI",
+          "23": "/XO",
+          "24": "GND",
+          "25": "+1V8",
+          "26": "+3.3V",
+          "27": "Net-(U1-REXT)",
+          "28": "+1V8",
+          "29": "/D-",
+          "30": "/D+",
+          "31": "+3.3V",
+          "32": "/U5D-",
+          "33": "/U5D+",
+          "34": "/U6D-",
+          "35": "/U6D+",
+          "36": "+3.3V",
+          "37": "/U7D-",
+          "38": "/U7D+",
+          "39": "GND",
+          "40": "Net-(U1-EXT_RST#)",
+          "41": "Net-(U1-VBUS_SENSE)",
+          "42": "+3.3V",
+          "43": "Net-(U1-TEST1#)",
+          "44": "unconnected-(U1-TEST#2{slash}DNC-Pad44)",
+          "45": "Net-(U1-TEST3#)",
+          "46": "/LED7",
+          "47": "/LED6",
+          "48": "/LED5"
+        }
+      },
+      {
+        "ref": "U2",
+        "value": "Dialog_SLG5NT1487V",
+        "footprint": "footprints:TDFN-8_1.5x2mm_Fused-Lead_JEDEC_MO-252_W2015D",
+        "side": "bottom",
+        "x": 154.9,
+        "y": 105.85,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.75,
+        "height_source": "3D model",
+        "mpn": "SLG5NT1487VTR",
+        "pins": {
+          "1": "VIN",
+          "2": "VIN",
+          "3": "VIN",
+          "5": "+5V",
+          "7": "Net-(U2-CAP)",
+          "8": "GND"
+        }
+      },
+      {
+        "ref": "Y1",
+        "value": "12MHz 50ppm 16-20pF",
+        "footprint": "footprints:Crystal_4-SMD_2.5x2mm",
+        "side": "bottom",
+        "x": 150.997,
+        "y": 105.927,
+        "rotation": -135.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "3D model",
+        "mpn": "CM4012M00020T8188026",
+        "pins": {
+          "1": "/XI",
+          "2": "GND",
+          "3": "/XO",
+          "4": "GND"
+        }
+      }
+    ]
+  },
+  "electrical": {
+    "supply": {
+      "net": "VIN",
+      "voltage": null,
+      "reason": "highest rail on connector JP1",
+      "current_limit_a": 0.5
+    },
+    "power_nets": [
+      "+1V8",
+      "+3.3V",
+      "+5V",
+      "VIN"
+    ],
+    "ground_nets": [
+      "GND"
+    ],
+    "nets": [
+      {
+        "name": "+1V8",
+        "kind": "power",
+        "pad_count": 8,
+        "pads": [
+          "C4.1",
+          "C11.1",
+          "C12.1",
+          "C13.1",
+          "U1.6",
+          "U1.21",
+          "U1.25",
+          "U1.28"
+        ],
+        "expected_v": {
+          "nominal": 1.8,
+          "min": 1.71,
+          "max": 1.89,
+          "source": "net name"
+        }
+      },
+      {
+        "name": "+3.3V",
+        "kind": "power",
+        "pad_count": 17,
+        "pads": [
+          "C3.1",
+          "C5.1",
+          "C6.1",
+          "C7.1",
+          "C8.1",
+          "C9.1",
+          "C10.1",
+          "R3.1",
+          "R4.1",
+          "R5.1",
+          "U1.9",
+          "U1.15",
+          "U1.20",
+          "U1.26",
+          "U1.31",
+          "U1.36",
+          "U1.42"
+        ],
+        "expected_v": {
+          "nominal": 3.3,
+          "min": 3.135,
+          "max": 3.465,
+          "source": "net name"
+        }
+      },
+      {
+        "name": "+5V",
+        "kind": "power",
+        "pad_count": 35,
+        "pads": [
+          "C1.1",
+          "C14.1",
+          "C15.1",
+          "C16.1",
+          "C17.1",
+          "C18.1",
+          "C19.1",
+          "C20.1",
+          "C22.1",
+          "C23.1",
+          "C24.1",
+          "C25.1",
+          "C26.1",
+          "C27.1",
+          "C29.1",
+          "C30.1",
+          "C31.1",
+          "C32.1",
+          "C33.1",
+          "C34.1",
+          "C35.1",
+          "C36.1",
+          "C37.1",
+          "C38.1",
+          "D25.2",
+          "J2.1",
+          "J3.1",
+          "J4.1",
+          "J5.1",
+          "J6.1",
+          "J7.1",
+          "J8.1",
+          "R1.1",
+          "U1.8",
+          "U2.5"
+        ],
+        "expected_v": {
+          "nominal": 5.0,
+          "min": 4.75,
+          "max": 5.25,
+          "source": "net name"
+        }
+      },
+      {
+        "name": "/D+",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D23.2",
+          "J1.3",
+          "U1.30"
+        ]
+      },
+      {
+        "name": "/D-",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D22.2",
+          "J1.2",
+          "U1.29"
+        ]
+      },
+      {
+        "name": "/LC",
+        "kind": "signal",
+        "pad_count": 15,
+        "pads": [
+          "D15.GK",
+          "D15.RA",
+          "D16.GK",
+          "D16.RA",
+          "D17.GK",
+          "D17.RA",
+          "D18.GK",
+          "D18.RA",
+          "D19.GK",
+          "D19.RA",
+          "D20.GK",
+          "D20.RA",
+          "D21.GK",
+          "D21.RA",
+          "U1.1"
+        ]
+      },
+      {
+        "name": "/LED1",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R7.2",
+          "U1.3"
+        ]
+      },
+      {
+        "name": "/LED2",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R8.2",
+          "U1.4"
+        ]
+      },
+      {
+        "name": "/LED3",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R9.2",
+          "U1.5"
+        ]
+      },
+      {
+        "name": "/LED4",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R10.2",
+          "U1.7"
+        ]
+      },
+      {
+        "name": "/LED5",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R11.2",
+          "U1.48"
+        ]
+      },
+      {
+        "name": "/LED6",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R12.2",
+          "U1.47"
+        ]
+      },
+      {
+        "name": "/LED7",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R13.2",
+          "U1.46"
+        ]
+      },
+      {
+        "name": "/U1D+",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D2.2",
+          "J2.3",
+          "U1.19"
+        ]
+      },
+      {
+        "name": "/U1D-",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D1.2",
+          "J2.2",
+          "U1.18"
+        ]
+      },
+      {
+        "name": "/U2D+",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D4.2",
+          "J3.3",
+          "U1.17"
+        ]
+      },
+      {
+        "name": "/U2D-",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D3.2",
+          "J3.2",
+          "U1.16"
+        ]
+      },
+      {
+        "name": "/U3D+",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D6.2",
+          "J4.3",
+          "U1.14"
+        ]
+      },
+      {
+        "name": "/U3D-",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D5.2",
+          "J4.2",
+          "U1.13"
+        ]
+      },
+      {
+        "name": "/U4D+",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D8.2",
+          "J5.3",
+          "U1.12"
+        ]
+      },
+      {
+        "name": "/U4D-",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D7.2",
+          "J5.2",
+          "U1.11"
+        ]
+      },
+      {
+        "name": "/U5D+",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D10.2",
+          "J6.3",
+          "U1.33"
+        ]
+      },
+      {
+        "name": "/U5D-",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D9.2",
+          "J6.2",
+          "U1.32"
+        ]
+      },
+      {
+        "name": "/U6D+",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D12.2",
+          "J7.3",
+          "U1.35"
+        ]
+      },
+      {
+        "name": "/U6D-",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D11.2",
+          "J7.2",
+          "U1.34"
+        ]
+      },
+      {
+        "name": "/U7D+",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D14.2",
+          "J8.3",
+          "U1.38"
+        ]
+      },
+      {
+        "name": "/U7D-",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D13.2",
+          "J8.2",
+          "U1.37"
+        ]
+      },
+      {
+        "name": "/XI",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "U1.22",
+          "Y1.1"
+        ]
+      },
+      {
+        "name": "/XO",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "U1.23",
+          "Y1.3"
+        ]
+      },
+      {
+        "name": "GND",
+        "kind": "ground",
+        "pad_count": 87,
+        "pads": [
+          "C1.2",
+          "C2.2",
+          "C3.2",
+          "C4.2",
+          "C5.2",
+          "C6.2",
+          "C7.2",
+          "C8.2",
+          "C9.2",
+          "C10.2",
+          "C11.2",
+          "C12.2",
+          "C13.2",
+          "C14.2",
+          "C15.2",
+          "C16.2",
+          "C17.2",
+          "C18.2",
+          "C19.2",
+          "C20.2",
+          "C21.2",
+          "C22.2",
+          "C23.2",
+          "C24.2",
+          "C25.2",
+          "C26.2",
+          "C27.2",
+          "C28.2",
+          "C29.2",
+          "C30.2",
+          "C31.2",
+          "C32.2",
+          "C33.2",
+          "C34.2",
+          "C35.2",
+          "C36.2",
+          "C37.2",
+          "C38.2",
+          "D1.1",
+          "D2.1",
+          "D3.1",
+          "D4.1",
+          "D5.1",
+          "D6.1",
+          "D7.1",
+          "D8.1",
+          "D9.1",
+          "D10.1",
+          "D11.1",
+          "D12.1",
+          "D13.1",
+          "D14.1",
+          "D22.1",
+          "D23.1",
+          "D24.1",
+          "D25.1",
+          "J1.4",
+          "J2.4",
+          "J2.MP",
+          "J2.MP",
+          "J3.4",
+          "J3.MP",
+          "J3.MP",
+          "J4.4",
+          "J4.MP",
+          "J4.MP",
+          "J5.4",
+          "J5.MP",
+          "J5.MP",
+          "J6.4",
+          "J6.MP",
+          "J6.MP",
+          "J7.4",
+          "J7.MP",
+          "J7.MP",
+          "J8.4",
+          "J8.MP",
+          "J8.MP",
+          "J9.1",
+          "R2.2",
+          "R6.2",
+          "U1.10",
+          "U1.24",
+          "U1.39",
+          "U2.8",
+          "Y1.2",
+          "Y1.4"
+        ],
+        "expected_v": {
+          "nominal": 0.0,
+          "min": -0.05,
+          "max": 0.05,
+          "source": "net name"
+        },
+        "probes": [
+          "PP01"
+        ]
+      },
+      {
+        "name": "Net-(D15-1)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D15.GA",
+          "D15.RK",
+          "R7.1"
+        ]
+      },
+      {
+        "name": "Net-(D16-1)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D16.GA",
+          "D16.RK",
+          "R8.1"
+        ]
+      },
+      {
+        "name": "Net-(D17-1)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D17.GA",
+          "D17.RK",
+          "R9.1"
+        ]
+      },
+      {
+        "name": "Net-(D18-1)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D18.GA",
+          "D18.RK",
+          "R10.1"
+        ]
+      },
+      {
+        "name": "Net-(D19-1)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D19.GA",
+          "D19.RK",
+          "R11.1"
+        ]
+      },
+      {
+        "name": "Net-(D20-1)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D20.GA",
+          "D20.RK",
+          "R12.1"
+        ]
+      },
+      {
+        "name": "Net-(D21-1)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "D21.GA",
+          "D21.RK",
+          "R13.1"
+        ]
+      },
+      {
+        "name": "Net-(J1-Pin_1)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J1.1",
+          "JP1.1"
+        ]
+      },
+      {
+        "name": "Net-(U1-EXT_RST#)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R3.2",
+          "U1.40"
+        ]
+      },
+      {
+        "name": "Net-(U1-REXT)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R6.1",
+          "U1.27"
+        ]
+      },
+      {
+        "name": "Net-(U1-TEST1#)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R5.2",
+          "U1.43"
+        ]
+      },
+      {
+        "name": "Net-(U1-TEST3#)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R4.2",
+          "U1.45"
+        ]
+      },
+      {
+        "name": "Net-(U1-VBUS_SENSE)",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "C2.1",
+          "R1.2",
+          "R2.1",
+          "U1.41"
+        ]
+      },
+      {
+        "name": "Net-(U2-CAP)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "C28.1",
+          "U2.7"
+        ]
+      },
+      {
+        "name": "VIN",
+        "kind": "power",
+        "pad_count": 6,
+        "pads": [
+          "C21.1",
+          "D24.2",
+          "JP1.2",
+          "U2.1",
+          "U2.2",
+          "U2.3"
+        ]
+      }
+    ]
+  },
+  "acceptance_criteria": [
+    {
+      "id": "DIM-OUTLINE",
+      "type": "dimensional",
+      "description": "Board outline 16.50 x 40.00 mm",
+      "limits": {
+        "width_mm": [
+          16.3,
+          16.7
+        ],
+        "height_mm": [
+          39.8,
+          40.2
+        ]
+      }
+    },
+    {
+      "id": "DIM-THICKNESS",
+      "type": "dimensional",
+      "description": "Board thickness 1.60 mm +/-10%",
+      "limits": {
+        "thickness_mm": [
+          1.44,
+          1.76
+        ]
+      }
+    },
+    {
+      "id": "WORKMANSHIP",
+      "type": "visual",
+      "description": "Soldering per IPC-A-610 Class 2"
+    },
+    {
+      "id": "VIS-POLARITY",
+      "type": "visual",
+      "step": "S1",
+      "description": "Polarity/orientation correct",
+      "refs": [
+        "C38",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14",
+        "D15",
+        "D16",
+        "D17",
+        "D18",
+        "D19",
+        "D20",
+        "D21",
+        "D22",
+        "D23",
+        "D24",
+        "D25"
+      ]
+    },
+    {
+      "id": "VIS-PIN1",
+      "type": "visual",
+      "step": "S1",
+      "description": "IC pin-1 orientation matches silkscreen",
+      "refs": [
+        "U1",
+        "U2"
+      ]
+    },
+    {
+      "id": "VIS-THT",
+      "type": "visual",
+      "step": "S1",
+      "description": "Through-hole joints filled, leads clipped <= 1.5 mm",
+      "refs": [
+        "J9"
+      ]
+    },
+    {
+      "id": "VIS-BRIDGES",
+      "type": "visual",
+      "step": "S1",
+      "description": "No solder bridges on fine-pitch parts",
+      "refs": [
+        "U1",
+        "U2"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "uid": "F001",
+      "id": "MFG-EDGE-CLEARANCE",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "11 copper item(s) closer than 0.30 mm to the board edge",
+      "detail": "Routing/scoring exposes or burrs copper that sits this close to the edge (shorts to enclosure, delamination).",
+      "recommendation": "Pull copper back to >= 0.38 mm from Edge.Cuts or ask the fab for edge plating.",
+      "refs": [
+        "C38",
+        "J9",
+        "JP1"
+      ],
+      "nets": [
+        "+5V",
+        "GND",
+        "Net-(J1-Pin_1)",
+        "VIN"
+      ],
+      "count": 11,
+      "items": [
+        {
+          "x": 157.3,
+          "y": 106.88,
+          "kind": "pad",
+          "pad": "JP1.1",
+          "net": "Net-(J1-Pin_1)",
+          "clearance": 0.134
+        },
+        {
+          "x": 157.3,
+          "y": 104.93,
+          "kind": "pad",
+          "pad": "JP1.2",
+          "net": "VIN",
+          "clearance": 0.2
+        },
+        {
+          "x": 152.11,
+          "y": 81.22,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.242
+        },
+        {
+          "x": 156.25,
+          "y": 82.25,
+          "kind": "pad",
+          "pad": "C38.2",
+          "net": "GND",
+          "clearance": 0.249
+        },
+        {
+          "x": 151.5,
+          "y": 81.5,
+          "kind": "via",
+          "net": "GND",
+          "clearance": 0.25
+        },
+        {
+          "x": 157.75,
+          "y": 95.25,
+          "kind": "via",
+          "net": "GND",
+          "clearance": 0.25
+        },
+        {
+          "x": 157.25,
+          "y": 100.25,
+          "kind": "pad",
+          "pad": "J9.1",
+          "net": "GND",
+          "clearance": 0.25
+        },
+        {
+          "x": 153.75,
+          "y": 82.25,
+          "kind": "pad",
+          "pad": "C38.1",
+          "net": "+5V",
+          "clearance": 0.25
+        },
+        {
+          "x": 154.13,
+          "y": 80.95,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.29
+        },
+        {
+          "x": 142.29,
+          "y": 100.25,
+          "kind": "via",
+          "net": "GND",
+          "clearance": 0.29
+        },
+        {
+          "x": 142.29,
+          "y": 102.25,
+          "kind": "via",
+          "net": "GND",
+          "clearance": 0.29
+        }
+      ]
+    },
+    {
+      "uid": "F002",
+      "id": "MFG-HOLE-SPACING",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "3 hole pair(s) closer than 0.25 mm",
+      "detail": "Thin webs between drills crack or merge during drilling.",
+      "recommendation": "Increase spacing between the holes.",
+      "count": 3,
+      "items": [
+        {
+          "x": 149.97,
+          "y": 108.65,
+          "a": "via",
+          "b": "H1.",
+          "gap": -0.949
+        },
+        {
+          "x": 149.91,
+          "y": 108.26,
+          "a": "via",
+          "b": "H1.",
+          "gap": -0.153
+        },
+        {
+          "x": 149.15,
+          "y": 108.65,
+          "a": "via",
+          "b": "H1.",
+          "gap": -0.069
+        }
+      ]
+    },
+    {
+      "uid": "F003",
+      "id": "MFG-TECH-CLASS",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "Board is finer than Eurocircuits supports (pattern)",
+      "detail": "No level of Eurocircuits pattern + drill classes accepts these features: via annular ring (outer) 0.05 at pattern 9 (limit 0.1); via hole (finished) 0.3 at drill B (limit 0.35).",
+      "recommendation": "Widen the listed features, or choose a finer process or another class system.",
+      "count": 1,
+      "data": {
+        "system": "eurocircuits-2024",
+        "required": null,
+        "measured": {
+          "aspect_ratio": 4.0,
+          "drill_via": 0.3,
+          "gap_outer": 0.1491,
+          "microvias": 0.0,
+          "ring_via_outer": 0.05,
+          "thickness_max": 1.6,
+          "track_outer": 0.15
+        },
+        "status": "verified"
+      }
+    },
+    {
+      "uid": "F004",
+      "id": "ASM-FIDUCIALS",
+      "severity": "major",
+      "category": "assembly",
+      "title": "No fiducials on the top side (35 SMD parts)",
+      "detail": "Pick-and-place machines need >= 2 global fiducials per populated side for accurate placement.",
+      "recommendation": "Add 2-3 fiducials in opposite corners of the top side, or confirm that the panel rails carry them.",
+      "count": 1,
+      "data": {
+        "side": "top",
+        "smd_parts": 35
+      }
+    },
+    {
+      "uid": "F005",
+      "id": "ASM-FIDUCIALS",
+      "severity": "major",
+      "category": "assembly",
+      "title": "No fiducials on the bottom side (51 SMD parts)",
+      "detail": "Pick-and-place machines need >= 2 global fiducials per populated side for accurate placement.",
+      "recommendation": "Add 2-3 fiducials in opposite corners of the bottom side, or confirm that the panel rails carry them.",
+      "count": 1,
+      "data": {
+        "side": "bottom",
+        "smd_parts": 51
+      }
+    },
+    {
+      "uid": "F006",
+      "id": "ASM-TOMBSTONE",
+      "severity": "major",
+      "category": "assembly",
+      "title": "17 small part(s) with unbalanced pad heating",
+      "detail": "One pad heats much slower than the other (solid plane, wide track or via); surface tension then lifts the part on end during reflow (tombstoning/open joint).",
+      "recommendation": "Use thermal reliefs on the plane connection and equal-width tracks on both pads.",
+      "refs": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14",
+        "D22",
+        "D23",
+        "D24"
+      ],
+      "count": 17,
+      "items": [
+        {
+          "ref": "D4",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone, 0.95 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "D10",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone, 0.80 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "D8",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "D9",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "D1",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "D5",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone, 0.65 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "D3",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "D6",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "D7",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone, 0.85 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "D14",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "D11",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "D2",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone, 1.60 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "D12",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone, 0.80 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "D13",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone, 0.75 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "D23",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "D24",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone, 0.60 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "D22",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "solid zone",
+          "severity": "major"
+        }
+      ]
+    },
+    {
+      "uid": "F007",
+      "id": "REL-SMD-CONNECTOR",
+      "severity": "major",
+      "category": "reliability",
+      "title": "10 connector(s) without through-hole anchors",
+      "detail": "Mating forces and cable strain go straight into SMD solder joints; pads rip off after repeated use.",
+      "recommendation": "Use connector variants with through-hole shell tabs/pegs, or add an enclosure strain relief.",
+      "refs": [
+        "J1",
+        "J2",
+        "J3",
+        "J4",
+        "J5",
+        "J6",
+        "J7",
+        "J8",
+        "J9",
+        "JP1"
+      ],
+      "count": 10,
+      "items": [
+        {
+          "ref": "J7",
+          "footprint": "JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J8",
+          "footprint": "JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J2",
+          "footprint": "JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J5",
+          "footprint": "JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J1",
+          "footprint": "USB_A_PCB_traces_small",
+          "external": true,
+          "severity": "major"
+        },
+        {
+          "ref": "J4",
+          "footprint": "JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J6",
+          "footprint": "JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J3",
+          "footprint": "JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J9",
+          "footprint": "1P-1.5x1.5",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "JP1",
+          "footprint": "JP-2_1.5x1.5",
+          "external": false,
+          "severity": "minor"
+        }
+      ]
+    },
+    {
+      "uid": "F008",
+      "id": "TEST-POWER-ACCESS",
+      "severity": "major",
+      "category": "testability",
+      "title": "4 power net(s) cannot be probed",
+      "detail": "Rails without probe access cannot be verified on the production tester.",
+      "recommendation": "Add a >= 0.9 mm test pad on the bottom side for each listed rail.",
+      "nets": [
+        "+1V8",
+        "+3.3V",
+        "+5V",
+        "VIN"
+      ],
+      "count": 4,
+      "items": [
+        {
+          "net": "+1V8",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "+3.3V",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "+5V",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "VIN",
+          "reason": "no accessible pad on the bottom side"
+        }
+      ]
+    },
+    {
+      "uid": "F009",
+      "id": "MFG-ACID-TRAP",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "5 acute track junction(s) (< 80 deg)",
+      "detail": "Acute copper angles trap etchant and can over-etch, creating thin necks.",
+      "recommendation": "Re-route the junctions with 45/90 degree entries.",
+      "count": 5,
+      "items": [
+        {
+          "x": 145.46,
+          "y": 108.03,
+          "layer": "F.Cu",
+          "net": "GND",
+          "angle": 45.0
+        },
+        {
+          "x": 144.12,
+          "y": 89.11,
+          "layer": "F.Cu",
+          "net": "GND",
+          "angle": 45.0
+        },
+        {
+          "x": 150.06,
+          "y": 95.58,
+          "layer": "F.Cu",
+          "net": "GND",
+          "angle": 45.0
+        },
+        {
+          "x": 148.5,
+          "y": 87.25,
+          "layer": "B.Cu",
+          "net": "GND",
+          "angle": 45.0
+        },
+        {
+          "x": 151.6,
+          "y": 102.16,
+          "layer": "B.Cu",
+          "net": "+1V8",
+          "angle": 45.0
+        }
+      ]
+    },
+    {
+      "uid": "F010",
+      "id": "MFG-EDGE-CLEARANCE",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "17 copper item(s) close to the board edge",
+      "detail": "Between 0.30 and 0.38 mm from the edge.",
+      "recommendation": "Add margin where cheap to do so.",
+      "count": 17,
+      "items": [
+        {
+          "x": 142.25,
+          "y": 83.42,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.3
+        },
+        {
+          "x": 142.35,
+          "y": 87.85,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.3
+        },
+        {
+          "x": 142.25,
+          "y": 86.55,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.3
+        },
+        {
+          "x": 151.67,
+          "y": 81.5,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.3
+        },
+        {
+          "x": 142.5,
+          "y": 81.25,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.3
+        },
+        {
+          "x": 157.6,
+          "y": 95.1,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.3
+        },
+        {
+          "x": 157.33,
+          "y": 95.25,
+          "kind": "track",
+          "net": "GND",
+          "layer": "B.Cu",
+          "clearance": 0.3
+        },
+        {
+          "x": 157.19,
+          "y": 99.94,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.325
+        },
+        {
+          "x": 157.8,
+          "y": 98.1,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.325
+        },
+        {
+          "x": 156.84,
+          "y": 95.91,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.325
+        },
+        {
+          "x": 142.67,
+          "y": 100.25,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.34
+        },
+        {
+          "x": 142.64,
+          "y": 102.6,
+          "kind": "track",
+          "net": "GND",
+          "layer": "F.Cu",
+          "clearance": 0.34
+        },
+        {
+          "x": 142.29,
+          "y": 101.25,
+          "kind": "track",
+          "net": "GND",
+          "layer": "B.Cu",
+          "clearance": 0.34
+        },
+        {
+          "x": 155.72,
+          "y": 107.55,
+          "kind": "pad",
+          "pad": "J2.MP",
+          "net": "GND",
+          "clearance": 0.35
+        },
+        {
+          "x": 155.72,
+          "y": 80.95,
+          "kind": "pad",
+          "pad": "J5.MP",
+          "net": "GND",
+          "clearance": 0.35
+        },
+        {
+          "x": 144.28,
+          "y": 107.55,
+          "kind": "pad",
+          "pad": "J6.MP",
+          "net": "GND",
+          "clearance": 0.35
+        },
+        {
+          "x": 147.4,
+          "y": 80.67,
+          "kind": "via",
+          "net": "GND",
+          "clearance": 0.363
+        }
+      ]
+    },
+    {
+      "uid": "F011",
+      "id": "MFG-TRACK-WIDTH",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "857 track segment(s) close to the 0.127 mm fab minimum",
+      "detail": "Narrowest track: 0.150 mm. Over-etching on thin tracks causes opens and lower yield.",
+      "recommendation": "Widen tracks to at least 0.159 mm where space allows, or choose a fab profile that supports them.",
+      "nets": [
+        "+1V8",
+        "/D+",
+        "/D-",
+        "/LC",
+        "/LED1",
+        "/LED2",
+        "/LED3",
+        "/LED4",
+        "/LED5",
+        "/LED6",
+        "/LED7",
+        "/U1D+",
+        "/U1D-",
+        "/U2D+",
+        "/U2D-",
+        "/U3D+",
+        "/U3D-",
+        "/U4D+",
+        "/U4D-",
+        "/U5D+",
+        "/U5D-",
+        "/U6D+",
+        "/U6D-",
+        "/U7D+",
+        "/U7D-",
+        "/XI",
+        "/XO",
+        "GND",
+        "Net-(D15-1)",
+        "Net-(D16-1)",
+        "Net-(D17-1)",
+        "Net-(D18-1)",
+        "Net-(D19-1)",
+        "Net-(D20-1)",
+        "Net-(D21-1)",
+        "Net-(U1-EXT_RST#)",
+        "Net-(U1-TEST1#)",
+        "Net-(U1-TEST3#)",
+        "Net-(U1-VBUS_SENSE)"
+      ],
+      "count": 857,
+      "items": [
+        {
+          "x": 143.75,
+          "y": 85.28,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 153.78,
+          "y": 86.11,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 142.97,
+          "y": 85.34,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 143.31,
+          "y": 96.28,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 153.29,
+          "y": 82.25,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 149.91,
+          "y": 84.61,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 149.91,
+          "y": 82.89,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 151.24,
+          "y": 82.27,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 149.87,
+          "y": 84.3,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 149.86,
+          "y": 84.02,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 144.55,
+          "y": 107.55,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 151.99,
+          "y": 82.26,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 145.64,
+          "y": 87.95,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 145.22,
+          "y": 107.79,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 155.22,
+          "y": 81.6,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 150.22,
+          "y": 82.54,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 149.87,
+          "y": 83.2,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 143.84,
+          "y": 97.17,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 153.76,
+          "y": 85.52,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 155.6,
+          "y": 88.6,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 149.86,
+          "y": 83.48,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 144.12,
+          "y": 89.27,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 149.89,
+          "y": 84.91,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 149.99,
+          "y": 96.25,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        },
+        {
+          "x": 151.72,
+          "y": 88.62,
+          "layer": "F.Cu",
+          "net": "GND",
+          "width": 0.15
+        }
+      ],
+      "items_truncated": 832,
+      "data": {
+        "min_width_mm": 0.15
+      }
+    },
+    {
+      "uid": "F012",
+      "id": "MFG-VIA",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "87 via(s) with annular ring close to the minimum",
+      "detail": "Annular ring is within 25% of the fab limit; yield drops at the limit.",
+      "recommendation": "Use a slightly larger via pad where space allows.",
+      "count": 87,
+      "items": [
+        {
+          "x": 157.25,
+          "y": 102.45,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 151.5,
+          "y": 81.5,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 142.78,
+          "y": 93.25,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 150.12,
+          "y": 99.76,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 146.18,
+          "y": 93.07,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 157.3,
+          "y": 88.25,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 142.29,
+          "y": 100.25,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 142.75,
+          "y": 81.0,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 150.03,
+          "y": 92.96,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 148.3,
+          "y": 99.93,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 157.25,
+          "y": 98.85,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 148.4,
+          "y": 107.15,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 147.23,
+          "y": 88.03,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 157.28,
+          "y": 81.5,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 149.82,
+          "y": 107.26,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 157.29,
+          "y": 86.25,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 153.78,
+          "y": 86.68,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 143.31,
+          "y": 95.91,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 147.03,
+          "y": 106.04,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 147.28,
+          "y": 98.9,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 157.28,
+          "y": 93.25,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 142.29,
+          "y": 102.25,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 151.72,
+          "y": 95.57,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 155.41,
+          "y": 92.54,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        },
+        {
+          "x": 151.03,
+          "y": 103.57,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.5,
+          "annular": 0.1
+        }
+      ],
+      "items_truncated": 62
+    },
+    {
+      "uid": "F013",
+      "id": "ASM-COMPONENT-EDGE",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "5 component(s) within 0.5 mm of (or over) the edge",
+      "detail": "Parts at the edge collide with panel rails, conveyor clamps and depaneling tools.",
+      "recommendation": "Keep courtyards >= 3.0 mm inside the outline or add breakaway rails.",
+      "refs": [
+        "C21",
+        "C32",
+        "C38",
+        "D18",
+        "U1"
+      ],
+      "count": 5,
+      "items": [
+        {
+          "ref": "D18",
+          "edge_mm": 0.39,
+          "overhang": false
+        },
+        {
+          "ref": "C32",
+          "edge_mm": 0.4,
+          "overhang": false
+        },
+        {
+          "ref": "U1",
+          "edge_mm": 0.22,
+          "overhang": false
+        },
+        {
+          "ref": "C38",
+          "edge_mm": 0.0,
+          "overhang": true
+        },
+        {
+          "ref": "C21",
+          "edge_mm": 0.28,
+          "overhang": false
+        }
+      ]
+    },
+    {
+      "uid": "F014",
+      "id": "ASM-FINE-PITCH",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "2 fine-pitch (<= 0.5 mm) part(s)",
+      "detail": "Fine pitch raises the risk of solder bridges and insufficient joints.",
+      "recommendation": "Use a <= 0.12 mm stencil with reduced apertures, solder-mask dams between pads and AOI after reflow.",
+      "refs": [
+        "U1",
+        "U2"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "ref": "U2",
+          "package": "TDFN-8_1.5x2mm_Fused-Lead_JEDEC_MO-252_W2015D",
+          "pitch": 0.5
+        },
+        {
+          "ref": "U1",
+          "package": "LQFP-48_7x7mm_P0.5mm",
+          "pitch": 0.5
+        }
+      ]
+    },
+    {
+      "uid": "F015",
+      "id": "ASM-PROCESS",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "Assembly process: SMT top (35 parts) + SMT bottom (51 parts) + THT (1 parts: wave, selective or hand soldering)",
+      "detail": "Each extra process step adds cost and handling (handling = flex & ESD exposure). Bottom SMD + THT usually needs selective soldering or a wave pallet.",
+      "recommendation": "The generated solder jig holds the THT parts for hand soldering.",
+      "refs": [
+        "J9"
+      ],
+      "count": 1,
+      "data": {
+        "smd_top": 35,
+        "smd_bottom": 51,
+        "tht": 1
+      }
+    },
+    {
+      "uid": "F016",
+      "id": "ELEC-ESD",
+      "severity": "minor",
+      "category": "electrical",
+      "title": "1 external connector(s) with unprotected signal lines",
+      "detail": "ESD at user-accessible connectors is a top cause of field returns (latent damage, not caught by test).",
+      "recommendation": "Add TVS/ESD diodes close to the connector (e.g. USBLC6 for USB, low-capacitance arrays for data lines).",
+      "refs": [
+        "J1"
+      ],
+      "nets": [
+        "Net-(J1-Pin_1)"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "J1",
+          "nets": [
+            "Net-(J1-Pin_1)"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "F017",
+      "id": "REL-POWER-TRACKS",
+      "severity": "minor",
+      "category": "electrical",
+      "title": "5 power net(s) contain tracks narrower than 0.30 mm",
+      "detail": "Thin power tracks drop voltage and heat up; capacity shown is IPC-2221 at 10 C rise (35 um Cu). Set nets.<name>.max_current_a in the config to turn this into a hard check.",
+      "recommendation": "Widen power tracks where space allows.",
+      "nets": [
+        "+1V8",
+        "+3.3V",
+        "+5V",
+        "GND",
+        "VIN"
+      ],
+      "count": 5,
+      "items": [
+        {
+          "net": "+1V8",
+          "min_width_mm": 0.15,
+          "capacity_a": 0.6
+        },
+        {
+          "net": "+3.3V",
+          "min_width_mm": 0.2,
+          "capacity_a": 0.74
+        },
+        {
+          "net": "+5V",
+          "min_width_mm": 0.2,
+          "capacity_a": 0.74
+        },
+        {
+          "net": "GND",
+          "min_width_mm": 0.15,
+          "capacity_a": 0.6
+        },
+        {
+          "net": "VIN",
+          "min_width_mm": 0.2,
+          "capacity_a": 0.74
+        }
+      ]
+    },
+    {
+      "uid": "F018",
+      "id": "TEST-TESTPOINTS",
+      "severity": "minor",
+      "category": "testability",
+      "title": "No dedicated test points",
+      "detail": "The fixture has to probe component pads and THT leads; probes on solder joints wear tips and can hide cracked joints.",
+      "recommendation": "Add >= 1 mm test pads on the probe side for every rail and key signal (see the test plan coverage).",
+      "count": 1
+    },
+    {
+      "uid": "F019",
+      "id": "DOC-MPN",
+      "severity": "minor",
+      "category": "documentation",
+      "title": "7 of 92 part(s) have no part number",
+      "detail": "Unspecified parts get substituted, which changes ratings, footprints and long-term reliability.",
+      "recommendation": "Add MPN fields for the remaining parts.",
+      "refs": [
+        "J1",
+        "J9",
+        "JP1",
+        "LOGO1",
+        "LOGO2",
+        "LOGO3",
+        "LOGO4"
+      ],
+      "count": 1
+    },
+    {
+      "uid": "F020",
+      "id": "DOC-REVISION",
+      "severity": "minor",
+      "category": "documentation",
+      "title": "No revision in the board title block",
+      "detail": "Test results, fixtures and field returns cannot be traced to a board revision.",
+      "recommendation": "Set the revision in Board Setup > Title block and print it on silkscreen (${REVISION}).",
+      "count": 1
+    },
+    {
+      "uid": "F021",
+      "id": "ASM-POLARITY",
+      "severity": "info",
+      "category": "assembly",
+      "title": "Diodes on the top side use 3 different orientations",
+      "detail": "Mixed orientations of polarized parts increase placement and visual-inspection errors.",
+      "recommendation": "Align polarized parts to one or two orientations and mark polarity clearly on silkscreen.",
+      "refs": [
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "D14",
+        "D15",
+        "D16",
+        "D17",
+        "D18",
+        "D19",
+        "D20",
+        "D21"
+      ],
+      "count": 3,
+      "items": [
+        {
+          "rotation": 0,
+          "refs": [
+            "D15",
+            "D16",
+            "D17",
+            "D18",
+            "D19",
+            "D20",
+            "D21"
+          ]
+        },
+        {
+          "rotation": 90,
+          "refs": [
+            "D1",
+            "D3",
+            "D5",
+            "D7",
+            "D10",
+            "D12",
+            "D14"
+          ]
+        },
+        {
+          "rotation": 270,
+          "refs": [
+            "D2",
+            "D4",
+            "D6",
+            "D8",
+            "D9",
+            "D11",
+            "D13"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "F022",
+      "id": "TEST-FIXTURE-CLEARANCE",
+      "severity": "info",
+      "category": "testability",
+      "title": "1 probe-side part(s) taller than the fixture clearance",
+      "detail": "The fixture board gets cut-outs for these parts and no probes are placed under them.",
+      "recommendation": "Check the cut-outs in the generated fixture board.",
+      "refs": [
+        "J9"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "J9",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 155.25,
+            "y_min": 98.25,
+            "x_max": 159.25,
+            "y_max": 102.25,
+            "width": 4.0,
+            "height": 4.0
+          },
+          "side": "bottom"
+        }
+      ]
+    },
+    {
+      "uid": "F023",
+      "id": "TEST-SIGNAL-ACCESS",
+      "severity": "info",
+      "category": "testability",
+      "title": "27 signal net(s) not probed",
+      "detail": "These nets are not covered by the bed-of-nails test.",
+      "recommendation": "Add test pads, raise testplan.max_channels, or accept the gap.",
+      "nets": [
+        "/D+",
+        "/D-",
+        "/LC",
+        "/LED1",
+        "/LED2",
+        "/LED3",
+        "/LED4",
+        "/LED5",
+        "/LED6",
+        "/LED7",
+        "/U1D+",
+        "/U1D-",
+        "/U2D+",
+        "/U2D-",
+        "/U3D+",
+        "/U3D-",
+        "/U4D+",
+        "/U4D-",
+        "/U5D+",
+        "/U5D-",
+        "/U6D+",
+        "/U6D-",
+        "/U7D+",
+        "/U7D-",
+        "/XI",
+        "/XO",
+        "Net-(J1-Pin_1)"
+      ],
+      "count": 27,
+      "items": [
+        {
+          "net": "/D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LC",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LED1",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LED2",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LED3",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LED4",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LED5",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LED6",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LED7",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U1D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U1D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U2D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U2D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U3D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U3D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U4D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U4D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U5D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U5D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U6D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U6D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U7D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/U7D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/XI",
+          "reason": "all candidate pads conflict with other probes (pitch 2.40 mm)"
+        }
+      ],
+      "items_truncated": 2
+    }
+  ],
+  "summary": {
+    "counts": {
+      "critical": 0,
+      "major": 8,
+      "minor": 12,
+      "info": 3
+    },
+    "score": 28,
+    "verdict": "needs review",
+    "total": 23,
+    "waived": 0
+  },
+  "decision_log": [],
+  "warnings": []
+}

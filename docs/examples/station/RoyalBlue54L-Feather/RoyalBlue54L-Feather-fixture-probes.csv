@@ -1,0 +1,13 @@
+site,probe,dut_net,role,x_mm,y_mm,drill_mm,tip,channel,header_pin,divider_ratio
+1,PP01,"/Debugger/USB.VBUS",supply,149.6100,99.5950,1.40,spear,CH01,3,1.82
+1,PP02,"GND",ground,151.7400,98.0450,1.40,spear,,,
+1,PP03,"GND",ground,145.0250,100.5900,1.40,spear,,,
+1,PP04,"+BATT",measure,158.7400,101.3080,1.40,spear,CH02,4,1.82
+1,PP05,"Net-(JP1-A)",measure,146.2500,111.7050,1.40,spear,CH03,5,1.82
+1,PP06,"VSYS",measure,148.5350,108.6700,1.40,spear,CH04,6,1.82
+2,PP01,"/Debugger/USB.VBUS",supply,246.1300,99.5950,1.40,spear,CH01,7,1.82
+2,PP02,"GND",ground,248.2600,98.0450,1.40,spear,,,
+2,PP03,"GND",ground,241.5450,100.5900,1.40,spear,,,
+2,PP04,"+BATT",measure,255.2600,101.3080,1.40,spear,CH02,8,1.82
+2,PP05,"Net-(JP1-A)",measure,242.7700,111.7050,1.40,spear,CH03,9,1.82
+2,PP06,"VSYS",measure,245.0550,108.6700,1.40,spear,CH04,10,1.82

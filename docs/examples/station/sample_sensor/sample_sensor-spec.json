@@ -1,0 +1,2214 @@
+{
+  "schema": "pcbtestkit/spec@1",
+  "generator": "PCB TestKit 1.1.1",
+  "generated": "2026-11-26T16:17:46",
+  "source": {
+    "board": "sample_sensor.kicad_pcb",
+    "schematic": "sample_sensor.kicad_sch",
+    "file_format_version": 20240108,
+    "generator": "pcbtestkit 8.0"
+  },
+  "board": {
+    "name": "sample_sensor",
+    "title": "Sensor Node",
+    "revision": "",
+    "date": "2026-11-19",
+    "company": "Example Co",
+    "outline_mm": {
+      "x_min": 100.0,
+      "y_min": 80.0,
+      "x_max": 160.0,
+      "y_max": 125.0,
+      "width": 60.0,
+      "height": 45.0
+    },
+    "area_mm2": 2700.0,
+    "thickness_mm": 1.6,
+    "copper_layers": 2,
+    "layer_names": [
+      "F.Cu",
+      "B.Cu"
+    ],
+    "copper_thickness_um": 35.0,
+    "finish": null,
+    "stackup": null
+  },
+  "technology": {
+    "system": "eurocircuits-2024",
+    "name": "Eurocircuits pattern + drill classes",
+    "status": "verified",
+    "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+    "required": {
+      "class": null,
+      "fits": false,
+      "services": null,
+      "levels": {
+        "pattern": null,
+        "drill": "C"
+      },
+      "beyond": [
+        "pattern"
+      ]
+    },
+    "ordered": null,
+    "layers": 2,
+    "thickness_mm": 1.6,
+    "base_copper_um": 35.0,
+    "finish": null,
+    "short_count": 10,
+    "microvias": 0,
+    "primary": {
+      "system": "eurocircuits-2024",
+      "name": "Eurocircuits pattern + drill classes",
+      "status": "verified",
+      "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+      "verified": "2026-11-19",
+      "category": "manufacturing",
+      "context": {
+        "layers": 2,
+        "copper_um": 35.0,
+        "thickness_mm": 1.6,
+        "board_w_mm": 60.0,
+        "board_h_mm": 45.0,
+        "mask_color": "green",
+        "edge_process": "routed"
+      },
+      "measured": {
+        "aspect_ratio": 4.5714,
+        "drill_npth": 3.2,
+        "drill_pth": 0.8,
+        "drill_via": 0.25,
+        "gap_outer": 0.1755,
+        "microvias": 0.0,
+        "ring_pth_outer": 0.3,
+        "ring_via_outer": 0.025,
+        "thickness_max": 1.6,
+        "track_outer": 0.1
+      },
+      "required": {
+        "levels": {
+          "pattern": null,
+          "drill": "C"
+        },
+        "fits": false,
+        "class": null,
+        "beyond": [
+          "pattern"
+        ],
+        "drivers": [
+          {
+            "dimension": "pattern",
+            "level": "9",
+            "metric": "ring_via_outer",
+            "measured": 0.025,
+            "limit": 0.1
+          },
+          {
+            "dimension": "drill",
+            "level": "B",
+            "metric": "drill_via",
+            "measured": 0.25,
+            "limit": 0.35
+          }
+        ]
+      },
+      "process": {
+        "ok": false,
+        "violations": {
+          "track_outer": {
+            "label": "outer track width",
+            "count": 1,
+            "worst": 0.1,
+            "limit": 0.125,
+            "severity": "major",
+            "note": "35 um base copper"
+          }
+        }
+      }
+    },
+    "checks": [],
+    "overview": [
+      {
+        "system": "aisler-2025",
+        "name": "AISLER design rules (all published stack-ups)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "copper to board edge",
+          "outer track width",
+          "via annular ring (outer)"
+        ],
+        "services": []
+      },
+      {
+        "system": "allpcb-2026",
+        "name": "ALLPCB standard PCB capability",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "aspect-8",
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)",
+          "outer track width",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "eurocircuits-2024",
+        "name": "Eurocircuits pattern + drill classes",
+        "kind": "fab-classes",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "outer track width",
+          "via annular ring (outer)",
+          "via hole (finished)"
+        ],
+        "services": []
+      },
+      {
+        "system": "ipc-2221-voltage",
+        "name": "IPC-2221 conductor spacing by voltage (Table 6-1)",
+        "kind": "standard",
+        "status": "secondary",
+        "class": "B2",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "ipc-6012-ring",
+        "name": "IPC-6012 performance class: annular ring and plating",
+        "kind": "standard",
+        "status": "partial",
+        "class": "2",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "jlcpcb-2026",
+        "name": "JLCPCB rigid PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "component hole to copper (outer)",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "multicb-2026",
+        "name": "Multi-CB design parameters (35 um copper)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "special",
+        "fits": false,
+        "blockers": [
+          "component hole to copper (outer)",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "nextpcb-2026",
+        "name": "NextPCB standard PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "component hole to copper (outer)",
+          "copper to board edge",
+          "via annular ring (outer)"
+        ],
+        "services": []
+      },
+      {
+        "system": "oshpark-2026",
+        "name": "OSH Park services",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "component hole to copper (outer)",
+          "copper to board edge",
+          "outer track width",
+          "via annular ring (outer)"
+        ],
+        "services": []
+      },
+      {
+        "system": "pcbway-standard-2026",
+        "name": "PCBWay standard PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)"
+        ],
+        "services": []
+      },
+      {
+        "system": "seeed-fusion-2026",
+        "name": "Seeed Fusion PCB (standard FR4 specification)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)",
+          "copper to board edge",
+          "outer track width"
+        ],
+        "services": []
+      },
+      {
+        "system": "wurth-basic-2022",
+        "name": "Wurth Elektronik BASIC design rules",
+        "kind": "fab-classes",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "outer track width",
+          "copper to board edge",
+          "via annular ring (outer)"
+        ],
+        "services": []
+      }
+    ]
+  },
+  "manufacturing": {
+    "fab_profile": "standard",
+    "fab_limits": {
+      "min_track": 0.127,
+      "min_clearance": 0.127,
+      "min_drill": 0.3,
+      "min_via_annular": 0.1,
+      "min_tht_annular": 0.15,
+      "min_edge_clearance": 0.3,
+      "min_hole_to_hole": 0.25,
+      "max_aspect_ratio": 8.0,
+      "warn_factor": 1.25,
+      "source": "fab profile standard"
+    },
+    "project_rules": {
+      "min_clearance": 0.15,
+      "min_track_width": 0.1,
+      "min_via_diameter": 0.45,
+      "min_through_hole_diameter": 0.25,
+      "min_copper_edge_clearance": 0.3,
+      "min_via_annular_width": 0.075
+    },
+    "netclasses": [
+      {
+        "name": "Default",
+        "clearance": 0.2,
+        "track_width": 0.25,
+        "via_diameter": 0.6,
+        "via_drill": 0.3
+      }
+    ],
+    "measured": {
+      "min_track_width_mm": 0.1,
+      "min_via_drill_mm": 0.25,
+      "min_via_annular_mm": 0.075,
+      "min_tht_annular_mm": 0.35,
+      "min_hole_mm": 0.25,
+      "max_via_aspect_ratio": 6.4,
+      "min_pad_via_edge_clearance_mm": 0.788,
+      "via_count": 4,
+      "plated_holes": 17,
+      "non_plated_holes": 4,
+      "drill_histogram_mm": {
+        "0.25": 1,
+        "0.30": 3,
+        "0.80": 4,
+        "1.00": 4,
+        "1.10": 3,
+        "1.30": 2,
+        "3.20": 4
+      },
+      "track_count": 11,
+      "zone_count": 2
+    }
+  },
+  "assembly": {
+    "component_count": 30,
+    "smd_top": 16,
+    "smd_bottom": 5,
+    "tht": 5,
+    "dnp": [],
+    "components": [
+      {
+        "ref": "C1",
+        "value": "100uF 25V",
+        "footprint": "Capacitor_THT:CP_Radial_D8.0mm_P3.50mm",
+        "side": "top",
+        "x": 132.0,
+        "y": 89.0,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 8.0,
+        "height_source": "3D model",
+        "mpn": "EEU-FR1E101",
+        "rated_voltage_v": 25.0,
+        "polarized": true,
+        "pins": {
+          "1": "VIN_12V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C2",
+        "value": "47uF 6.3V",
+        "footprint": "Capacitor_THT:CP_Radial_D5.0mm_P2.00mm",
+        "side": "top",
+        "x": 142.0,
+        "y": 89.0,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 5.0,
+        "height_source": "3D model",
+        "rated_voltage_v": 6.3,
+        "polarized": true,
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C3",
+        "value": "100nF",
+        "footprint": "Capacitor_SMD:C_0402_1005Metric",
+        "side": "top",
+        "x": 131.0,
+        "y": 104.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C4",
+        "value": "100nF",
+        "footprint": "Capacitor_SMD:C_0402_1005Metric",
+        "side": "top",
+        "x": 150.0,
+        "y": 118.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C5",
+        "value": "1uF 16V",
+        "footprint": "Capacitor_SMD:C_0805_2012Metric",
+        "side": "top",
+        "x": 112.0,
+        "y": 97.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "GRM21BR71C105KA01L",
+        "rated_voltage_v": 16.0,
+        "pins": {
+          "1": "VIN_12V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C7",
+        "value": "10uF 10V",
+        "footprint": "Capacitor_SMD:C_0805_2012Metric",
+        "side": "top",
+        "x": 157.6,
+        "y": 108.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "GRM21BR61A106KE19L",
+        "rated_voltage_v": 10.0,
+        "pins": {
+          "1": "+3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C8",
+        "value": "100nF",
+        "footprint": "Capacitor_SMD:C_0402_1005Metric",
+        "side": "top",
+        "x": 151.0,
+        "y": 85.5,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C9",
+        "value": "100nF",
+        "footprint": "Capacitor_SMD:C_0402_1005Metric",
+        "side": "bottom",
+        "x": 140.0,
+        "y": 104.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "D1",
+        "value": "SS14",
+        "footprint": "Diode_SMD:D_SOD-123",
+        "side": "top",
+        "x": 122.0,
+        "y": 98.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.26,
+        "height_source": "3D model",
+        "mpn": "SS14",
+        "polarized": true,
+        "pins": {
+          "1": "+5V",
+          "2": "VBUS"
+        }
+      },
+      {
+        "ref": "D2",
+        "value": "GREEN",
+        "footprint": "LED_SMD:LED_0603_1608Metric",
+        "side": "top",
+        "x": 146.0,
+        "y": 116.0,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.1,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "GND",
+          "2": "Net-(D2-A)"
+        }
+      },
+      {
+        "ref": "D3",
+        "value": "PESD5V0S1BL",
+        "footprint": "Diode_SMD:D_SOD-323",
+        "side": "top",
+        "x": 110.0,
+        "y": 104.0,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.11,
+        "height_source": "3D model",
+        "mpn": "PESD5V0S1BL",
+        "polarized": true,
+        "pins": {
+          "1": "VBUS",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "H1",
+        "value": "MountingHole",
+        "footprint": "MountingHole:MountingHole_3.2mm_M3",
+        "side": "top",
+        "x": 104.0,
+        "y": 84.0,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "H2",
+        "value": "MountingHole",
+        "footprint": "MountingHole:MountingHole_3.2mm_M3",
+        "side": "top",
+        "x": 156.0,
+        "y": 84.0,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "H3",
+        "value": "MountingHole",
+        "footprint": "MountingHole:MountingHole_3.2mm_M3",
+        "side": "top",
+        "x": 104.0,
+        "y": 121.0,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "H4",
+        "value": "MountingHole",
+        "footprint": "MountingHole:MountingHole_3.2mm_M3",
+        "side": "top",
+        "x": 156.0,
+        "y": 121.0,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "J1",
+        "value": "USB_B_Micro",
+        "footprint": "Connector_USB:USB_Micro-B_Molex-105017-0001",
+        "side": "top",
+        "x": 103.2,
+        "y": 108.0,
+        "rotation": 270.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "mpn": "105017-0001",
+        "pins": {
+          "1": "VBUS",
+          "2": "/D-",
+          "3": "/D+",
+          "4": "unconnected-(J1-ID-Pad4)",
+          "5": "GND",
+          "6": "GND"
+        }
+      },
+      {
+        "ref": "J2",
+        "value": "I2C",
+        "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+        "side": "top",
+        "x": 110.0,
+        "y": 113.0,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 8.54,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3",
+          "2": "/SDA",
+          "3": "/SCL",
+          "4": "GND"
+        }
+      },
+      {
+        "ref": "J3",
+        "value": "12V IN",
+        "footprint": "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2_1x02_P5.00mm_Horizontal",
+        "side": "top",
+        "x": 110.0,
+        "y": 89.0,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 13.8,
+        "height_source": "3D model",
+        "mpn": "1729128",
+        "pins": {
+          "1": "VIN_12V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R1",
+        "value": "4k7",
+        "footprint": "Resistor_SMD:R_0603_1608Metric",
+        "side": "top",
+        "x": 128.0,
+        "y": 116.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.45,
+        "height_source": "3D model",
+        "mpn": "RC0603FR-074K7L",
+        "pins": {
+          "1": "/SDA",
+          "2": "+3V3"
+        }
+      },
+      {
+        "ref": "R2",
+        "value": "4k7",
+        "footprint": "Resistor_SMD:R_0603_1608Metric",
+        "side": "top",
+        "x": 128.0,
+        "y": 119.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.45,
+        "height_source": "3D model",
+        "mpn": "RC0603FR-074K7L",
+        "pins": {
+          "1": "/SCL",
+          "2": "+3V3"
+        }
+      },
+      {
+        "ref": "R3",
+        "value": "330",
+        "footprint": "Resistor_SMD:R_0402_1005Metric",
+        "side": "top",
+        "x": 142.0,
+        "y": 116.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/LED",
+          "2": "Net-(D2-A)"
+        }
+      },
+      {
+        "ref": "R4",
+        "value": "1k",
+        "footprint": "Resistor_SMD:R_0402_1005Metric",
+        "side": "top",
+        "x": 116.0,
+        "y": 97.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "VIN_12V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R5",
+        "value": "10k",
+        "footprint": "Resistor_SMD:R_0603_1608Metric",
+        "side": "top",
+        "x": 138.0,
+        "y": 100.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.45,
+        "height_source": "3D model",
+        "mpn": "RC0603FR-0710KL",
+        "pins": {
+          "1": "/NRST",
+          "2": "+3V3"
+        }
+      },
+      {
+        "ref": "TP1",
+        "value": "+3V3",
+        "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+        "side": "bottom",
+        "x": 120.0,
+        "y": 110.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "+3V3"
+        }
+      },
+      {
+        "ref": "TP2",
+        "value": "+5V",
+        "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+        "side": "bottom",
+        "x": 124.0,
+        "y": 110.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "+5V"
+        }
+      },
+      {
+        "ref": "TP3",
+        "value": "GND",
+        "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+        "side": "bottom",
+        "x": 120.0,
+        "y": 114.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "TP4",
+        "value": "SDA",
+        "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+        "side": "bottom",
+        "x": 124.0,
+        "y": 114.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "/SDA"
+        }
+      },
+      {
+        "ref": "U1",
+        "value": "LM7805_TO220",
+        "footprint": "Package_TO_SOT_THT:TO-220-3_Vertical",
+        "side": "top",
+        "x": 122.0,
+        "y": 88.0,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 18.77,
+        "height_source": "3D model",
+        "mpn": "LM7805CT",
+        "pins": {
+          "1": "VIN_12V",
+          "2": "GND",
+          "3": "+5V"
+        }
+      },
+      {
+        "ref": "U2",
+        "value": "AMS1117-3.3",
+        "footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+        "side": "top",
+        "x": 151.0,
+        "y": 96.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.7,
+        "height_source": "3D model",
+        "mpn": "AMS1117-3.3",
+        "pins": {
+          "1": "GND",
+          "2": "+3V3",
+          "3": "+5V",
+          "4": "+3V3"
+        }
+      },
+      {
+        "ref": "U3",
+        "value": "STM32G031K8U6",
+        "footprint": "Package_DFN_QFN:QFN-32-1EP_5x5mm_P0.5mm_EP3.45x3.45mm",
+        "side": "top",
+        "x": 135.0,
+        "y": 108.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.77,
+        "height_source": "3D model",
+        "mpn": "STM32G031K8U6",
+        "pins": {
+          "1": "+3V3",
+          "2": "/NRST",
+          "3": "unconnected-(U3-P3-Pad3)",
+          "4": "unconnected-(U3-P4-Pad4)",
+          "5": "unconnected-(U3-PA0-Pad5)",
+          "6": "unconnected-(U3-P6-Pad6)",
+          "7": "unconnected-(U3-P7-Pad7)",
+          "8": "unconnected-(U3-P8-Pad8)",
+          "9": "/SDA",
+          "10": "/SCL",
+          "11": "unconnected-(U3-P11-Pad11)",
+          "12": "unconnected-(U3-P12-Pad12)",
+          "13": "unconnected-(U3-P13-Pad13)",
+          "14": "unconnected-(U3-P14-Pad14)",
+          "15": "unconnected-(U3-P15-Pad15)",
+          "16": "GND",
+          "17": "unconnected-(U3-P17-Pad17)",
+          "18": "unconnected-(U3-P18-Pad18)",
+          "19": "unconnected-(U3-P19-Pad19)",
+          "20": "/LED",
+          "21": "/D-",
+          "22": "/D+",
+          "23": "unconnected-(U3-P23-Pad23)",
+          "24": "+3V3",
+          "25": "unconnected-(U3-P25-Pad25)",
+          "26": "unconnected-(U3-P26-Pad26)",
+          "27": "unconnected-(U3-P27-Pad27)",
+          "28": "unconnected-(U3-P28-Pad28)",
+          "29": "unconnected-(U3-P29-Pad29)",
+          "30": "unconnected-(U3-P30-Pad30)",
+          "31": "unconnected-(U3-P31-Pad31)",
+          "32": "GND",
+          "33": "GND"
+        }
+      }
+    ]
+  },
+  "electrical": {
+    "supply": {
+      "net": "VIN_12V",
+      "voltage": 12.0,
+      "reason": "highest rail on connector J3",
+      "current_limit_a": 0.5
+    },
+    "power_nets": [
+      "+3V3",
+      "+5V",
+      "VBUS",
+      "VIN_12V"
+    ],
+    "ground_nets": [
+      "GND"
+    ],
+    "nets": [
+      {
+        "name": "+3V3",
+        "kind": "power",
+        "pad_count": 14,
+        "pads": [
+          "C3.1",
+          "C4.1",
+          "C7.1",
+          "C8.1",
+          "C9.1",
+          "J2.1",
+          "R1.2",
+          "R2.2",
+          "R5.2",
+          "TP1.1",
+          "U2.2",
+          "U2.4",
+          "U3.1",
+          "U3.24"
+        ],
+        "expected_v": {
+          "nominal": 3.3,
+          "min": 3.135,
+          "max": 3.465,
+          "source": "net name"
+        },
+        "probes": [
+          "PP05"
+        ]
+      },
+      {
+        "name": "+5V",
+        "kind": "power",
+        "pad_count": 5,
+        "pads": [
+          "C2.1",
+          "D1.1",
+          "TP2.1",
+          "U1.3",
+          "U2.3"
+        ],
+        "expected_v": {
+          "nominal": 5.0,
+          "min": 4.75,
+          "max": 5.25,
+          "source": "net name"
+        },
+        "probes": [
+          "PP06"
+        ]
+      },
+      {
+        "name": "/D+",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J1.3",
+          "U3.22"
+        ]
+      },
+      {
+        "name": "/D-",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J1.2",
+          "U3.21"
+        ]
+      },
+      {
+        "name": "/LED",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R3.1",
+          "U3.20"
+        ]
+      },
+      {
+        "name": "/NRST",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R5.1",
+          "U3.2"
+        ]
+      },
+      {
+        "name": "/SCL",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "J2.3",
+          "R2.1",
+          "U3.10"
+        ],
+        "probes": [
+          "PP07"
+        ]
+      },
+      {
+        "name": "/SDA",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J2.2",
+          "R1.1",
+          "TP4.1",
+          "U3.9"
+        ],
+        "probes": [
+          "PP08"
+        ]
+      },
+      {
+        "name": "GND",
+        "kind": "ground",
+        "pad_count": 24,
+        "pads": [
+          "C1.2",
+          "C2.2",
+          "C3.2",
+          "C4.2",
+          "C5.2",
+          "C7.2",
+          "C8.2",
+          "C9.2",
+          "D2.1",
+          "D3.2",
+          "J1.5",
+          "J1.6",
+          "J1.6",
+          "J1.6",
+          "J1.6",
+          "J2.4",
+          "J3.2",
+          "R4.2",
+          "TP3.1",
+          "U1.2",
+          "U2.1",
+          "U3.16",
+          "U3.32",
+          "U3.33"
+        ],
+        "expected_v": {
+          "nominal": 0.0,
+          "min": -0.05,
+          "max": 0.05,
+          "source": "net name"
+        },
+        "probes": [
+          "PP03",
+          "PP04"
+        ]
+      },
+      {
+        "name": "Net-(D2-A)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D2.2",
+          "R3.2"
+        ]
+      },
+      {
+        "name": "VBUS",
+        "kind": "power",
+        "pad_count": 3,
+        "pads": [
+          "D1.2",
+          "D3.1",
+          "J1.1"
+        ],
+        "expected_v": {
+          "nominal": 5.0,
+          "min": 4.75,
+          "max": 5.25,
+          "source": "net name"
+        }
+      },
+      {
+        "name": "VIN_12V",
+        "kind": "power",
+        "pad_count": 5,
+        "pads": [
+          "C1.1",
+          "C5.1",
+          "J3.1",
+          "R4.1",
+          "U1.1"
+        ],
+        "expected_v": {
+          "nominal": 12.0,
+          "min": 11.4,
+          "max": 12.6,
+          "source": "net name"
+        },
+        "probes": [
+          "PP01",
+          "PP02"
+        ]
+      }
+    ]
+  },
+  "acceptance_criteria": [
+    {
+      "id": "DIM-OUTLINE",
+      "type": "dimensional",
+      "description": "Board outline 60.00 x 45.00 mm",
+      "limits": {
+        "width_mm": [
+          59.8,
+          60.2
+        ],
+        "height_mm": [
+          44.8,
+          45.2
+        ]
+      }
+    },
+    {
+      "id": "DIM-THICKNESS",
+      "type": "dimensional",
+      "description": "Board thickness 1.60 mm +/-10%",
+      "limits": {
+        "thickness_mm": [
+          1.44,
+          1.76
+        ]
+      }
+    },
+    {
+      "id": "WORKMANSHIP",
+      "type": "visual",
+      "description": "Soldering per IPC-A-610 Class 2"
+    },
+    {
+      "id": "VIS-POLARITY",
+      "type": "visual",
+      "step": "S1",
+      "description": "Polarity/orientation correct",
+      "refs": [
+        "C1",
+        "C2",
+        "D1",
+        "D2",
+        "D3"
+      ]
+    },
+    {
+      "id": "VIS-PIN1",
+      "type": "visual",
+      "step": "S1",
+      "description": "IC pin-1 orientation matches silkscreen",
+      "refs": [
+        "U1",
+        "U2",
+        "U3"
+      ]
+    },
+    {
+      "id": "VIS-THT",
+      "type": "visual",
+      "step": "S1",
+      "description": "Through-hole joints filled, leads clipped <= 1.5 mm",
+      "refs": [
+        "C1",
+        "C2",
+        "J2",
+        "J3",
+        "U1"
+      ]
+    },
+    {
+      "id": "VIS-BRIDGES",
+      "type": "visual",
+      "step": "S1",
+      "description": "No solder bridges on fine-pitch parts",
+      "refs": [
+        "J1",
+        "U3"
+      ]
+    },
+    {
+      "id": "VIS-MLCC-CRACK",
+      "type": "visual",
+      "step": "S1",
+      "description": "No cracked MLCCs near the board edge",
+      "refs": [
+        "C7"
+      ]
+    },
+    {
+      "id": "R_VIN_12V",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on VIN_12V",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "R_+3V3",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on +3V3",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "R_+5V",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on +5V",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "V_SUPPLY",
+      "type": "electrical",
+      "step": "S3",
+      "description": "Apply power (VIN_12V = 12.0 V) on VIN_12V",
+      "limits": {
+        "min_v": 11.4,
+        "max_v": 12.6
+      }
+    },
+    {
+      "id": "V_+3V3",
+      "type": "electrical",
+      "step": "S4",
+      "description": "Rail voltages on +3V3",
+      "limits": {
+        "min_v": 3.135,
+        "max_v": 3.465
+      }
+    },
+    {
+      "id": "V_+5V",
+      "type": "electrical",
+      "step": "S4",
+      "description": "Rail voltages on +5V",
+      "limits": {
+        "min_v": 4.75,
+        "max_v": 5.25
+      }
+    }
+  ],
+  "findings": [
+    {
+      "uid": "F001",
+      "id": "MFG-COPPER-SHORT",
+      "severity": "critical",
+      "category": "manufacturing",
+      "title": "10 place(s) where copper of different nets touches",
+      "detail": "Overlapping tracks/pads of different nets short every board.",
+      "recommendation": "Fix the routing (run KiCad DRC).",
+      "count": 10,
+      "items": [
+        {
+          "layer": "F.Cu",
+          "a": "track VIN_12V",
+          "b": "pad J3.2",
+          "x": 115.5,
+          "y": 88.75
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track VIN_12V",
+          "b": "pad U1.2",
+          "x": 125.77,
+          "y": 88.25
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track VIN_12V",
+          "b": "track +5V",
+          "x": 130.77,
+          "y": 88.5
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track VIN_12V",
+          "b": "pad U1.3",
+          "x": 127.04,
+          "y": 88.25
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track +5V",
+          "b": "pad C1.1",
+          "x": 133.27,
+          "y": 88.75
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track +5V",
+          "b": "pad C1.2",
+          "x": 135.02,
+          "y": 88.75
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track +5V",
+          "b": "track +3V3",
+          "x": 144.425,
+          "y": 95.825
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track +5V",
+          "b": "pad U2.2",
+          "x": 146.387,
+          "y": 94.825
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track /SDA",
+          "b": "track /SCL",
+          "x": 119.044,
+          "y": 115.685
+        },
+        {
+          "layer": "F.Cu",
+          "a": "track +3V3",
+          "b": "pad C3.2",
+          "x": 131.52,
+          "y": 104.062
+        }
+      ]
+    },
+    {
+      "uid": "F002",
+      "id": "MFG-TRACK-WIDTH",
+      "severity": "critical",
+      "category": "manufacturing",
+      "title": "1 track segment(s) below the 0.127 mm fab minimum",
+      "detail": "Narrowest track: 0.100 mm. Over-etching on thin tracks causes opens and lower yield.",
+      "recommendation": "Widen tracks to at least 0.159 mm where space allows, or choose a fab profile that supports them.",
+      "nets": [
+        "/SDA"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "x": 118.59,
+          "y": 115.77,
+          "layer": "F.Cu",
+          "net": "/SDA",
+          "width": 0.1
+        }
+      ],
+      "data": {
+        "min_width_mm": 0.1
+      }
+    },
+    {
+      "uid": "F003",
+      "id": "MFG-VIA",
+      "severity": "critical",
+      "category": "manufacturing",
+      "title": "1 via(s) with drill below 0.30 mm",
+      "detail": "Mechanical drills below the fab minimum need laser drilling (HDI) or are rejected.",
+      "recommendation": "Increase via drill to >= 0.30 mm or order an HDI process.",
+      "count": 1,
+      "items": [
+        {
+          "x": 130.0,
+          "y": 100.0,
+          "net": "GND",
+          "drill": 0.25,
+          "size": 0.5
+        }
+      ]
+    },
+    {
+      "uid": "F004",
+      "id": "REL-RES-POWER",
+      "severity": "critical",
+      "category": "reliability",
+      "title": "1 resistor(s) over their derated power",
+      "detail": "Computed from the rail voltages across the resistor (P = V^2/R).",
+      "recommendation": "Use a larger package/higher rating, or a higher resistance.",
+      "refs": [
+        "R4"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "R4",
+          "value": "1k",
+          "power_w": 0.144,
+          "rated_w": 0.0625,
+          "rating_source": "typical for 0402",
+          "severity": "critical"
+        }
+      ]
+    },
+    {
+      "uid": "F005",
+      "id": "MFG-EDGE-CLEARANCE",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "1 copper item(s) closer than 0.30 mm to the board edge",
+      "detail": "Routing/scoring exposes or burrs copper that sits this close to the edge (shorts to enclosure, delamination).",
+      "recommendation": "Pull copper back to >= 0.38 mm from Edge.Cuts or ask the fab for edge plating.",
+      "nets": [
+        "GND"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "x": 127.5,
+          "y": 124.8,
+          "kind": "track",
+          "net": "GND",
+          "layer": "B.Cu",
+          "clearance": 0.075
+        }
+      ]
+    },
+    {
+      "uid": "F006",
+      "id": "MFG-TECH-CLASS",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "Board is finer than Eurocircuits supports (pattern)",
+      "detail": "No level of Eurocircuits pattern + drill classes accepts these features: via annular ring (outer) 0.025 at pattern 9 (limit 0.1); via hole (finished) 0.25 at drill B (limit 0.35).",
+      "recommendation": "Widen the listed features, or choose a finer process or another class system.",
+      "count": 1,
+      "data": {
+        "system": "eurocircuits-2024",
+        "required": null,
+        "measured": {
+          "aspect_ratio": 4.5714,
+          "drill_npth": 3.2,
+          "drill_pth": 0.8,
+          "drill_via": 0.25,
+          "gap_outer": 0.1755,
+          "microvias": 0.0,
+          "ring_pth_outer": 0.3,
+          "ring_via_outer": 0.025,
+          "thickness_max": 1.6,
+          "track_outer": 0.1
+        },
+        "status": "verified"
+      }
+    },
+    {
+      "uid": "F007",
+      "id": "MFG-TECH-CLASS",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "1 feature(s) break Eurocircuits process limits",
+      "detail": "outer track width: 1 (worst 0.1 vs 0.125).",
+      "recommendation": "These limits apply to every class of Eurocircuits pattern + drill classes.",
+      "count": 1,
+      "items": [
+        {
+          "value": 0.1,
+          "limit": 0.125,
+          "x": 118.588,
+          "y": 115.77,
+          "layer": "F.Cu",
+          "net": "/SDA",
+          "parameter": "track_outer"
+        }
+      ],
+      "data": {
+        "system": "eurocircuits-2024",
+        "required": null,
+        "measured": {
+          "aspect_ratio": 4.5714,
+          "drill_npth": 3.2,
+          "drill_pth": 0.8,
+          "drill_via": 0.25,
+          "gap_outer": 0.1755,
+          "microvias": 0.0,
+          "ring_pth_outer": 0.3,
+          "ring_via_outer": 0.025,
+          "thickness_max": 1.6,
+          "track_outer": 0.1
+        },
+        "status": "verified"
+      }
+    },
+    {
+      "uid": "F008",
+      "id": "MFG-VIA",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "1 via(s) with annular ring below 0.100 mm",
+      "detail": "Drill wander can break out of a thin annular ring, giving intermittent or open connections.",
+      "recommendation": "Increase via pad diameter (size - drill >= 0.25 mm).",
+      "count": 1,
+      "items": [
+        {
+          "x": 138.0,
+          "y": 102.0,
+          "net": "+3V3",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        }
+      ]
+    },
+    {
+      "uid": "F009",
+      "id": "ASM-FIDUCIALS",
+      "severity": "major",
+      "category": "assembly",
+      "title": "No fiducials on the top side (16 SMD parts)",
+      "detail": "Pick-and-place machines need >= 2 global fiducials per populated side for accurate placement.",
+      "recommendation": "Add 2-3 fiducials in opposite corners of the top side, or confirm that the panel rails carry them.",
+      "count": 1,
+      "data": {
+        "side": "top",
+        "smd_parts": 16
+      }
+    },
+    {
+      "uid": "F010",
+      "id": "ASM-FIDUCIALS",
+      "severity": "major",
+      "category": "assembly",
+      "title": "No fiducials on the bottom side (1 SMD parts)",
+      "detail": "Pick-and-place machines need >= 2 global fiducials per populated side for accurate placement.",
+      "recommendation": "Add 2-3 fiducials in opposite corners of the bottom side, or confirm that the panel rails carry them.",
+      "count": 1,
+      "data": {
+        "side": "bottom",
+        "smd_parts": 1
+      }
+    },
+    {
+      "uid": "F011",
+      "id": "ASM-THT-SOLID-ZONE",
+      "severity": "major",
+      "category": "assembly",
+      "title": "5 through-hole pad(s) with solid plane connection",
+      "detail": "The plane sinks heat away: hole fill is poor in wave/selective soldering and hand soldering creates cold joints.",
+      "recommendation": "Use thermal-relief spokes for THT pads (zone 'Thermal reliefs for PTH' or pad override).",
+      "refs": [
+        "C1",
+        "C2",
+        "J2",
+        "J3",
+        "U1"
+      ],
+      "nets": [
+        "GND"
+      ],
+      "count": 5,
+      "items": [
+        {
+          "x": 115.0,
+          "y": 89.0,
+          "pad": "J3.2",
+          "net": "GND"
+        },
+        {
+          "x": 124.54,
+          "y": 88.0,
+          "pad": "U1.2",
+          "net": "GND"
+        },
+        {
+          "x": 135.5,
+          "y": 89.0,
+          "pad": "C1.2",
+          "net": "GND"
+        },
+        {
+          "x": 144.0,
+          "y": 89.0,
+          "pad": "C2.2",
+          "net": "GND"
+        },
+        {
+          "x": 110.0,
+          "y": 120.62,
+          "pad": "J2.4",
+          "net": "GND"
+        }
+      ]
+    },
+    {
+      "uid": "F012",
+      "id": "ASM-TOMBSTONE",
+      "severity": "major",
+      "category": "assembly",
+      "title": "3 small part(s) with unbalanced pad heating",
+      "detail": "One pad heats much slower than the other (solid plane, wide track or via); surface tension then lifts the part on end during reflow (tombstoning/open joint).",
+      "recommendation": "Use thermal reliefs on the plane connection and equal-width tracks on both pads.",
+      "refs": [
+        "C3",
+        "C9",
+        "R1"
+      ],
+      "count": 3,
+      "items": [
+        {
+          "ref": "C3",
+          "package": "0402",
+          "heavy_pad": "2",
+          "reason": "solid zone",
+          "severity": "major"
+        },
+        {
+          "ref": "R1",
+          "package": "0603",
+          "heavy_pad": "2",
+          "reason": "via in pad",
+          "severity": "minor"
+        },
+        {
+          "ref": "C9",
+          "package": "0402",
+          "heavy_pad": "2",
+          "reason": "solid zone",
+          "severity": "major"
+        }
+      ]
+    },
+    {
+      "uid": "F013",
+      "id": "ASM-MLCC-EDGE",
+      "severity": "major",
+      "category": "reliability",
+      "title": "1 MLCC(s) within 3.0 mm of the board edge",
+      "detail": "Board flexing during depaneling, ICT, connector insertion or screwing cracks MLCCs; cracks short the rail later in the field. Perpendicular orientation (terminals at different distances from the edge) is worst.",
+      "recommendation": "Move MLCCs >= 3.0 mm from edges and V-score lines, orient them parallel to the edge, or use soft-termination / flexible-termination parts.",
+      "refs": [
+        "C7"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "C7",
+          "package": "0805",
+          "edge_mm": 0.98,
+          "orientation": "perpendicular",
+          "severity": "major",
+          "x": 157.6,
+          "y": 108.0
+        }
+      ]
+    },
+    {
+      "uid": "F014",
+      "id": "REL-ELCAP-HEAT",
+      "severity": "major",
+      "category": "reliability",
+      "title": "2 electrolytic capacitor(s) within 10 mm of a heat source",
+      "detail": "Electrolytic life roughly halves for every 10 C rise (Arrhenius); electrolyte dries out and ESR rises, a classic end-of-life failure of power supplies.",
+      "recommendation": "Move the capacitors away from regulators/MOSFETs/inductors, use 105 C long-life series or polymer capacitors.",
+      "refs": [
+        "C1",
+        "C2",
+        "U1",
+        "U2"
+      ],
+      "count": 3,
+      "items": [
+        {
+          "ref": "C1",
+          "heat_source": "U1",
+          "reason": "power package (TO-220-3_Vertical)",
+          "distance_mm": 0.0
+        },
+        {
+          "ref": "C1",
+          "heat_source": "U2",
+          "reason": "power package (SOT-223-3_TabPin2)",
+          "distance_mm": 8.6
+        },
+        {
+          "ref": "C2",
+          "heat_source": "U2",
+          "reason": "power package (SOT-223-3_TabPin2)",
+          "distance_mm": 1.1
+        }
+      ]
+    },
+    {
+      "uid": "F015",
+      "id": "REL-SMD-CONNECTOR",
+      "severity": "major",
+      "category": "reliability",
+      "title": "1 connector(s) without through-hole anchors",
+      "detail": "Mating forces and cable strain go straight into SMD solder joints; pads rip off after repeated use.",
+      "recommendation": "Use connector variants with through-hole shell tabs/pegs, or add an enclosure strain relief.",
+      "refs": [
+        "J1"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "J1",
+          "footprint": "USB_Micro-B_Molex-105017-0001",
+          "external": true,
+          "severity": "major"
+        }
+      ]
+    },
+    {
+      "uid": "F016",
+      "id": "ELEC-DECOUPLING",
+      "severity": "major",
+      "category": "electrical",
+      "title": "2 IC power net(s) lack a nearby decoupling capacitor",
+      "detail": "Distant decoupling adds loop inductance: supply noise, brown-out resets and EMC failures that show up unit-to-unit and over temperature.",
+      "recommendation": "Place a 100 nF capacitor within 5 mm of every power pin (plus bulk capacitance per rail).",
+      "refs": [
+        "U1",
+        "U2"
+      ],
+      "nets": [
+        "+5V",
+        "VIN_12V"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "ref": "U1",
+          "net": "VIN_12V",
+          "nearest_cap_mm": 10.0,
+          "severity": "major"
+        },
+        {
+          "ref": "U2",
+          "net": "+5V",
+          "nearest_cap_mm": 11.0,
+          "severity": "major"
+        }
+      ]
+    },
+    {
+      "uid": "F017",
+      "id": "ELEC-FLOATING",
+      "severity": "major",
+      "category": "electrical",
+      "title": "1 input/power pin(s) left unconnected",
+      "detail": "Floating CMOS inputs oscillate, draw extra current and cause random behaviour; unconnected power pins leave parts of the IC unpowered.",
+      "recommendation": "Tie unused inputs to a defined level (per datasheet) and connect all power pins.",
+      "refs": [
+        "U3"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "pad": "U3.5",
+          "pinfunction": "PA0",
+          "pintype": "input",
+          "severity": "major"
+        }
+      ]
+    },
+    {
+      "uid": "F018",
+      "id": "TEST-POWER-ACCESS",
+      "severity": "major",
+      "category": "testability",
+      "title": "1 power net(s) cannot be probed",
+      "detail": "Rails without probe access cannot be verified on the production tester.",
+      "recommendation": "Add a >= 0.9 mm test pad on the bottom side for each listed rail. The other side reaches VBUS: probe both sides (testplan.probe_side = \"both\", two fixture plates).",
+      "nets": [
+        "VBUS"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "net": "VBUS",
+          "reason": "no accessible pad on the bottom side"
+        }
+      ]
+    },
+    {
+      "uid": "F019",
+      "id": "MFG-ACID-TRAP",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "1 acute track junction(s) (< 80 deg)",
+      "detail": "Acute copper angles trap etchant and can over-etch, creating thin necks.",
+      "recommendation": "Re-route the junctions with 45/90 degree entries.",
+      "count": 1,
+      "items": [
+        {
+          "x": 115.0,
+          "y": 118.0,
+          "layer": "F.Cu",
+          "net": "/SCL",
+          "angle": 32.8
+        }
+      ]
+    },
+    {
+      "uid": "F020",
+      "id": "MFG-TRACK-WIDTH",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "3 track segment(s) close to the 0.127 mm fab minimum",
+      "detail": "Narrowest track: 0.150 mm. Over-etching on thin tracks causes opens and lower yield.",
+      "recommendation": "Widen tracks to at least 0.159 mm where space allows, or choose a fab profile that supports them.",
+      "nets": [
+        "/SCL"
+      ],
+      "count": 3,
+      "items": [
+        {
+          "x": 112.5,
+          "y": 118.04,
+          "layer": "F.Cu",
+          "net": "/SCL",
+          "width": 0.15
+        },
+        {
+          "x": 121.09,
+          "y": 118.5,
+          "layer": "F.Cu",
+          "net": "/SCL",
+          "width": 0.15
+        },
+        {
+          "x": 119.5,
+          "y": 115.6,
+          "layer": "F.Cu",
+          "net": "/SCL",
+          "width": 0.15
+        }
+      ],
+      "data": {
+        "min_width_mm": 0.15
+      }
+    },
+    {
+      "uid": "F021",
+      "id": "ASM-FINE-PITCH",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "1 fine-pitch (<= 0.5 mm) part(s)",
+      "detail": "Fine pitch raises the risk of solder bridges and insufficient joints.",
+      "recommendation": "Use a <= 0.12 mm stencil with reduced apertures, solder-mask dams between pads and AOI after reflow.",
+      "refs": [
+        "U3"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "U3",
+          "package": "QFN-32-1EP_5x5mm_P0.5mm_EP3.45x3.45mm",
+          "pitch": 0.5
+        }
+      ]
+    },
+    {
+      "uid": "F022",
+      "id": "ASM-PROCESS",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "Assembly process: SMT top (16 parts) + SMT bottom (1 parts) + THT (5 parts: wave, selective or hand soldering)",
+      "detail": "Each extra process step adds cost and handling (handling = flex & ESD exposure). Bottom SMD + THT usually needs selective soldering or a wave pallet.",
+      "recommendation": "The generated solder jig holds the THT parts for hand soldering.",
+      "refs": [
+        "C1",
+        "C2",
+        "J2",
+        "J3",
+        "U1"
+      ],
+      "count": 1,
+      "data": {
+        "smd_top": 16,
+        "smd_bottom": 1,
+        "tht": 5
+      }
+    },
+    {
+      "uid": "F023",
+      "id": "ASM-VIA-IN-PAD",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "1 via(s) inside SMD pads",
+      "detail": "Open vias in pads wick solder away from the joint (starved joints, voids) unless they are filled and capped.",
+      "recommendation": "Move vias next to the pad (dog-bone) or order filled & capped vias (IPC-4761 type VII).",
+      "refs": [
+        "R1"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "x": 128.82,
+          "y": 116.0,
+          "pad": "R1.2",
+          "net": "+3V3",
+          "severity": "minor"
+        }
+      ]
+    },
+    {
+      "uid": "F024",
+      "id": "REL-CAP-VOLTAGE",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "1 capacitor(s) exceed voltage derating",
+      "detail": "Over-stressed capacitors fail early: tantalums short (and burn), electrolytics wear out, class-II ceramics lose most of their capacitance under DC bias.",
+      "recommendation": "Pick parts with a higher voltage rating (ceramic >= 2x, tantalum >= 2x, electrolytic >= 1.25x working voltage).",
+      "refs": [
+        "C5"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "C5",
+          "kind": "ceramic",
+          "working_v": 12.0,
+          "rated_v": 16.0,
+          "usage_pct": 75,
+          "limit_pct": 50,
+          "severity": "minor"
+        }
+      ]
+    },
+    {
+      "uid": "F025",
+      "id": "REL-MOUNTING",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "2 flex-sensitive part(s) within 3 mm of mounting holes",
+      "detail": "Screw torque bends the board locally and cracks MLCCs / BGA joints.",
+      "recommendation": "Keep MLCCs and area-array packages away from screws or use standoffs with washers.",
+      "refs": [
+        "C4",
+        "C8"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "ref": "C8",
+          "hole": "H2"
+        },
+        {
+          "ref": "C4",
+          "hole": "H4"
+        }
+      ]
+    },
+    {
+      "uid": "F026",
+      "id": "REL-TALL-PARTS",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "1 tall/heavy part(s) may need staking",
+      "detail": "Under vibration and shock, tall parts lever on their solder joints and leads fatigue.",
+      "recommendation": "Glue/stake them to the board (RTV or hot melt), add clamps, or use lower-profile parts.",
+      "refs": [
+        "U1"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "U1",
+          "height_mm": 18.8,
+          "height_source": "3D model"
+        }
+      ]
+    },
+    {
+      "uid": "F027",
+      "id": "REL-THERMAL-PAD",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "1 exposed pad(s) without thermal vias",
+      "detail": "Without vias the exposed pad cannot spread heat; the part runs hot and ages faster.",
+      "recommendation": "Add an array of 0.3 mm vias (tented or filled on the bottom to limit solder voids).",
+      "refs": [
+        "U3"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "U3",
+          "pad": "33",
+          "net": "GND",
+          "pad_mm": "3.5x3.5"
+        }
+      ]
+    },
+    {
+      "uid": "F028",
+      "id": "ELEC-ESD",
+      "severity": "minor",
+      "category": "electrical",
+      "title": "1 external connector(s) with unprotected signal lines",
+      "detail": "ESD at user-accessible connectors is a top cause of field returns (latent damage, not caught by test).",
+      "recommendation": "Add TVS/ESD diodes close to the connector (e.g. USBLC6 for USB, low-capacitance arrays for data lines).",
+      "refs": [
+        "J1"
+      ],
+      "nets": [
+        "/D+",
+        "/D-"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "J1",
+          "nets": [
+            "/D+",
+            "/D-"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "F029",
+      "id": "REL-POWER-TRACKS",
+      "severity": "minor",
+      "category": "electrical",
+      "title": "3 power net(s) contain tracks narrower than 0.30 mm",
+      "detail": "Thin power tracks drop voltage and heat up; capacity shown is IPC-2221 at 10 C rise (35 um Cu). Set nets.<name>.max_current_a in the config to turn this into a hard check.",
+      "recommendation": "Widen power tracks where space allows.",
+      "nets": [
+        "+3V3",
+        "+5V",
+        "GND"
+      ],
+      "count": 3,
+      "items": [
+        {
+          "net": "+3V3",
+          "min_width_mm": 0.2,
+          "capacity_a": 0.74
+        },
+        {
+          "net": "+5V",
+          "min_width_mm": 0.25,
+          "capacity_a": 0.88
+        },
+        {
+          "net": "GND",
+          "min_width_mm": 0.25,
+          "capacity_a": 0.88
+        }
+      ]
+    },
+    {
+      "uid": "F030",
+      "id": "DOC-CAP-RATING",
+      "severity": "minor",
+      "category": "documentation",
+      "title": "4 capacitor(s) on known rails have no voltage rating",
+      "detail": "Without a rating the derating cannot be verified and purchasing may substitute a low-voltage part.",
+      "recommendation": "Add a 'Voltage' field (e.g. 16V) to the capacitor symbols.",
+      "refs": [
+        "C3",
+        "C4",
+        "C8",
+        "C9"
+      ],
+      "count": 1
+    },
+    {
+      "uid": "F031",
+      "id": "DOC-MPN",
+      "severity": "minor",
+      "category": "documentation",
+      "title": "9 of 22 part(s) have no part number",
+      "detail": "Unspecified parts get substituted, which changes ratings, footprints and long-term reliability.",
+      "recommendation": "Add MPN fields for the remaining parts.",
+      "refs": [
+        "C2",
+        "C3",
+        "C4",
+        "C8",
+        "C9",
+        "D2",
+        "J2",
+        "R3",
+        "R4"
+      ],
+      "count": 1
+    },
+    {
+      "uid": "F032",
+      "id": "DOC-REVISION",
+      "severity": "minor",
+      "category": "documentation",
+      "title": "No revision in the board title block",
+      "detail": "Test results, fixtures and field returns cannot be traced to a board revision.",
+      "recommendation": "Set the revision in Board Setup > Title block and print it on silkscreen (${REVISION}).",
+      "count": 1
+    },
+    {
+      "uid": "F033",
+      "id": "ASM-POLARITY",
+      "severity": "info",
+      "category": "assembly",
+      "title": "Diodes on the top side use 3 different orientations",
+      "detail": "Mixed orientations of polarized parts increase placement and visual-inspection errors.",
+      "recommendation": "Align polarized parts to one or two orientations and mark polarity clearly on silkscreen.",
+      "refs": [
+        "D1",
+        "D2",
+        "D3"
+      ],
+      "count": 3,
+      "items": [
+        {
+          "rotation": 0,
+          "refs": [
+            "D1"
+          ]
+        },
+        {
+          "rotation": 90,
+          "refs": [
+            "D3"
+          ]
+        },
+        {
+          "rotation": 180,
+          "refs": [
+            "D2"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "F034",
+      "id": "TEST-SIGNAL-ACCESS",
+      "severity": "info",
+      "category": "testability",
+      "title": "4 signal net(s) not probed",
+      "detail": "These nets are not covered by the bed-of-nails test.",
+      "recommendation": "Add test pads, raise testplan.max_channels, or accept the gap.",
+      "nets": [
+        "/D+",
+        "/D-",
+        "/LED",
+        "/NRST"
+      ],
+      "count": 4,
+      "items": [
+        {
+          "net": "/D+",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/D-",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/LED",
+          "reason": "no accessible pad on the bottom side"
+        },
+        {
+          "net": "/NRST",
+          "reason": "no accessible pad on the bottom side"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "counts": {
+      "critical": 4,
+      "major": 14,
+      "minor": 14,
+      "info": 2
+    },
+    "score": 0,
+    "verdict": "not ready",
+    "total": 34,
+    "waived": 0
+  },
+  "decision_log": [],
+  "warnings": []
+}

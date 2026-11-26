@@ -1,0 +1,1422 @@
+{
+  "schema": "pcbtestkit/testplan@1",
+  "board": {
+    "name": "pic_programmer",
+    "revision": ""
+  },
+  "probe_side": "bottom",
+  "probe_side_reason": "auto: bottom side scored higher (bottom 37, top 0)",
+  "probe_side_eval": {
+    "bottom": {
+      "power_nets": 5,
+      "nets": 12,
+      "test_pads": 0,
+      "component_pads": 0,
+      "supply_reached": true,
+      "score": 37
+    },
+    "top": {
+      "power_nets": 0,
+      "nets": 0,
+      "test_pads": 0,
+      "component_pads": 0,
+      "supply_reached": false,
+      "score": 0
+    }
+  },
+  "pogo": {
+    "family": "P75",
+    "mount": "receptacle",
+    "pitch_mm": 1.91,
+    "drill_mm": 1.4,
+    "pad_mm": 1.9,
+    "min_spacing_mm": 2.4,
+    "min_target_mm": 0.9,
+    "probe_clearance_mm": 6.0
+  },
+  "adc": {
+    "max_input_v": 3.3
+  },
+  "facility": {
+    "id": "test_station",
+    "name": "PCB TestKit test station",
+    "analog_inputs": 32,
+    "max_input_v": null,
+    "shared": true,
+    "buses": {
+      "can": "fixture",
+      "i2c": "fixture",
+      "uart": "fixture"
+    },
+    "plate_mm": [
+      260.0,
+      190.0
+    ],
+    "connectors": [
+      {
+        "name": "J1",
+        "site": 1,
+        "shared": true,
+        "sites": 1,
+        "pins": [
+          {
+            "pin": 1,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 2,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 3,
+            "function": "AIN1",
+            "signal": "CH01",
+            "site": 1
+          },
+          {
+            "pin": 4,
+            "function": "AIN2",
+            "signal": "CH02",
+            "site": 1
+          },
+          {
+            "pin": 5,
+            "function": "AIN3",
+            "signal": "CH03",
+            "site": 1
+          },
+          {
+            "pin": 6,
+            "function": "AIN4",
+            "signal": "CH04",
+            "site": 1
+          },
+          {
+            "pin": 7,
+            "function": "AIN5",
+            "signal": "CH05",
+            "site": 1
+          },
+          {
+            "pin": 8,
+            "function": "AIN6",
+            "signal": "CH06",
+            "site": 1
+          },
+          {
+            "pin": 9,
+            "function": "AIN7",
+            "signal": "CH07",
+            "site": 1
+          },
+          {
+            "pin": 10,
+            "function": "AIN8",
+            "signal": "CH08",
+            "site": 1
+          },
+          {
+            "pin": 11,
+            "function": "AIN9",
+            "signal": "CH09",
+            "site": 1
+          },
+          {
+            "pin": 12,
+            "function": "AIN10",
+            "signal": "CH10",
+            "site": 1
+          },
+          {
+            "pin": 13,
+            "function": "AIN11",
+            "signal": "CH11",
+            "site": 1
+          },
+          {
+            "pin": 14,
+            "function": "AIN12",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 15,
+            "function": "AIN13",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 16,
+            "function": "AIN14",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 17,
+            "function": "AIN15",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 18,
+            "function": "AIN16",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 19,
+            "function": "AIN17",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 20,
+            "function": "AIN18",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 21,
+            "function": "AIN19",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 22,
+            "function": "AIN20",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 23,
+            "function": "AIN21",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 24,
+            "function": "AIN22",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 25,
+            "function": "AIN23",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 26,
+            "function": "AIN24",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 27,
+            "function": "AIN25",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 28,
+            "function": "AIN26",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 29,
+            "function": "AIN27",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 30,
+            "function": "AIN28",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 31,
+            "function": "AIN29",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 32,
+            "function": "AIN30",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 33,
+            "function": "AIN31",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 34,
+            "function": "AIN32",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 35,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 36,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 37,
+            "function": "VOUT1",
+            "signal": "VIN",
+            "site": 1
+          },
+          {
+            "pin": 38,
+            "function": "VOUT2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 39,
+            "function": "VOUT3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 40,
+            "function": "VOUT4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 41,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 42,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 43,
+            "function": "CAN_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 44,
+            "function": "CAN_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 45,
+            "function": "CAN2_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 46,
+            "function": "CAN2_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 47,
+            "function": "UART_TX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 48,
+            "function": "UART_RX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 49,
+            "function": "UART2_TX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 50,
+            "function": "UART2_RX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 51,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 52,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 53,
+            "function": "I2C_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 54,
+            "function": "I2C_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 55,
+            "function": "I2C2_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 56,
+            "function": "I2C2_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 57,
+            "function": "I2C3_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 58,
+            "function": "I2C3_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 59,
+            "function": "I2C4_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 60,
+            "function": "I2C4_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 61,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 62,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 63,
+            "function": "DIO1",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 64,
+            "function": "DIO2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 65,
+            "function": "DIO3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 66,
+            "function": "DIO4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 67,
+            "function": "DIO5",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 68,
+            "function": "DIO6",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 69,
+            "function": "DIO7",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 70,
+            "function": "DIO8",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 71,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 72,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 73,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 74,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 75,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 76,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 77,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 78,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 79,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 80,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          }
+        ]
+      }
+    ],
+    "max_sites": null,
+    "driver": false,
+    "bus_checks": [],
+    "capacity": {
+      "shared": true,
+      "max_sites": null,
+      "plate_mm": [
+        260.0,
+        190.0
+      ],
+      "inputs": 32,
+      "supplies": 4,
+      "gnd_pins": 12,
+      "buses": {
+        "can": 2,
+        "uart": 2,
+        "i2c": 4
+      },
+      "dio": 8,
+      "boards": {
+        "count": 2,
+        "limit": "inputs",
+        "by": {
+          "inputs": 2,
+          "supplies": 4
+        }
+      }
+    }
+  },
+  "supply": {
+    "net": "/pic_sockets/VCC_PIC",
+    "voltage": null,
+    "reason": "highest rail on connector P3, P2, JP1",
+    "current_limit_a": 0.5
+  },
+  "main_ground": "GND",
+  "probes": [
+    {
+      "id": "PP01",
+      "net": "/pic_sockets/VCC_PIC",
+      "role": "supply",
+      "x": 175.26,
+      "y": 76.2,
+      "source": "tht",
+      "label": "P3.11",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH01",
+      "header_pin": 3,
+      "divider": {
+        "r_top_ohm": 1200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP02",
+      "net": "/pic_sockets/VCC_PIC",
+      "role": "supply",
+      "x": 190.5,
+      "y": 71.12,
+      "source": "tht",
+      "label": "P3.32",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP03",
+      "net": "GND",
+      "role": "ground",
+      "x": 81.8,
+      "y": 60.0,
+      "source": "tht",
+      "label": "P1.1",
+      "target_mm": 3.0,
+      "tip": "crown",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP04",
+      "net": "GND",
+      "role": "ground",
+      "x": 175.26,
+      "y": 68.58,
+      "source": "tht",
+      "label": "P3.8",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP05",
+      "net": "/VPP{slash}MCLR",
+      "role": "measure",
+      "x": 175.26,
+      "y": 50.8,
+      "source": "tht",
+      "label": "P3.1",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH02",
+      "header_pin": 4,
+      "divider": {
+        "r_top_ohm": 1200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP06",
+      "net": "VCC",
+      "role": "measure",
+      "x": 125.73,
+      "y": 67.23,
+      "source": "tht",
+      "label": "L1.2",
+      "target_mm": 2.6,
+      "tip": "crown",
+      "channel": "CH03",
+      "header_pin": 5,
+      "divider": {
+        "r_top_ohm": 1200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP07",
+      "net": "VPP",
+      "role": "measure",
+      "x": 139.7,
+      "y": 54.61,
+      "source": "tht",
+      "label": "R7.1",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH04",
+      "header_pin": 6,
+      "divider": {
+        "r_top_ohm": 1200.0,
+        "r_bottom_ohm": 10000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP08",
+      "net": "/PC-DATA-IN",
+      "role": "measure",
+      "x": 79.76,
+      "y": 113.275,
+      "source": "tht",
+      "label": "J1.8",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH05",
+      "header_pin": 7,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP09",
+      "net": "Net-(D1-A)",
+      "role": "measure",
+      "x": 81.8,
+      "y": 65.0,
+      "source": "tht",
+      "label": "P1.2",
+      "target_mm": 3.0,
+      "tip": "crown",
+      "channel": "CH06",
+      "header_pin": 8,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP10",
+      "net": "/PC-CLOCK-OUT",
+      "role": "measure",
+      "x": 79.76,
+      "y": 116.045,
+      "source": "tht",
+      "label": "J1.7",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH07",
+      "header_pin": 9,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP11",
+      "net": "/PC-DATA-OUT",
+      "role": "measure",
+      "x": 82.6,
+      "y": 111.89,
+      "source": "tht",
+      "label": "J1.4",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH08",
+      "header_pin": 10,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP12",
+      "net": "/VPP_ON",
+      "role": "measure",
+      "x": 82.6,
+      "y": 114.66,
+      "source": "tht",
+      "label": "J1.3",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH09",
+      "header_pin": 11,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP13",
+      "net": "/CLOCK-RB6",
+      "role": "measure",
+      "x": 190.5,
+      "y": 53.34,
+      "source": "tht",
+      "label": "P3.39",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH10",
+      "header_pin": 12,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP14",
+      "net": "/DATA-RB7",
+      "role": "measure",
+      "x": 190.5,
+      "y": 50.8,
+      "source": "tht",
+      "label": "P3.40",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH11",
+      "header_pin": 13,
+      "divider": {
+        "r_top_ohm": 12000.0,
+        "r_bottom_ohm": 100000.0,
+        "ratio": 1.12,
+        "full_scale_v": 3.696
+      },
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    }
+  ],
+  "header": [
+    {
+      "pin": 3,
+      "signal": "CH01",
+      "function": "AIN1",
+      "net": "/pic_sockets/VCC_PIC"
+    },
+    {
+      "pin": 4,
+      "signal": "CH02",
+      "function": "AIN2",
+      "net": "/VPP{slash}MCLR"
+    },
+    {
+      "pin": 5,
+      "signal": "CH03",
+      "function": "AIN3",
+      "net": "VCC"
+    },
+    {
+      "pin": 6,
+      "signal": "CH04",
+      "function": "AIN4",
+      "net": "VPP"
+    },
+    {
+      "pin": 7,
+      "signal": "CH05",
+      "function": "AIN5",
+      "net": "/PC-DATA-IN"
+    },
+    {
+      "pin": 8,
+      "signal": "CH06",
+      "function": "AIN6",
+      "net": "Net-(D1-A)"
+    },
+    {
+      "pin": 9,
+      "signal": "CH07",
+      "function": "AIN7",
+      "net": "/PC-CLOCK-OUT"
+    },
+    {
+      "pin": 10,
+      "signal": "CH08",
+      "function": "AIN8",
+      "net": "/PC-DATA-OUT"
+    },
+    {
+      "pin": 11,
+      "signal": "CH09",
+      "function": "AIN9",
+      "net": "/VPP_ON"
+    },
+    {
+      "pin": 12,
+      "signal": "CH10",
+      "function": "AIN10",
+      "net": "/CLOCK-RB6"
+    },
+    {
+      "pin": 13,
+      "signal": "CH11",
+      "function": "AIN11",
+      "net": "/DATA-RB7"
+    },
+    {
+      "pin": 37,
+      "signal": "VIN",
+      "function": "VOUT1"
+    }
+  ],
+  "sequence": [
+    {
+      "id": "S1",
+      "name": "Visual inspection",
+      "type": "manual",
+      "power": "off",
+      "items": [
+        {
+          "id": "VIS-POLARITY",
+          "check": "Polarity/orientation correct",
+          "refs": [
+            "C1",
+            "C2",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "D8",
+            "D9",
+            "D10",
+            "D11",
+            "D12"
+          ]
+        },
+        {
+          "id": "VIS-PIN1",
+          "check": "IC pin-1 orientation matches silkscreen",
+          "refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6"
+          ]
+        },
+        {
+          "id": "VIS-THT",
+          "check": "Through-hole joints filled, leads clipped <= 1.5 mm",
+          "refs": [
+            "C1",
+            "C2",
+            "C3",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C9",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "D5",
+            "D6",
+            "D7",
+            "D8",
+            "D9",
+            "D10",
+            "D11",
+            "D12",
+            "L1",
+            "P1",
+            "P2",
+            "P3",
+            "Q1",
+            "Q2",
+            "Q3",
+            "R1",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "R8",
+            "R9",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R14",
+            "R15",
+            "R16",
+            "R17",
+            "R18",
+            "R19",
+            "R20",
+            "R21",
+            "RV1",
+            "U1",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6"
+          ]
+        }
+      ],
+      "phase": "unpowered"
+    },
+    {
+      "id": "S2",
+      "name": "Unpowered short check (rails to GND)",
+      "type": "resistance",
+      "power": "off",
+      "optional": true,
+      "checks": [
+        {
+          "id": "R_VCC_PIC",
+          "channel": "CH01",
+          "net": "/pic_sockets/VCC_PIC",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_VPP{slash}MCLR",
+          "channel": "CH02",
+          "net": "/VPP{slash}MCLR",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_VCC",
+          "channel": "CH03",
+          "net": "VCC",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_VPP",
+          "channel": "CH04",
+          "net": "VPP",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        }
+      ],
+      "note": "Needs the source-resistor circuit described in runner/README; skipped otherwise.",
+      "phase": "unpowered"
+    },
+    {
+      "id": "S3",
+      "name": "Apply power (/pic_sockets/VCC_PIC = None V)",
+      "type": "power",
+      "action": "on",
+      "net": "/pic_sockets/VCC_PIC",
+      "voltage": null,
+      "settle_ms": 500,
+      "current": {
+        "limit_a": 0.5,
+        "max_idle_a": null,
+        "min_idle_a": null
+      },
+      "abort_on_fail": true,
+      "checks": [
+        {
+          "id": "V_SUPPLY",
+          "channel": "CH01",
+          "net": "/pic_sockets/VCC_PIC",
+          "min_v": null,
+          "max_v": null
+        }
+      ],
+      "phase": "power"
+    },
+    {
+      "id": "S4",
+      "name": "Rail voltages",
+      "type": "voltage",
+      "power": "on",
+      "checks": [
+        {
+          "id": "V_VPP{slash}MCLR",
+          "channel": "CH02",
+          "net": "/VPP{slash}MCLR",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        },
+        {
+          "id": "V_VCC",
+          "channel": "CH03",
+          "net": "VCC",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        },
+        {
+          "id": "V_VPP",
+          "channel": "CH04",
+          "net": "VPP",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        }
+      ],
+      "phase": "powered"
+    },
+    {
+      "id": "S5",
+      "name": "Signal levels (idle)",
+      "type": "voltage",
+      "power": "on",
+      "checks": [
+        {
+          "id": "V_PC-DATA-IN",
+          "channel": "CH05",
+          "net": "/PC-DATA-IN",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_Net-(D1-A)",
+          "channel": "CH06",
+          "net": "Net-(D1-A)",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_PC-CLOCK-OUT",
+          "channel": "CH07",
+          "net": "/PC-CLOCK-OUT",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_PC-DATA-OUT",
+          "channel": "CH08",
+          "net": "/PC-DATA-OUT",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_VPP_ON",
+          "channel": "CH09",
+          "net": "/VPP_ON",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_CLOCK-RB6",
+          "channel": "CH10",
+          "net": "/CLOCK-RB6",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_DATA-RB7",
+          "channel": "CH11",
+          "net": "/DATA-RB7",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        }
+      ],
+      "phase": "powered"
+    },
+    {
+      "id": "S9",
+      "name": "Remove power",
+      "type": "power",
+      "action": "off",
+      "phase": "end"
+    }
+  ],
+  "coverage": {
+    "nets_total": 34,
+    "nets_probed": 12,
+    "power_nets": 5,
+    "power_nets_probed": 5,
+    "untestable": [],
+    "percent": 35.3
+  },
+  "fixture_keepouts": [],
+  "plates": [
+    "bottom"
+  ],
+  "headers": null,
+  "probe_side_hint": null,
+  "stack": [],
+  "after_test": [],
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  },
+  "program": null,
+  "firmware": {
+    "programmed": [],
+    "firmware_nets": []
+  },
+  "warnings": [],
+  "timing": {
+    "assumptions": {
+      "board_handling_s": 8.0,
+      "serial_entry_s": 3.0,
+      "visual_s": 15.0,
+      "short_check_s": 0.5,
+      "read_s": 0.05,
+      "bus_s": 3.0,
+      "place_part_s": 6.0,
+      "solder_joint_s": 2.5,
+      "jig_cycle_s": 45.0,
+      "program_s": 30.0
+    },
+    "batch": 1,
+    "test": {
+      "one_board_s": 29.5,
+      "sequential_s": 29.5,
+      "batch_s": 29.5,
+      "per_board_s": 29.5,
+      "saved_s": 0.0,
+      "timeline": [
+        {
+          "site": 1,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 0.0,
+              "end": 28.8
+            },
+            {
+              "phase": "checks",
+              "start": 28.8,
+              "end": 29.5
+            }
+          ]
+        }
+      ],
+      "phases_s": {
+        "unpowered": 17.0,
+        "power": 0.8,
+        "powered": 0.5,
+        "end": 0.2
+      }
+    },
+    "assembly": {
+      "per_board_s": 945.0,
+      "batch_s": 945.0,
+      "parts": 55,
+      "joints": 228,
+      "jig_loads": 1,
+      "boards_per_jig": 1
+    },
+    "per_board_s": 974.5,
+    "by_batch_size": [
+      {
+        "boards": 1,
+        "test_per_board_s": 29.5,
+        "assembly_per_board_s": 945.0,
+        "per_board_s": 974.5
+      },
+      {
+        "boards": 2,
+        "test_per_board_s": 29.5,
+        "assembly_per_board_s": 945.0,
+        "per_board_s": 974.5
+      },
+      {
+        "boards": 3,
+        "test_per_board_s": 29.5,
+        "assembly_per_board_s": 945.0,
+        "per_board_s": 974.5
+      },
+      {
+        "boards": 4,
+        "test_per_board_s": 29.5,
+        "assembly_per_board_s": 945.0,
+        "per_board_s": 974.5
+      },
+      {
+        "boards": 5,
+        "test_per_board_s": 29.5,
+        "assembly_per_board_s": 945.0,
+        "per_board_s": 974.5
+      },
+      {
+        "boards": 6,
+        "test_per_board_s": 29.5,
+        "assembly_per_board_s": 945.0,
+        "per_board_s": 974.5
+      },
+      {
+        "boards": 7,
+        "test_per_board_s": 29.5,
+        "assembly_per_board_s": 945.0,
+        "per_board_s": 974.5
+      },
+      {
+        "boards": 8,
+        "test_per_board_s": 29.5,
+        "assembly_per_board_s": 945.0,
+        "per_board_s": 974.5
+      }
+    ],
+    "suggested_batch": 1,
+    "note": "Estimates; set your own durations in 'timing' in pcbtestkit.json. The runner records the real ones in every result file."
+  }
+}

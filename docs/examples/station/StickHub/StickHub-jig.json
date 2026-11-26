@@ -1,0 +1,1211 @@
+{
+  "jig_size_mm": [
+    114.5,
+    57.75,
+    14.7
+  ],
+  "support_height_mm": 12.1,
+  "floor_mm": 2.0,
+  "resolution_mm": 0.25,
+  "board_bbox_in_jig_mm": [
+    3.3,
+    3.3,
+    19.8,
+    43.3
+  ],
+  "side": "bottom",
+  "orientation": "PCB bottom side faces down into the jig; jig X = board X, jig Y = -board Y (view from above shows the board's top side)",
+  "parts_to_place": [
+    "J9"
+  ],
+  "pockets": [
+    {
+      "ref": "J9",
+      "type": "hold",
+      "center": [
+        18.8,
+        23.05
+      ],
+      "depth_mm": 10.1,
+      "part_height_mm": 10.0,
+      "height_source": "default for THT (set a 'Height' field to override); outline pads",
+      "size_mm": [
+        2.0,
+        2.0
+      ],
+      "rotation_deg": -0.0
+    },
+    {
+      "ref": "C1",
+      "type": "relief",
+      "center": [
+        17.573,
+        28.305
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "C2",
+      "type": "relief",
+      "center": [
+        5.729,
+        26.714
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": -135.0
+    },
+    {
+      "ref": "C3",
+      "type": "relief",
+      "center": [
+        18.103,
+        27.775
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "C4",
+      "type": "relief",
+      "center": [
+        10.35,
+        18.0
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C5",
+      "type": "relief",
+      "center": [
+        9.85,
+        18.5
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C6",
+      "type": "relief",
+      "center": [
+        7.6,
+        20.75
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C7",
+      "type": "relief",
+      "center": [
+        6.113,
+        22.252
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C8",
+      "type": "relief",
+      "center": [
+        17.3,
+        21.7
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "C9",
+      "type": "relief",
+      "center": [
+        7.85,
+        28.836
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": -135.0
+    },
+    {
+      "ref": "C10",
+      "type": "relief",
+      "center": [
+        16.189,
+        19.954
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 45.0
+    },
+    {
+      "ref": "C11",
+      "type": "relief",
+      "center": [
+        16.512,
+        29.366
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "C12",
+      "type": "relief",
+      "center": [
+        15.1,
+        18.95
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C13",
+      "type": "relief",
+      "center": [
+        8.85,
+        19.5
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C21",
+      "type": "relief",
+      "center": [
+        18.8,
+        20.8
+      ],
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D model",
+      "size_mm": [
+        4.1,
+        3.05
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C22",
+      "type": "relief",
+      "center": [
+        15.3,
+        16.3
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": -135.0
+    },
+    {
+      "ref": "C23",
+      "type": "relief",
+      "center": [
+        10.629,
+        34.071
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C24",
+      "type": "relief",
+      "center": [
+        11.336,
+        33.364
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C25",
+      "type": "relief",
+      "center": [
+        12.043,
+        32.657
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C26",
+      "type": "relief",
+      "center": [
+        12.75,
+        31.95
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C27",
+      "type": "relief",
+      "center": [
+        13.457,
+        31.243
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "C28",
+      "type": "relief",
+      "center": [
+        14.05,
+        15.55
+      ],
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": -180.0
+    },
+    {
+      "ref": "C29",
+      "type": "relief",
+      "center": [
+        5.7,
+        16.6
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C30",
+      "type": "relief",
+      "center": [
+        6.7,
+        16.6
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C31",
+      "type": "relief",
+      "center": [
+        4.7,
+        16.6
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "C32",
+      "type": "relief",
+      "center": [
+        4.2,
+        18.7
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C33",
+      "type": "relief",
+      "center": [
+        5.2,
+        18.7
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "C34",
+      "type": "relief",
+      "center": [
+        14.357,
+        33.543
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "C35",
+      "type": "relief",
+      "center": [
+        13.65,
+        34.25
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "C36",
+      "type": "relief",
+      "center": [
+        12.943,
+        34.957
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "C37",
+      "type": "relief",
+      "center": [
+        12.236,
+        35.664
+      ],
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D model",
+      "size_mm": [
+        3.7,
+        2.6
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "C38",
+      "type": "relief",
+      "center": [
+        16.93,
+        46.55
+      ],
+      "depth_mm": 4.5,
+      "part_height_mm": 3.5,
+      "height_source": "3D model",
+      "size_mm": [
+        8.66,
+        17.1
+      ],
+      "rotation_deg": -180.0
+    },
+    {
+      "ref": "D22",
+      "type": "relief",
+      "center": [
+        8.65,
+        16.1
+      ],
+      "depth_mm": 1.37,
+      "part_height_mm": 0.37,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.4
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "D23",
+      "type": "relief",
+      "center": [
+        7.8,
+        16.1
+      ],
+      "depth_mm": 1.37,
+      "part_height_mm": 0.37,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.4
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "D24",
+      "type": "relief",
+      "center": [
+        17.45,
+        20.2
+      ],
+      "depth_mm": 1.37,
+      "part_height_mm": 0.37,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.4
+      ],
+      "rotation_deg": 90.0
+    },
+    {
+      "ref": "D25",
+      "type": "relief",
+      "center": [
+        10.7,
+        35.65
+      ],
+      "depth_mm": 1.37,
+      "part_height_mm": 0.37,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.4
+      ],
+      "rotation_deg": -45.0
+    },
+    {
+      "ref": "JP1",
+      "type": "relief",
+      "center": [
+        18.85,
+        17.4
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        5.55,
+        3.6
+      ],
+      "rotation_deg": -90.0
+    },
+    {
+      "ref": "LOGO1",
+      "type": "relief",
+      "center": [
+        10.95,
+        24.7
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        3.1,
+        3.1
+      ],
+      "rotation_deg": -180.0
+    },
+    {
+      "ref": "LOGO2",
+      "type": "relief",
+      "center": [
+        12.45,
+        24.7
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        3.1,
+        3.1
+      ],
+      "rotation_deg": -0.0
+    },
+    {
+      "ref": "LOGO3",
+      "type": "relief",
+      "center": [
+        10.95,
+        26.2
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        3.1,
+        3.1
+      ],
+      "rotation_deg": -0.0
+    },
+    {
+      "ref": "LOGO4",
+      "type": "relief",
+      "center": [
+        12.45,
+        26.2
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "default for SMD",
+      "size_mm": [
+        3.1,
+        3.1
+      ],
+      "rotation_deg": -0.0
+    },
+    {
+      "ref": "R1",
+      "type": "relief",
+      "center": [
+        7.32,
+        28.305
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 45.0
+    },
+    {
+      "ref": "R2",
+      "type": "relief",
+      "center": [
+        6.259,
+        27.245
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": -135.0
+    },
+    {
+      "ref": "R3",
+      "type": "relief",
+      "center": [
+        6.79,
+        27.775
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 45.0
+    },
+    {
+      "ref": "R4",
+      "type": "relief",
+      "center": [
+        8.911,
+        29.896
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 45.0
+    },
+    {
+      "ref": "R5",
+      "type": "relief",
+      "center": [
+        8.381,
+        29.366
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 45.0
+    },
+    {
+      "ref": "R6",
+      "type": "relief",
+      "center": [
+        9.35,
+        19.0
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "R7",
+      "type": "relief",
+      "center": [
+        14.921,
+        30.957
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "R8",
+      "type": "relief",
+      "center": [
+        15.452,
+        30.427
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "R9",
+      "type": "relief",
+      "center": [
+        15.982,
+        29.896
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "R10",
+      "type": "relief",
+      "center": [
+        17.043,
+        28.836
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "R11",
+      "type": "relief",
+      "center": [
+        10.502,
+        31.487
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 45.0
+    },
+    {
+      "ref": "R12",
+      "type": "relief",
+      "center": [
+        9.972,
+        30.957
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 45.0
+    },
+    {
+      "ref": "R13",
+      "type": "relief",
+      "center": [
+        9.441,
+        30.427
+      ],
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D model",
+      "size_mm": [
+        3.1,
+        2.3
+      ],
+      "rotation_deg": 45.0
+    },
+    {
+      "ref": "U1",
+      "type": "relief",
+      "center": [
+        12.3,
+        24.55
+      ],
+      "depth_mm": 2.5,
+      "part_height_mm": 1.5,
+      "height_source": "3D model",
+      "size_mm": [
+        11.9,
+        11.9
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "U2",
+      "type": "relief",
+      "center": [
+        16.45,
+        17.45
+      ],
+      "depth_mm": 1.75,
+      "part_height_mm": 0.75,
+      "height_source": "3D model",
+      "size_mm": [
+        3.6,
+        3.9
+      ],
+      "rotation_deg": 135.0
+    },
+    {
+      "ref": "Y1",
+      "type": "relief",
+      "center": [
+        12.547,
+        17.373
+      ],
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "3D model",
+      "size_mm": [
+        4.6,
+        4.1
+      ],
+      "rotation_deg": 135.0
+    }
+  ],
+  "posts": [
+    {
+      "hole": "H1",
+      "center": [
+        11.55,
+        14.05
+      ],
+      "diameter_mm": 3.6
+    }
+  ],
+  "notes": [
+    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud.",
+    "Two-jig workflow: put the PCB bottom side up in the placement jig, fit the parts, put this holding jig on top (pockets down), turn the stack over, lift off the placement jig and solder from above.",
+    "Batch of 4 boards: every jig holds all of them (4 x 1)."
+  ],
+  "scad": "StickHub-jig.scad",
+  "workflow": "two_jig",
+  "placement": {
+    "jig_size_mm": [
+      115.0,
+      52.25,
+      13.4
+    ],
+    "pcb_rest_height_mm": 12.0,
+    "lead_clearance_mm": 10.0,
+    "floor_mm": 2.0,
+    "resolution_mm": 0.25,
+    "board_bbox_in_jig_mm": [
+      6.0,
+      6.0,
+      22.5,
+      46.0
+    ],
+    "orientation": "PCB bottom side up; jig X = board X, jig Y = board Y (the board turned over about its X axis)",
+    "stops": [
+      {
+        "side": "left",
+        "at": [
+          141.75,
+          -89.75
+        ]
+      },
+      {
+        "side": "right",
+        "at": [
+          158.25,
+          -89.75
+        ]
+      }
+    ],
+    "lead_wells": 0,
+    "bottom_pockets": [
+      "D4",
+      "J7",
+      "J8",
+      "D10",
+      "C18",
+      "C16",
+      "D15",
+      "C14",
+      "D8",
+      "D9",
+      "D16",
+      "D1",
+      "D5",
+      "D3",
+      "C15",
+      "J2",
+      "D19",
+      "J5",
+      "C20",
+      "D20",
+      "D6",
+      "J1",
+      "C17",
+      "D7",
+      "D14",
+      "D21",
+      "J4",
+      "D11",
+      "J6",
+      "C19",
+      "D17",
+      "D18",
+      "D2",
+      "D12",
+      "J3",
+      "D13"
+    ],
+    "notes": [
+      "only 2 locating stop(s) fit around this outline; place the PCB carefully",
+      "Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm."
+    ],
+    "batch": {
+      "boards": 4,
+      "cols": 4,
+      "rows": 1,
+      "pitch_mm": [
+        28.75,
+        57.75
+      ],
+      "board_offsets_mm": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          28.75,
+          0.0
+        ],
+        [
+          57.5,
+          0.0
+        ],
+        [
+          86.25,
+          0.0
+        ]
+      ],
+      "sets": 1,
+      "batch_count": 4
+    },
+    "preview_png": "StickHub-jig-placement.png",
+    "mesh": {
+      "triangles": 35096,
+      "unmatched_edges": 0,
+      "volume_mm3": 57345.2,
+      "watertight": true
+    },
+    "stl": "StickHub-jig-placement.stl"
+  },
+  "key": "hand_bottom",
+  "passes": [
+    {
+      "pass": 1,
+      "process": "smt",
+      "side": "top",
+      "parts": 35,
+      "jig": null
+    },
+    {
+      "pass": 2,
+      "process": "smt",
+      "side": "bottom",
+      "parts": 50,
+      "jig": "nest_bottom"
+    },
+    {
+      "pass": 3,
+      "process": "hand",
+      "side": "bottom",
+      "parts": [
+        "J9"
+      ],
+      "jig": "hand_bottom"
+    }
+  ],
+  "extra": {
+    "nest_bottom": {
+      "jig_size_mm": [
+        187.0,
+        70.25,
+        7.86
+      ],
+      "pcb_rest_height_mm": 6.26,
+      "lead_clearance_mm": 4.26,
+      "floor_mm": 2.0,
+      "resolution_mm": 0.25,
+      "board_bbox_in_jig_mm": [
+        15.0,
+        15.0,
+        31.5,
+        55.0
+      ],
+      "orientation": "PCB bottom side up; jig X = board X, jig Y = board Y (the board turned over about its X axis)",
+      "stops": [],
+      "notes": [
+        "Rest the PCB bottom side up in the nest; the frame is flush with the board, so the stencil lies flat. Print it in PLA or PETG: it does not go into the reflow oven."
+      ],
+      "kind": "paste_nest",
+      "side": "bottom",
+      "down_side_pockets": [
+        "D4",
+        "J7",
+        "J8",
+        "D10",
+        "C18",
+        "C16",
+        "D15",
+        "C14",
+        "D8",
+        "D9",
+        "D16",
+        "D1",
+        "D5",
+        "D3",
+        "C15",
+        "J2",
+        "D19",
+        "J5",
+        "C20",
+        "D20",
+        "D6",
+        "C17",
+        "D7",
+        "D14",
+        "D21",
+        "J4",
+        "D11",
+        "J6",
+        "C19",
+        "D17",
+        "D18",
+        "D2",
+        "D12",
+        "J3",
+        "D13"
+      ],
+      "batch": {
+        "boards": 4,
+        "cols": 4,
+        "rows": 1,
+        "pitch_mm": [
+          46.75,
+          70.25
+        ],
+        "board_offsets_mm": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            46.75,
+            0.0
+          ],
+          [
+            93.5,
+            0.0
+          ],
+          [
+            140.25,
+            0.0
+          ]
+        ],
+        "sets": 1,
+        "batch_count": 4
+      },
+      "preview_png": "StickHub-paste-nest-bottom.png",
+      "mesh": {
+        "triangles": 46560,
+        "unmatched_edges": 0,
+        "volume_mm3": 82519.5,
+        "watertight": true
+      },
+      "stl": "StickHub-paste-nest-bottom.stl"
+    }
+  },
+  "batch": {
+    "boards_per_jig": 4,
+    "cols": 4,
+    "rows": 1,
+    "sets": 1,
+    "batch_count": 4,
+    "bed_mm": [
+      220.0,
+      220.0
+    ]
+  },
+  "preview_png": "StickHub-jig.png",
+  "mesh": {
+    "triangles": 92188,
+    "unmatched_edges": 0,
+    "volume_mm3": 73845.2,
+    "watertight": true
+  },
+  "stl": "StickHub-jig.stl"
+}

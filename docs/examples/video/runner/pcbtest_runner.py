@@ -30,6 +30,7 @@ import re
 import statistics
 import subprocess
 import sys
+import tempfile
 import time
 from typing import Any, Dict, List, Optional
 
@@ -385,54 +386,81 @@ def run_batch(plan, hwcfg, args, sites: List[int], serials: Dict[int, str]) -> D
                 alive.remove(k)
 
     verdict_over: Dict[int, str] = {}
+    procs: Dict[int, Any] = {}                           # site -> (programmer process, its output file) or "sim"
     try:
         phase("unpowered", "Unpowered checks")
         phase("power", "Power up")
         prog = (by.get("program") or [None])[0]
-        procs: Dict[int, Any] = {}
         t_prog = time.time()
+
+        def no_firmware(k: int) -> None:
+            """Programming board k failed: the checks that need the firmware cannot pass; switch it off."""
+            r = runners[k]
+            for st in by.get("after_program") or []:
+                r.record(st, st["id"], "skip", note="not programmed")
+            hw.select_site(k)
+            r.set_power(False)
+            if k in alive:
+                alive.remove(k)
+            verdict_over[k] = "FAIL"
+
         if prog is not None and (not args.only or prog["id"] in args.only):
             cmd = prog.get("command") or []
+            per_board = any("{site}" in str(a) for a in cmd)
             if args.simulate:
                 print("== Programming %d board(s) at the same time (simulated) ==" % len(alive))
-                procs = {k: "sim" for k in alive}
-            elif cmd and args.allow_commands:
+                procs.update({k: "sim" for k in alive})
+            elif cmd and args.allow_commands and (per_board or len(alive) == 1):
                 print("== Programming %d board(s) at the same time: %s ==" % (len(alive), " ".join(cmd)[:60]))
-                for k in alive:
+                for k in list(alive):
+                    out_f = tempfile.TemporaryFile(mode="w+")     # not a pipe: a chatty programmer must never stall
                     try:
-                        procs[k] = subprocess.Popen(_fill(cmd, k, serials[k]), stdout=subprocess.PIPE,
-                                                    stderr=subprocess.STDOUT, text=True)
+                        procs[k] = (subprocess.Popen(_fill(cmd, k, serials[k]), stdout=out_f, stderr=subprocess.STDOUT,
+                                                     text=True), out_f)
                     except OSError as e:
-                        runners[k].record(prog, prog["id"], "fail", note=str(e)[:80])
-            else:                       # by hand (or not allowed): one board after the other, before the checks
+                        out_f.close()
+                        runners[k].record(prog, prog["id"], "fail", note=str(e)[:200])
+                        no_firmware(k)
+            else:
+                # by hand, not allowed, or one command without {site} for several boards (one probe or mux):
+                # one board after the other, before the checks
+                if cmd and args.allow_commands and not per_board:
+                    print("  program.command has no {site}: the boards are programmed one after the other")
                 phase("program", "Programming")
                 prog = None
         phase("during_program", "Checks while the boards are programmed" if procs else "Checks")
         if procs:
             deadline = t_prog + float(prog.get("timeout_s", 180))
-            for k, p in procs.items():
+            for k in list(procs):
+                pr = procs.pop(k)
                 r = runners[k]
                 t0 = time.time()
-                if p == "sim":
+                if pr == "sim":
                     time.sleep(max(0.0, t_prog + 1.0 - time.time()))
                     r.record(prog, prog["id"], "pass", note="simulated")
                 else:
+                    p, out_f = pr
                     try:
-                        out, _ = p.communicate(timeout=max(1.0, deadline - time.time()))
-                        last = (out or "").strip().splitlines()[-1][:80] if (out or "").strip() else ""
-                        r.record(prog, prog["id"], "pass" if p.returncode == 0 else "fail", p.returncode, note=last)
+                        p.wait(timeout=max(1.0, deadline - time.time()))
+                        timed_out = False
                     except subprocess.TimeoutExpired:
                         p.kill()
-                        r.record(prog, prog["id"], "fail", note="timed out after %.0f s" % float(prog.get("timeout_s", 180)))
+                        p.wait()                                   # reaped; its output is kept below
+                        timed_out = True
+                    out_f.seek(0)
+                    lines = [ln.rstrip() for ln in out_f.read().splitlines() if ln.strip()]
+                    out_f.close()
+                    tail = " | ".join(lines[-3:])[-300:]
+                    if timed_out:
+                        r.record(prog, prog["id"], "fail", note=("timed out after %.0f s; %s" % (
+                            float(prog.get("timeout_s", 180)), tail))[:300])
+                    else:
+                        r.record(prog, prog["id"], "pass" if p.returncode == 0 else "fail", p.returncode,
+                                 note=tail if p.returncode else (lines[-1][:120] if lines else ""))
                 r.timings.append({"step": prog["id"], "phase": "program", "seconds": round(time.time() - t_prog, 3),
                                   "waited": round(time.time() - t0, 3)})
                 if r.results[-1]["status"] == "fail":       # no firmware: the checks that need it cannot pass
-                    for st in by.get("after_program") or []:
-                        r.record(st, st["id"], "skip", note="not programmed")
-                    hw.select_site(k)
-                    r.set_power(False)
-                    alive.remove(k)
-                    verdict_over[k] = "FAIL"
+                    no_firmware(k)
         phase("after_program", "Checks with the firmware running")
         phase("powered", "Checks")
         phase("end", "Power off")
@@ -443,6 +471,14 @@ def run_batch(plan, hwcfg, args, sites: List[int], serials: Dict[int, str]) -> D
         print("  %sHARDWARE ERROR%s %s" % (RED, RST, e))
         verdict_over.update({k: "ERROR" for k in sites})
     finally:
+        for pr in procs.values():                        # programmers still running after an error or Ctrl-C
+            if pr != "sim":
+                try:
+                    pr[0].kill()
+                    pr[0].wait(timeout=10)
+                    pr[1].close()
+                except Exception:  # pragma: no cover
+                    pass
         for k in sites:                                  # every board off, whatever happened
             try:
                 hw.select_site(k)

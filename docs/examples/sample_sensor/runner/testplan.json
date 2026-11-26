@@ -42,6 +42,7 @@
     "name": "Raspberry Pi + ADC (built-in)",
     "analog_inputs": null,
     "max_input_v": null,
+    "shared": false,
     "buses": {},
     "plate_mm": null,
     "connectors": [],

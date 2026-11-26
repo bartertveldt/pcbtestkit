@@ -479,12 +479,12 @@
   ],
   "outline_mode": "rect",
   "outline": {
-    "x_min": 45.59,
-    "y_min": 48.52,
-    "x_max": 373.63,
-    "y_max": 212.27,
-    "width": 328.04,
-    "height": 163.76
+    "x_min": 32.59,
+    "y_min": 1.77,
+    "x_max": 386.63,
+    "y_max": 222.77,
+    "width": 354.04,
+    "height": 221.01
   },
   "pogo_count": 34,
   "nets": 65,
@@ -494,8 +494,8 @@
     "unrouted_nets": [],
     "connections": 134,
     "unrouted_connections": 0,
-    "length_mm": 4831.6,
-    "vias": 128,
+    "length_mm": 5009.9,
+    "vias": 125,
     "grid_mm": 0.254,
     "passes": 1,
     "best_pass": 1,
@@ -508,5 +508,170 @@
     "rows": 1,
     "spacing_mm": 10.0,
     "source": "single board"
+  },
+  "plate_fit": true,
+  "plate_fits_cols": [],
+  "nest": {
+    "enabled": true,
+    "style": "slide",
+    "entry": "front",
+    "clamp": "toggle",
+    "heights": {
+      "work": 6.0,
+      "tips": 7.5,
+      "rest": 10.55,
+      "gap": 3.05,
+      "travel": 4.55,
+      "ledge": 2.0,
+      "wall": 5.1,
+      "boss": 6.45,
+      "bottom_rest": 8.55,
+      "bottom_work": 4.0,
+      "standoff": 15,
+      "adapter": 14.7,
+      "finger": 14.1,
+      "plate": 5.0,
+      "plate_top_work": 26.7
+    },
+    "board_mm": [
+      106.68,
+      312.04,
+      1.600198
+    ],
+    "spring": {
+      "free_mm": 10.0,
+      "solid_mm": 3.5,
+      "rest_mm": 8.55,
+      "work_mm": 4.0
+    },
+    "bom": [
+      {
+        "qty": 1,
+        "part": "nest (print, PETG)",
+        "file": "nest"
+      },
+      {
+        "qty": 4,
+        "part": "M3 hex standoff, female-female, 15 mm"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw + M3 large washer (DIN 9021, 9 mm), on top of each standoff"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw, standoff to fixture board (from below)"
+      },
+      {
+        "qty": 4,
+        "part": "compression spring, outer 8 mm, wire 0.5 mm, free length 10 mm (solid 3.5 mm or less)"
+      },
+      {
+        "qty": 1,
+        "part": "vertical toggle clamp, about 25 kg, flanged base (e.g. GH-101-A)"
+      },
+      {
+        "qty": 1,
+        "part": "clamp adapter (print)",
+        "file": "adapter"
+      },
+      {
+        "qty": 1,
+        "part": "press plate (print)",
+        "file": "press"
+      },
+      {
+        "qty": 4,
+        "part": "M4 x 12 screw + M4 nut, clamp to adapter (nuts in the adapter's channels)"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"
+      },
+      {
+        "qty": 2,
+        "part": "nut + washer for the clamp's spindle, one each side of the press plate"
+      }
+    ],
+    "warnings": [],
+    "gap_reason": "U5",
+    "extents": {
+      "left": 12.5,
+      "right": 12.5,
+      "top": 46.25,
+      "bottom": 10.0
+    },
+    "fingers": 19,
+    "files": {
+      "nest": {
+        "stl": "video-fixture-nest.stl",
+        "preview_png": "video-fixture-nest.png",
+        "print": 1,
+        "size_mm": [
+          122.0,
+          338.2,
+          6.45
+        ]
+      },
+      "press": {
+        "stl": "video-fixture-press-plate.stl",
+        "preview_png": "video-fixture-press-plate.png",
+        "print": 1,
+        "size_mm": [
+          110.5,
+          320.8,
+          19.1
+        ]
+      },
+      "adapter": {
+        "stl": "video-fixture-clamp-adapter.stl",
+        "preview_png": "video-fixture-clamp-adapter.png",
+        "print": 1,
+        "size_mm": [
+          40.0,
+          38.0,
+          14.7
+        ]
+      }
+    },
+    "mesh": {
+      "nest": {
+        "triangles": 197948,
+        "unmatched_edges": 0,
+        "volume_mm3": 15699.0,
+        "watertight": true
+      },
+      "press": {
+        "triangles": 122934,
+        "unmatched_edges": 0,
+        "volume_mm3": 179567.7,
+        "watertight": true
+      },
+      "adapter": {
+        "triangles": 12708,
+        "unmatched_edges": 0,
+        "volume_mm3": 15426.1,
+        "watertight": true
+      }
+    },
+    "refs": [
+      {
+        "site": 1,
+        "posts": [
+          "NP1",
+          "NP2",
+          "NP3",
+          "NP4"
+        ],
+        "adapter": [
+          "NK1",
+          "NK2",
+          "NK3",
+          "NK4"
+        ],
+        "nest": "N1",
+        "clamp": "K1"
+      }
+    ]
   }
 }

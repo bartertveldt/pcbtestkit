@@ -1,0 +1,398 @@
+{
+  "sites": [
+    {
+      "site": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 149.61,
+          "y": 99.595,
+          "fixture_net": "S1_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 151.74,
+          "y": 98.045,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 145.025,
+          "y": 100.59,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 158.74,
+          "y": 101.308,
+          "fixture_net": "S1_TP_+BATT"
+        },
+        {
+          "probe": "PP05",
+          "x": 146.25,
+          "y": 111.705,
+          "fixture_net": "S1_TP_Net-_JP1-A"
+        },
+        {
+          "probe": "PP06",
+          "x": 148.535,
+          "y": 108.67,
+          "fixture_net": "S1_TP_VSYS"
+        }
+      ],
+      "net_prefix": "S1_",
+      "program": []
+    },
+    {
+      "site": 2,
+      "offset": [
+        96.52,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 246.13,
+          "y": 99.595,
+          "fixture_net": "S2_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 248.26,
+          "y": 98.045,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 241.545,
+          "y": 100.59,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 255.26,
+          "y": 101.308,
+          "fixture_net": "S2_TP_+BATT"
+        },
+        {
+          "probe": "PP05",
+          "x": 242.77,
+          "y": 111.705,
+          "fixture_net": "S2_TP_Net-_JP1-A"
+        },
+        {
+          "probe": "PP06",
+          "x": 245.055,
+          "y": 108.67,
+          "fixture_net": "S2_TP_VSYS"
+        }
+      ],
+      "net_prefix": "S2_",
+      "program": []
+    }
+  ],
+  "warnings": [],
+  "channel_map": [
+    {
+      "site": 1,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 3,
+      "dut_net": "/Debugger/USB.VBUS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 4,
+      "dut_net": "+BATT",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 5,
+      "dut_net": "Net-(JP1-A)",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 1,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 6,
+      "dut_net": "VSYS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 7,
+      "dut_net": "/Debugger/USB.VBUS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 8,
+      "dut_net": "+BATT",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 9,
+      "dut_net": "Net-(JP1-A)",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 2,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 10,
+      "dut_net": "VSYS",
+      "divider_ratio": 1.82
+    }
+  ],
+  "outline_mode": "rect",
+  "outline": {
+    "x_min": 66.62,
+    "y_min": 17.68,
+    "x_max": 326.62,
+    "y_max": 207.68,
+    "width": 260.0,
+    "height": 190.0
+  },
+  "pogo_count": 12,
+  "nets": 25,
+  "routing": {
+    "nets": 17,
+    "routed_nets": 17,
+    "unrouted_nets": [],
+    "connections": 49,
+    "unrouted_connections": 0,
+    "length_mm": 1541.7,
+    "vias": 22,
+    "grid_mm": 0.254,
+    "passes": 1,
+    "best_pass": 1,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5
+  },
+  "batch": {
+    "count": 2,
+    "cols": 2,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "batch"
+  },
+  "plate_fit": true,
+  "plate_fits_cols": [],
+  "facility": {
+    "id": "test_station",
+    "connectors": [
+      {
+        "ref": "J1",
+        "name": "J1",
+        "site": 1,
+        "shared": true
+      }
+    ],
+    "plate_mm": [
+      260.0,
+      190.0
+    ]
+  },
+  "nest": {
+    "enabled": true,
+    "style": "slide",
+    "entry": "front",
+    "clamp": "toggle",
+    "heights": {
+      "work": 6.0,
+      "tips": 7.5,
+      "rest": 10.3,
+      "gap": 2.8,
+      "travel": 4.3,
+      "ledge": 2.0,
+      "wall": 5.1,
+      "boss": 6.7,
+      "bottom_rest": 8.3,
+      "bottom_work": 4.0,
+      "standoff": 15,
+      "adapter": 7.6,
+      "finger": 3.0,
+      "plate": 5.0,
+      "plate_top_work": 15.6
+    },
+    "board_mm": [
+      22.86,
+      58.42,
+      1.6
+    ],
+    "spring": {
+      "free_mm": 10.0,
+      "solid_mm": 3.5,
+      "rest_mm": 8.3,
+      "work_mm": 4.0
+    },
+    "bom": [
+      {
+        "qty": 1,
+        "part": "nest (print, PETG)",
+        "file": "nest"
+      },
+      {
+        "qty": 4,
+        "part": "M3 hex standoff, female-female, 15 mm"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw + M3 large washer (DIN 9021, 9 mm), on top of each standoff"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw, standoff to fixture board (from below)"
+      },
+      {
+        "qty": 4,
+        "part": "compression spring, outer 8 mm, wire 0.5 mm, free length 10 mm (solid 3.5 mm or less)"
+      },
+      {
+        "qty": 1,
+        "part": "vertical toggle clamp, about 25 kg, flanged base (e.g. GH-101-A)"
+      },
+      {
+        "qty": 1,
+        "part": "clamp adapter (print)",
+        "file": "adapter"
+      },
+      {
+        "qty": 1,
+        "part": "press plate (print)",
+        "file": "press"
+      },
+      {
+        "qty": 4,
+        "part": "M4 x 12 screw + M4 nut, clamp to adapter (nuts in the adapter's channels)"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"
+      },
+      {
+        "qty": 2,
+        "part": "nut + washer for the clamp's spindle, one each side of the press plate"
+      }
+    ],
+    "warnings": [],
+    "gap_reason": "J4",
+    "extents": {
+      "left": 12.5,
+      "right": 12.5,
+      "top": 46.25,
+      "bottom": 10.0
+    },
+    "fingers": 8,
+    "files": {
+      "nest": {
+        "stl": "RoyalBlue54L-Feather-fixture-nest.stl",
+        "preview_png": "RoyalBlue54L-Feather-fixture-nest.png",
+        "print": 2,
+        "size_mm": [
+          38.2,
+          84.5,
+          6.7
+        ]
+      },
+      "press": {
+        "stl": "RoyalBlue54L-Feather-fixture-press-plate.stl",
+        "preview_png": "RoyalBlue54L-Feather-fixture-press-plate.png",
+        "print": 2,
+        "size_mm": [
+          26.8,
+          67.0,
+          8.0
+        ]
+      },
+      "adapter": {
+        "stl": "RoyalBlue54L-Feather-fixture-clamp-adapter.stl",
+        "preview_png": "RoyalBlue54L-Feather-fixture-clamp-adapter.png",
+        "print": 2,
+        "size_mm": [
+          40.0,
+          38.0,
+          7.6
+        ]
+      }
+    },
+    "mesh": {
+      "nest": {
+        "triangles": 31714,
+        "unmatched_edges": 0,
+        "volume_mm3": 3808.3,
+        "watertight": true
+      },
+      "press": {
+        "triangles": 17788,
+        "unmatched_edges": 0,
+        "volume_mm3": 8466.4,
+        "watertight": true
+      },
+      "adapter": {
+        "triangles": 12708,
+        "unmatched_edges": 0,
+        "volume_mm3": 7262.8,
+        "watertight": true
+      }
+    },
+    "refs": [
+      {
+        "site": 1,
+        "posts": [
+          "NP1",
+          "NP2",
+          "NP3",
+          "NP4"
+        ],
+        "adapter": [
+          "NK1",
+          "NK2",
+          "NK3",
+          "NK4"
+        ],
+        "nest": "N1",
+        "clamp": "K1"
+      },
+      {
+        "site": 2,
+        "posts": [
+          "NP5",
+          "NP6",
+          "NP7",
+          "NP8"
+        ],
+        "adapter": [
+          "NK5",
+          "NK6",
+          "NK7",
+          "NK8"
+        ],
+        "nest": "N2",
+        "clamp": "K2"
+      }
+    ]
+  }
+}
