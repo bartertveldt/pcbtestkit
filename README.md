@@ -228,9 +228,33 @@ For `generate`:
   Track and via sizes: `fixture.track_mm`, `power_track_mm`, `clearance_mm`, `via_mm`, `via_drill_mm`.
 - **Probe side.** `auto` plans both sides and picks the better one (rails reached first, dedicated test pads preferred, component solder joints avoided). `bottom`: the board lies on the fixture as is. `top`: mirrored for a board placed face down. `both`: two fixture plates with the board between them (a clamshell); each net is probed on whichever side has the best target, each plate gets its own header, and channel numbers are shared. A plate that would carry no probe is not made. When `auto` leaves rails that only the other side reaches, the report and the open decisions suggest `both`.
 - **Pogo drills** are typical values for receptacle-mounted pins (P50 0.9 mm, P75 1.4 mm, P100 1.7 mm) or direct-solder pins; check your pin's datasheet and set `testplan.pogo_drill_mm` if needed. Probe spacing is the larger of the family pitch and pad diameter + 0.5 mm. Tips: `crown` for THT leads, `spear` for flat pads.
-- **Guide pins** go through the board's mounting holes (a warning if there are fewer than two).
+- **Nest and clamp per board** (default): see below. With `fixture.nest.enabled: false`, **guide pins** go through
+  the board's mounting holes instead (a warning if there are fewer than two).
 - **Dividers** are inserted where a channel's maximum exceeds 90 % of the ADC range; the runner multiplies readings by the exact ratio.
 - `*-fixture-probes.csv` lists every pogo position (handy for drilling a plain plate instead).
+
+### Board nest and clamp
+
+Every board on the fixture gets its own printed **nest** and **toggle clamp**, so in production each board is slid
+in, clamped, tested and taken off on its own, also in a batch:
+
+- **The nest** floats on four sprung M3 standoffs. Two rails guide the board's edges, an end stop locates it, and
+  the rails run on past its front edge with a flared mouth: lay the board there and slide it back to the stop.
+  Ledges under its edges carry it *above* the pogo tips while it slides, so the tips never scrape the pads; the
+  middle is open for the pins and the parts on the probed side. Ledges and walls leave room wherever a part or a
+  through-hole lead slides through, and the gap above the tips grows to clear them. A board whose underside would
+  sweep over a pin gets the drop-in style (four chamfered walls) instead.
+- **The clamp** is a vertical toggle clamp (bought, e.g. a GH-101-A) on a printed adapter behind the nest, with a
+  printed press plate on its spindle: push fingers press on bare spots of the board's other side next to the
+  probes. Closing it pushes board and nest down by the nest's travel and the pins by their working stroke. The
+  adapter's cross slots take clamp base patterns within 4 mm of `fixture.nest.clamp_holes_mm`; for another clamp
+  you reprint only the adapter.
+- **Outputs:** `<board>-fixture-nest.stl`, `-fixture-press-plate.stl`, `-fixture-clamp-adapter.stl` and previews
+  (print one of each per board), the standoff and clamp holes on the fixture board, the nest and clamp as 3D models
+  in it, and the heights, parts list and assembly steps in the guide.
+- **Options** (`fixture.nest`): `entry` front | back | left | right (where the boards slide in from), `style` auto |
+  slide | drop, `clamp` toggle | none, `lead_in_mm`, `tip_gap_mm`, the springs. Agents: `set_fixture_options`
+  (`nest_*`). On a facility's fixed plate the nests are turned to the side when that is what fits.
 
 ### Batches
 
@@ -391,6 +415,29 @@ Pick it in the dialog (*Test facility*), in `pcbtestkit.json` (`"facility": "my-
 tool. The default `raspberry-pi` facility changes nothing. The built-in `bench-tester-example` is a complete worked
 example (160 x 120 mm plate, 2 x 20 IDC connector, 16 inputs, CAN/UART/I2C through the fixture, USB/Ethernet by cable).
 Everything about the format: [docs/FACILITIES.md](docs/FACILITIES.md).
+
+### Test station: several board types on one tester
+
+In production one tester often serves several products. Describe the **station** once, by its own KiCad board, and
+every board type gets a fixture that fits it: the same outline, the same mounting holes and the mating connector
+in the same place, so changing products is swapping one fixture for another.
+
+- The station's interface connector is **shared**: board *k* of a batch gets the next block of analog inputs, its
+  own switched supply `VOUT<k>` and its own bus instance (`CAN2_H`, `UART2_TX`, `I2C3_SDA`, ...).
+- `station plan` works out, per board type, how many boards one fixture takes (inputs, supplies, buses, the plate
+  with every board's nest and clamp) and what limits it, so each batch uses as much of the connector as it can.
+- `station run` makes every board type's outputs plus `station.html` (capacity, each board type's pin map, how to
+  swap fixtures) and, with `--video`, a video of every fixture sliding onto the station with its boards.
+
+```bash
+python3 examples/make_station.py                                  # an example station (2 x 40 socket, 32 inputs)
+pcbtestkit facilities from-pcb examples/station/test_station.kicad_pcb --out my-station.json
+pcbtestkit station plan examples/station/test_station.kicad_pcb boardA/ boardB/ boardC/
+pcbtestkit station run  examples/station/test_station.kicad_pcb boardA/ boardB/ --batch boardA=3 --out station_out --video
+```
+
+The connector is found by its net names (`GND`, `AIN<n>`, `VOUT<n>`, `DIO<n>`, `CAN<n>_H/L`, `UART<n>_TX/RX`,
+`I2C<n>_SDA/SCL`, `RS485_<n>_A/B`); `--connector J1` picks it when the board has several.
 
 ---
 

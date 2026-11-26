@@ -210,7 +210,26 @@ Fixture PCB outline, margins, N x M panel, mounting holes, dividers, routing (tr
     "power_track_mm": 0.5,
     "clearance_mm": 0.2,
     "via_mm": 0.6,
-    "via_drill_mm": 0.3
+    "via_drill_mm": 0.3,
+    "nest": {
+      "enabled": true,
+      "entry": "front",
+      "style": "auto",
+      "clamp": "toggle",
+      "clamp_holes_mm": [
+        20.0,
+        16.0
+      ],
+      "clearance_mm": 0.25,
+      "rail_mm": 4.0,
+      "ledge_mm": 2.0,
+      "rail_above_mm": 1.5,
+      "lead_in_mm": 10.0,
+      "tip_gap_mm": 1.0,
+      "spring_free_mm": 10.0,
+      "spring_solid_mm": 3.5,
+      "finger_mm": 4.0
+    }
   }
 }
 ```

@@ -131,6 +131,24 @@ DEFAULTS: Dict[str, Any] = {
         "clearance_mm": 0.2,
         "via_mm": 0.6,
         "via_drill_mm": 0.3,
+        # Every board gets a nest and a clamp: it slides in on two rails to an end stop, carried above the pogo tips
+        # by a nest floating on four sprung M3 standoffs; a toggle clamp behind it presses it down onto the pins.
+        "nest": {
+            "enabled": True,
+            "entry": "front",           # where the boards slide in from: front (+y) | back | left | right
+            "style": "auto",            # auto (slide where the board's underside allows, else drop in) | slide | drop
+            "clamp": "toggle",          # toggle (vertical toggle clamp on a printed adapter + press plate) | none
+            "clamp_holes_mm": [20.0, 16.0],  # the clamp base's hole pattern; the adapter's slots take +-4 mm
+            "clearance_mm": 0.25,       # board edge to rail
+            "rail_mm": 4.0,             # rail width
+            "ledge_mm": 2.0,            # how far the ledges reach under the board's edges
+            "rail_above_mm": 1.5,       # rails stand this far above the board's top face
+            "lead_in_mm": 10.0,         # rails run on past the board's front edge: lay it there, slide it to the stop
+            "tip_gap_mm": 1.0,          # the board slides in this far above the pogo tips (more for its underside parts)
+            "spring_free_mm": 10.0,     # compression spring under each standoff boss: 8 mm outside, 0.5 mm wire
+            "spring_solid_mm": 3.5,
+            "finger_mm": 4.0,           # press plate push fingers
+        },
     },
     "batch": {
         "count": 1,                 # boards per batch: one fixture site per board, jigs that hold them all

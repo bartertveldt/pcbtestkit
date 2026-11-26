@@ -48,7 +48,9 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `pcbtestkit/analysis.py`, `classify.py`, `measure.py`, `geometry.py` | Weak-point checks, part/net classification, board measurement streams. |
 | `pcbtestkit/classsys/` | Fab class-system engine; one JSON per system in `systems/`. Data, not code. |
 | `pcbtestkit/testplan.py`, `fixture.py`, `router.py`, `jig.py`, `kicad_writer.py` | Test plan, fixture PCB writer, its two-layer autorouter, solder-jig mesher, KiCad file writer. |
-| `pcbtestkit/facility.py`, `facilities/` | Test facilities (the tester a fixture plugs into: connector, plate, buses, runner driver). Data, not code; see `docs/FACILITIES.md`. |
+| `pcbtestkit/facility.py`, `facilities/` | Test facilities (the tester a fixture plugs into: connector, plate, buses, runner driver). Data, not code; see `docs/FACILITIES.md`. Also stations (a shared connector) and `facility_from_pcb`. |
+| `pcbtestkit/station.py`, `station_video.py` | Several board types on one station: batch per board type (`station plan/run`), `station.html`, the station video. |
+| `pcbtestkit/nest.py` | Every board's nest (rails, sprung standoffs) and toggle clamp: geometry, printable heightmaps, 3D models. |
 | `pcbtestkit/spec.py`, `report.py`, `guide.py`, `visuals.py` | Spec JSON, HTML report, visual guide, KiCad 3D renders. |
 | `pcbtestkit/animate.py`, `video.py`, `video_frames.py`, `video_job.py` | 3D-animated explainer (kicad-cli per frame, ray-tracing presets), storyboard, wx captions, the background job with its progress window. |
 | `pcbtestkit/phases.py`, `timing.py` | What needs the firmware (test phases, batch programmed at once); production timing per batch size. |
@@ -60,6 +62,7 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `pcm/`, `tools/` | KiCad package metadata + icon; build, docs, icon and owner scripts. |
 | `docs/` | Human docs; `docs/reference/` is generated; `docs/examples/` are generated outputs. |
 | `tests/test_toolkit.py`, `examples/make_sample.py` | Tests on a generated sample board with seeded weak points. |
+| `examples/make_station.py` | Generates the example test station board (`examples/station/`). |
 
 ### Rules
 

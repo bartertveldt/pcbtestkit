@@ -83,7 +83,7 @@ cable, and a driver that talks SCPI over the network. Try it on a board with
 | `buses.<bus>.check`, `.note` | Passed to the driver's `bus_test` as `step["check"]`; `note` is the operator's prompt. |
 | `fixture.plate_mm` | Fixed fixture size `[width, height]`. The boards (and their divider block) are centred in the part of the plate the connectors leave free. If they do not fit, you get a warning, with a `batch.cols` that fits when there is one. |
 | `fixture.holes` | Fixed mounting holes (`at_mm` from the plate's top-left corner, `d_mm`, `label`); they replace the four corner holes. |
-| `fixture.connectors` | Fixed interface connector(s). `at_mm` is pin 1 from the plate's top-left corner (KiCad's Y points down). The geometry is as in KiCad's libraries: at `angle` 0 the connector runs down the board, `pins_along` positions long and `pins_across` pins wide. `numbering` `zigzag` = 1 and 2 side by side, then 3 and 4 (2 x N headers, IDC); `rows` = down the first column, then the next. `footprint` and `model` name KiCad's library footprint and 3D model; `pad_mm` / `drill_mm` override the pad size. `site` = which board of a batch it serves (one connector per board). |
+| `fixture.connectors` | Fixed interface connector(s). `at_mm` is pin 1 from the plate's top-left corner (KiCad's Y points down). The geometry is as in KiCad's libraries: at `angle` 0 the connector runs down the board, `pins_along` positions long and `pins_across` pins wide. `numbering` `zigzag` = 1 and 2 side by side, then 3 and 4 (2 x N headers, IDC); `rows` = down the first column, then the next. `footprint` and `model` name KiCad's library footprint and 3D model; `pad_mm` / `drill_mm` override the pad size. `site` = which board of a batch it serves (one connector per board). `shared: true`: one connector for every board of the batch (a station, below). |
 | `runner` | `driver`: the driver file next to `facility.json`, copied into the output's `runner/` as `facility_driver.py`. `class`: its class (default `Driver`). `hardware`: the `hardware.json` the runner starts from. |
 
 ### Pin functions
@@ -94,7 +94,9 @@ cable, and a driver that talks SCPI over the network. Try it on a board with
 | `AIN1` .. `AIN<n>` | Measurement channels: CH01 on AIN1, CH02 on AIN2, ... (after the fixture's divider, if the net needs one) |
 | `VOUT1` | The board's supply (the supply probes) |
 | `CAN_H` `CAN_L` · `USB_DP` `USB_DM` · `ETH_TX_P` `ETH_TX_N` `ETH_RX_P` `ETH_RX_N` · `UART_TX` `UART_RX` · `I2C_SDA` `I2C_SCL` · `RS485_A` `RS485_B` | That bus signal of the board, when the facility takes the bus through the fixture. Signals are named as the board sees them: `UART_TX` is the board's transmit line. |
-| `DIO<n>`, `VOUT2`.., `NC` | Left open (yours to wire) |
+| `CAN2_H`, `UART2_TX`, `I2C3_SDA`, `RS485_2_A`, ... | Bus instance 2, 3, ... (`CAN_H` and `CAN1_H` are instance 1). On a shared connector board *k* of a batch gets instance *k*. |
+| `VOUT<k>` | On a shared connector: board *k*'s supply. On a connector of its own: `VOUT1` is the supply, the rest stay open. |
+| `DIO<n>`, `NC` | Left open (yours to wire) |
 
 ### How the board's bus nets are found
 
@@ -115,7 +117,8 @@ signal levels.
 ```python
 class Driver:
     def __init__(self, hardware, plan): ...      # hardware.json and testplan.json as dicts
-    def select_site(self, site, inputs): ...     # board `site` of a batch; inputs = {"CH01": "AIN3", ...}
+    def select_site(self, site, inputs): ...     # board `site` of a batch; inputs = what it uses on the facility,
+                                                 # {"CH01": "AIN3", "VIN": "VOUT2", "CAN_H": "CAN2_H", ...}
     def read_v(self, channel): ...               # volts at the facility input; the runner undoes the divider
     def power(self, on): ...                     # switch the board's supply
     def current_a(self): ...                     # optional: supply current in A, or None
@@ -136,6 +139,38 @@ Give a facility one connector per board (`"site": 1`, `"site": 2`, ...) at their
 With `batch.count` boards, every site gets its pogo pins, its dividers and its own connector, and the runner tests
 the boards one after the other (`select_site(k, inputs)` before each). Programming connectors and the jigs work as
 for any batch.
+
+## Stations: one connector for every board, several board types
+
+A **station** is a facility whose connector is `"shared": true`: the fixture plugs onto it once and every board of
+the batch is wired to it. Board *k* gets the *k*-th block of `AIN` pins (as many as it has channels), `VOUT<k>` for
+its supply and instance *k* of every bus. So the batch of a board type is limited by the station's inputs, supplies,
+complete bus instances and plate; `pcbtestkit station plan` works it out per board type and names the limit:
+
+```bash
+pcbtestkit station plan examples/station/test_station.kicad_pcb boardA/ boardB/ --json
+pcbtestkit station run  examples/station/test_station.kicad_pcb boardA/ boardB/ --batch boardA=2 --out out --video
+```
+
+`station run` writes each board type's outputs into `out/<board>/`, `station.json`, `station.html` (capacity, every
+board type's pin map, swapping fixtures) and with `--video` `station-compatibility.mp4`. The plate check builds the
+real fixture, with every board's nest and clamp; when the boards fit better turned (sliding in from the side), the
+plan says so (`entry`) and the run uses it.
+
+### A station from its own KiCad board
+
+```bash
+pcbtestkit facilities from-pcb station.kicad_pcb --out ~/.pcbtestkit/facilities/my-station
+```
+
+reads the station's board: the interface connector (the footprint with the most station-like net names, or
+`--connector J1`), each pad's function from its net (`GND`, `AIN<n>`/`ADC<n>`/`CH<n>`, `VOUT<n>`/`VSUP<n>`,
+`DIO<n>`/`GPIO<n>`, `CAN<n>_H/L`, `UART<n>_TX/RX`, `I2C<n>_SDA/SCL`, `RS485_<n>_A/B`, `USB_DP/DM`), the pad grid
+(pitch, rows, numbering, rotation), its position from the outline's top-left corner, the plate (the outline) and the
+holes (mounting holes and non-plated holes of 2 mm or more). The fixture gets the mating part (socket <-> header).
+A station given straight to `station plan/run` as a `.kicad_pcb` is read the same way. `examples/make_station.py`
+generates the example: 260 x 190 mm, a 2 x 40 socket with 32 analog inputs, 4 supplies, 2 CAN, 2 UART, 4 I2C and
+8 DIO, and four M3 holes.
 
 ## What it changes, and what it does not
 

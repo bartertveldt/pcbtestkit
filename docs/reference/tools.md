@@ -25,7 +25,7 @@ R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo
 | [`set_supply`](#set_supply) | W | yes | Set how the tester powers the DUT: net, voltage, current limit, idle current window |
 | [`set_test_options`](#set_test_options) | W | yes | Test-plan options (probe side, pogo family, signal policy, include/exclude nets, channels, ADC range...) |
 | [`set_jig_options`](#set_jig_options) | W |  | Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances |
-| [`set_fixture_options`](#set_fixture_options) | W |  | Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes) |
+| [`set_fixture_options`](#set_fixture_options) | W |  | Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes), every board's nest and clamp (nest_*) |
 | [`set_batch_and_programming`](#set_batch_and_programming) | W |  | Batch size (boards per fixture and jig set) and programming: headers, fixture connector type, flash command |
 | [`set_facility`](#set_facility) | W |  | Pick the test facility (tester) the fixture plugs into, by id from get_schema('facilities'): its channel count and range, fixed connector and plate, buses and runner driver |
 | [`set_stacked_boards`](#set_stacked_boards) | W |  | Declare boards stacked on this one (daughter board, shield, display): parts, outline, height, fitted during the test or after |
@@ -257,7 +257,7 @@ Solder-jig options: workflow (two jigs or one), which parts it holds, part heigh
 
 ### set_fixture_options
 
-Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes).
+Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes), every board's nest and clamp (nest_*).
 
 | Argument | Type | Description |
 |---|---|---|
@@ -280,6 +280,13 @@ Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sit
 | `clearance_mm` | number |  |
 | `via_mm` | number |  |
 | `via_drill_mm` | number |  |
+| `nest` | boolean | A nest (rails, end stop, sprung standoffs) and a toggle clamp per board. |
+| `nest_entry` | front \| back \| left \| right | Side the boards slide in from. |
+| `nest_style` | auto \| slide \| drop |  |
+| `nest_clamp` | toggle \| none |  |
+| `nest_clamp_holes_mm` | array of number | The toggle clamp base's hole pattern [along, across] in mm. |
+| `nest_lead_in_mm` | number |  |
+| `nest_tip_gap_mm` | number |  |
 
 ### set_batch_and_programming
 

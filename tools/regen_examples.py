@@ -4,12 +4,14 @@
     python3 tools/regen_examples.py                 all three, with the 3D-animated video
     python3 tools/regen_examples.py --no-video      minutes instead of half an hour
     python3 tools/regen_examples.py --only sample_sensor
+    python3 tools/regen_examples.py --only station  the example test station with four board types
 
 Boards: the bundled sample (examples/sample_sensor) and KiCad's own demos pic_programmer, video and
 tiny_tapeout, found next to kicad-cli (macOS app bundle, /usr/share/kicad/demos, Windows install) or in --demos.
 tiny_tapeout is the showcase: a batch of four boards on one fixture, programmed at the same time over SWD while
 the checks that need no firmware run, the production timing and the test shot with the tested copper lighting
-up. It runs on a copy of the demo with the settings in SHOWCASE.
+up. It runs on a copy of the demo with the settings in SHOWCASE. station: the example test station
+(examples/make_station.py) with the sample and three demos, each with its batch, and the station video.
 Needs KiCad 9+ (renders) and ffmpeg (video).
 """
 import argparse
@@ -72,6 +74,8 @@ def main() -> int:
         print("KiCad demos not found (use --demos); only the sample board is regenerated")
     if not os.path.exists(boards["sample_sensor"]):
         subprocess.run([sys.executable, os.path.join(ROOT, "examples", "make_sample.py")], check=True)
+    if demos and (not a.only or "station" in a.only):
+        station(demos, a.no_video)
     for name, board in boards.items():
         if a.only and name not in a.only:
             continue
@@ -95,6 +99,31 @@ def main() -> int:
             os.remove(prl)
         print("==", name, "OK" if r.returncode == 0 else "FAILED (exit %d)" % r.returncode)
     return 0
+
+
+# the boards on the example station: four board types, each with the batch the station takes
+STATION_BOARDS = ("stickhub", "royalblue54L_feather", "pic_programmer")
+
+
+def station(demos: str, no_video: bool) -> None:
+    """docs/examples/station: one test station, four board types, a fixture (and batch) per type."""
+    st = os.path.join(ROOT, "examples", "station", "test_station.kicad_pcb")
+    if not os.path.exists(st):
+        subprocess.run([sys.executable, os.path.join(ROOT, "examples", "make_station.py")], check=True)
+    out = os.path.join(ROOT, "docs", "examples", "station")
+    shutil.rmtree(out, ignore_errors=True)
+    projects = [os.path.join(ROOT, "examples", "sample_sensor")] + [os.path.join(demos, b) for b in STATION_BOARDS]
+    cmd = [sys.executable, "-m", "pcbtestkit", "station", "run", st] + projects + ["--out", out, "-q"]
+    if not no_video:
+        cmd += ["--video", "all"]                 # every board type's explainer and the station video
+    print("== station ...", flush=True)
+    r = subprocess.run(cmd, cwd=ROOT)
+    for junk in glob.glob(os.path.join(out, "*", "runner", "results")) + glob.glob(os.path.join(out, "*", ".pcbtestkit")) + \
+            [os.path.join(out, "station_video")]:
+        shutil.rmtree(junk, ignore_errors=True)
+    for prl in glob.glob(os.path.join(out, "*", "*.kicad_prl")):
+        os.remove(prl)
+    print("== station", "OK" if r.returncode in (0, 1) else "FAILED (exit %d)" % r.returncode)
 
 
 if __name__ == "__main__":

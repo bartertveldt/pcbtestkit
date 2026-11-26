@@ -361,7 +361,8 @@ def storyboard(design, spec, plan, fixture, jig, visuals, out_dir, work,
                    "sub": "Red = supply in, white = GND, green = measured. Coverage %s%% of nets." % plan["coverage"]["percent"]})
     fac = plan.get("facility") or {}
     build = ["Route and order the fixture PCB", "Press in %d receptacles + %s pogo pins" % (len(plan["probes"]), plan["pogo"]["family"]),
-             "Fit guide pins in the GUIDE holes", "Wire the header to the Pi ADC" if not fac.get("connectors") else
+             ("Fit a nest and a toggle clamp for every board" if ((fixture or {}).get("nest") or {}).get("enabled") else
+              "Fit guide pins in the GUIDE holes"), "Wire the header to the Pi ADC" if not fac.get("connectors") else
              "Plug it into %s" % fac.get("name", fac.get("id", "the tester"))]
     if shots.get("pogo"):
         scenes.append(_anim(shots["pogo"], step=2, title="Build the fixture", bullets=build,
@@ -372,13 +373,19 @@ def storyboard(design, spec, plan, fixture, jig, visuals, out_dir, work,
 
     # ---- 3. test -----------------------------------------------------------------------------------
     nsite = len((fixture or {}).get("sites") or []) or 1
+    nest = (fixture or {}).get("nest") or {}
+    if nest.get("enabled"):
+        into = "Slide the board into its nest up to the stop" if nest.get("style") == "slide" else "Drop the board into its nest"
+        press_cap = ("%s, above the pogo pins, and close the clamp: board and nest go down onto the pins." % into if nsite == 1
+                     else "Every board gets its own nest and clamp: load them one by one, close each clamp (%d boards)." % nsite)
+    else:
+        press_cap = ("Slide the board over the guide pins and press it down onto the pogo pins." if nsite == 1
+                     else "Put a board on each of the %d sites, over its guide pins, and press them down." % nsite)
     if shots.get("press"):
-        scenes.append(_anim(shots["press"], step=3, title="Test a board" if nsite == 1 else "Load the batch",
-                            caption="Slide the board over the guide pins and press it down onto the pogo pins." if nsite == 1
-                            else "Put a board on each of the %d sites, over its guide pins, and press them down." % nsite))
+        scenes.append(_anim(shots["press"], step=3, title="Test a board" if nsite == 1 else "Load the batch", caption=press_cap))
     elif im.get("fixture_dut_seated"):
         scenes.append({"kind": "image", "bg": im["fixture_dut_seated"], "duration": 4.0, "step": 3, "title": "Test a board",
-                       "caption": "Place the board on the guide pins and press it down onto the pogo pins."})
+                       "caption": press_cap})
     lines = _runner_lines(out_dir, work)
     if lines and shots.get("test"):
         scenes.append(_live_test_scene(shots["test"], lines, plan))

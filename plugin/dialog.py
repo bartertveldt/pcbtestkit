@@ -184,6 +184,14 @@ class MainDialog(wx.Dialog):
                                  "'pcbtestkit facilities template' in ~/.pcbtestkit/facilities.")
         self.route_fx = wx.CheckBox(p, label="tracks and vias, KiCad's default rules")
         self.route_fx.SetValue(bool(fx.get("route", True)))
+        nc = fx.get("nest") or {}
+        self.nest_opts = [("front", "slides in from the front"), ("back", "slides in from the back"),
+                          ("left", "slides in from the left"), ("right", "slides in from the right"), ("off", "none (guide pins)")]
+        self.nest = wx.Choice(p, choices=[t for _k, t in self.nest_opts])
+        cur_n = "off" if not nc.get("enabled", True) else str(nc.get("entry", "front"))
+        self.nest.SetSelection(next((i for i, (k, _t) in enumerate(self.nest_opts) if k == cur_n), 0))
+        self.nest.SetToolTip("Every board gets a printed nest (rails, sprung standoffs: it slides in above the pogo pins) "
+                             "and a toggle clamp that presses it down. The STL files are in the output folder.")
         sup = self.design.supply()
         self.sup_net = wx.Choice(p, choices=[""] + self.design.nets_of_kind("power"))
         self.sup_net.SetStringSelection(sup.get("net") or "")
@@ -203,6 +211,7 @@ class MainDialog(wx.Dialog):
                          ("Boards per batch (fixture sites, jig positions)", self.batch_n),
                          ("Batch columns (0 = automatic)", self.batch_cols),
                          ("Route the fixture board", self.route_fx),
+                         ("Nest and clamp per board", self.nest),
                          ("Programming connector per board", self.prog_conn),
                          ("Programming command (test runner)", self.prog_cmd)]:
             g.Add(wx.StaticText(p, label=lab), 0, wx.ALIGN_CENTER_VERTICAL)
@@ -534,6 +543,8 @@ class MainDialog(wx.Dialog):
         if not isinstance(u.get("facility"), dict):          # an inline definition stays as it is
             u["facility"] = self.fac_ids[max(0, self.facility.GetSelection())]
         fx["route"] = self.route_fx.GetValue()
+        nk = self.nest_opts[max(0, self.nest.GetSelection())][0]
+        fx["nest"] = dict(fx.get("nest") or {}, enabled=nk != "off", **({} if nk == "off" else {"entry": nk}))
         import shlex
         pr = u.setdefault("program", {})
         pr["connector"] = self.prog_opts[max(0, self.prog_conn.GetSelection())][0]

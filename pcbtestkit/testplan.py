@@ -82,7 +82,10 @@ class Planner:
         from .facility import analog_limits, facility_for
         self.fac = facility_for(design)
         self.tp = dict(design.cfg["testplan"])
-        n_in, v_in = analog_limits(self.fac)
+        from .batch import layout as _layout
+        _bb = design.board.outline_bbox()
+        self.sites = int(_layout(design.cfg, _bb.w, _bb.h)["count"])
+        n_in, v_in = analog_limits(self.fac, self.sites)   # a station splits its inputs between the batch
         if n_in is not None:
             self.tp["max_channels"] = min(int(self.tp["max_channels"]), n_in)
         if v_in is not None:
@@ -667,8 +670,10 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
             pl.warnings.append("facility %s: its connector goes on the %s fixture plate only" % (
                 pl.fac["id"], (r.get("plates") or ["bottom"])[0]))
         fac_plan["connectors"] = assign_pins(pl.fac, [p.channel for p in points if p.channel], bool(sup.get("net")),
-                                             r.get("buses") or [])
-        first = fac_plan["connectors"][0]
+                                             r.get("buses") or [], sites=batch["count"])
+        first = dict(fac_plan["connectors"][0])
+        if first.get("shared"):            # a station: the plan's header is the first board's share of the connector
+            first["pins"] = [q for q in first["pins"] if q.get("site") == 1]
         sig_net = {p.channel: p.net for p in points if p.channel}
         sig_net.update({sig: net for b in r.get("buses") or [] if b["via"] == "fixture" for sig, net in b["signals"].items()})
         r["header"] = [dict({"pin": q["pin"], "signal": q["signal"], "function": q["function"]},
@@ -678,7 +683,17 @@ def build_testplan(design: Design, findings=None) -> Dict[str, Any]:
         for p in points:
             p.header_pin = pin_of.get(p.channel) if p.channel else pin_of.get(bus_sig.get(p.net, ""))
         sites = {c["site"] for c in fac_plan["connectors"]}
-        if batch["count"] > len(sites):
+        if any(c.get("shared") for c in fac_plan["connectors"]):
+            from .facility import capacity, max_sites
+            need = {"channels": sum(1 for p in points if p.channel), "supply": bool(sup.get("net")),
+                    "buses": sorted({b["bus"] for b in r.get("buses") or [] if b["via"] == "fixture"})}
+            fit = max_sites(capacity(pl.fac), need)
+            fac_plan["capacity"] = dict(capacity(pl.fac), boards=fit)
+            if batch["count"] > fit["count"]:
+                pl.warnings.append("station %s serves %d board(s) of this type at once (limited by its %s); the batch "
+                                   "has %d: the other boards get no inputs, supply or bus on the connector" % (
+                                       pl.fac["id"], fit["count"], fit["limit"], batch["count"]))
+        elif batch["count"] > len(sites):
             pl.warnings.append("facility %s has a connector for %d board(s); the batch has %d: the other sites get no "
                                "connector" % (pl.fac["id"], len(sites), batch["count"]))
     if fac_plan.get("max_sites") and batch["count"] > fac_plan["max_sites"]:

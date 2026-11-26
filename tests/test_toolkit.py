@@ -421,6 +421,10 @@ class TestAnimation(Base):
         order = ["Assemble the board", "Print the solder jig", "Load the jig", "Lower the PCB onto the jig",
                  "Lift out the finished board", "Build the fixture", "Test a board"]
         self.assertEqual(titles[1:], order)
+        build = [s for s in scenes if s.get("title") == "Build the fixture"][0]
+        self.assertIn("Fit a nest and a toggle clamp for every board", build["bullets"])     # nests, not guide pins
+        press = [s for s in scenes if s.get("title") == "Test a board"][0]
+        self.assertIn("into its nest", press["caption"])
         still = storyboard(d, spec, plan, None, None, {"images": {}}, out_dir, out_dir, {})
         self.assertFalse([s for s in still if s["kind"] == "anim"])
 
@@ -1449,7 +1453,7 @@ class TestBatchAndProgramming(unittest.TestCase):
         with open(res["paths"]["guide"], encoding="utf-8") as fh:
             g = fh.read()
         self.assertIn("<h3>Programming</h3>", g)
-        self.assertIn("put a board in each of the 2 sites", g)
+        self.assertIn("slide a board into each of the 2 nests and close its clamp", g)
 
     def test_agent_tool(self):
         ws = Workspace(self.pcb)
@@ -1676,8 +1680,10 @@ class TestFacilities(Base):
         self.assertEqual((net["1"], net["23"], net["29"]), ("GND", "VIN", "TP_SDA"))
         self.assertEqual(net["37"], "")                                   # NC stays open
         ox, oy = fx["outline"]["x_min"], fx["outline"]["y_min"]
-        self.assertAlmostEqual(j.x - ox, 55.87, places=2)               # pin 1 where the facility puts it
-        self.assertAlmostEqual(j.y - oy, 114.0, places=2)
+        self.assertAlmostEqual(j.x - ox, 55.87, delta=0.011)            # pin 1 where the facility puts it (the
+        self.assertAlmostEqual(j.y - oy, 114.0, delta=0.011)            # outline is reported to 0.01 mm)
+        self.assertTrue(fx["plate_fit"])
+        self.assertTrue(any("nests are turned" in w for w in fx["warnings"]), fx["warnings"])
         holes = sorted((round(fp.x - ox, 2), round(fp.y - oy, 2)) for fp in b.footprints if fp.ref.startswith("H"))
         self.assertEqual(holes, [(5.0, 5.0), (5.0, 115.0), (155.0, 5.0), (155.0, 115.0)])
 
@@ -2025,3 +2031,387 @@ class TestBatchProgrammingEdgeCases(unittest.TestCase):
             self.assertEqual(sp["status"], "fail")
             self.assertIn("timed out after 2 s", sp["note"])
             self.assertIn("connecting to probe %d" % k, sp["note"])
+
+
+class TestNest(Base):
+    """Every board's nest (rails, end stop, sprung standoffs) and toggle clamp on the fixture."""
+
+    def plan_and_nest(self, **over):
+        from pcbtestkit.nest import plan_nest
+        from pcbtestkit.pipeline import analyze
+        d = self.design(**over)
+        _f, plan = analyze(d, include_kicad=False)
+        return d, plan, plan_nest(d, plan)
+
+    def test_heights_and_parts_are_consistent(self):
+        from pcbtestkit import nest as N
+        d, plan, nest = self.plan_and_nest()
+        self.assertTrue(nest["enabled"])
+        self.assertEqual((nest["style"], nest["entry"], nest["clamp"]), ("slide", "front", "toggle"))
+        H = nest["heights"]
+        clear = float(plan["pogo"]["probe_clearance_mm"])
+        self.assertAlmostEqual(H["work"], clear)
+        self.assertAlmostEqual(H["tips"], clear + N.PRELOAD)
+        self.assertAlmostEqual(H["rest"], H["tips"] + H["gap"], places=2)
+        self.assertAlmostEqual(H["travel"], H["rest"] - H["work"], places=2)
+        self.assertGreaterEqual(H["gap"], 1.0)                            # the board slides in above the tips
+        self.assertGreaterEqual(H["ledge"], 2.0)
+        self.assertGreaterEqual(H["bottom_work"] + 1e-6, nest["spring"]["solid_mm"] + 0.5)   # springs never go solid
+        self.assertIn(H["standoff"], N.STANDOFFS)
+        self.assertGreaterEqual(H["standoff"], H["bottom_rest"] + H["wall"])
+        self.assertLess(H["bottom_rest"] + 0.5, nest["spring"]["free_mm"])   # the springs lift it to the washers
+        if nest["gap_reason"]:                                            # a lead or part sweeps over a pin
+            self.assertGreaterEqual(H["gap"], N.LEAD_MM + 0.3 - 1e-6)
+        # standoffs and clamp screws stay clear of the board and its pins; fingers press on bare board
+        bb = d.board.outline_bbox()
+        for x, y in nest["posts"] + nest["adapter_holes"]:
+            self.assertFalse(bb.grow(0.5).contains(x, y), (x, y))
+            for p in plan["probes"]:
+                self.assertGreater(((x - p["x"]) ** 2 + (y - p["y"]) ** 2) ** 0.5, 5.0)
+        self.assertGreaterEqual(len(nest["fingers"]), 3)
+        other = [fp for fp in d.components() if fp.side != plan["probe_side"]]
+        for x, y in nest["fingers"]:
+            self.assertTrue(bb.contains(x, y))
+            for fp in other:
+                self.assertFalse(fp.courtyard_bbox().grow(0.5).contains(x, y), fp.ref)
+        self.assertGreaterEqual(H["finger"], max(d.height_of(fp)[0] for fp in other) + 0.9)
+        # the three printed parts: watertight, the pins and every part that sweeps in stay free
+        out = os.path.join(self.tmp, "nest_parts")
+        os.makedirs(out, exist_ok=True)
+        res = N.write_parts(nest, out, d.board.name)
+        for tag in ("nest", "press", "adapter"):
+            self.assertTrue(res["mesh"][tag]["watertight"], tag)
+            self.assertGreater(res["mesh"][tag]["volume_mm3"], 100.0, tag)
+            self.assertTrue(os.path.exists(os.path.join(out, res["files"][tag]["stl"])))
+            self.assertTrue(os.path.exists(os.path.join(out, res["files"][tag]["preview_png"])))
+        for f in ("nest", "post", "clamp"):
+            self.assertTrue(os.path.exists(os.path.join(out, "pcbtestkit-models", res["models"][f])), f)
+        g = res["_grids"]["nest"]
+
+        def at(s, t):
+            i, j = int((s - g["s0"]) / g["res"]), int((t - g["t0"]) / g["res"])
+            return g["H"][j][i] if 0 <= i < g["nx"] and 0 <= j < g["ny"] else 0
+        for ps, pt in nest["pins_local"]:
+            self.assertEqual(at(ps, pt), 0)
+        L = nest["local"]
+        for s0, t0, s1, t1, _h in nest["under_local"]:            # nothing stands where a part slides through
+            for s in (s0 - L["lead"] + 0.5, (s0 + s1) / 2.0, s1 - 0.3):
+                self.assertEqual(at(s, (t0 + t1) / 2.0), 0, (s, t0, t1))
+        ledges = sum(1 for row in g["H"] for v in row if v == int(round(nest["heights"]["ledge"] * 100)))
+        self.assertGreater(ledges * g["res"] ** 2, 40.0)            # the board rests on ledges
+        self.assertGreater(at(L["s_lo"] + 2.0, L["t_in"] + 2.0), 0)  # the rails run on into the lead-in
+        self.assertEqual(at(0.0, 0.0), 0)                            # open in the middle for the pins
+
+    def test_fixture_gets_holes_models_and_no_guide_pins(self):
+        d, plan, _n = self.plan_and_nest()
+        fx = build_fixture(d, plan)
+        self.assertEqual(len(fx["nest_refs"]), 1)
+        refs = fx["nest_refs"][0]
+        self.assertEqual((len(refs["posts"]), len(refs["adapter"])), (4, 4))
+        text = fx["kicad_pcb"]
+        self.assertEqual(text.count('(footprint "PCBTestKit:NestPost_M3"'), 4)
+        self.assertEqual(text.count('(footprint "PCBTestKit:ClampScrew_M3"'), 4)
+        self.assertIn("pcbtestkit-models/nest_sample_sensor.wrl", text)
+        self.assertIn("pcbtestkit-models/clamp_sample_sensor.wrl", text)
+        self.assertNotIn('"GUIDE', text)                                     # the rails locate the board
+        self.assertFalse([w for w in fx["warnings"] if "guide-pin" in w or "nest" in w], fx["warnings"])
+        o = fx["outline"]
+        for x, y in fx["nest"]["posts"] + fx["nest"]["adapter_holes"]:
+            self.assertTrue(o["x_min"] + 4 < x < o["x_max"] - 4 and o["y_min"] + 4 < y < o["y_max"] - 4)
+        self.assertEqual((fx["routing"] or {}).get("unrouted_connections", 0), 0)
+        # nests off: guide pins as before
+        d2 = self.design(fixture={"nest": {"enabled": False}})
+        fx2 = build_fixture(d2, build_testplan(d2, run_analysis(d2, include_kicad=False)))
+        self.assertFalse(fx2["nest"]["enabled"])
+        self.assertNotIn("NestPost_M3", fx2["kicad_pcb"])
+        self.assertLess(fx2["outline"]["height"], o["height"])
+
+    def test_a_nest_and_clamp_per_board_of_a_batch(self):
+        from pcbtestkit.nest import BOSS_R
+        d = self.design(batch={"count": 3})
+        plan = build_testplan(d, run_analysis(d, include_kicad=False))
+        fx = build_fixture(d, plan)
+        self.assertEqual([r["site"] for r in fx["nest_refs"]], [1, 2, 3])
+        self.assertEqual(fx["kicad_pcb"].count('(footprint "PCBTestKit:Nest"'), 3)
+        posts = []
+        for st in fx["sites"]:
+            dx, dy = st["offset"]
+            posts += [(x + dx, y + dy) for x, y in fx["nest"]["posts"]]
+        for i, a in enumerate(posts):                                     # no two bosses overlap
+            for b in posts[i + 1:]:
+                self.assertGreater(((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5, 2 * BOSS_R)
+        self.assertFalse([w for w in fx["warnings"] if "mounting hole" in w], fx["warnings"])
+
+    def test_entries_styles_and_when_there_is_no_nest(self):
+        from pcbtestkit.nest import ENTRY, Frame
+        for e, (sv, tv) in ENTRY.items():                                  # proper rotations: no mirrored nests
+            self.assertAlmostEqual(sv[0] * tv[1] - sv[1] * tv[0], 1.0)
+            fr = Frame(e, (10.0, 20.0))
+            x, y = fr.fix(3.0, -4.0)
+            self.assertEqual(tuple(round(v, 6) for v in fr.loc(x, y)), (3.0, -4.0))
+        ext = {}
+        for e in ("front", "back", "left", "right"):
+            _d, _p, n = self.plan_and_nest(fixture={"nest": {"entry": e}})
+            ext[e] = n["extents"]
+        self.assertGreater(ext["front"]["top"], ext["front"]["bottom"])     # clamp behind, lead-in in front
+        self.assertGreater(ext["back"]["bottom"], ext["back"]["top"])
+        self.assertGreater(ext["left"]["right"], ext["left"]["left"])
+        self.assertGreater(ext["right"]["left"], ext["right"]["right"])
+        _d, _p, drop = self.plan_and_nest(fixture={"nest": {"style": "drop"}})
+        self.assertEqual((drop["style"], drop["local"]["lead"]), ("drop", 0.0))
+        self.assertAlmostEqual(drop["heights"]["gap"], 1.0)
+        _d, _p, top = self.plan_and_nest(testplan={"probe_side": "top"})
+        self.assertTrue(top["enabled"])
+        for over, why in (({"testplan": {"probe_side": "both"}}, "both sides"), ({"fixture": {"outline": "outline"}}, "outline"),
+                          ({"fixture": {"nest": {"enabled": False}}}, "enabled")):
+            _d, _p, n = self.plan_and_nest(**over)
+            self.assertFalse(n["enabled"])
+            self.assertIn(why, n["reason"])
+        _d, _p, low = self.plan_and_nest(testplan={"probe_clearance_mm": 4.0})
+        self.assertTrue(any("probe clearance" in w for w in low["warnings"]))
+
+    def test_guide_scenes_and_animation(self):
+        from pcbtestkit import animate as A
+        from pcbtestkit.nest import clamp_shapes, scene_text
+        from pcbtestkit.visuals import Renderer, write_wrl
+        out = os.path.join(self.tmp, "nest_out")
+        res = run_pipeline(self.design(), out_dir=out, include_kicad=False, outputs={"visuals": False, "video": False})
+        for k in ("nest_stl", "nest_press_stl", "nest_adapter_stl", "nest_preview"):
+            self.assertTrue(os.path.exists(res["paths"][k]), k)
+        with open(res["paths"]["guide"], encoding="utf-8") as fh:
+            guide = fh.read()
+        self.assertIn("Board nest and clamp", guide)
+        self.assertIn("vertical toggle clamp", guide)
+        self.assertIn("slide it into its nest", guide)
+        with open(res["paths"]["fixture_meta"], encoding="utf-8") as fh:
+            meta = json.load(fh)
+        self.assertTrue(meta["nest"]["enabled"])
+        self.assertNotIn("under_local", meta["nest"])                      # a summary, not the geometry
+        self.assertTrue(all(m["watertight"] for m in meta["nest"]["mesh"].values()))
+        with open(res["paths"]["fixture"], encoding="utf-8") as fh:
+            fx_text = fh.read()
+        d, plan, nest = self.plan_and_nest()
+        sd = os.path.join(self.tmp, "nest_scene")
+        down = scene_text(fx_text, nest, d.board.name, sd, True, 0.0)
+        self.assertNotIn("pcbtestkit-models/nest_sample_sensor.wrl", down)
+        self.assertIn("nest_sample_sensor_down_0.wrl", down)
+        self.assertEqual(len(load_board_text(down).footprints), len(load_board_text(fx_text).footprints))
+        z = lambda sh: max(v[2] for s_ in sh for v in s_[0])                # noqa: E731
+        self.assertGreater(z(clamp_shapes(nest, 95.0)), z(clamp_shapes(nest, 0.0)) + 20.0)   # open: arm and plate up
+        ghost = os.path.join(sd, "ghost.wrl")
+        write_wrl(ghost, clamp_shapes(nest, 0.0, ghost=True))
+        with open(ghost) as fh:
+            self.assertIn("transparency 0.72", fh.read())
+        # the explainer's press shot: down onto the lead-in, back to the stop, clamp shut, nest down
+        rd = Renderer(os.path.join(self.tmp, "nest_vis"), 320, 200, quality="basic")
+        with open(res["paths"]["testplan"], encoding="utf-8") as fh:
+            tplan = json.load(fh)
+        st = A.Stage(d, tplan, meta, None, {"fixture": res["paths"]["fixture"]}, rd, os.path.join(self.tmp, "nest_anim"), fps=4)
+        st.dut_wrl = lambda *a, **k: "dut.wrl"
+        sh = st.shot_press()
+        self.assertEqual(sh.meta.get("nest"), "slide")
+        first, last = sh.jobs[0]["make"]("x")[0], sh.jobs[-1]["make"]("x")[0]
+        nref = st._fx_nest[0]
+        self.assertIn("CLAMP1", first)
+        self.assertEqual(len(st._fx_pogo), len(plan["probes"]))
+        travel = nest["heights"]["travel"]
+        blk = lambda txt: txt[txt.index('"%s"' % nref):]                    # noqa: E731
+        self.assertIn("%.5f" % -travel, blk(last)[:4000])                  # the nest pressed down at the end
+        self.assertIn("(hide yes)", last)                                  # the fixture's own (open) clamp hidden
+
+    def test_set_fixture_options_for_nests(self):
+        proj = os.path.join(self.tmp, "nest_opts")
+        make_sample.main(proj)
+        ws = Workspace(os.path.join(proj, "sample_sensor.kicad_pcb"))
+        r = ws.call("set_fixture_options", {"nest_entry": "left", "nest_clamp_holes_mm": [24, 18], "nest_tip_gap_mm": 1.5,
+                                            "confirm": True})
+        self.assertTrue(r["ok"], r)
+        with open(os.path.join(proj, "pcbtestkit.json")) as fh:
+            self.assertEqual(json.load(fh)["fixture"]["nest"], {"entry": "left", "clamp_holes_mm": [24.0, 18.0],
+                                                                 "tip_gap_mm": 1.5})
+        for bad in ({"nest_style": "sideways"}, {"nest_clamp_holes_mm": [24]}, {"nest_tip_gap_mm": 9}):
+            r = ws.call("set_fixture_options", dict(bad, dry_run=True))
+            self.assertFalse(r["ok"], bad)
+
+
+class TestStation(unittest.TestCase):
+    """A test station: one tester, a fixture per board type, every board of a batch on its own inputs, supply and bus."""
+
+    @classmethod
+    def setUpClass(cls):
+        import make_station
+        cls.tmp = tempfile.mkdtemp(prefix="pcbtk_st_")
+        cls.station = make_station.main(os.path.join(cls.tmp, "station"))
+        cls.proj = os.path.join(cls.tmp, "sample_sensor")
+        make_sample.main(cls.proj)
+        cls.proj2 = os.path.join(cls.tmp, "second", "sample_sensor")     # the same board again: two folders
+        make_sample.main(cls.proj2)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def fac(self):
+        from pcbtestkit.facility import facility_from_pcb
+        fac, warns = facility_from_pcb(self.station)
+        self.assertEqual(warns, [])
+        return fac
+
+    def test_bus_pin_grammar(self):
+        from pcbtestkit.facility import bus_function, bus_pin, is_pin_function
+        for fn, want in (("CAN_H", ("CAN_H", 1)), ("CAN2_H", ("CAN_H", 2)), ("CAN1_L", ("CAN_L", 1)),
+                         ("UART2_TX", ("UART_TX", 2)), ("I2C3_SDA", ("I2C_SDA", 3)), ("RS485_2_A", ("RS485_A", 2))):
+            self.assertEqual(bus_pin(fn), want, fn)
+            self.assertEqual(bus_pin(bus_function(*want)), want)
+        for fn in ("AIN3", "VOUT2", "DIO8", "GND", "NC", "CAN2_H", "I2C4_SCL"):
+            self.assertTrue(is_pin_function(fn), fn)
+        for fn in ("AIN", "CAN_X", "VOUT", "FOO1"):
+            self.assertFalse(is_pin_function(fn), fn)
+
+    def test_station_from_its_pcb(self):
+        from pcbtestkit import facility as F
+        fac = self.fac()
+        self.assertTrue(F.validate(fac)["ok"], F.validate(fac))
+        c = fac["fixture"]["connectors"][0]
+        self.assertTrue(c.get("shared"))
+        fns = list(c["pins"].values())
+        self.assertEqual(sum(1 for f in fns if f.startswith("AIN")), 32)
+        self.assertEqual(sum(1 for f in fns if f.startswith("VOUT")), 4)
+        self.assertEqual(fns.count("GND"), 12)
+        self.assertIn("PinHeader", c.get("footprint", ""))                # the mate of the station's socket
+        self.assertEqual([round(v) for v in fac["fixture"]["plate_mm"]], [260, 190])
+        holes = sorted((round(h["at_mm"][0]), round(h["at_mm"][1])) for h in fac["fixture"]["holes"])
+        self.assertEqual(holes, [(5, 5), (5, 185), (255, 5), (255, 185)])
+        cap = F.capacity(fac)
+        self.assertEqual((cap["inputs"], cap["supplies"]), (32, 4))
+        self.assertEqual({k: cap["buses"][k] for k in ("can", "uart", "i2c")}, {"can": 2, "uart": 2, "i2c": 4})
+        self.assertEqual(F.analog_limits(fac, 4)[0], 8)
+
+    def test_shared_pins_and_limits(self):
+        from pcbtestkit import facility as F
+        fac = self.fac()
+        buses = [{"bus": "can", "via": "fixture", "signals": ["CAN_H", "CAN_L"]}]
+        conns = F.assign_pins(fac, ["CH%02d" % i for i in range(1, 7)], True, buses, sites=2)
+        pins = conns[0]["pins"]
+        self.assertTrue(conns[0]["shared"])
+        used = [q for q in pins if q.get("site")]
+        self.assertEqual(len({q["pin"] for q in used}), len(used))          # no pin twice
+        by = {(q["site"], q["signal"]): q["function"] for q in used}
+        self.assertEqual(by[(1, "CH01")], "AIN1")
+        self.assertEqual(by[(2, "CH01")], "AIN7")
+        self.assertEqual((by[(1, "VIN")], by[(2, "VIN")]), ("VOUT1", "VOUT2"))
+        self.assertEqual((F.bus_pin(by[(1, "CAN_H")]), F.bus_pin(by[(2, "CAN_L")])), (("CAN_H", 1), ("CAN_L", 2)))
+        self.assertTrue(all(q["site"] is None for q in pins if q["signal"] == "GND"))
+        cap = F.capacity(fac)
+        for need, n, limit in (({"channels": 6, "supply": True, "buses": []}, 4, "supplies"),
+                               ({"channels": 12, "supply": True, "buses": []}, 2, "inputs"),
+                               ({"channels": 2, "supply": True, "buses": ["uart"]}, 2, "uart buses"),
+                               ({"channels": 0, "supply": False, "buses": []}, None, None)):
+            r = F.max_sites(cap, need)
+            if n is not None:
+                self.assertEqual((r["count"], r["limit"]), (n, limit), need)
+            else:
+                self.assertGreaterEqual(r["count"], 1)
+
+    def test_runner_gives_every_board_its_own_lines(self):
+        from unittest import mock
+        from pcbtestkit.runner.hw import facility_inputs
+        plan = {"facility": {"connectors": [{"name": "J1", "site": 1, "shared": True, "sites": 2, "pins": [
+            {"pin": 3, "function": "AIN1", "signal": "CH01", "site": 1}, {"pin": 4, "function": "AIN2", "signal": "CH01", "site": 2},
+            {"pin": 37, "function": "VOUT1", "signal": "VIN", "site": 1}, {"pin": 38, "function": "VOUT2", "signal": "VIN", "site": 2},
+            {"pin": 45, "function": "CAN2_H", "signal": "CAN_H", "site": 2}, {"pin": 1, "function": "GND", "signal": "GND", "site": None}]}]}}
+        self.assertEqual(facility_inputs(plan, 2), {"CH01": "AIN2", "VIN": "VOUT2", "CAN_H": "CAN2_H"})
+        self.assertEqual(facility_inputs(plan, 1), {"CH01": "AIN1", "VIN": "VOUT1"})
+        drv_path = os.path.join(ROOT, "pcbtestkit", "facilities", "bench-tester-example", "driver.py")
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("bench_driver", drv_path)
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        sent = []
+        sock = mock.MagicMock()
+        sock.sendall.side_effect = lambda b: sent.append(b.decode().strip())
+        sock.recv.return_value = b"OK\n"
+        with mock.patch("socket.create_connection", return_value=sock):
+            drv = m.Driver({"commands": {"bus": "BUS:{bus}{inst}:TEST?"}}, {})
+        drv.select_site(2, facility_inputs(plan, 2))
+        drv.power(True)
+        self.assertEqual(sent[-1], "OUTP2 ON")                               # board 2's own supply
+        ok, _note = drv.bus_test({"bus": "can", "signals": ["CAN_H", "CAN_L"]})
+        self.assertTrue(ok)
+        self.assertEqual(sent[-1], "BUS:CAN2:TEST?")                         # ...and its own bus
+        for line, want in (("CAN2_H", "2"), ("I2C3_SDA", "3"), ("RS485_2_A", "2"), ("CAN_H", "1"), ("", "1")):
+            self.assertEqual(m._instance(line), want, line)
+
+    def test_plan_and_run_the_station(self):
+        from pcbtestkit.runner.hw import facility_inputs
+        from pcbtestkit.station import plan_station, run_station
+        st = plan_station(self.station, [self.proj, self.proj2], batches={"sample_sensor": 2})
+        self.assertEqual(len(st["boards"]), 2)
+        self.assertEqual([b["folder"] for b in st["boards"]], ["sample_sensor-1", "sample_sensor-2"])
+        b = st["boards"][0]
+        self.assertEqual((b["status"], b["batch"]), ("ok", 2))
+        self.assertEqual(b["inputs_used"], 2 * b["channels"])
+        out = os.path.join(self.tmp, "run")
+        res = run_station(self.station, [self.proj], out, batches={"sample_sensor": 2}, visuals=False, route=False)
+        for f in ("station.json", "station.html"):                            # shared files: no local paths
+            with open(os.path.join(out, f), encoding="utf-8") as fh:
+                txt = fh.read()
+            self.assertIn("sample_sensor", txt)
+            self.assertNotIn(self.tmp, txt, f)
+        board = res["boards"][0]
+        self.assertEqual(board["status"], "ok", board)
+        fac = self.fac()
+        bdir = os.path.join(out, board["folder"])
+        with open(glob.glob(os.path.join(bdir, "*-testplan.json"))[0], encoding="utf-8") as fh:
+            plan = json.load(fh)
+        self.assertEqual(facility_inputs(plan, 1)["VIN"], "VOUT1")
+        self.assertEqual(facility_inputs(plan, 2)["VIN"], "VOUT2")
+        self.assertNotEqual(facility_inputs(plan, 1)["CH01"], facility_inputs(plan, 2)["CH01"])
+        # the fixture's connector sits exactly where the station's socket is, every board on its own nets
+        from pcbtestkit.facility import pin_xy
+        pcb = load_board(glob.glob(os.path.join(bdir, "*-fixture.kicad_pcb"))[0])
+        conn = [fp for fp in pcb.footprints if len(fp.pads) == 80][0]
+        sp = load_board(self.station)
+        sj = [fp for fp in sp.footprints if fp.ref == "J1"][0]
+        ob, sb = pcb.outline_bbox(), sp.outline_bbox()
+        for pd in conn.pads:
+            spd = [q for q in sj.pads if q.number == pd.number][0]
+            self.assertAlmostEqual(pd.x - ob.x0, spd.x - sb.x0, places=2)
+            self.assertAlmostEqual(pd.y - ob.y0, spd.y - sb.y0, places=2)
+        nets = {pd.number: pd.net for pd in conn.pads}
+        by_fn = {fn: nets.get(num) for num, fn in fac["fixture"]["connectors"][0]["pins"].items()}
+        self.assertEqual(by_fn["VOUT1"], "S1_VIN")
+        self.assertEqual(by_fn["VOUT2"], "S2_VIN")
+        self.assertEqual(by_fn["GND"], "GND")
+        self.assertIn(by_fn["VOUT3"] or "", ("", None))                     # a third supply nobody uses
+        # every board has its own nest and clamp on the station's plate
+        with open(glob.glob(os.path.join(bdir, "*-fixture.json"))[0], encoding="utf-8") as fh:
+            meta = json.load(fh)
+        self.assertEqual(len(meta["nest"]["refs"]), 2)
+        self.assertEqual([round(v) for v in (meta["outline"]["width"], meta["outline"]["height"])], [260, 190])
+        r = subprocess.run([sys.executable, os.path.join(bdir, "runner", "pcbtest_runner.py"), "test", "--simulate",
+                            "--non-interactive", "--serial", "S1"], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
+    def test_cli_station_and_from_pcb(self):
+        out = os.path.join(self.tmp, "fac.json")
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "facilities", "from-pcb", self.station, "--out", out],
+                           capture_output=True, text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        with open(out) as fh:
+            fac = json.load(fh)
+        self.assertEqual(len(fac["fixture"]["connectors"][0]["pins"]), 80)
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "station", "plan", self.station, self.proj, "--json"],
+                           capture_output=True, text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(json.loads(r.stdout)["boards"][0]["status"], "ok")
+        small = dict(fac, id="tiny-station")                               # a plate too small for the board
+        small["fixture"] = dict(fac["fixture"], plate_mm=[60.0, 40.0], holes=[])
+        small["fixture"]["connectors"] = [dict(fac["fixture"]["connectors"][0], at_mm=[2.0, 36.0])]
+        tiny = os.path.join(self.tmp, "tiny.json")
+        with open(tiny, "w") as fh:
+            json.dump(small, fh)
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "station", "plan", tiny, self.proj, "--json"],
+                           capture_output=True, text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertEqual(json.loads(r.stdout)["boards"][0]["status"], "does not fit")

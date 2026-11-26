@@ -6,7 +6,8 @@ DUT exported as VRML, pogo pins). Rendering them with kicad-cli gives:
 
   dut_iso / dut_top / dut_bottom      the board itself
   fixture_iso                          fixture PCB with pogo pins
-  fixture_dut_exploded / _seated       DUT above / on the pins
+  fixture_dut_exploded / _seated       DUT above / on the pins (clamped)
+  fixture_dut_loaded                   DUT in its nest above the pins, clamp open (fixtures with nests)
   jig_iso                              the printed jig on its own
   jig_exploded / jig_assembled         parts in the jig, PCB above / seated
   jig2_print .. jig2_solder            two-jig workflow, one still per step (from the video's scenes)
@@ -40,9 +41,10 @@ def write_wrl(path: str, shapes: Sequence[Shape], shininess: float = 0.3) -> Non
     s = 1.0 / MM_PER_UNIT
     with open(path, "w", encoding="ascii") as fh:
         fh.write("#VRML V2.0 utf8\n")
-        for verts, faces, col in shapes:
+        for verts, faces, col in shapes:          # col (r, g, b) or (r, g, b, transparency)
             fh.write("Shape { appearance Appearance { material Material { diffuseColor %.3f %.3f %.3f "
-                     "specularColor 0.25 0.25 0.25 shininess %.2f } }\n" % (col[0], col[1], col[2], shininess))
+                     "specularColor 0.25 0.25 0.25 shininess %.2f%s } }\n" % (
+                         col[0], col[1], col[2], shininess, " transparency %.2f" % col[3] if len(col) > 3 else ""))
             fh.write(" geometry IndexedFaceSet { solid FALSE creaseAngle 0.6 coord Coordinate { point [\n")
             fh.write(",\n".join("%.4f %.4f %.4f" % (x * s, y * s, z * s) for x, y, z in verts))
             fh.write(" ] }\n coordIndex [\n")
@@ -280,7 +282,7 @@ class Renderer:
 
     def render(self, board: str, png: str, side: str = "top", rotate: Optional[str] = None, zoom: float = 1.0,
                w: Optional[int] = None, h: Optional[int] = None, floor: bool = False, quality: Optional[str] = None,
-               perspective: bool = False, pan: Optional[str] = None) -> bool:
+               perspective: bool = False, pan: Optional[str] = None, stackup_colors: bool = False) -> bool:
         if not self.cli:
             return False
         q = quality or self.quality
@@ -294,6 +296,8 @@ class Renderer:
             args.append("--perspective")
         if pan:
             args += ["--pan", pan]
+        if stackup_colors:                  # the board's own solder-mask / silkscreen colours (its stackup)
+            args.append("--use-board-stackup-colors")
         args.append(board)
         try:
             r = subprocess.run(args, capture_output=True, timeout=600, env=self.env_for(q), **QUIET)
@@ -357,21 +361,30 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
             mirror = fixture_side(plan) == "top"
             rotate = (0.0, 180.0, 0.0) if mirror else (0.0, 0.0, 0.0)
 
-            def fixture_scene(lift: float, tag: str) -> str:
+            nest = fixture.get("nest") or {}
+
+            def fixture_scene(lift: float, tag: str, pressed: bool = False) -> str:
                 items = []
                 for s in fixture.get("sites", []):
                     dx, dy = s["offset"]
                     items.append(model_footprint("DUT%d" % s["site"], bb.cx + dx, bb.cy + dy, dut_wrl,
                                                  offset=(0.0, 0.0, clear + b.thickness / 2 + lift), rotate=rotate))
+                text = fx_text
+                if nest.get("enabled"):                 # every nest pressed down and its clamp closed, or open
+                    from .nest import scene_text
+                    text = scene_text(fx_text, nest, b.name, sd, pressed, 0.0 if pressed else 95.0)
                 path = os.path.join(sd, "fixture_scene_%s.kicad_pcb" % tag)
                 with open(path, "w", encoding="utf-8") as fh:
-                    fh.write(append_items(fx_text, items))
+                    fh.write(append_items(text, items))
                 return path
 
             # exploded: the board well above the pins and a lower camera, so the pogo pins show between the boards
             high = max(30.0, min(60.0, 0.3 * max(bb.w, bb.h)))
-            for name, lift, rot, zoom in (("fixture_dut_exploded", high, ISO_SIDE, 0.72), ("fixture_dut_seated", 0.0, ISO_TOP, 0.8)):
-                if rd.render(fixture_scene(lift, name), P(name), rotate=rot, zoom=zoom):
+            shots = [("fixture_dut_exploded", high, ISO_SIDE, 0.72, False), ("fixture_dut_seated", 0.0, ISO_TOP, 0.8, True)]
+            if nest.get("enabled"):                     # in its nest, above the pins, clamp open
+                shots.insert(1, ("fixture_dut_loaded", float(nest["heights"]["travel"]), ISO_TOP, 0.8, False))
+            for name, lift, rot, zoom, pressed in shots:
+                if rd.render(fixture_scene(lift, name, pressed), P(name), rotate=rot, zoom=zoom):
                     img[name] = P(name)
 
     # ---- solder jig -----------------------------------------------------------------------------

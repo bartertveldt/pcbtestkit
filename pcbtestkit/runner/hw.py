@@ -237,11 +237,18 @@ def load_driver(cfg: Dict[str, Any]):
 
 
 def facility_inputs(plan: Dict[str, Any], site: int) -> Dict[str, str]:
-    """Each channel's input on the test facility for board ``site``: its connector pin function ("AIN3"), or the
-    generated header's pin ("PIN4") when the facility has no connector of its own."""
-    conns = [c for c in (plan.get("facility") or {}).get("connectors") or [] if int(c.get("site", 1)) == site]
+    """What board ``site`` uses on the test facility, by its own signal names: each channel's input ("CH01":
+    "AIN3"), its supply output ("VIN": "VOUT2") and its bus lines ("CAN_H": "CAN2_H"), from the facility's
+    connector; or each channel's pin on the generated header ("PIN4") when the facility has no connector.
+    A station's shared connector gives every board of the batch its own inputs, supply and bus instance."""
+    allc = (plan.get("facility") or {}).get("connectors") or []
+    shared = [c for c in allc if c.get("shared")]
+    if shared:
+        return {q["signal"]: q["function"] for c in shared for q in c["pins"]
+                if q.get("site") == site and q["signal"] not in ("GND", "NC")}
+    conns = [c for c in allc if int(c.get("site", 1)) == site]
     if conns:
-        return {q["signal"]: q["function"] for c in conns for q in c["pins"] if q["signal"].startswith("CH")}
+        return {q["signal"]: q["function"] for c in conns for q in c["pins"] if q["signal"] not in ("GND", "NC")}
     return {p["channel"]: "PIN%d" % p["header_pin"] for p in plan.get("probes", []) if p.get("channel") and p.get("header_pin")}
 
 

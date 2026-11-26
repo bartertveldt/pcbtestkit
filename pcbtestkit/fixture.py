@@ -3,7 +3,8 @@
 The fixture PCB carries one pogo pin per probe of the test plan, aligned with
 the DUT, plus a header to the measurement hardware (Raspberry Pi ADC HAT, MCU,
 ...), voltage dividers for channels above the ADC range, a power terminal,
-guide-pin holes copied from the DUT's mounting holes, mounting holes, and
+every board's nest and toggle clamp (standoff and clamp holes, 3D models: nest.py) or guide-pin holes
+copied from the DUT's mounting holes, mounting holes, and
 cut-outs for tall DUT parts and fitted stacked boards on the probed side.
 Several DUT sites can be panelised on one fixture. With probe_side "both" there
 is one fixture plate per side (a clamshell: the DUT lies between them).
@@ -68,6 +69,18 @@ class FixtureBuilder:
         self.central = False
         self.central_pins: List[Dict[str, Any]] = []
         self.fac_refs: List[Dict[str, Any]] = []
+        # a station's shared connector: which pin carries each board's signal ((site, signal) -> pin)
+        self.plate_fits_cols: List[int] = []
+        self.fac_pin_of: Dict[Tuple[int, str], int] = {
+            (int(q["site"]), q["signal"]): int(q["pin"]) for _c, cp in self.fac_conns if cp.get("shared")
+            for q in cp["pins"] if q.get("site")}
+        self.plate_fit = True
+        # every board's nest (rails, end stop, sprung standoffs) and toggle clamp: pcbtestkit.nest
+        from .nest import plan_nest
+        self.nest = plan_nest(design, plan)
+        self.nest_on = bool(self.nest.get("enabled"))
+        self.nest_refs: List[Dict[str, Any]] = []
+        self.nest_boxes: List[Tuple[int, BBox]] = []     # (site, area of its nest + clamp adapter) on the fixture
 
     # ------------------------------------------------------------------ #
     def net(self, name: str) -> Tuple[int, str]:
@@ -422,6 +435,9 @@ class FixtureBuilder:
         blay = batch_layout(self.d.cfg, self.bb.w, self.bb.h)     # batch.count (or fixture.panel): one site per board
         cols, rows, nsite = blay["cols"], blay["rows"], blay["count"]
         margin = float(fx["margin_mm"])
+        # room around each board: the margin, or what its nest and clamp need on that side
+        ext = (self.nest.get("extents") or {}) if self.nest_on else {}
+        m_l, m_r, m_t, m_b = (round(max(margin, float(ext.get(k, 0.0)) + 1.5), 3) for k in ("left", "right", "top", "bottom"))
         lay0 = self.block_layout()
         bw, bh, n_div = lay0["w"], lay0["h"], lay0["n_div"]
         self._block_w = None
@@ -457,15 +473,15 @@ class FixtureBuilder:
         r0 = rows // 2 - 1 if rows >= 2 else 0          # the band runs below this row
         if central:
             slot_w = (6.0 + max(x for _, x in lay0["slots"])) if lay0["slots"] else 0.0
-            site_w = max(self.bb.w + 2 * margin, slot_w + 18.0)
-            site_h = self.bb.h + 2 * margin + div_h + 2.0
+            site_w = max(self.bb.w + m_l + m_r, slot_w + 18.0)
+            site_h = self.bb.h + m_t + m_b + div_h + 2.0
         else:
-            site_w = max(self.bb.w + 2 * margin, bw + 18.0)
-            site_h = self.bb.h + 2 * margin + (0.0 if outline_mode == "outline" else bh + 7.0)
+            site_w = max(self.bb.w + m_l + m_r, bw + 18.0)
+            site_h = self.bb.h + m_t + m_b + (0.0 if outline_mode == "outline" else bh + 7.0)
         if nsite > 1:       # site pitch on the router's 0.254 mm grid, so every site's header pins are on it
             site_w = math.ceil((site_w + spacing) / 0.254 - 1e-9) * 0.254 - spacing
             site_h = math.ceil((site_h + spacing) / 0.254 - 1e-9) * 0.254 - spacing
-        fx0, fy0 = self.bb.x0 - margin, self.bb.y0 - margin
+        fx0, fy0 = self.bb.x0 - m_l, self.bb.y0 - m_t
         fx1 = fx0 + cols * site_w + (cols - 1) * spacing
         fy1 = fy0 + rows * site_h + (rows - 1) * spacing + ((band_h + spacing) if central else 0.0)
         band_y0 = fy0 + ((r0 + 1) * (site_h + spacing) if rows >= 2 else site_h + spacing)
@@ -493,16 +509,16 @@ class FixtureBuilder:
                         by = top + 1.0
                     else:                               # above it: dividers under the board
                         dy = top - fy0
-                        by = self.bb.y1 + margin + 1.0 + dy
+                        by = self.bb.y1 + m_b + 1.0 + dy
                 elif inside_xy:
                     bx, by = inside_xy
                 else:
-                    bx, by = self.bb.x0 - margin + 9.0 + dx, self.bb.y1 + margin + 4.0 + dy
+                    bx, by = self.bb.x0 - m_l + 9.0 + dx, self.bb.y1 + m_b + 4.0 + dy
                 if outline_mode == "outline":
                     limit = BBox(self.bb.x0, self.bb.y0, self.bb.x1, self.bb.y1)
                     lsegs = [(self.mx(a), b_, self.mx(c), d_) for a, b_, c, d_ in self.b.edge_segs]
                 else:
-                    limit = BBox(fx0 + dx, fy0 + dy, fx0 + dx + site_w, self.bb.y1 + margin + dy)
+                    limit = BBox(fx0 + dx, fy0 + dy, fx0 + dx + site_w, self.bb.y1 + m_b + dy)
                     lsegs = None
                 sites.append(self._site(k, nsite, dx, dy, bx, by, limit, lsegs))
         if central:
@@ -511,9 +527,11 @@ class FixtureBuilder:
         if plate:
             free = self._plate_free(float(plate[0]), float(plate[1]))
             if nat.w > free.w + 0.01 or nat.h > free.h + 0.01:
+                self.plate_fit = False
                 fits = [c for c in range(1, nsite + 1)
                         if c * site_w + (c - 1) * spacing <= free.w and
                         math.ceil(nsite / float(c)) * site_h + (math.ceil(nsite / float(c)) - 1) * spacing <= free.h]
+                self.plate_fits_cols = fits
                 self.warnings.append("the board%s (%.0f x %.0f mm with %s connector block) do%s not fit the %.0f x %.0f mm free "
                                      "area of facility %s's %.0f x %.0f mm plate%s" % (
                                          "s" if nsite > 1 else "", nat.w, nat.h, "their" if nsite > 1 else "its",
@@ -523,17 +541,26 @@ class FixtureBuilder:
             fx0, fy0 = origin
             fx1, fy1 = fx0 + float(plate[0]), fy0 + float(plate[1])
         for c, cp in self.fac_conns:                    # the facility's connectors at their fixed places
-            nets = self.site_nets.get(int(cp.get("site", 1)))
-            if nets is None:
-                continue
-            ref = self.facility_connector(c, origin[0] + float(c["at_mm"][0]), origin[1] + float(c["at_mm"][1]),
-                                          {q["pin"]: q["signal"] for q in cp["pins"]}, nets)
-            self.fac_refs.append({"ref": ref, "name": c.get("name", "TESTER"), "site": int(cp.get("site", 1))})
+            if cp.get("shared"):                        # a station: every board's signals on the one connector
+                sigs = {q["pin"]: ("%d:%s" % (q["site"], q["signal"]) if q.get("site") else q["signal"]) for q in cp["pins"]}
+                nets = {"GND": "GND"}
+                for k_, sn in self.site_nets.items():
+                    nets.update({"%d:%s" % (k_, sig): net for sig, net in sn.items() if sig != "GND"})
+                served = set(self.site_nets)
+            else:
+                nets = self.site_nets.get(int(cp.get("site", 1)))
+                if nets is None:
+                    continue
+                sigs = {q["pin"]: q["signal"] for q in cp["pins"]}
+                served = {int(cp.get("site", 1))}
+            ref = self.facility_connector(c, origin[0] + float(c["at_mm"][0]), origin[1] + float(c["at_mm"][1]), sigs, nets)
+            self.fac_refs.append(dict({"ref": ref, "name": c.get("name", "TESTER"), "site": int(cp.get("site", 1))},
+                                      **({"shared": True} if cp.get("shared") else {})))
             for st in sites:
-                if st["site"] == int(cp.get("site", 1)) and st["header"] is None:
+                if st["site"] in served and st["header"] is None:
                     st["header"] = ref
             for cm in self.channel_map:
-                if cm["site"] == int(cp.get("site", 1)) and cm["header"] is None:
+                if cm["site"] in served and cm["header"] is None:
                     cm["header"] = ref
             if not plate:                               # no fixed plate: the outline grows to take the connector
                 cb = self._occupied()[-1]
@@ -545,6 +572,8 @@ class FixtureBuilder:
                 self.items.append(W.gr_line(self.mx(sg[0]), sg[1], self.mx(sg[2]), sg[3], "Edge.Cuts", 0.1))
             ob = BBox(self.bb.x0, self.bb.y0, self.bb.x1, self.bb.y1)
         else:
+            if self.nest_on and not plate and fx.get("mounting_holes", True):
+                fx0, fy0, fx1, fy1 = fx0 - 7.0, fy0 - 7.0, fx1 + 7.0, fy1 + 7.0     # a frame for the mounting holes
             self.items.append(W.gr_rect(fx0, fy0, fx1, fy1, "Edge.Cuts", 0.1))
             ob = BBox(fx0, fy0, fx1, fy1)
         if self.fac_fixture.get("holes"):               # the facility's own mounting holes, where its fixture mounts
@@ -554,6 +583,11 @@ class FixtureBuilder:
                 if any(math.hypot(hx - px, hy - py) < d / 2 + 1.5 for px, py in self.pogo_xy):
                     self.warnings.append("facility mounting hole at (%.1f, %.1f) mm on the plate is next to a probe: move "
                                          "the board on the plate or check" % tuple(h["at_mm"]))
+                for site_, nb in self.nest_boxes:
+                    if nb.contains(hx, hy, d / 2):
+                        self.warnings.append("facility mounting hole at (%.1f, %.1f) mm on the plate lies under board %d's "
+                                             "nest or clamp: use a low screw head there, or turn the nests "
+                                             "(fixture.nest.entry)" % (h["at_mm"][0], h["at_mm"][1], site_))
                 self.hole(hx, hy, d, h.get("label", "MOUNT"))
         elif fx.get("mounting_holes", True) and outline_mode == "rect":
             d = float(fx.get("mounting_hole_d_mm", 3.2))
@@ -580,7 +614,8 @@ class FixtureBuilder:
                        rev=self.b.title_block.get("rev", ""), comment="Generated by PCB TestKit")
         res = {"kicad_pcb": text, "sites": sites, "warnings": self.warnings, "channel_map": self.channel_map,
                "outline_mode": outline_mode, "outline": ob.as_dict(2), "pogo_count": len(self.pogo_xy),
-               "nets": len(self.nets), "routing": self.routing, "batch": blay}
+               "nets": len(self.nets), "routing": self.routing, "batch": blay, "plate_fit": self.plate_fit,
+               "plate_fits_cols": self.plate_fits_cols, "nest": self.nest, "nest_refs": self.nest_refs}
         if self.fac_refs or plate:
             res["facility"] = {"id": self.fac["id"], "connectors": self.fac_refs, "plate_mm": plate}
         if central:
@@ -625,6 +660,77 @@ class FixtureBuilder:
             self.warnings.append("the batch connector (2 x %d pins) is wider than the fixture (%.0f mm); use fewer "
                                  "channels or fixture.batch_connector: per_site" % (ncol, fx1 - fx0))
         return ref
+
+    def _swept(self, box: BBox) -> BBox:
+        """A box and where it comes from while the board slides in along the nest's lead-in."""
+        (sx, sy), lead = self.nest["frame"]["s"], float(self.nest["local"]["lead"])
+        return BBox(box.x0 - (lead if sx > 0.5 else 0.0), box.y0 - (lead if sy > 0.5 else 0.0),
+                    box.x1 + (lead if sx < -0.5 else 0.0), box.y1 + (lead if sy < -0.5 else 0.0))
+
+    def nest_site(self, k: int, dx: float, dy: float, site_pogos: List[Tuple[float, float]]) -> None:
+        """Board k's nest: the holes for its four standoffs and its clamp adapter, the nest and the clamp as 3D
+        models, and their outlines on F.Fab."""
+        from .nest import ADAPTER, _safe
+        nest, name = self.nest, _safe(self.b.name)
+        cx, cy = nest["frame"]["origin"][0] + dx, nest["frame"]["origin"][1] + dy
+        models = "${KIPRJMOD}/pcbtestkit-models/"
+        refs: Dict[str, Any] = {"site": k}
+        posts = []
+        for x, y in nest["posts"]:
+            ref = self.ref("NP")
+            items = [W.fp_circle(0, 0, 4.75, CRT, 0.05), W.fp_circle(0, 0, 4.0, FAB, 0.1),
+                     W.pad("", "np_thru_hole", "circle", 0, 0, 9.0, 9.0, ["*.Cu", "*.Mask"], drill=3.2),
+                     W.fp_text("NEST %d" % k, 0, 5.6, FAB, 0.8)]
+            self.items.append(W.footprint("PCBTestKit:NestPost_M3", x + dx, y + dy, ref, "STANDOFF M3", items,
+                                          attr=("exclude_from_pos_files", "exclude_from_bom"), hide_ref=True,
+                                          models=[models + "nest_post_%s.wrl" % name]))
+            posts.append(ref)
+        refs["posts"] = posts
+        if nest["clamp"] == "toggle":
+            adapter = []
+            for x, y in nest["adapter_holes"]:
+                ref = self.ref("NK")
+                items = [W.fp_circle(0, 0, 3.5, CRT, 0.05),
+                         W.pad("", "np_thru_hole", "circle", 0, 0, 6.5, 6.5, ["*.Cu", "*.Mask"], drill=3.2),
+                         W.fp_text("CLAMP %d" % k, 0, 4.4, FAB, 0.8)]
+                self.items.append(W.footprint("PCBTestKit:ClampScrew_M3", x + dx, y + dy, ref, "CLAMP M3", items,
+                                              attr=("exclude_from_pos_files", "exclude_from_bom"), hide_ref=True))
+                adapter.append(ref)
+            refs["adapter"] = adapter
+        fr = nest["frame"]
+        L = nest["local"]
+
+        def fab_box(s0, t0, s1, t1) -> List[list]:
+            pts = [(s0, t0), (s1, t0), (s1, t1), (s0, t1)]
+            xy = [(s_ * fr["s"][0] + t_ * fr["t"][0], s_ * fr["s"][1] + t_ * fr["t"][1]) for s_, t_ in pts]
+            return [W.fp_line(xy[i][0], xy[i][1], xy[(i + 1) % 4][0], xy[(i + 1) % 4][1], FAB, 0.1) for i in range(4)]
+        fab = fab_box(L["s_lo"], L["t_in"], L["s_hi"], L["t_out"]) + fab_box(L["s_lo"], -L["t_out"], L["s_hi"], -L["t_in"]) + \
+            fab_box(L["s_stop"], -L["t_out"], L["s_hi"], L["t_out"])
+        ref = self.ref("N")
+        sx, sy = L["s_lo"] - 0.0, 0.0
+        tx_, ty_ = sx * fr["s"][0] + sy * fr["t"][0], sx * fr["s"][1] + sy * fr["t"][1]
+        fab.append(W.fp_text("BOARD %d SLIDES IN HERE" % k if nest["style"] == "slide" else "BOARD %d DROPS IN" % k,
+                             tx_ * 0.92, ty_ * 0.92, FAB, 0.8))
+        self.items.append(W.footprint("PCBTestKit:Nest", cx, cy, ref, "NEST", fab,
+                                      attr=("board_only", "exclude_from_pos_files", "exclude_from_bom"), hide_ref=True,
+                                      models=[models + "nest_%s.wrl" % name]))
+        refs["nest"] = ref
+        if nest["clamp"] == "toggle":
+            a_s = L["adapter_s"]
+            ref = self.ref("K")
+            self.items.append(W.footprint("PCBTestKit:ToggleClamp", cx, cy, ref, "TOGGLE CLAMP",
+                                          fab_box(a_s - ADAPTER[0] / 2.0, -ADAPTER[1] / 2.0, a_s + ADAPTER[0] / 2.0,
+                                                  ADAPTER[1] / 2.0),
+                                          attr=("board_only", "exclude_from_pos_files", "exclude_from_bom"), hide_ref=True,
+                                          models=[models + "clamp_%s.wrl" % name]))
+            refs["clamp"] = ref
+        ext = nest["extents"]
+        self.nest_boxes.append((k, BBox(self.bb.x0 - ext["left"] + dx, self.bb.y0 - ext["top"] + dy,
+                                        self.bb.x1 + ext["right"] + dx, self.bb.y1 + ext["bottom"] + dy)))
+        for x, y in nest["posts"] + nest["adapter_holes"]:
+            if any(math.hypot(x + dx - px, y + dy - py) < 4.5 + self.pad_d / 2 for px, py in site_pogos):
+                self.warnings.append("site %d: a nest screw at (%.1f, %.1f) is next to a pogo pin" % (k, x + dx, y + dy))
+        self.nest_refs.append(refs)
 
     def _plate_free(self, pw: float, ph: float) -> BBox:
         """The part of the facility's plate (plate coordinates) its connectors leave for the boards and their
@@ -698,7 +804,10 @@ class FixtureBuilder:
             for ref, t in tall.items():
                 bb = t["bbox"]
                 x0, x1 = sorted((self.mx(bb["x_min"]), self.mx(bb["x_max"])))
-                boxes.append([BBox(x0 + dx, bb["y_min"] + dy, x1 + dx, bb["y_max"] + dy), [ref], t["height_mm"]])
+                box = BBox(x0 + dx, bb["y_min"] + dy, x1 + dx, bb["y_max"] + dy)
+                if self.nest_on and self.nest["style"] == "slide":   # it passes through on the way in
+                    box = self._swept(box)
+                boxes.append([box, [ref], t["height_mm"]])
             merged = True
             while merged:
                 merged = False
@@ -735,7 +844,7 @@ class FixtureBuilder:
         # ---- DUT outline on F.Fab; L-shaped silk placement marks just outside its corners ----
         for sg in self.b.edge_segs:
             self.items.append(W.gr_line(self.mx(sg[0]) + dx, sg[1] + dy, self.mx(sg[2]) + dx, sg[3] + dy, FAB, 0.1))
-        if limit_segs is None:
+        if limit_segs is None and not self.nest_on:
             o = BBox(self.bb.x0 + dx, self.bb.y0 + dy, self.bb.x1 + dx, self.bb.y1 + dy).grow(0.8)
             L = min(5.0, o.w / 4, o.h / 4)
             for cx_, cy_, sx, sy in ((o.x0, o.y0, 1, 1), (o.x1, o.y0, -1, 1), (o.x0, o.y1, 1, -1), (o.x1, o.y1, -1, -1)):
@@ -745,10 +854,12 @@ class FixtureBuilder:
                     continue
                 self.items.append(W.gr_line(cx_, cy_, cx_ + sx * L, cy_, SILK, 0.15))
                 self.items.append(W.gr_line(cx_, cy_, cx_, cy_ + sy * L, SILK, 0.15))
-        # ---- guide pins from DUT mounting holes ---------------------------------------
+        # ---- the board's nest and clamp, or guide pins from its mounting holes --------------------------------
         guides = 0
         seen = set()
-        for fp in self.d.components():
+        if self.nest_on:
+            self.nest_site(k, dx, dy, site_pogos)
+        for fp in ([] if self.nest_on else self.d.components()):
             for pd in fp.pads:
                 if pd.drill_w >= 1.5 and (pd.is_npth or C.is_mounting_hole(fp)):
                     gx, gy = self.mx(pd.x) + dx, pd.y + dy
@@ -763,7 +874,7 @@ class FixtureBuilder:
                         continue
                     self.hole(gx, gy, round(pd.drill_w, 2), "GUIDE %.1f" % pd.drill_w, prefix="G")
                     guides += 1
-        if guides < 2:
+        if guides < 2 and not self.nest_on:
             self.warnings.append("site %d: fewer than 2 guide-pin holes (DUT has %d usable holes); add tooling holes to "
                                  "the DUT or locate it with a nest" % (k, guides))
         # ---- connector block: divider rows, header, power terminal -----------------
@@ -798,7 +909,8 @@ class FixtureBuilder:
                 pins.append((h["pin"], chnet, sig))
             else:
                 pins.append((h["pin"], src, sig))
-            self.channel_map.append({"site": k, "channel": sig, "header": None, "pin": h["pin"], "dut_net": probe["net"],
+            self.channel_map.append({"site": k, "channel": sig, "header": None, "pin": self.fac_pin_of.get((k, sig), h["pin"]),
+                                     "dut_net": probe["net"],
                                      "divider_ratio": div["ratio"] if div else 1.0})
         href = None
         if self.central:        # the batch's one connector in the middle takes this board's nets (placed later)
@@ -923,7 +1035,24 @@ def merge_routing(per_plate: Dict[str, Optional[Dict[str, Any]]]) -> Optional[Di
 
 def _build_one(design: Design, plan: Dict[str, Any]) -> Dict[str, Any]:
     W.reset_uids("fixture:%s" % design.board.name)
-    return FixtureBuilder(design, plan).build()
+    res = FixtureBuilder(design, plan).build()
+    nest = res.get("nest") or {}
+    if res.get("plate_fit", True) or not nest.get("enabled"):
+        return res
+    # the boards with their nests and clamps do not fit the facility's plate: turn the nests (the boards slide in
+    # from another side, the clamps sit beside them instead of behind them) if that fits
+    import copy
+    for entry in [e for e in ("left", "front", "back", "right") if e != nest.get("entry")]:
+        alt = copy.copy(design)
+        alt.cfg = copy.deepcopy(design.cfg)
+        alt.cfg.setdefault("fixture", {}).setdefault("nest", {})["entry"] = entry
+        W.reset_uids("fixture:%s" % design.board.name)
+        r2 = FixtureBuilder(alt, plan).build()
+        if r2.get("plate_fit", True):
+            r2["warnings"].insert(0, "the nests are turned: the boards slide in from the %s (fixture.nest.entry), so they "
+                                     "fit the facility's plate" % entry)
+            return r2
+    return res
 
 
 def project_file(name: str) -> str:

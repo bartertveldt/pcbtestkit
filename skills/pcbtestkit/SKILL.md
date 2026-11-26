@@ -58,6 +58,9 @@ Exit codes: 0 ok, 1 findings/violations/tool error (the JSON says which), 2 bad 
   programmed at the same time (`/firmware` and `/sequence/*/phase` in the testplan).
 - **Fixture PCB:** routed, one site per board of a batch, programming connector per board, two plates for both
   sides, cut-outs for tall parts and stacked boards; or the fixed plate and connector of the user's test facility.
+  Every board gets a printed nest (slides in above the pogo tips) and a toggle clamp (`/nest` in the fixture JSON).
+- **Test station:** several board types on one tester: `pcbtestkit station plan STATION.kicad_pcb BOARD...` gives
+  each type's batch and what limits it (`--json`); `station run ... --out DIR` makes every type's outputs.
 - **Solder jigs:** placement + holding jig per board side, paste-print nest for the second SMD side, as many boards
   per jig as fit the printer bed.
 - **Runner:** Raspberry Pi / MCU (or the facility's driver); batch flow, results with per-step timings.

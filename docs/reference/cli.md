@@ -14,6 +14,7 @@ Run `pcbtestkit <command> --help` for the same text. Without a pip install use `
 | `guide` | print the agent quick reference (cheapest way for an AI to use this CLI) |
 | `classes` | technology-class systems: list, show, check a board, validate, template |
 | `facilities` | test facilities (your tester: connector, buses, driver): list, show, validate, template |
+| `station` | several board types on one test station: plan the batch of each, or run them all |
 | `mcp` | run the MCP stdio server |
 
 ## `pcbtestkit run`
@@ -184,14 +185,46 @@ pcbtestkit classes [-h] [--class CLS] [--system SYSTEM] [--target TARGET_CLASS]
 test facilities (your tester: connector, buses, driver): list, show, validate, template
 
 ```text
-pcbtestkit facilities [-h] [--out OUT] [--json] {list,show,validate,template} [target ...]
+pcbtestkit facilities [-h] [--out OUT] [--connector CONNECTOR] [--id ID]
+                             [--analog-max-v ANALOG_MAX_V] [--json]
+                             {list,show,validate,template,from-pcb} [target ...]
 ```
 
 | Argument | Meaning |
 |---|---|
-| `action` | (one of: list, show, validate, template) |
-| `target` | facility id (show) or facility.json files (validate) |
-| `--out` | folder to write facility.json and driver.py to (template) |
+| `action` | (one of: list, show, validate, template, from-pcb) |
+| `target` | facility id (show), facility.json files (validate) or the station's .kicad_pcb (from-pcb) |
+| `--out` | folder to write facility.json (and driver.py for template) to; from-pcb also takes a .json file |
+| `--connector` | from-pcb: reference of the station's interface connector (default: found from its nets) |
+| `--id` | from-pcb: facility id (default: from the board's file name) |
+| `--analog-max-v` | from-pcb: full-scale voltage of the station's analog inputs |
+| `--json` |  |
+
+## `pcbtestkit station`
+
+several board types on one test station: plan the batch of each, or run them all
+
+```text
+pcbtestkit station [-h] [--out OUT] [--batch BOARD=N] [--connector CONNECTOR]
+                          [--analog-max-v ANALOG_MAX_V] [--max-sites MAX_SITES] [--no-visuals]
+                          [--no-route] [--video [{all,station,boards}]] [-q] [--json]
+                          {plan,run} station projects [projects ...]
+```
+
+| Argument | Meaning |
+|---|---|
+| `action` | (one of: plan, run) |
+| `station` | the station: its .kicad_pcb (interface connector nets AIN1.., VOUT1.., CAN1_H, ...), a facility.json or an installed facility id |
+| `projects` | the boards: .kicad_pcb, .kicad_pro or project folders |
+| `--out` | run: output folder (default station_out): <board>/ per board, station.html, station.json |
+| `--batch` | boards per fixture for one board type (default: as many as the station's inputs, supplies, buses and plate allow); repeatable |
+| `--connector` | reference of the station's interface connector (default: found from its nets) |
+| `--analog-max-v` | full-scale voltage of the station's analog inputs |
+| `--max-sites` | at most this many boards per fixture |
+| `--no-visuals` | run: skip the KiCad 3D renders in the guides |
+| `--no-route` | run: leave the fixture boards unrouted (faster) |
+| `--video` | run: render videos (KiCad 3D animation; minutes per video): all = the station video and every board's explainer, station = only the station video, boards = only the boards' (one of: all, station, boards) |
+| `-q`, `--quiet` |  |
 | `--json` |  |
 
 ## `pcbtestkit mcp`

@@ -2,7 +2,48 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 
-## 1.1.1 (unreleased)
+## 1.1.1 (2026-11-26)
+
+### Test stations: several board types on one tester
+- A station is a test facility whose interface connector is *shared*: every board of a batch gets the next block of
+  analog inputs, its own switched supply (`VOUT<k>`) and its own instance of every bus (`CAN2_H`, `UART2_TX`,
+  `I2C3_SDA`, `RS485_2_A`). Mark a connector `"shared": true` in `facility.json`; the pin grammar takes bus instances.
+- Describe the station by its own KiCad board: `pcbtestkit facilities from-pcb station.kicad_pcb` reads the interface
+  connector (found by its net names: `GND`, `AIN<n>`, `VOUT<n>`, `CAN<n>_H`, ...), its grid, rotation and position,
+  the plate (the board outline) and its mounting holes, and writes the facility. Every fixture made for it has the
+  same outline, holes and the mating connector at the same place, so swapping board types is swapping fixtures.
+- `pcbtestkit station plan STATION PROJECT...` works out, per board type, how many boards one fixture takes: what
+  the station's inputs, supplies, buses and plate allow (and which of them limits it), the plate checked with a real
+  fixture layout (another column count or nest orientation when that fits more). `station run` makes every board
+  type's outputs (guide, fixture, jigs, runner, optionally its video) plus `station.html` (capacity, pin map per
+  board type, how to swap fixtures) and a station video: every fixture slides onto the station in turn, its boards
+  drop in. `--batch BOARD=N` sets a batch; the exit code is 1 when a board type does not fit.
+- `examples/make_station.py` generates an example station (260 x 190 mm, a 2 x 40 socket with 32 analog inputs,
+  4 supplies, 2 CAN, 2 UART, 4 I2C, 8 DIO). The runner hands each board's own supply output and bus instance to the
+  facility driver (`select_site(site, inputs)`, the example driver switches `VOUT<k>` and tests bus `{inst}`).
+- Board renders can use the stackup colours (`kicad_writer.stackup`, `--use-board-stackup-colors`).
+
+### Board nests and clamps: load, clamp and test every board on its own
+- Every board on the fixture gets a printed nest and a clamp (`fixture.nest`, on by default for single-sided
+  fixtures with a rectangular outline). The nest floats on four sprung M3 standoffs: two rails guide the board's
+  edges, an end stop locates it and the rails run on past its front edge with a flared mouth. Ledges under the
+  board's edges carry it above the pogo tips while it slides in, so the tips never scrape the pads; ledges and walls
+  leave room wherever a part or a through-hole lead slides through, and the gap above the tips grows to clear them.
+  Boards whose underside would sweep over a pin get the drop-in style (four chamfered walls) instead.
+- A vertical toggle clamp (a bought part, e.g. GH-101-A) on a printed adapter behind each nest carries a printed
+  press plate: push fingers press on bare spots of the board's other side next to the probes and clear its tallest
+  part. Closing the clamp pushes board and nest down by the nest's travel; the pins are compressed by their working
+  stroke. The adapter's cross slots take clamp base patterns within 4 mm of `clamp_holes_mm`; only the adapter is
+  reprinted for another clamp.
+- New outputs: `<board>-fixture-nest.stl`, `-fixture-press-plate.stl`, `-fixture-clamp-adapter.stl` with previews
+  (one of each per board), heights and parts list in the fixture JSON and the guide (a new section with the assembly
+  steps). The fixture board gets the standoff and clamp holes per board (copper keep-outs, so tracks stay clear)
+  and the nest, standoffs and clamp as 3D models; the guide's renders show a board in its nest and clamped, and the
+  explainer video slides it in, closes the clamp and tests it under a see-through press plate.
+- Fixture sites get the room their nests need on every side; when the boards do not fit a facility's fixed plate,
+  the nests are turned (the boards slide in from the side). `fixture.nest.entry` front | back | left | right,
+  `style` auto | slide | drop, `clamp` toggle | none; agents: `set_fixture_options` (`nest_*`).
+- The rails replace the guide pins: fixtures with nests have no GUIDE holes.
 
 ### Batches: one connector, programmed at the same time, tested meanwhile
 - A batch fixture has one connector instead of a header, power terminal and programming connector per board: a

@@ -110,6 +110,18 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
         fixture = build_fixture(design, plan)
         from .fixture import write_pogo_models
         write_pogo_models(out_dir, plan)
+        nest_meta = None
+        if (fixture.get("nest") or {}).get("enabled"):
+            # every board's nest, press plate and clamp adapter (print one of each per board) + their 3D models
+            from .nest import summary as nest_summary, write_parts
+            step("Generating the board nests and clamps", 0.55)
+            nparts = write_parts(fixture["nest"], out_dir, name, count=len(fixture.get("sites") or [1]))
+            for tag, f in nparts["files"].items():
+                key = "nest" if tag == "nest" else "nest_" + tag
+                paths[key + "_stl"] = os.path.join(out_dir, f["stl"])
+                paths[key + "_preview"] = os.path.join(out_dir, f["preview_png"])
+            nest_meta = dict(nest_summary(fixture["nest"]), files=nparts["files"], mesh=nparts["mesh"],
+                             refs=fixture.get("nest_refs") or [])
         # one board per fixture plate: "<name>-fixture" (one side) or "<name>-fixture-top" / "-bottom" (both sides)
         plates = fixture.get("plates") or {"": fixture}
         metas: Dict[str, Any] = {}
@@ -127,7 +139,8 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
             paths[key + "_probes"] = os.path.join(out_dir, base + "-probes.csv")
             with open(paths[key + "_probes"], "w", encoding="utf-8") as fh:
                 fh.write(probes_csv(plan, fx))
-            meta = {k: v for k, v in fx.items() if k not in ("kicad_pcb", "plates")}
+            meta = {k: v for k, v in fx.items() if k not in ("kicad_pcb", "plates", "nest", "nest_refs")}
+            meta["nest"] = nest_meta or {"enabled": False, "reason": (fx.get("nest") or {}).get("reason", "")}
             try:
                 from .kicad_cli import drc_file, find_kicad_cli
                 cli = find_kicad_cli()

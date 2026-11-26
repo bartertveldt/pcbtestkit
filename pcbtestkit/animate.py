@@ -40,7 +40,7 @@ from . import kicad_writer as W
 from .kicad_cli import sexpr_path
 from .sexpr import dumps, fmt_num
 from .sides import view
-from .visuals import Renderer, _block_end, cylinder, footprint_spans, hide_models, model_footprint, read_stl
+from .visuals import Renderer, _block_end, cylinder, footprint_spans, hide_models, model_footprint, read_stl, write_wrl
 
 ISO = -38.0                 # camera tilt (deg) used by all shots
 
@@ -1227,9 +1227,51 @@ class Stage:
             path = self.paths["fixture"]
             with open(path, "r", encoding="utf-8") as fh:
                 text = fh.read().replace("${KIPRJMOD}", sexpr_path(os.path.dirname(os.path.abspath(path))))
-            pogo = [ref for s_, e_, ref in footprint_spans(text) if re.search(r'\(model\s+"[^"]*pogo', text[s_:e_])]
-            self._fx_tpl = Template(text, pogo)
+            spans = list(footprint_spans(text))
+            pogo = [ref for s_, e_, ref in spans if re.search(r'\(model\s+"[^"]*pogo', text[s_:e_])]
+            # every board's nest (lowered by its travel when clamped) and clamp (swapped for one turned per frame)
+            self._fx_nest = [ref for s_, e_, ref in spans if re.search(r'\(model\s+"[^"]*pcbtestkit-models/nest_(?!post_)', text[s_:e_])]
+            self._fx_clamp = [ref for s_, e_, ref in spans if re.search(r'\(model\s+"[^"]*pcbtestkit-models/clamp_', text[s_:e_])]
+            self._fx_pogo = pogo
+            self._fx_tpl = Template(text, pogo + self._fx_nest + self._fx_clamp)
         return self._fx_tpl
+
+    def nest(self) -> Optional[Dict[str, Any]]:
+        """The boards' nest geometry (pcbtestkit.nest), or None for a fixture without nests."""
+        if not hasattr(self, "_nest"):
+            n = (self.fixture or {}).get("nest") or {}
+            if n.get("enabled") and not n.get("local"):        # the fixture's JSON keeps only a summary
+                from .nest import plan_nest
+                n = plan_nest(self.design, self.plan)
+            self._nest = n if n.get("enabled") and n.get("local") else None
+        return self._nest
+
+    def clamp_wrl(self, deg: float, ghost: bool = False) -> str:
+        """A clamp (with its press plate) ``deg`` up, cached per 2.5 degrees."""
+        from .nest import clamp_shapes
+        key = int(round(deg / 2.5))
+        path = self.scene_file("anim_clamp_%03d%s" % (key, "_ghost" if ghost else ""))
+        if not os.path.exists(path):
+            write_wrl(path, clamp_shapes(self.nest(), key * 2.5, ghost=ghost))
+        return path
+
+    def nest_items(self, deg: float, ghost: bool = False) -> List[list]:
+        """Every site's clamp at ``deg`` (the fixture's own clamp models are hidden by nest_edits)."""
+        if not self.nest() or self.nest().get("clamp") != "toggle":
+            return []
+        wrl = self.clamp_wrl(deg, ghost)
+        return [model_footprint("CLAMP%d" % st["site"], self.bb.cx + st["offset"][0], self.bb.cy + st["offset"][1], wrl)
+                for st in self.fixture.get("sites") or [{"site": 1, "offset": [0.0, 0.0]}]]
+
+    def nest_edits(self, down: float) -> Dict[str, Tuple[float, bool]]:
+        """Template edits: every nest ``down`` (0..1 of its travel) and the clamps hidden (nest_items draws them)."""
+        self.fixture_template()
+        nest = self.nest()
+        if not nest:
+            return {}
+        e = {r: (-nest["heights"]["travel"] * down, False) for r in self._fx_nest}
+        e.update({r: (0.0, True) for r in self._fx_clamp})
+        return e
 
     def fixture_duts(self, wrl: str, lift: float, dx: float = 0.0) -> List[list]:
         clear = float(self.plan["pogo"].get("probe_clearance_mm", 6.0))
@@ -1246,7 +1288,7 @@ class Stage:
         if not self._fixture_ok():
             return None
         tpl = self.fixture_template()
-        pins = tpl.refs
+        pins = list(self._fx_pogo)
         if not pins:
             return None
         s = Shot("pogo", self.fps, hold=0.6)
@@ -1354,7 +1396,8 @@ class Stage:
             return [model_footprint("GLOW_%s_%d" % (tag, k), self.bb.cx + ddx, self.bb.cy + ddy, glow(nets, phase, level),
                                     offset=(0.0, 0.0, clear + self.t / 2), rotate=rotate)]
         tpl = self.fixture_template()
-        seated = self.fixture_duts(wrl, 0.0)
+        seated = self.fixture_duts(wrl, 0.0) + self.nest_items(0.0, ghost=True)
+        nest_down = self.nest_edits(1.0) or None
         # kicad-cli's pan is in centimetres; about 0.013 of the fixture's width moves it a seventh of the frame left
         pan_x = -0.013 * float(((self.fixture or {}).get("outline") or {}).get("width") or 4.0 * self.bb.w)
         s = Shot("test", self.fps, hold=1.2)
@@ -1376,7 +1419,7 @@ class Stage:
                 g = (f + i) / float(max(1, total - 1))
                 cam = self.cam(22 + 26 * smooth(g), zoom=0.95, tilt=ISO - 14)
                 cam["pan"] = "%.3f,0,0" % pan_x          # the runner's output covers the right of the frame
-                s.add(self.png("test", f + i), cam, make=lambda prefix, it=items: (tpl.text(None, it), {}))
+                s.add(self.png("test", f + i), cam, make=lambda prefix, it=items: (tpl.text(nest_down, it), {}))
             f += n
         s.meta = {"events": meta, "sites": len(offsets)}
         return s
@@ -1388,6 +1431,8 @@ class Stage:
         if not wrl:
             return None
         tpl = self.fixture_template()
+        if self.nest():
+            return self.shot_press_nest(tpl, wrl)
         s = Shot("press", self.fps, hold=1.0)
         n = self.n(seconds)
         lift0 = max(18.0, 0.15 * self.big)
@@ -1401,7 +1446,51 @@ class Stage:
         return s
 
 
-ANIM_REV = 2               # bumped when the shots change: frames kept from an older run are rendered again
+    def shot_press_nest(self, tpl: Template, wrl: str, seconds: float = 6.0) -> Shot:
+        """Every board into its nest: lowered onto the rails' lead-in, slid back to the stop (or dropped straight
+        in), then its clamp closes and pushes board and nest down onto the pogo pins."""
+        nest = self.nest()
+        H, L = nest["heights"], nest["local"]
+        (sx, sy) = nest["frame"]["s"]
+        slide = nest.get("style") == "slide"
+        lead = float(L["lead"]) if slide else 0.0
+        travel = float(H["travel"])
+        clear = float(self.plan["pogo"].get("probe_clearance_mm", 6.0))
+        from .testplan import fixture_side
+        rotate = (0.0, 180.0, 0.0) if fixture_side(self.plan) == "top" else (0.0, 0.0, 0.0)
+        sites = self.fixture.get("sites") or [{"site": 1, "offset": [0.0, 0.0]}]
+        high = max(25.0, min(60.0, 0.25 * self.big))
+        s = Shot("press", self.fps, hold=1.2)
+        n = self.n(seconds)
+        for i in range(n):
+            t = i / float(n - 1)
+            items = []
+            for k, st in enumerate(sites):              # the boards one after the other, a little apart
+                d = 0.12 * k / max(1, len(sites) - 1) if len(sites) > 1 else 0.0
+                a = smooth(phase(t, 0.0 + d, 0.24 + d))           # down onto the lead-in
+                b = smooth(phase(t, 0.26 + d, 0.46 + d))          # slide back to the stop
+                back = lead * (1.0 - b)
+                ddx, ddy = st["offset"]
+                items.append(model_footprint("DUT%d" % st["site"], self.bb.cx + ddx - back * sx, self.bb.cy + ddy - back * sy,
+                                             wrl, offset=(0.0, 0.0, clear + self.t / 2 + travel + high * (1.0 - a)),
+                                             rotate=rotate))
+            c = smooth(phase(t, 0.62, 0.9))                        # the clamps close...
+            down = smooth(phase(t, 0.82, 0.9))                     # ...and push board and nest down
+            if down > 0:                                           # the boards follow the nest down
+                items = []
+                for st in sites:
+                    ddx, ddy = st["offset"]
+                    items.append(model_footprint("DUT%d" % st["site"], self.bb.cx + ddx, self.bb.cy + ddy, wrl,
+                                                 offset=(0.0, 0.0, clear + self.t / 2 + travel * (1.0 - down)), rotate=rotate))
+            items += self.nest_items(95.0 * (1.0 - c))
+            edits = self.nest_edits(down)
+            s.add(self.png("press", i), self.cam(30 - 10 * smooth(t), zoom=0.6, rise=22.0 * (1.0 - 0.6 * c)),
+                  make=lambda prefix, it=items, e=edits: (tpl.text(e, it), {}))
+        s.meta = {"nest": nest.get("style"), "entry": nest.get("entry"), "clamp": nest.get("clamp"), "sites": len(sites)}
+        return s
+
+
+ANIM_REV = 3               # bumped when the shots change: frames kept from an older run are rendered again
 SHOTS = ("orbit", "place", "print", "load", "slide", "lift", "pogo", "press", "test")      # single-jig workflow
 SHOTS_TWO_JIG = ("orbit", "place", "print2", "place2", "cover", "flip", "unload", "solder", "lift2", "pogo", "press",
                  "test")

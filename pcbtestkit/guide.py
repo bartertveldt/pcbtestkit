@@ -261,6 +261,68 @@ def _program_section(plan: Dict[str, Any], fixture: Optional[Dict[str, Any]]) ->
     return "".join(out)
 
 
+def _part_img(path: Optional[str], cap: str) -> str:
+    if not path or not os.path.exists(path):
+        return ""
+    with open(path, "rb") as fh:
+        return ("<div><img alt='%s' style='max-width:100%%;max-height:260px;border-radius:8px;background:#222' "
+                "src='data:image/png;base64,%s'><div class='cap'>%s</div></div>" % (_e(cap), base64.b64encode(fh.read()).decode(), _e(cap)))
+
+
+def nest_section(fixture: Optional[Dict[str, Any]], paths: Dict[str, str], nsite: int) -> str:
+    """How every board is held on the fixture: its nest on sprung standoffs and its toggle clamp."""
+    nest = (fixture or {}).get("nest") or {}
+    if not nest.get("enabled"):
+        return ""
+    H = nest["heights"]
+    slide = nest.get("style") == "slide"
+    toggle = nest.get("clamp") == "toggle"
+    h = ["<h3 id='nest'>Board nest and clamp (one per board%s)</h3>" % (", %d in all" % nsite if nsite > 1 else "")]
+    h.append("<p>%s rests on two ledges along its edges, %.1f mm above the pogo tips, between two rails%s. %s The nest floats "
+             "on four sprung standoffs: closing the clamp pushes board and nest down %.1f mm, the pins come up through the "
+             "open middle of the nest and are compressed %.1f mm.</p>" % (
+                 "The board slides in from the %s: it" % _e(nest.get("entry", "front")) if slide else "The board drops in: it",
+                 H["gap"], " up to the end stop" if slide else " and two end walls",
+                 ("Lay it on the rails' lead-in in front of its place and slide it back to the stop." if slide else
+                  "Its underside parts would brush over the pogo pins if it slid in, so it is lowered straight in."),
+                 H["travel"], H["tips"] - H["work"]))
+    if nest.get("gap_reason"):
+        h.append("<p class='small muted'>The gap above the tips clears %s on the board's underside while it slides in.</p>" %
+                 _e(nest["gap_reason"]))
+    imgs = [_part_img(paths.get("nest_preview"), "Nest (print with the flat side down)")]
+    if toggle:
+        imgs += [_part_img(paths.get("nest_press_preview"), "Press plate (print fingers up)"),
+                 _part_img(paths.get("nest_adapter_preview"), "Clamp adapter (print upside down)")]
+    h.append("<div class='grid3' style='display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px'>%s</div>"
+             % "".join(imgs))
+    steps = ["Print the parts below (PETG holds its shape under the spring and clamp load), %s of each." % (
+                 "%d" % nsite if nsite > 1 else "one"),
+             "Screw the %d mm M3 standoffs onto the fixture board from below (the four NEST holes of every board). Slip a "
+             "spring over each standoff." % H["standoff"],
+             "Lay the nest on the springs with its bosses over the standoffs and screw a large washer on top of each: the "
+             "springs lift the nest against the washers, %.1f mm above the fixture." % H["bottom_rest"]]
+    if toggle:
+        steps += ["Put the M4 nuts in the channels under the clamp adapter, bolt the toggle clamp onto it (the cross slots "
+                  "take base patterns within 4 mm of %g x %g mm; set <code>fixture.nest.clamp_holes_mm</code> for yours and "
+                  "reprint only the adapter), and screw the adapter to the fixture from below (the CLAMP holes)." %
+                  tuple(nest.get("clamp_holes_mm") or (20, 16)),
+                  "Take the rubber tip off the clamp's spindle and fix the press plate in its slot with a nut on each side, "
+                  "fingers down, centred over the board.",
+                  "Adjust the spindle: with a board in the nest, the clamp should lock just as the nest reaches the bottom of "
+                  "its travel (%.1f mm down). The fingers then press the board %.1f mm onto the pins." % (
+                      H["travel"], H["tips"] - H["work"])]
+    h.append("".join("<div class='step'><div class='num'>%s</div><div>%s</div></div>" % (chr(97 + i), t)
+                     for i, t in enumerate(steps)))
+    rows = [("Board underside, clamped", H["work"]), ("Pogo tips, free", H["tips"]), ("Board underside, loading", H["rest"]),
+            ("Nest travel", H["travel"]), ("Standoff length", H["standoff"]), ("Push-finger length", H["finger"]),
+            ("Clamp adapter height", H["adapter"])]
+    h.append("<table><tr><th>Height above the fixture board</th><th>mm</th></tr>%s</table>" % "".join(
+        "<tr><td>%s</td><td>%.1f</td></tr>" % (_e(a), b_) for a, b_ in (rows if toggle else rows[:5])))
+    for w in nest.get("warnings") or []:
+        h.append("<p class='warn'>%s</p>" % _e(w))
+    return "".join(h)
+
+
 def _step_html(n: int, text: str, img: Optional[str] = None, cap: str = "") -> str:
     pic = _img(img, cap) if img else ""
     if pic:
@@ -422,14 +484,22 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
         if progs:
             kinds = Counter(pc["connector"] for pc in progs)
             bom.append("programming connector: " + ", ".join("%d x %s" % (v, _prog_title(k, plan)) for k, v in sorted(kinds.items())))
-        bom.append("guide pins matching the board's mounting holes; 4 x M3 standoffs")
+        nest = (fixture or {}).get("nest") or {}
+        if nest.get("enabled"):
+            bom += ["%d x %s" % (it["qty"] * nsite, it["part"]) for it in nest.get("bom") or []]
+            bom.append("4 x M3 standoffs under the fixture board")
+        else:
+            bom.append("guide pins matching the board's mounting holes; 4 x M3 standoffs")
         h.append("<h3>Parts</h3><ul>%s</ul>" % "".join("<li>%s</li>" % _e(x) for x in bom))
         files_ = ", ".join("<code>%s</code>" % _e(os.path.basename(paths.get("fixture_" + sd, sd))) for sd in plates) if plates else \
             "<code>%s</code>" % _e(os.path.basename(paths.get("fixture", "fixture")))
         from .report import routing_note
         steps = ["%s: %s" % (files_, _e(routing_note((fixture or {}).get("routing")))),
                  "Press the receptacles into the plated holes and solder them; insert the pogo pins (crown tips on through-hole leads, spear tips on flat pads - see the probes CSV).",
-                 "Fit the guide pins in the GUIDE holes; they locate the board through its mounting holes. Mount the fixture on M3 standoffs.",
+                 ("Build a nest and a clamp for every board (section below): standoffs, springs, the printed nest, the "
+                  "clamp on its adapter and the press plate. Mount the fixture on M3 standoffs."
+                  if ((fixture or {}).get("nest") or {}).get("enabled") else
+                  "Fit the guide pins in the GUIDE holes; they locate the board through its mounting holes. Mount the fixture on M3 standoffs."),
                  "Solder the divider resistors, header and power terminal. Wire the header to the measurement hardware as shown below."
                  if not fconns else
                  "Solder the divider resistors and the %s connector. The fixture is made for <b>%s</b>%s: it plugs straight in, "
@@ -462,6 +532,7 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
         else:
             h.append("<h3>Wiring</h3><div class='svgbox'>%s</div>" % wiring_svg(plan))
         h.append(_program_section(plan, fixture))
+        h.append(nest_section(fixture, paths, nsite))
         h.append("</section>")
 
     stacks = [st for st in plan.get("stack") or [] if st.get("valid")]
@@ -478,7 +549,16 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
 
     # ---- test ----------------------------------------------------------------------------------------
     h.append("<section id='test'><h2>2 &middot; Run a production test</h2>")
-    if mode == "generate":
+    nest_on = bool(((fixture or {}).get("nest") or {}).get("enabled"))
+    if mode == "generate" and nest_on:
+        slide = (fixture["nest"].get("style") == "slide")
+        h.append("<div class='grid2'><div>%s<div class='cap'>%s</div></div><div>%s<div class='cap'>"
+                 "...and close its clamp: the board and nest go down, every pogo pin touches its test point</div></div></div>" %
+                 (_img(im.get("fixture_dut_loaded") or im.get("fixture_dut_exploded"), "Board in its nest"),
+                  "Slide the board in along the rails to the stop: it rides above the pogo tips..." if slide else
+                  "Drop the board into its nest: it rests above the pogo tips...",
+                  _img(im.get("fixture_dut_seated"), "Board clamped on the fixture")))
+    elif mode == "generate":
         h.append("<div class='grid2'><div>%s<div class='cap'>Lower the board onto the guide pins: a pogo pin stands under "
                  "every test point...</div></div><div>%s<div class='cap'>"
                  "...and press it down: every pogo pin touches its test point</div></div></div>" %
@@ -495,19 +575,22 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
               "<code>hardware.json</code>; its driver (<code>facility_driver.py</code>) measures, switches the supply and "
               "runs the bus checks." % _e((plan.get("facility") or {}).get("name", ""))),
              "Once, with known-good boards: <code>python3 pcbtest_runner.py learn --units 3</code> to fill in signal limits.",
-             "For every board: place it, press down, run <code>python3 pcbtest_runner.py test --loop</code> and enter the serial number.",
+             ("For every board: slide it into its nest up to the stop, close the clamp, run <code>python3 pcbtest_runner.py "
+              "test --loop</code> and enter the serial number." if nest_on else
+              "For every board: place it, press down, run <code>python3 pcbtest_runner.py test --loop</code> and enter the serial number."),
              "Green PASS: next board. Red FAIL: the failed checks are listed and stored in <code>results/results.csv</code>."]
     nsites = int((plan.get("batch") or {}).get("count") or 1)
     phased = any(st.get("phase") == "program" for st in plan.get("sequence") or [])
     if mode == "generate" and nsites > 1:
-        steps[2] = ("For every batch: put a board in each of the %d sites, press down, run <code>python3 pcbtest_runner.py test "
-                    "--loop</code>. The runner tests site 1 to %d in turn, asks the serial number of each board and gives a "
-                    "verdict per board (<code>--site 2</code> retests one board)." % (nsites, nsites)) if not phased else (
-                    "For every batch: put a board in each of the %d sites, press down, run <code>python3 pcbtest_runner.py test "
+        load = "slide a board into each of the %d nests and close its clamp" if nest_on else "put a board in each of the %d sites, press down"
+        steps[2] = (("For every batch: " + load + ", run <code>python3 pcbtest_runner.py test "
+                     "--loop</code>. The runner tests site 1 to %d in turn, asks the serial number of each board and gives a "
+                     "verdict per board (<code>--site 2</code> retests one board).") % (nsites, nsites)) if not phased else ((
+                    "For every batch: " + load + ", run <code>python3 pcbtest_runner.py test "
                     "--loop</code> and enter the serial numbers. The runner checks every board unpowered and powers it up, "
                     "then programs all %d at the same time and, while the programmers run, measures what needs no "
                     "firmware; the checks that need the firmware follow. A verdict per board (<code>--site 2</code> retests "
-                    "one board, <code>--sequential</code> tests one board after the other)." % (nsites, nsites))
+                    "one board, <code>--sequential</code> tests one board after the other).") % (nsites, nsites))
     if mode == "generate" and (plan.get("program") or {}).get("headers"):
         cmd = (plan["program"] or {}).get("command")
         steps.insert(3, ("Programming (step SP): the runner flashes each board with <code>%s</code> through its PROG connector "

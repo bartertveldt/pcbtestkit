@@ -1061,13 +1061,37 @@ FIXTURE_OPTS = {
     "route": {"type": "boolean", "description": "Route the fixture board with the built-in router (default true)."},
     "track_mm": {"type": "number"}, "power_track_mm": {"type": "number", "description": "GND and VIN tracks."},
     "clearance_mm": {"type": "number"}, "via_mm": {"type": "number"}, "via_drill_mm": {"type": "number"},
+    "nest": {"type": "boolean", "description": "A nest (rails, end stop, sprung standoffs) and a toggle clamp per board."},
+    "nest_entry": {"type": "string", "enum": ["front", "back", "left", "right"], "description": "Side the boards slide in from."},
+    "nest_style": {"type": "string", "enum": ["auto", "slide", "drop"]},
+    "nest_clamp": {"type": "string", "enum": ["toggle", "none"]},
+    "nest_clamp_holes_mm": {"type": "array", "items": {"type": "number"},
+                            "description": "The toggle clamp base's hole pattern [along, across] in mm."},
+    "nest_lead_in_mm": {"type": "number"}, "nest_tip_gap_mm": {"type": "number"},
 }
+NEST_RANGES = {"lead_in_mm": (0.0, 40.0), "tip_gap_mm": (0.3, 5.0)}
 
 
 @tool("set_fixture_options", "Fixture options: mode (generate|own|none), outline, margin, panel of N x M sites, dividers, "
-      "holes, routing (route, track and via sizes).",
+      "holes, routing (route, track and via sizes), every board's nest and clamp (nest_*).",
       {"properties": dict(FIXTURE_OPTS, **WRITE_COMMON)}, read_only=False, writes=True)
 def t_set_fixture_options(ws: Workspace, rationale: str = "", dry_run: bool = False, confirm: bool = False, **opts):
+    nest: Dict[str, Any] = {}
+    for k in [k_ for k_ in list(opts) if k_ == "nest" or k_.startswith("nest_")]:
+        v = opts.pop(k)
+        if v is None:
+            continue
+        key = "enabled" if k == "nest" else k[5:]
+        p = FIXTURE_OPTS[k]
+        if "enum" in p and v not in p["enum"]:
+            raise ToolError("BAD_VALUE", "%s must be one of %s" % (k, p["enum"]))
+        if key in NEST_RANGES:
+            v = _num(v, k, *NEST_RANGES[key])
+        if key == "clamp_holes_mm":
+            if not isinstance(v, list) or len(v) != 2:
+                raise ToolError("BAD_VALUE", "nest_clamp_holes_mm is [along, across] in mm")
+            v = [_num(x, k, 5.0, 60.0) for x in v]
+        nest[key] = v
     panel = {}
     for k, pk in (("panel_cols", "cols"), ("panel_rows", "rows"), ("panel_spacing_mm", "spacing_mm")):
         if opts.get(k) is not None:
@@ -1078,16 +1102,20 @@ def t_set_fixture_options(ws: Workspace, rationale: str = "", dry_run: bool = Fa
         else:
             opts.pop(k, None)
     clean = {k: v for k, v in opts.items() if v is not None}
-    if panel:
+    if panel or nest:
         cur = dict(ws._d().cfg["fixture"].get("panel") or {})
         cur.update(panel)
         if cur.get("cols", 1) * cur.get("rows", 1) > 24:
             raise ToolError("OUT_OF_RANGE", "more than 24 sites per fixture is not supported")
 
         def mutate(cfg):
-            cfg.setdefault("fixture", {})["panel"] = cur
+            fx_ = cfg.setdefault("fixture", {})
+            if panel:
+                fx_["panel"] = cur
+            if nest:
+                fx_["nest"] = dict(fx_.get("nest") or {}, **nest)
             if clean:
-                cfg["fixture"].update(clean)
+                fx_.update(clean)
             return []
         for k, v in clean.items():
             if k in _RANGES:

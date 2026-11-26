@@ -171,8 +171,26 @@ def zone(net: int, net_name: str, layer: str, pts: Sequence[Tuple[float, float]]
             ["polygon", ["pts"] + [["xy", x, y] for x, y in pts]]]
 
 
+def stackup(thickness: float = 1.6, mask: str = "Green", silk: str = "White") -> list:
+    """A two-layer board stackup with the solder-mask and silkscreen colours KiCad shows in 3D
+    (kicad-cli pcb render --use-board-stackup-colors)."""
+    core = round(thickness - 2 * 0.035 - 2 * 0.01, 4)
+    return ["stackup",
+            ["layer", "F.SilkS", ["type", "Top Silk Screen"], ["color", silk]],
+            ["layer", "F.Paste", ["type", "Top Solder Paste"]],
+            ["layer", "F.Mask", ["type", "Top Solder Mask"], ["color", mask], ["thickness", 0.01]],
+            ["layer", "F.Cu", ["type", "copper"], ["thickness", 0.035]],
+            ["layer", "dielectric 1", ["type", "core"], ["thickness", core], ["material", "FR4"], ["epsilon_r", 4.5],
+             ["loss_tangent", 0.02]],
+            ["layer", "B.Cu", ["type", "copper"], ["thickness", 0.035]],
+            ["layer", "B.Mask", ["type", "Bottom Solder Mask"], ["color", mask], ["thickness", 0.01]],
+            ["layer", "B.Paste", ["type", "Bottom Solder Paste"]],
+            ["layer", "B.SilkS", ["type", "Bottom Silk Screen"], ["color", silk]],
+            ["copper_finish", "ENIG"], ["dielectric_constraints", Sym("no")]]
+
+
 def board(nets: Sequence[str], items: List[list], thickness: float = 1.6, title: str = "", rev: str = "",
-          company: str = "", date: str = "", comment: str = "") -> str:
+          company: str = "", date: str = "", comment: str = "", mask_color: Optional[str] = None) -> str:
     layers = ["layers"]
     for l in LAYERS_2:
         node = [l[0], l[1], Sym(l[2])]
@@ -195,7 +213,9 @@ def board(nets: Sequence[str], items: List[list], thickness: float = 1.6, title:
     if len(tb) > 1:
         root.append(tb)
     root.append(layers)
-    root.append(["setup", ["pad_to_mask_clearance", 0], ["allow_soldermask_bridges_in_footprints", Sym("no")]])
+    setup = ["setup"] + ([stackup(thickness, mask_color)] if mask_color else []) + [
+        ["pad_to_mask_clearance", 0], ["allow_soldermask_bridges_in_footprints", Sym("no")]]
+    root.append(setup)
     root.append(["net", 0, ""])
     for i, n in enumerate(nets, 1):
         root.append(["net", i, n])

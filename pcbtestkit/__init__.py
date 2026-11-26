@@ -10,7 +10,7 @@ AI/agent entry points live in :mod:`pcbtestkit.agent` (tool registry),
 :mod:`pcbtestkit.mcp_server` (Model Context Protocol server) and the
 ``pcbtestkit api`` command line.
 """
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 from .project import Design  # noqa: E402,F401
 

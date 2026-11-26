@@ -16,6 +16,7 @@ import argparse
 import json
 import os
 import sys
+from typing import Any, Dict
 
 from . import __version__
 
@@ -214,6 +215,33 @@ def cmd_facilities(args) -> int:
                 print("  warn ", w)
             bad += 0 if r["ok"] else 1
         return 1 if bad else 0
+    if act == "from-pcb":
+        if not args.target:
+            print("give the station's .kicad_pcb: pcbtestkit facilities from-pcb station.kicad_pcb", file=sys.stderr)
+            return 2
+        extra = {"analog": {"max_v": args.analog_max_v}} if args.analog_max_v else None
+        try:
+            fac, warns = F.facility_from_pcb(args.target[0], connector=args.connector, ident=args.id, extra=extra)
+        except (OSError, ValueError) as e:
+            print("error: %s" % e, file=sys.stderr)
+            return 2
+        txt = json.dumps(fac, indent=1)
+        if args.out and args.out.lower().endswith(".json"):          # a file of its own
+            os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
+            with open(args.out, "w", encoding="utf-8") as fh:
+                fh.write(txt + "\n")
+            print("wrote %s" % args.out)
+        elif args.out:
+            os.makedirs(args.out, exist_ok=True)
+            with open(os.path.join(args.out, "facility.json"), "w", encoding="utf-8") as fh:
+                fh.write(txt + "\n")
+            print("wrote %s - install it with: cp -r %s ~/.pcbtestkit/facilities/%s" % (
+                os.path.join(args.out, "facility.json"), args.out, fac["id"]))
+        else:
+            print(txt)
+        for w in warns:
+            print("WARN", w, file=sys.stderr)
+        return 0
     project_dir = None
     found, warns = F.load_facilities(None, project_dir)
     if act == "list":
@@ -243,6 +271,65 @@ def cmd_facilities(args) -> int:
         print(json.dumps(f, indent=1))
         return 0
     return 2
+
+
+def _batches(items) -> Dict[str, int]:
+    out: Dict[str, int] = {}
+    for it in items or []:
+        name, _, n = str(it).partition("=")
+        if not n.strip().isdigit():
+            raise SystemExit("--batch takes BOARD=N, e.g. --batch sample_sensor=2 (got %r)" % it)
+        out[name.strip()] = int(n)
+    return out
+
+
+def cmd_station(args) -> int:
+    """Several board types on one test station: plan (batch sizes) or run (every board's outputs + station page)."""
+    from .station import plan_station, run_station
+    extra: Dict[str, Any] = {}
+    if args.analog_max_v:
+        extra["analog"] = {"max_v": args.analog_max_v}
+    if args.max_sites:
+        extra["batch"] = {"max_sites": args.max_sites}
+
+    def prog(msg, frac):
+        if not args.quiet and not args.json:
+            print("[%3d%%] %s" % (int(frac * 100), msg), file=sys.stderr)
+    try:
+        if args.action == "plan":
+            st = plan_station(args.station, args.projects, _batches(args.batch), args.connector, extra or None, progress=prog)
+            st.pop("_facility", None)
+        else:
+            video = args.video or "none"
+            st = run_station(args.station, args.projects, args.out or "station_out", _batches(args.batch), args.connector,
+                             extra or None, visuals=not args.no_visuals, board_videos=video in ("all", "boards"),
+                             station_video=video in ("all", "station"), route=not args.no_route, progress=prog)
+    except ValueError as e:
+        print("error: %s" % e, file=sys.stderr)
+        return 2
+    if args.json:
+        print(json.dumps(st, indent=1, default=str))
+    else:
+        cap = st["capacity"]
+        print("\nstation %s: %s inputs, %s supplies, buses %s, plate %s mm" % (
+            st["station"]["id"], cap.get("inputs", "-"), cap.get("supplies", "-"),
+            ", ".join("%s x%d" % kv for kv in sorted((cap.get("buses") or {}).items())) or "-",
+            " x ".join("%g" % v for v in cap.get("plate_mm") or []) or "-"))
+        for b in st["boards"]:
+            if b.get("status") == "ok":
+                print("  %-24s %d per fixture  %s inputs of %s  limited by %s" % (
+                    b["name"], b["batch"], b["inputs_used"], b.get("inputs_total") or "-", b.get("limit") or "-"))
+            else:
+                print("  %-24s %s: %s" % (b["name"], b.get("status", "?").upper(), b.get("reason", "")))
+        if args.action == "run":
+            print("\n  station page    %s" % os.path.join(args.out or "station_out", "station.html"))
+            if (st.get("video") or {}).get("path"):
+                print("  station video   %s" % os.path.join(args.out or "station_out", st["video"]["path"]))
+            elif st.get("video"):
+                print("  ! station video: %s" % st["video"].get("reason"))
+        for w in st.get("warnings", []):
+            print("  ! %s" % w)
+    return 0 if all(b.get("status") == "ok" for b in st["boards"]) else 1
 
 
 def cmd_classes(args) -> int:
@@ -457,11 +544,35 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(fn=cmd_classes)
 
     p = sub.add_parser("facilities", help="test facilities (your tester: connector, buses, driver): list, show, validate, template")
-    p.add_argument("action", choices=["list", "show", "validate", "template"])
-    p.add_argument("target", nargs="*", help="facility id (show) or facility.json files (validate)")
-    p.add_argument("--out", help="folder to write facility.json and driver.py to (template)")
+    p.add_argument("action", choices=["list", "show", "validate", "template", "from-pcb"])
+    p.add_argument("target", nargs="*", help="facility id (show), facility.json files (validate) or the station's "
+                                             ".kicad_pcb (from-pcb)")
+    p.add_argument("--out", help="folder to write facility.json (and driver.py for template) to; from-pcb also takes a .json file")
+    p.add_argument("--connector", help="from-pcb: reference of the station's interface connector (default: found from its nets)")
+    p.add_argument("--id", help="from-pcb: facility id (default: from the board's file name)")
+    p.add_argument("--analog-max-v", type=float, help="from-pcb: full-scale voltage of the station's analog inputs")
     p.add_argument("--json", action="store_true")
     p.set_defaults(fn=cmd_facilities)
+
+    p = sub.add_parser("station", help="several board types on one test station: plan the batch of each, or run them all")
+    p.add_argument("action", choices=["plan", "run"])
+    p.add_argument("station", help="the station: its .kicad_pcb (interface connector nets AIN1.., VOUT1.., CAN1_H, ...), "
+                                   "a facility.json or an installed facility id")
+    p.add_argument("projects", nargs="+", help="the boards: .kicad_pcb, .kicad_pro or project folders")
+    p.add_argument("--out", help="run: output folder (default station_out): <board>/ per board, station.html, station.json")
+    p.add_argument("--batch", action="append", metavar="BOARD=N", help="boards per fixture for one board type (default: "
+                   "as many as the station's inputs, supplies, buses and plate allow); repeatable")
+    p.add_argument("--connector", help="reference of the station's interface connector (default: found from its nets)")
+    p.add_argument("--analog-max-v", type=float, help="full-scale voltage of the station's analog inputs")
+    p.add_argument("--max-sites", type=int, help="at most this many boards per fixture")
+    p.add_argument("--no-visuals", action="store_true", help="run: skip the KiCad 3D renders in the guides")
+    p.add_argument("--no-route", action="store_true", help="run: leave the fixture boards unrouted (faster)")
+    p.add_argument("--video", nargs="?", const="all", choices=["all", "station", "boards"],
+                   help="run: render videos (KiCad 3D animation; minutes per video): all = the station video and every "
+                        "board's explainer, station = only the station video, boards = only the boards'")
+    p.add_argument("-q", "--quiet", action="store_true")
+    p.add_argument("--json", action="store_true")
+    p.set_defaults(fn=cmd_station)
 
     p = sub.add_parser("mcp", help="run the MCP stdio server")
     p.add_argument("--project", help="board or project to open at start (open_project can switch later)")
