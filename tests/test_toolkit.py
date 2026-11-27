@@ -2404,7 +2404,13 @@ class TestNest(Base):
             self.assertTrue(bb.contains(x, y))
             for fp in other:
                 self.assertFalse(fp.courtyard_bbox().grow(0.5).contains(x, y), fp.ref)
-        self.assertGreaterEqual(H["finger"], max(d.height_of(fp)[0] for fp in other) + 0.9)
+        # the fingers reach past every part on that side, up to 20 mm; the press plate has a window over taller ones
+        tall = [fp for fp in other if d.height_of(fp)[0] + 0.9 > H["finger"]]
+        if tall:
+            self.assertEqual(H["finger"], 20.0)
+            self.assertGreaterEqual(len(nest["windows_local"]), 1)
+        else:
+            self.assertGreaterEqual(H["finger"], max(d.height_of(fp)[0] for fp in other) + 0.9)
         # the three printed parts: watertight, the pins and every part that sweeps in stay free
         out = os.path.join(self.tmp, "nest_parts")
         os.makedirs(out, exist_ok=True)
@@ -2908,12 +2914,14 @@ class TestEnvironmentDesign(unittest.TestCase):
                 os.makedirs(os.path.dirname(p), exist_ok=True)
                 open(p, "w").close()
             got, warns = discover([tmp])
-            self.assertEqual(sorted(os.path.relpath(g, tmp) for g in got), ["a/a.kicad_pcb", "b/sub/b.kicad_pcb", "c/c.kicad_pcb"])
+            self.assertEqual(sorted(os.path.relpath(g, tmp).replace(os.sep, "/") for g in got),
+                         ["a/a.kicad_pcb", "b/sub/b.kicad_pcb", "c/c.kicad_pcb"])
             lst = os.path.join(tmp, "boards.txt")
             with open(lst, "w") as fh:
                 fh.write("# my boards\na/a.kicad_pro\nnope\nc\n")
             got, warns = discover(["@" + lst, os.path.join(tmp, "a", "a.kicad_pcb")])
-            self.assertEqual(sorted(os.path.relpath(g, tmp) for g in got), ["a/a.kicad_pcb", "c/c.kicad_pcb"])
+            self.assertEqual(sorted(os.path.relpath(g, tmp).replace(os.sep, "/") for g in got),
+                             ["a/a.kicad_pcb", "c/c.kicad_pcb"])
             self.assertTrue(any("nope" in w for w in warns))
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
