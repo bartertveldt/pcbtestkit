@@ -1,7 +1,7 @@
 {
   "schema": "pcbtestkit/spec@1",
-  "generator": "PCB TestKit 1.1.1",
-  "generated": "2026-11-26T16:45:44",
+  "generator": "PCB TestKit 1.1.2",
+  "generated": "2026-11-27T13:58:50",
   "source": {
     "board": "pic_programmer.kicad_pcb",
     "schematic": "pic_programmer.kicad_sch",
@@ -2148,6 +2148,7 @@
         "D10",
         "D11",
         "D12",
+        "J1",
         "L1",
         "P1",
         "P2",
@@ -2400,7 +2401,7 @@
       "id": "ASM-PROCESS",
       "severity": "minor",
       "category": "assembly",
-      "title": "Assembly process: SMT bottom (1 parts) + THT (55 parts: wave, selective or hand soldering)",
+      "title": "Assembly process: SMT bottom (1 parts) + THT (56 parts: wave, selective or hand soldering)",
       "detail": "Each extra process step adds cost and handling (handling = flex & ESD exposure). Bottom SMD + THT usually needs selective soldering or a wave pallet.",
       "recommendation": "The generated solder jig holds the THT parts for hand soldering.",
       "refs": [
@@ -2424,6 +2425,7 @@
         "D10",
         "D11",
         "D12",
+        "J1",
         "L1",
         "P1",
         "P2",
@@ -2464,7 +2466,7 @@
       "data": {
         "smd_top": 0,
         "smd_bottom": 1,
-        "tht": 55
+        "tht": 56
       }
     },
     {
@@ -2660,7 +2662,7 @@
       "title": "No manufacturer part numbers in the schematic",
       "detail": "The BOM relies on generic values; the assembler chooses parts.",
       "recommendation": "Add an MPN field (or LCSC/Digikey numbers) to control what gets assembled.",
-      "count": 55
+      "count": 56
     }
   ],
   "summary": {

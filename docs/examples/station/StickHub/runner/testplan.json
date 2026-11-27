@@ -851,8 +851,8 @@
   "after_test": [],
   "batch": {
     "count": 4,
-    "cols": 4,
-    "rows": 1,
+    "cols": 2,
+    "rows": 2,
     "spacing_mm": 10.0,
     "source": "batch"
   },

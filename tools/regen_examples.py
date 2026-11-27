@@ -128,8 +128,9 @@ def station(demos: str, no_video: bool) -> None:
     for junk in glob.glob(os.path.join(out, "*", "runner", "results")) + glob.glob(os.path.join(out, "*", ".pcbtestkit")) + \
             [os.path.join(out, "station_video"), os.path.join(out, "station_video_parts")]:
         shutil.rmtree(junk, ignore_errors=True)
-    for prl in glob.glob(os.path.join(out, "*", "*.kicad_prl")):
-        os.remove(prl)
+    for prl in glob.glob(os.path.join(out, "*", "*.kicad_prl")) + glob.glob(os.path.join(out, "*", ".*.kicad_prl")) + \
+            glob.glob(os.path.join(out, "*", ".pcbtestkit-station.json")):
+        os.remove(prl)                          # KiCad's local settings, the run's resume stamps
     print("== station", "OK" if r.returncode in (0, 1) else "FAILED (exit %d)" % r.returncode)
 
 

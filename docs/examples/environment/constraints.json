@@ -1,0 +1,8137 @@
+{
+ "schema": "pcbtestkit-constraints/1",
+ "boards": [
+  {
+   "board": "avr_board_01",
+   "folder": "avr_board_01",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 218.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "avr_board_02",
+   "folder": "avr_board_02",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 213.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "avr_board_03",
+   "folder": "avr_board_03",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 212.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "avr_board_04",
+   "folder": "avr_board_04",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "avr_board_05",
+   "folder": "avr_board_05",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "avr_board_06",
+   "folder": "avr_board_06",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 219.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "avr_board_07",
+   "folder": "avr_board_07",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 212.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_01",
+   "folder": "can_node_01",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_02",
+   "folder": "can_node_02",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_03",
+   "folder": "can_node_03",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 167.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_04",
+   "folder": "can_node_04",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 232.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_05",
+   "folder": "can_node_05",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_06",
+   "folder": "can_node_06",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 232.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_07",
+   "folder": "can_node_07",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_08",
+   "folder": "can_node_08",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 167.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_09",
+   "folder": "can_node_09",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_10",
+   "folder": "can_node_10",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_11",
+   "folder": "can_node_11",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 350 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 240.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_12",
+   "folder": "can_node_12",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 232.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_13",
+   "folder": "can_node_13",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 167.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_14",
+   "folder": "can_node_14",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 233.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_15",
+   "folder": "can_node_15",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 233.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_16",
+   "folder": "can_node_16",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 167.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_17",
+   "folder": "can_node_17",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 350 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 240.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_18",
+   "folder": "can_node_18",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 233.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "can_node_19",
+   "folder": "can_node_19",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "CAN instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more CAN (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "can",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 233.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "CM5_MINIMA_3",
+   "folder": "CM5_MINIMA_3",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "complex_hierarchy",
+   "folder": "complex_hierarchy",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 122.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "controller_01",
+   "folder": "controller_01",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 3,
+     "binds": false
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 107.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "controller_02",
+   "folder": "controller_02",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 3,
+     "binds": false
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 450 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       450.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 113.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "controller_03",
+   "folder": "controller_03",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 107.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "controller_04",
+   "folder": "controller_04",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 300 x 350 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       350.0
+      ]
+     }
+    ],
+    "cost": 110.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "controller_05",
+   "folder": "controller_05",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 450 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       450.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 113.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "controller_06",
+   "folder": "controller_06",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 300 x 350 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       350.0
+      ]
+     }
+    ],
+    "cost": 110.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "controller_07",
+   "folder": "controller_07",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 3,
+     "binds": false
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 500 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       500.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "ecc83-pp",
+   "folder": "ecc83-pp",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 161.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "ecc83-pp_v2",
+   "folder": "ecc83-pp_v2",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 161.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_01",
+   "folder": "gateway_01",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_02",
+   "folder": "gateway_02",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "Ethernet instances",
+    "RS-485 instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more Ethernet (2 -> 3)",
+     "station-1: 1 more RS-485 (2 -> 3)",
+     "station-1: plate 300 x 350 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 3
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       350.0
+      ]
+     }
+    ],
+    "cost": 184.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_03",
+   "folder": "gateway_03",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "Ethernet instances",
+    "RS-485 instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more Ethernet (2 -> 3)",
+     "station-1: 1 more RS-485 (2 -> 3)",
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 3
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 176.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_04",
+   "folder": "gateway_04",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "Ethernet instances",
+    "RS-485 instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more Ethernet (2 -> 3)",
+     "station-1: 1 more RS-485 (2 -> 3)",
+     "station-1: plate 300 x 350 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 3
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       350.0
+      ]
+     }
+    ],
+    "cost": 184.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_05",
+   "folder": "gateway_05",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "Ethernet instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more Ethernet (2 -> 3)",
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 167.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_06",
+   "folder": "gateway_06",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 6,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)",
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 147.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_07",
+   "folder": "gateway_07",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 7,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 142.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_08",
+   "folder": "gateway_08",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_09",
+   "folder": "gateway_09",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 7,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "Ethernet instances",
+    "USB instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more Ethernet (2 -> 3)",
+     "station-1: 1 more USB (2 -> 3)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 3
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 187.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_10",
+   "folder": "gateway_10",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 7,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "Ethernet instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more Ethernet (2 -> 3)",
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 167.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "gateway_11",
+   "folder": "gateway_11",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "Ethernet instances",
+     "key": "ethernet buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 6,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "Ethernet instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more Ethernet (2 -> 3)",
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 167.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "interf_u",
+   "folder": "interf_u",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "analog inputs"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: 8 more analog inputs (56 -> 64)"
+    ],
+    "change": [
+     {
+      "kind": "ain",
+      "station": "station-1",
+      "to": 64
+     }
+    ],
+    "cost": 150.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "jetson-agx-thor-baseboard",
+   "folder": "jetson-agx-thor-baseboard",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 450 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       450.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 113.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "kit-dev-coldfire-xilinx_5213",
+   "folder": "kit-dev-coldfire-xilinx_5213",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "CAN instances",
+     "key": "can buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "analog inputs",
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: 8 more analog inputs (56 -> 64)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "ain",
+      "station": "station-1",
+      "to": 64
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 222.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "multichannel_mixer",
+   "folder": "multichannel_mixer",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 7,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 450 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       450.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 128.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "One-Air-Max",
+   "folder": "One-Air-Max",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "analog inputs",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 16 more analog inputs (56 -> 72)",
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "ain",
+      "station": "station-1",
+      "to": 72
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 302.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "pic_programmer",
+   "folder": "pic_programmer",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 5,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 107.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_01",
+   "folder": "power_01",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 116.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_02",
+   "folder": "power_02",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "analog inputs",
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: 16 more analog inputs (56 -> 72)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "ain",
+      "station": "station-1",
+      "to": 72
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 372.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_03",
+   "folder": "power_03",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 3,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 110.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_04",
+   "folder": "power_04",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 5,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 122.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_05",
+   "folder": "power_05",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 5,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 122.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_06",
+   "folder": "power_06",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 5,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 400 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 122.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_07",
+   "folder": "power_07",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 6,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 116.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_08",
+   "folder": "power_08",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "analog inputs",
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: 4 more analog inputs (56 -> 60)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "ain",
+      "station": "station-1",
+      "to": 60
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 222.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_09",
+   "folder": "power_09",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 3,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": true
+    },
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 7,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 4,
+    "changes": [
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 132.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_10",
+   "folder": "power_10",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 5,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 131.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "power_11",
+   "folder": "power_11",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 5,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 116.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "RoyalBlue54L-Feather",
+   "folder": "RoyalBlue54L-Feather",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 6,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 7,
+    "changes": [
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 192.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_01",
+   "folder": "rs485_io_01",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_02",
+   "folder": "rs485_io_02",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_03",
+   "folder": "rs485_io_03",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_04",
+   "folder": "rs485_io_04",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 124.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_05",
+   "folder": "rs485_io_05",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_06",
+   "folder": "rs485_io_06",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_07",
+   "folder": "rs485_io_07",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_08",
+   "folder": "rs485_io_08",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_09",
+   "folder": "rs485_io_09",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_10",
+   "folder": "rs485_io_10",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "rs485_io_11",
+   "folder": "rs485_io_11",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "RS-485 instances",
+     "key": "rs485 buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 3,
+     "binds": false
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "RS-485 instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more RS-485 (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     }
+    ],
+    "cost": 120.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_01",
+   "folder": "sensor_01",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 212.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_02",
+   "folder": "sensor_02",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     }
+    ],
+    "cost": 147.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_03",
+   "folder": "sensor_03",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 146.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_04",
+   "folder": "sensor_04",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 184.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_05",
+   "folder": "sensor_05",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     }
+    ],
+    "cost": 141.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_06",
+   "folder": "sensor_06",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 212.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_07",
+   "folder": "sensor_07",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 6,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 7,
+    "changes": [
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 192.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_08",
+   "folder": "sensor_08",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 6,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 7,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 184.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_09",
+   "folder": "sensor_09",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 212.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_10",
+   "folder": "sensor_10",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 28,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     }
+    ],
+    "cost": 147.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_11",
+   "folder": "sensor_11",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 8,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 8,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": true
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area",
+    "switched supplies"
+   ],
+   "next": {
+    "batch": 9,
+    "changes": [
+     "station-1: 1 more switched supplies (8 -> 9)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "vout",
+      "station": "station-1",
+      "to": 9
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 320.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_12",
+   "folder": "sensor_12",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 8,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "switched supplies"
+   ],
+   "next": {
+    "batch": 9,
+    "changes": [
+     "station-1: 1 more switched supplies (8 -> 9)"
+    ],
+    "change": [
+     {
+      "kind": "vout",
+      "station": "station-1",
+      "to": 9
+     }
+    ],
+    "cost": 315.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_13",
+   "folder": "sensor_13",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "UART instances"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more UART (4 -> 5)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     }
+    ],
+    "cost": 141.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_14",
+   "folder": "sensor_14",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 146.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_15",
+   "folder": "sensor_15",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 152.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_16",
+   "folder": "sensor_16",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances",
+    "UART instances"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)",
+     "station-1: 1 more UART (4 -> 5)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     },
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     }
+    ],
+    "cost": 147.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_17",
+   "folder": "sensor_17",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "I2C instances",
+     "key": "i2c buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 10,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "I2C instances"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more I2C (4 -> 5)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "i2c",
+      "to": 5
+     }
+    ],
+    "cost": 141.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_18",
+   "folder": "sensor_18",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 6,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 7,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 184.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_19",
+   "folder": "sensor_19",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "UART instances",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more UART (4 -> 5)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 146.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_20",
+   "folder": "sensor_20",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 8,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 8,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": true
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 18,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area",
+    "switched supplies"
+   ],
+   "next": {
+    "batch": 9,
+    "changes": [
+     "station-1: 1 more switched supplies (8 -> 9)",
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "vout",
+      "station": "station-1",
+      "to": 9
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 320.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_21",
+   "folder": "sensor_21",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "UART instances"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more UART (4 -> 5)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     }
+    ],
+    "cost": 141.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_22",
+   "folder": "sensor_22",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 6,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 7,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 191.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_23",
+   "folder": "sensor_23",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "UART instances",
+     "key": "uart buses",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "UART instances"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 1 more UART (4 -> 5)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "uart",
+      "to": 5
+     }
+    ],
+    "cost": 141.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_24",
+   "folder": "sensor_24",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 161.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sensor_25",
+   "folder": "sensor_25",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 184.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "sonde xilinx",
+   "folder": "sonde_xilinx",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 4,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 4,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "analog inputs",
+    "plate area"
+   ],
+   "next": {
+    "batch": 5,
+    "changes": [
+     "station-1: 12 more analog inputs (56 -> 68)",
+     "station-1: plate 300 x 300 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "ain",
+      "station": "station-1",
+      "to": 68
+     },
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       300.0
+      ]
+     }
+    ],
+    "cost": 357.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "StickHub",
+   "folder": "StickHub",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 6,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 7,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 191.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "tinytapeout-demo",
+   "folder": "tinytapeout-demo",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 2,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "analog inputs"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-1: 8 more analog inputs (56 -> 64)"
+    ],
+    "change": [
+     {
+      "kind": "ain",
+      "station": "station-1",
+      "to": 64
+     }
+    ],
+    "cost": 150.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_01",
+   "folder": "usb_dongle_01",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 18,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_02",
+   "folder": "usb_dongle_02",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_03",
+   "folder": "usb_dongle_03",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 10,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_04",
+   "folder": "usb_dongle_04",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 10,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 18,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_05",
+   "folder": "usb_dongle_05",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 6,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 6,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 7,
+    "changes": [
+     "station-1: plate 300 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 184.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_06",
+   "folder": "usb_dongle_06",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 10,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 18,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_07",
+   "folder": "usb_dongle_07",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 8,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 10,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 18,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "switched supplies"
+   ],
+   "next": {
+    "batch": 9,
+    "changes": [
+     "station-1: 1 more switched supplies (8 -> 9)"
+    ],
+    "change": [
+     {
+      "kind": "vout",
+      "station": "station-1",
+      "to": 9
+     }
+    ],
+    "cost": 315.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_08",
+   "folder": "usb_dongle_08",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 10,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_09",
+   "folder": "usb_dongle_09",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 10,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 10,
+     "binds": true
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 11,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 236.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_10",
+   "folder": "usb_dongle_10",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_11",
+   "folder": "usb_dongle_11",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 9,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 9,
+     "binds": true
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "plate area"
+   ],
+   "next": {
+    "batch": 10,
+    "changes": [
+     "station-1: plate 350 x 250 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       350.0,
+       250.0
+      ]
+     }
+    ],
+    "cost": 221.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_12",
+   "folder": "usb_dongle_12",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 9,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 11,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "usb_dongle_13",
+   "folder": "usb_dongle_13",
+   "status": "compatible",
+   "station": "station-1",
+   "batch": 2,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "USB instances",
+     "key": "usb buses",
+     "allows": 2,
+     "binds": true
+    },
+    {
+     "what": "switched supplies",
+     "key": "supplies",
+     "allows": 8,
+     "binds": false
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 10,
+     "binds": false
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    },
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 14,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "USB instances"
+   ],
+   "next": {
+    "batch": 3,
+    "changes": [
+     "station-1: 1 more USB (2 -> 3)"
+    ],
+    "change": [
+     {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     }
+    ],
+    "cost": 130.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "video",
+   "folder": "video",
+   "status": "compatible",
+   "station": "station-2",
+   "batch": 1,
+   "priority": 1.0,
+   "limits": [
+    {
+     "what": "analog inputs",
+     "key": "inputs",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "plate area",
+     "key": "plate",
+     "allows": 1,
+     "binds": true
+    },
+    {
+     "what": "boards per fixture (max_batch)",
+     "key": "batch limit",
+     "allows": 12,
+     "binds": false
+    }
+   ],
+   "limited_by": [
+    "analog inputs",
+    "plate area"
+   ],
+   "next": {
+    "batch": 2,
+    "changes": [
+     "station-2: 32 more analog inputs (32 -> 64)",
+     "station-2: plate 400 x 350 mm (now 400 x 300 mm)"
+    ],
+    "change": [
+     {
+      "kind": "ain",
+      "station": "station-2",
+      "to": 64
+     },
+     {
+      "kind": "plate",
+      "station": "station-2",
+      "to": [
+       400.0,
+       350.0
+      ]
+     }
+    ],
+    "cost": 365.0,
+    "note": null
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "dual_side_01",
+   "folder": "dual_side_01",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "reason": "probed from both sides (two fixture plates): a station takes one-sided fixtures; set testplan.probe_side to top or bottom",
+   "to_fit": {
+    "station": null,
+    "changes": [],
+    "cost": null,
+    "note": "no station change helps: probed from both sides (two fixture plates): a station takes one-sided fixtures; set testplan.probe_side to top or bottom"
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "dual_side_02",
+   "folder": "dual_side_02",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "reason": "probed from both sides (two fixture plates): a station takes one-sided fixtures; set testplan.probe_side to top or bottom",
+   "to_fit": {
+    "station": null,
+    "changes": [],
+    "cost": null,
+    "note": "no station change helps: probed from both sides (two fixture plates): a station takes one-sided fixtures; set testplan.probe_side to top or bottom"
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "dual_side_03",
+   "folder": "dual_side_03",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "reason": "probed from both sides (two fixture plates): a station takes one-sided fixtures; set testplan.probe_side to top or bottom",
+   "to_fit": {
+    "station": null,
+    "changes": [],
+    "cost": null,
+    "note": "no station change helps: probed from both sides (two fixture plates): a station takes one-sided fixtures; set testplan.probe_side to top or bottom"
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "hv_driver_01",
+   "folder": "hv_driver_01",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "stations": {
+    "station-1": {
+     "lacks": [
+      "supplies up to 48 V (now 24 V)"
+     ]
+    },
+    "station-2": {
+     "lacks": [
+      "supplies up to 48 V (now 24 V)",
+      "1 more switched supplies (0 -> 1)",
+      "1 more CAN (0 -> 1)"
+     ]
+    }
+   },
+   "reason": "needs a 48 V supply; the environment's supplies go to 24 V (supplies.max_v)",
+   "to_fit": {
+    "station": "station-1",
+    "changes": [
+     "supplies up to 48 V (now 24 V)"
+    ],
+    "change": [
+     {
+      "kind": "supply_v",
+      "to": 48.0
+     }
+    ],
+    "cost": 825.0
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "hv_driver_02",
+   "folder": "hv_driver_02",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "stations": {
+    "station-1": {
+     "lacks": [
+      "supplies up to 48 V (now 24 V)"
+     ]
+    },
+    "station-2": {
+     "lacks": [
+      "supplies up to 48 V (now 24 V)",
+      "1 more switched supplies (0 -> 1)",
+      "1 more CAN (0 -> 1)"
+     ]
+    }
+   },
+   "reason": "needs a 48 V supply; the environment's supplies go to 24 V (supplies.max_v)",
+   "to_fit": {
+    "station": "station-1",
+    "changes": [
+     "supplies up to 48 V (now 24 V)"
+    ],
+    "change": [
+     {
+      "kind": "supply_v",
+      "to": 48.0
+     }
+    ],
+    "cost": 840.0
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "hv_driver_03",
+   "folder": "hv_driver_03",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "stations": {
+    "station-1": {
+     "lacks": [
+      "supplies up to 48 V (now 24 V)"
+     ]
+    },
+    "station-2": {
+     "lacks": [
+      "supplies up to 48 V (now 24 V)",
+      "1 more switched supplies (0 -> 1)",
+      "1 more CAN (0 -> 1)"
+     ]
+    }
+   },
+   "reason": "needs a 48 V supply; the environment's supplies go to 24 V (supplies.max_v)",
+   "to_fit": {
+    "station": "station-1",
+    "changes": [
+     "supplies up to 48 V (now 24 V)"
+    ],
+    "change": [
+     {
+      "kind": "supply_v",
+      "to": 48.0
+     }
+    ],
+    "cost": 840.0
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "microwave",
+   "folder": "microwave",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "reason": "no test point the fixture can reach",
+   "to_fit": {
+    "station": null,
+    "changes": [],
+    "cost": null,
+    "note": "no station change helps: no test point the fixture can reach"
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "RoyalBlue54L-NFC-Antenna",
+   "folder": "RoyalBlue54L-NFC-Antenna",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "reason": "no test point the fixture can reach",
+   "to_fit": {
+    "station": null,
+    "changes": [],
+    "cost": null,
+    "note": "no station change helps: no test point the fixture can reach"
+   },
+   "currency": "EUR"
+  },
+  {
+   "board": "vme-wren",
+   "folder": "vme-wren",
+   "status": "incompatible",
+   "station": null,
+   "batch": 0,
+   "priority": 1.0,
+   "stations": {
+    "station-1": {
+     "lacks": [
+      "plate 300 x 350 mm (now 300 x 220 mm)"
+     ]
+    },
+    "station-2": {
+     "lacks": [
+      "1 more switched supplies (0 -> 1)",
+      "1 more I2C (0 -> 1)",
+      "plate 400 x 350 mm (now 400 x 300 mm)"
+     ]
+    }
+   },
+   "reason": "one board with its nest, clamp and divider block takes 187 x 318 mm; station-1 leaves 300 x 201 mm of its 300 x 220 mm plate",
+   "to_fit": {
+    "station": "station-1",
+    "changes": [
+     "station-1: plate 300 x 350 mm (now 300 x 220 mm)"
+    ],
+    "change": [
+     {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       300.0,
+       350.0
+      ]
+     }
+    ],
+    "cost": 94.0
+   },
+   "currency": "EUR"
+  }
+ ]
+}

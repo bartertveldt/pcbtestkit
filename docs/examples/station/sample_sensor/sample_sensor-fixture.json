@@ -64,7 +64,7 @@
     {
       "site": 2,
       "offset": [
-        98.044,
+        90.17,
         0.0
       ],
       "header": "J1",
@@ -72,49 +72,49 @@
       "probes": [
         {
           "probe": "PP01",
-          "x": 208.044,
+          "x": 200.17,
           "y": 89.0,
           "fixture_net": "S2_VIN"
         },
         {
           "probe": "PP02",
-          "x": 220.044,
+          "x": 212.17,
           "y": 88.0,
           "fixture_net": "S2_VIN"
         },
         {
           "probe": "PP03",
-          "x": 218.044,
+          "x": 210.17,
           "y": 114.0,
           "fixture_net": "GND"
         },
         {
           "probe": "PP04",
-          "x": 213.044,
+          "x": 205.17,
           "y": 89.0,
           "fixture_net": "GND"
         },
         {
           "probe": "PP05",
-          "x": 218.044,
+          "x": 210.17,
           "y": 110.0,
           "fixture_net": "S2_TP_+3V3"
         },
         {
           "probe": "PP06",
-          "x": 222.044,
+          "x": 214.17,
           "y": 110.0,
           "fixture_net": "S2_TP_+5V"
         },
         {
           "probe": "PP07",
-          "x": 208.044,
+          "x": 200.17,
           "y": 118.08,
           "fixture_net": "S2_TP_SCL"
         },
         {
           "probe": "PP08",
-          "x": 222.044,
+          "x": 214.17,
           "y": 114.0,
           "fixture_net": "S2_TP_SDA"
         }
@@ -176,10 +176,10 @@
   ],
   "outline_mode": "rect",
   "outline": {
-    "x_min": 49.04,
-    "y_min": 15.31,
-    "x_max": 309.04,
-    "y_max": 205.31,
+    "x_min": 45.17,
+    "y_min": 11.31,
+    "x_max": 305.17,
+    "y_max": 201.31,
     "width": 260.0,
     "height": 190.0
   },
@@ -191,8 +191,8 @@
     "unrouted_nets": [],
     "connections": 47,
     "unrouted_connections": 0,
-    "length_mm": 1678.6,
-    "vias": 17,
+    "length_mm": 1714.8,
+    "vias": 25,
     "grid_mm": 0.254,
     "passes": 1,
     "best_pass": 1,
@@ -208,6 +208,11 @@
   },
   "plate_fit": true,
   "plate_fits_cols": [],
+  "site_mm": [
+    87.17,
+    128.572
+  ],
+  "site_spacing_mm": 3.0,
   "facility": {
     "id": "test_station",
     "connectors": [
@@ -272,7 +277,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 6 screw, standoff to fixture board (from below)"
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
       },
       {
         "qty": 4,
@@ -298,7 +303,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
       },
       {
         "qty": 2,

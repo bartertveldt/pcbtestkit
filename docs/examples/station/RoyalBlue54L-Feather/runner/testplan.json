@@ -57,7 +57,7 @@
         "name": "J1",
         "site": 1,
         "shared": true,
-        "sites": 2,
+        "sites": 4,
         "pins": [
           {
             "pin": 1,
@@ -122,50 +122,50 @@
           {
             "pin": 11,
             "function": "AIN9",
-            "signal": "NC",
-            "site": null
+            "signal": "CH01",
+            "site": 3
           },
           {
             "pin": 12,
             "function": "AIN10",
-            "signal": "NC",
-            "site": null
+            "signal": "CH02",
+            "site": 3
           },
           {
             "pin": 13,
             "function": "AIN11",
-            "signal": "NC",
-            "site": null
+            "signal": "CH03",
+            "site": 3
           },
           {
             "pin": 14,
             "function": "AIN12",
-            "signal": "NC",
-            "site": null
+            "signal": "CH04",
+            "site": 3
           },
           {
             "pin": 15,
             "function": "AIN13",
-            "signal": "NC",
-            "site": null
+            "signal": "CH01",
+            "site": 4
           },
           {
             "pin": 16,
             "function": "AIN14",
-            "signal": "NC",
-            "site": null
+            "signal": "CH02",
+            "site": 4
           },
           {
             "pin": 17,
             "function": "AIN15",
-            "signal": "NC",
-            "site": null
+            "signal": "CH03",
+            "site": 4
           },
           {
             "pin": 18,
             "function": "AIN16",
-            "signal": "NC",
-            "site": null
+            "signal": "CH04",
+            "site": 4
           },
           {
             "pin": 19,
@@ -290,14 +290,14 @@
           {
             "pin": 39,
             "function": "VOUT3",
-            "signal": "NC",
-            "site": null
+            "signal": "VIN",
+            "site": 3
           },
           {
             "pin": 40,
             "function": "VOUT4",
-            "signal": "NC",
-            "site": null
+            "signal": "VIN",
+            "site": 4
           },
           {
             "pin": 41,
@@ -398,26 +398,26 @@
           {
             "pin": 57,
             "function": "I2C3_SDA",
-            "signal": "NC",
-            "site": null
+            "signal": "I2C_SDA",
+            "site": 3
           },
           {
             "pin": 58,
             "function": "I2C3_SCL",
-            "signal": "NC",
-            "site": null
+            "signal": "I2C_SCL",
+            "site": 3
           },
           {
             "pin": 59,
             "function": "I2C4_SDA",
-            "signal": "NC",
-            "site": null
+            "signal": "I2C_SDA",
+            "site": 4
           },
           {
             "pin": 60,
             "function": "I2C4_SCL",
-            "signal": "NC",
-            "site": null
+            "signal": "I2C_SCL",
+            "site": 4
           },
           {
             "pin": 61,
@@ -1224,9 +1224,9 @@
   "stack": [],
   "after_test": [],
   "batch": {
-    "count": 2,
+    "count": 4,
     "cols": 2,
-    "rows": 1,
+    "rows": 2,
     "spacing_mm": 10.0,
     "source": "batch"
   },
@@ -1240,7 +1240,8 @@
     "I2C bus: I2C_SCL (/Connectors/I2C.SCL) has no probe, so the I2C check cannot run through the fixture",
     "I2C bus: I2C_SDA (/Connectors/I2C.SDA) has no probe, so the I2C check cannot run through the fixture",
     "UART bus: UART_RX (/Connectors/UART.RX) has no probe, so the UART check cannot run through the fixture",
-    "UART bus: UART_TX (/Connectors/UART.TX) has no probe, so the UART check cannot run through the fixture"
+    "UART bus: UART_TX (/Connectors/UART.TX) has no probe, so the UART check cannot run through the fixture",
+    "station test_station serves 2 board(s) of this type at once (limited by its uart buses); the batch has 4: the other boards get no inputs, supply or bus on the connector"
   ],
   "timing": {
     "assumptions": {
@@ -1255,11 +1256,11 @@
       "jig_cycle_s": 45.0,
       "program_s": 30.0
     },
-    "batch": 2,
+    "batch": 4,
     "test": {
       "one_board_s": 35.2,
-      "sequential_s": 70.3,
-      "batch_s": 70.3,
+      "sequential_s": 140.6,
+      "batch_s": 140.6,
       "per_board_s": 35.1,
       "saved_s": 0.0,
       "timeline": [
@@ -1273,8 +1274,8 @@
             },
             {
               "phase": "checks",
-              "start": 57.6,
-              "end": 64.0
+              "start": 115.2,
+              "end": 121.5
             }
           ]
         },
@@ -1288,8 +1289,38 @@
             },
             {
               "phase": "checks",
-              "start": 64.0,
-              "end": 70.3
+              "start": 121.5,
+              "end": 127.9
+            }
+          ]
+        },
+        {
+          "site": 3,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 57.6,
+              "end": 86.4
+            },
+            {
+              "phase": "checks",
+              "start": 127.9,
+              "end": 134.2
+            }
+          ]
+        },
+        {
+          "site": 4,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 86.4,
+              "end": 115.2
+            },
+            {
+              "phase": "checks",
+              "start": 134.2,
+              "end": 140.6
             }
           ]
         }
@@ -1302,14 +1333,14 @@
       }
     },
     "assembly": {
-      "per_board_s": 22.5,
+      "per_board_s": 11.2,
       "batch_s": 45.0,
       "parts": 0,
       "joints": 0,
       "jig_loads": 1,
-      "boards_per_jig": 2
+      "boards_per_jig": 4
     },
-    "per_board_s": 57.6,
+    "per_board_s": 46.3,
     "by_batch_size": [
       {
         "boards": 1,
@@ -1326,41 +1357,41 @@
       {
         "boards": 3,
         "test_per_board_s": 35.1,
-        "assembly_per_board_s": 30.0,
-        "per_board_s": 65.1
+        "assembly_per_board_s": 15.0,
+        "per_board_s": 50.1
       },
       {
         "boards": 4,
         "test_per_board_s": 35.1,
-        "assembly_per_board_s": 22.5,
-        "per_board_s": 57.6
+        "assembly_per_board_s": 11.2,
+        "per_board_s": 46.3
       },
       {
         "boards": 5,
         "test_per_board_s": 35.1,
-        "assembly_per_board_s": 27.0,
-        "per_board_s": 62.1
+        "assembly_per_board_s": 18.0,
+        "per_board_s": 53.1
       },
       {
         "boards": 6,
         "test_per_board_s": 35.1,
-        "assembly_per_board_s": 22.5,
-        "per_board_s": 57.6
+        "assembly_per_board_s": 15.0,
+        "per_board_s": 50.1
       },
       {
         "boards": 7,
         "test_per_board_s": 35.1,
-        "assembly_per_board_s": 25.7,
-        "per_board_s": 60.8
+        "assembly_per_board_s": 12.9,
+        "per_board_s": 48.0
       },
       {
         "boards": 8,
         "test_per_board_s": 35.2,
-        "assembly_per_board_s": 22.5,
-        "per_board_s": 57.7
+        "assembly_per_board_s": 11.2,
+        "per_board_s": 46.4
       }
     ],
-    "suggested_batch": 2,
+    "suggested_batch": 4,
     "note": "Estimates; set your own durations in 'timing' in pcbtestkit.json. The runner records the real ones in every result file."
   }
 }

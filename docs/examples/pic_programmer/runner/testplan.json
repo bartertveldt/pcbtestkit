@@ -539,6 +539,7 @@
             "D10",
             "D11",
             "D12",
+            "J1",
             "L1",
             "P1",
             "P2",
@@ -833,62 +834,62 @@
       }
     },
     "assembly": {
-      "per_board_s": 945.0,
-      "batch_s": 945.0,
-      "parts": 55,
-      "joints": 228,
+      "per_board_s": 978.5,
+      "batch_s": 978.5,
+      "parts": 56,
+      "joints": 239,
       "jig_loads": 1,
       "boards_per_jig": 1
     },
-    "per_board_s": 974.5,
+    "per_board_s": 1008.0,
     "by_batch_size": [
       {
         "boards": 1,
         "test_per_board_s": 29.5,
-        "assembly_per_board_s": 945.0,
-        "per_board_s": 974.5
+        "assembly_per_board_s": 978.5,
+        "per_board_s": 1008.0
       },
       {
         "boards": 2,
         "test_per_board_s": 29.5,
-        "assembly_per_board_s": 945.0,
-        "per_board_s": 974.5
+        "assembly_per_board_s": 978.5,
+        "per_board_s": 1008.0
       },
       {
         "boards": 3,
         "test_per_board_s": 29.5,
-        "assembly_per_board_s": 945.0,
-        "per_board_s": 974.5
+        "assembly_per_board_s": 978.5,
+        "per_board_s": 1008.0
       },
       {
         "boards": 4,
         "test_per_board_s": 29.5,
-        "assembly_per_board_s": 945.0,
-        "per_board_s": 974.5
+        "assembly_per_board_s": 978.5,
+        "per_board_s": 1008.0
       },
       {
         "boards": 5,
         "test_per_board_s": 29.5,
-        "assembly_per_board_s": 945.0,
-        "per_board_s": 974.5
+        "assembly_per_board_s": 978.5,
+        "per_board_s": 1008.0
       },
       {
         "boards": 6,
         "test_per_board_s": 29.5,
-        "assembly_per_board_s": 945.0,
-        "per_board_s": 974.5
+        "assembly_per_board_s": 978.5,
+        "per_board_s": 1008.0
       },
       {
         "boards": 7,
         "test_per_board_s": 29.5,
-        "assembly_per_board_s": 945.0,
-        "per_board_s": 974.5
+        "assembly_per_board_s": 978.5,
+        "per_board_s": 1008.0
       },
       {
         "boards": 8,
         "test_per_board_s": 29.5,
-        "assembly_per_board_s": 945.0,
-        "per_board_s": 974.5
+        "assembly_per_board_s": 978.5,
+        "per_board_s": 1008.0
       }
     ],
     "suggested_batch": 1,

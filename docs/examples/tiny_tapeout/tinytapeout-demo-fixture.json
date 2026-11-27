@@ -94,7 +94,7 @@
     {
       "site": 2,
       "offset": [
-        142.748,
+        134.62,
         0.0
       ],
       "header": "J1",
@@ -102,79 +102,79 @@
       "probes": [
         {
           "probe": "PP01",
-          "x": 284.1205,
+          "x": 275.9925,
           "y": 67.1975,
           "fixture_net": "S2_VIN"
         },
         {
           "probe": "PP02",
-          "x": 289.458,
+          "x": 281.33,
           "y": 67.21,
           "fixture_net": "GND"
         },
         {
           "probe": "PP03",
-          "x": 286.848,
+          "x": 278.72,
           "y": 55.96,
           "fixture_net": "GND"
         },
         {
           "probe": "PP04",
-          "x": 236.798,
+          "x": 228.67,
           "y": 121.24,
           "fixture_net": "S2_TP_+3V3"
         },
         {
           "probe": "PP05",
-          "x": 286.798,
+          "x": 278.67,
           "y": 64.65,
           "fixture_net": "S2_TP_+5V"
         },
         {
           "probe": "PP06",
-          "x": 275.548,
+          "x": 267.42,
           "y": 108.35,
           "fixture_net": "S2_TP_DVDD"
         },
         {
           "probe": "PP07",
-          "x": 277.348,
+          "x": 269.22,
           "y": 77.15,
           "fixture_net": "S2_TP_in1"
         },
         {
           "probe": "PP08",
-          "x": 277.348,
+          "x": 269.22,
           "y": 79.69,
           "fixture_net": "S2_TP_in2"
         },
         {
           "probe": "PP09",
-          "x": 277.348,
+          "x": 269.22,
           "y": 82.23,
           "fixture_net": "S2_TP_in3"
         },
         {
           "probe": "PP10",
-          "x": 277.348,
+          "x": 269.22,
           "y": 84.77,
           "fixture_net": "S2_TP_in4"
         },
         {
           "probe": "PP11",
-          "x": 277.348,
+          "x": 269.22,
           "y": 87.31,
           "fixture_net": "S2_TP_in5"
         },
         {
           "probe": "PP12",
-          "x": 277.348,
+          "x": 269.22,
           "y": 89.85,
           "fixture_net": "S2_TP_in6"
         },
         {
           "probe": "PP13",
-          "x": 277.348,
+          "x": 269.22,
           "y": 92.39,
           "fixture_net": "S2_TP_in7"
         }
@@ -186,7 +186,7 @@
       "site": 3,
       "offset": [
         0.0,
-        230.768
+        216.402
       ],
       "header": "J1",
       "power_terminal": null,
@@ -194,79 +194,79 @@
         {
           "probe": "PP01",
           "x": 141.3725,
-          "y": 297.9655,
+          "y": 283.5995,
           "fixture_net": "S3_VIN"
         },
         {
           "probe": "PP02",
           "x": 146.71,
-          "y": 297.978,
+          "y": 283.612,
           "fixture_net": "GND"
         },
         {
           "probe": "PP03",
           "x": 144.1,
-          "y": 286.728,
+          "y": 272.362,
           "fixture_net": "GND"
         },
         {
           "probe": "PP04",
           "x": 94.05,
-          "y": 352.008,
+          "y": 337.642,
           "fixture_net": "S3_TP_+3V3"
         },
         {
           "probe": "PP05",
           "x": 144.05,
-          "y": 295.418,
+          "y": 281.052,
           "fixture_net": "S3_TP_+5V"
         },
         {
           "probe": "PP06",
           "x": 132.8,
-          "y": 339.118,
+          "y": 324.752,
           "fixture_net": "S3_TP_DVDD"
         },
         {
           "probe": "PP07",
           "x": 134.6,
-          "y": 307.918,
+          "y": 293.552,
           "fixture_net": "S3_TP_in1"
         },
         {
           "probe": "PP08",
           "x": 134.6,
-          "y": 310.458,
+          "y": 296.092,
           "fixture_net": "S3_TP_in2"
         },
         {
           "probe": "PP09",
           "x": 134.6,
-          "y": 312.998,
+          "y": 298.632,
           "fixture_net": "S3_TP_in3"
         },
         {
           "probe": "PP10",
           "x": 134.6,
-          "y": 315.538,
+          "y": 301.172,
           "fixture_net": "S3_TP_in4"
         },
         {
           "probe": "PP11",
           "x": 134.6,
-          "y": 318.078,
+          "y": 303.712,
           "fixture_net": "S3_TP_in5"
         },
         {
           "probe": "PP12",
           "x": 134.6,
-          "y": 320.618,
+          "y": 306.252,
           "fixture_net": "S3_TP_in6"
         },
         {
           "probe": "PP13",
           "x": 134.6,
-          "y": 323.158,
+          "y": 308.792,
           "fixture_net": "S3_TP_in7"
         }
       ],
@@ -276,88 +276,88 @@
     {
       "site": 4,
       "offset": [
-        142.748,
-        230.768
+        134.62,
+        216.402
       ],
       "header": "J1",
       "power_terminal": null,
       "probes": [
         {
           "probe": "PP01",
-          "x": 284.1205,
-          "y": 297.9655,
+          "x": 275.9925,
+          "y": 283.5995,
           "fixture_net": "S4_VIN"
         },
         {
           "probe": "PP02",
-          "x": 289.458,
-          "y": 297.978,
+          "x": 281.33,
+          "y": 283.612,
           "fixture_net": "GND"
         },
         {
           "probe": "PP03",
-          "x": 286.848,
-          "y": 286.728,
+          "x": 278.72,
+          "y": 272.362,
           "fixture_net": "GND"
         },
         {
           "probe": "PP04",
-          "x": 236.798,
-          "y": 352.008,
+          "x": 228.67,
+          "y": 337.642,
           "fixture_net": "S4_TP_+3V3"
         },
         {
           "probe": "PP05",
-          "x": 286.798,
-          "y": 295.418,
+          "x": 278.67,
+          "y": 281.052,
           "fixture_net": "S4_TP_+5V"
         },
         {
           "probe": "PP06",
-          "x": 275.548,
-          "y": 339.118,
+          "x": 267.42,
+          "y": 324.752,
           "fixture_net": "S4_TP_DVDD"
         },
         {
           "probe": "PP07",
-          "x": 277.348,
-          "y": 307.918,
+          "x": 269.22,
+          "y": 293.552,
           "fixture_net": "S4_TP_in1"
         },
         {
           "probe": "PP08",
-          "x": 277.348,
-          "y": 310.458,
+          "x": 269.22,
+          "y": 296.092,
           "fixture_net": "S4_TP_in2"
         },
         {
           "probe": "PP09",
-          "x": 277.348,
-          "y": 312.998,
+          "x": 269.22,
+          "y": 298.632,
           "fixture_net": "S4_TP_in3"
         },
         {
           "probe": "PP10",
-          "x": 277.348,
-          "y": 315.538,
+          "x": 269.22,
+          "y": 301.172,
           "fixture_net": "S4_TP_in4"
         },
         {
           "probe": "PP11",
-          "x": 277.348,
-          "y": 318.078,
+          "x": 269.22,
+          "y": 303.712,
           "fixture_net": "S4_TP_in5"
         },
         {
           "probe": "PP12",
-          "x": 277.348,
-          "y": 320.618,
+          "x": 269.22,
+          "y": 306.252,
           "fixture_net": "S4_TP_in6"
         },
         {
           "probe": "PP13",
-          "x": 277.348,
-          "y": 323.158,
+          "x": 269.22,
+          "y": 308.792,
           "fixture_net": "S4_TP_in7"
         }
       ],
@@ -722,12 +722,12 @@
   ],
   "outline_mode": "rect",
   "outline": {
-    "x_min": 35.5,
-    "y_min": -1.25,
-    "x_max": 325.0,
-    "y_max": 380.29,
-    "width": 289.5,
-    "height": 381.54
+    "x_min": 36.0,
+    "y_min": -0.75,
+    "x_max": 316.24,
+    "y_max": 366.05,
+    "width": 280.24,
+    "height": 366.8
   },
   "pogo_count": 52,
   "nets": 89,
@@ -737,8 +737,8 @@
     "unrouted_nets": [],
     "connections": 194,
     "unrouted_connections": 0,
-    "length_mm": 7936.7,
-    "vias": 167,
+    "length_mm": 7617.6,
+    "vias": 170,
     "grid_mm": 0.3175,
     "passes": 1,
     "best_pass": 1,
@@ -754,6 +754,11 @@
   },
   "plate_fit": true,
   "plate_fits_cols": [],
+  "site_mm": [
+    131.62,
+    165.402
+  ],
+  "site_spacing_mm": 3.0,
   "central_header": {
     "ref": "J1",
     "pins": [
@@ -1144,7 +1149,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 6 screw, standoff to fixture board (from below)"
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
       },
       {
         "qty": 4,
@@ -1170,7 +1175,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
       },
       {
         "qty": 2,

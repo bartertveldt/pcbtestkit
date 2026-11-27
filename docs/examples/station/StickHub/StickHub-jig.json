@@ -1,10 +1,10 @@
 {
   "jig_size_mm": [
-    114.5,
-    57.75,
-    14.7
+    52.0,
+    116.25,
+    13.2
   ],
-  "support_height_mm": 12.1,
+  "support_height_mm": 12.0,
   "floor_mm": 2.0,
   "resolution_mm": 0.25,
   "board_bbox_in_jig_mm": [
@@ -23,937 +23,922 @@
       "ref": "J9",
       "type": "hold",
       "center": [
-        18.8,
-        23.05
+        18.75,
+        23.0
       ],
-      "depth_mm": 10.1,
-      "part_height_mm": 10.0,
-      "height_source": "default for THT (set a 'Height' field to override); outline pads",
       "size_mm": [
-        2.0,
-        2.0
+        2.5,
+        2.5
       ],
-      "rotation_deg": -0.0
+      "rotation_deg": -0.0,
+      "depth_mm": 10.0,
+      "part_height_mm": 10.0,
+      "height_source": "box (default for THT (set a 'Height' field to override) height)",
+      "cells": 100
     },
     {
       "ref": "C1",
       "type": "relief",
       "center": [
-        17.573,
-        28.305
+        17.562,
+        28.312
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 162
     },
     {
       "ref": "C2",
       "type": "relief",
       "center": [
-        5.729,
-        26.714
+        5.75,
+        26.75
       ],
+      "size_mm": [
+        3.79,
+        4.14
+      ],
+      "rotation_deg": -135.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": -135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 169
     },
     {
       "ref": "C3",
       "type": "relief",
       "center": [
-        18.103,
-        27.775
+        18.062,
+        27.812
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 169
     },
     {
       "ref": "C4",
       "type": "relief",
       "center": [
-        10.35,
-        18.0
+        10.312,
+        18.062
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 169
     },
     {
       "ref": "C5",
       "type": "relief",
       "center": [
-        9.85,
-        18.5
+        9.812,
+        18.562
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 169
     },
     {
       "ref": "C6",
       "type": "relief",
       "center": [
-        7.6,
-        20.75
+        7.562,
+        20.812
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 169
     },
     {
       "ref": "C7",
       "type": "relief",
       "center": [
-        6.113,
-        22.252
+        6.125,
+        22.25
       ],
+      "size_mm": [
+        3.61,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 168
     },
     {
       "ref": "C8",
       "type": "relief",
       "center": [
-        17.3,
-        21.7
+        17.312,
+        21.688
       ],
+      "size_mm": [
+        3.26,
+        3.79
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 133
     },
     {
       "ref": "C9",
       "type": "relief",
       "center": [
-        7.85,
-        28.836
+        7.875,
+        28.875
       ],
+      "size_mm": [
+        3.79,
+        4.14
+      ],
+      "rotation_deg": -135.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": -135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 161
     },
     {
       "ref": "C10",
       "type": "relief",
       "center": [
-        16.189,
-        19.954
+        16.188,
+        19.938
       ],
+      "size_mm": [
+        3.26,
+        3.79
+      ],
+      "rotation_deg": 45.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 133
     },
     {
       "ref": "C11",
       "type": "relief",
       "center": [
-        16.512,
-        29.366
+        16.5,
+        29.375
       ],
+      "size_mm": [
+        3.61,
+        4.32
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 168
     },
     {
       "ref": "C12",
       "type": "relief",
       "center": [
-        15.1,
-        18.95
+        15.125,
+        18.875
       ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 90.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
     },
     {
       "ref": "C13",
       "type": "relief",
       "center": [
-        8.85,
-        19.5
+        8.812,
+        19.562
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 169
     },
     {
       "ref": "C21",
       "type": "relief",
       "center": [
-        18.8,
-        20.8
+        18.75,
+        20.75
       ],
+      "size_mm": [
+        4.0,
+        3.0
+      ],
+      "rotation_deg": -90.0,
       "depth_mm": 2.25,
       "part_height_mm": 1.25,
-      "height_source": "3D model",
-      "size_mm": [
-        4.1,
-        3.05
-      ],
-      "rotation_deg": -90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 192
     },
     {
       "ref": "C22",
       "type": "relief",
       "center": [
-        15.3,
-        16.3
+        15.312,
+        16.312
       ],
+      "size_mm": [
+        3.96,
+        4.85
+      ],
+      "rotation_deg": -135.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": -135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 225
     },
     {
       "ref": "C23",
       "type": "relief",
       "center": [
-        10.629,
-        34.071
+        10.625,
+        34.125
       ],
+      "size_mm": [
+        4.14,
+        4.85
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 218
     },
     {
       "ref": "C24",
       "type": "relief",
       "center": [
-        11.336,
-        33.364
+        11.375,
+        33.375
       ],
+      "size_mm": [
+        4.14,
+        4.85
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 218
     },
     {
       "ref": "C25",
       "type": "relief",
       "center": [
-        12.043,
-        32.657
+        12.062,
+        32.688
       ],
+      "size_mm": [
+        3.96,
+        4.85
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 225
     },
     {
       "ref": "C26",
       "type": "relief",
       "center": [
         12.75,
-        31.95
+        32.0
       ],
+      "size_mm": [
+        4.14,
+        4.85
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 227
     },
     {
       "ref": "C27",
       "type": "relief",
       "center": [
-        13.457,
-        31.243
+        13.5,
+        31.25
       ],
+      "size_mm": [
+        4.14,
+        4.85
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 227
     },
     {
       "ref": "C28",
       "type": "relief",
       "center": [
-        14.05,
-        15.55
+        14.125,
+        15.625
       ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": -180.0,
       "depth_mm": 1.5,
       "part_height_mm": 0.5,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": -180.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
     },
     {
       "ref": "C29",
       "type": "relief",
       "center": [
-        5.7,
-        16.6
+        5.75,
+        16.625
       ],
+      "size_mm": [
+        3.75,
+        3.0
+      ],
+      "rotation_deg": 90.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": 90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 180
     },
     {
       "ref": "C30",
       "type": "relief",
       "center": [
-        6.7,
-        16.6
+        6.75,
+        16.625
       ],
+      "size_mm": [
+        3.75,
+        3.0
+      ],
+      "rotation_deg": 90.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": 90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 180
     },
     {
       "ref": "C31",
       "type": "relief",
       "center": [
-        4.7,
-        16.6
+        4.75,
+        16.625
       ],
+      "size_mm": [
+        3.75,
+        3.0
+      ],
+      "rotation_deg": 90.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": 90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 180
     },
     {
       "ref": "C32",
       "type": "relief",
       "center": [
-        4.2,
-        18.7
+        4.25,
+        18.625
       ],
+      "size_mm": [
+        3.75,
+        3.0
+      ],
+      "rotation_deg": -90.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": -90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 180
     },
     {
       "ref": "C33",
       "type": "relief",
       "center": [
-        5.2,
-        18.7
+        5.25,
+        18.625
       ],
+      "size_mm": [
+        3.75,
+        3.0
+      ],
+      "rotation_deg": -90.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": -90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 180
     },
     {
       "ref": "C34",
       "type": "relief",
       "center": [
-        14.357,
-        33.543
+        14.375,
+        33.625
       ],
+      "size_mm": [
+        4.14,
+        4.85
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 217
     },
     {
       "ref": "C35",
       "type": "relief",
       "center": [
-        13.65,
-        34.25
+        13.688,
+        34.312
       ],
+      "size_mm": [
+        3.96,
+        4.85
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 216
     },
     {
       "ref": "C36",
       "type": "relief",
       "center": [
-        12.943,
-        34.957
+        13.0,
+        35.0
       ],
+      "size_mm": [
+        4.14,
+        4.85
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 230
     },
     {
       "ref": "C37",
       "type": "relief",
       "center": [
-        12.236,
-        35.664
+        12.312,
+        35.688
       ],
+      "size_mm": [
+        3.96,
+        4.85
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.8,
       "part_height_mm": 0.8,
-      "height_source": "3D model",
-      "size_mm": [
-        3.7,
-        2.6
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 225
     },
     {
       "ref": "C38",
       "type": "relief",
       "center": [
-        16.93,
-        46.55
+        16.5,
+        47.875
       ],
+      "size_mm": [
+        8.5,
+        15.25
+      ],
+      "rotation_deg": -180.0,
       "depth_mm": 4.5,
       "part_height_mm": 3.5,
-      "height_source": "3D model",
-      "size_mm": [
-        8.66,
-        17.1
-      ],
-      "rotation_deg": -180.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 1978
     },
     {
       "ref": "D22",
       "type": "relief",
       "center": [
-        8.65,
-        16.1
+        8.625,
+        16.125
       ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 90.0,
       "depth_mm": 1.37,
       "part_height_mm": 0.37,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.4
-      ],
-      "rotation_deg": 90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 141
     },
     {
       "ref": "D23",
       "type": "relief",
       "center": [
-        7.8,
-        16.1
+        7.75,
+        16.125
       ],
+      "size_mm": [
+        3.25,
+        3.0
+      ],
+      "rotation_deg": 90.0,
       "depth_mm": 1.37,
       "part_height_mm": 0.37,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.4
-      ],
-      "rotation_deg": 90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 154
     },
     {
       "ref": "D24",
       "type": "relief",
       "center": [
-        17.45,
-        20.2
+        17.5,
+        20.25
       ],
+      "size_mm": [
+        3.0,
+        2.5
+      ],
+      "rotation_deg": 90.0,
       "depth_mm": 1.37,
       "part_height_mm": 0.37,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.4
-      ],
-      "rotation_deg": 90.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 116
     },
     {
       "ref": "D25",
       "type": "relief",
       "center": [
-        10.7,
-        35.65
+        10.688,
+        35.688
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": -45.0,
       "depth_mm": 1.37,
       "part_height_mm": 0.37,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.4
-      ],
-      "rotation_deg": -45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 161
     },
     {
       "ref": "JP1",
       "type": "relief",
       "center": [
-        18.85,
-        17.4
+        18.875,
+        17.375
       ],
+      "size_mm": [
+        6.25,
+        4.25
+      ],
+      "rotation_deg": -90.0,
       "depth_mm": 2.0,
       "part_height_mm": 1.0,
-      "height_source": "default for SMD",
-      "size_mm": [
-        5.55,
-        3.6
-      ],
-      "rotation_deg": -90.0
-    },
-    {
-      "ref": "LOGO1",
-      "type": "relief",
-      "center": [
-        10.95,
-        24.7
-      ],
-      "depth_mm": 2.0,
-      "part_height_mm": 1.0,
-      "height_source": "default for SMD",
-      "size_mm": [
-        3.1,
-        3.1
-      ],
-      "rotation_deg": -180.0
-    },
-    {
-      "ref": "LOGO2",
-      "type": "relief",
-      "center": [
-        12.45,
-        24.7
-      ],
-      "depth_mm": 2.0,
-      "part_height_mm": 1.0,
-      "height_source": "default for SMD",
-      "size_mm": [
-        3.1,
-        3.1
-      ],
-      "rotation_deg": -0.0
-    },
-    {
-      "ref": "LOGO3",
-      "type": "relief",
-      "center": [
-        10.95,
-        26.2
-      ],
-      "depth_mm": 2.0,
-      "part_height_mm": 1.0,
-      "height_source": "default for SMD",
-      "size_mm": [
-        3.1,
-        3.1
-      ],
-      "rotation_deg": -0.0
-    },
-    {
-      "ref": "LOGO4",
-      "type": "relief",
-      "center": [
-        12.45,
-        26.2
-      ],
-      "depth_mm": 2.0,
-      "part_height_mm": 1.0,
-      "height_source": "default for SMD",
-      "size_mm": [
-        3.1,
-        3.1
-      ],
-      "rotation_deg": -0.0
+      "height_source": "box (default for SMD height)",
+      "cells": 425
     },
     {
       "ref": "R1",
       "type": "relief",
       "center": [
-        7.32,
-        28.305
+        7.312,
+        28.312
       ],
+      "size_mm": [
+        3.61,
+        4.14
+      ],
+      "rotation_deg": 45.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 158
     },
     {
       "ref": "R2",
       "type": "relief",
       "center": [
-        6.259,
-        27.245
+        6.25,
+        27.25
       ],
+      "size_mm": [
+        3.79,
+        4.14
+      ],
+      "rotation_deg": -135.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": -135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 178
     },
     {
       "ref": "R3",
       "type": "relief",
       "center": [
-        6.79,
-        27.775
+        6.75,
+        27.75
       ],
+      "size_mm": [
+        3.79,
+        4.14
+      ],
+      "rotation_deg": 45.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 169
     },
     {
       "ref": "R4",
       "type": "relief",
       "center": [
-        8.911,
-        29.896
+        8.875,
+        29.875
       ],
+      "size_mm": [
+        3.79,
+        4.14
+      ],
+      "rotation_deg": 45.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 161
     },
     {
       "ref": "R5",
       "type": "relief",
       "center": [
-        8.381,
-        29.366
+        8.375,
+        29.375
       ],
+      "size_mm": [
+        3.79,
+        4.14
+      ],
+      "rotation_deg": 45.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 161
     },
     {
       "ref": "R6",
       "type": "relief",
       "center": [
-        9.35,
-        19.0
+        9.312,
+        19.062
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 171
     },
     {
       "ref": "R7",
       "type": "relief",
       "center": [
-        14.921,
-        30.957
+        14.937,
+        30.937
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 162
     },
     {
       "ref": "R8",
       "type": "relief",
       "center": [
-        15.452,
-        30.427
+        15.437,
+        30.437
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 162
     },
     {
       "ref": "R9",
       "type": "relief",
       "center": [
-        15.982,
-        29.896
+        15.938,
+        29.938
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 171
     },
     {
       "ref": "R10",
       "type": "relief",
       "center": [
-        17.043,
-        28.836
+        17.062,
+        28.812
       ],
+      "size_mm": [
+        3.79,
+        4.32
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 162
     },
     {
       "ref": "R11",
       "type": "relief",
       "center": [
-        10.502,
-        31.487
+        10.5,
+        31.5
       ],
+      "size_mm": [
+        3.79,
+        4.14
+      ],
+      "rotation_deg": 45.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 178
     },
     {
       "ref": "R12",
       "type": "relief",
       "center": [
-        9.972,
-        30.957
+        10.0,
+        31.0
       ],
+      "size_mm": [
+        3.79,
+        4.14
+      ],
+      "rotation_deg": 45.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 169
     },
     {
       "ref": "R13",
       "type": "relief",
       "center": [
-        9.441,
-        30.427
+        9.437,
+        30.438
       ],
+      "size_mm": [
+        3.61,
+        4.14
+      ],
+      "rotation_deg": 45.0,
       "depth_mm": 1.35,
       "part_height_mm": 0.35,
-      "height_source": "3D model",
-      "size_mm": [
-        3.1,
-        2.3
-      ],
-      "rotation_deg": 45.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 158
     },
     {
       "ref": "U1",
       "type": "relief",
       "center": [
-        12.3,
-        24.55
+        12.312,
+        24.562
       ],
+      "size_mm": [
+        11.56,
+        11.74
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 2.5,
       "part_height_mm": 1.5,
-      "height_source": "3D model",
-      "size_mm": [
-        11.9,
-        11.9
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 1858
     },
     {
       "ref": "U2",
       "type": "relief",
       "center": [
-        16.45,
-        17.45
+        16.438,
+        17.437
       ],
+      "size_mm": [
+        5.2,
+        4.67
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 1.75,
       "part_height_mm": 0.75,
-      "height_source": "3D model",
-      "size_mm": [
-        3.6,
-        3.9
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 305
     },
     {
       "ref": "Y1",
       "type": "relief",
       "center": [
-        12.547,
-        17.373
+        12.562,
+        17.312
       ],
+      "size_mm": [
+        5.2,
+        5.73
+      ],
+      "rotation_deg": 135.0,
       "depth_mm": 2.0,
       "part_height_mm": 1.0,
-      "height_source": "3D model",
-      "size_mm": [
-        4.6,
-        4.1
-      ],
-      "rotation_deg": 135.0
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 374
     }
   ],
-  "posts": [
-    {
-      "hole": "H1",
-      "center": [
-        11.55,
-        14.05
-      ],
-      "diameter_mm": 3.6
-    }
-  ],
+  "posts": [],
+  "pocket_floor": "shaped",
+  "room": {},
+  "ignored": {},
   "notes": [
-    "Hold pocket depth = part height + 0.10 mm; adjust jig.heights.<REF> if a part sits proud.",
+    "Shape estimated as a box for 3 part(s): J1, J9, JP1. Their fit can't be guaranteed: add a 3D model, set jig.heights, or leave them out with jig.ignore.",
+    "Pockets follow each part's 3D shape; a hold pocket's floor is the part's own top, so every part touches its pocket as the board lands (jig.hold_depth_offset_mm +0.00 mm).",
     "Two-jig workflow: put the PCB bottom side up in the placement jig, fit the parts, put this holding jig on top (pockets down), turn the stack over, lift off the placement jig and solder from above.",
-    "Batch of 4 boards: every jig holds all of them (4 x 1)."
+    "Fit check (89 parts, their 3D shapes): nothing touches on the way in; all 1 hand-soldered parts touch their pockets as the board lands on the support (within 0.01 mm) and are held on all four sides (0.23 to 0.23 mm of play); held by the part beside it, too close for a jig wall between them: J9 -x against C8 (0.19 mm), J9 -y against C8 (0.19 mm); the holding jig closes over the placement jig without touching it. Estimated (box) shapes: J1, J9, JP1.",
+    "Batch of 4 boards: every jig holds all of them (2 x 2)."
   ],
   "scad": "StickHub-jig.scad",
   "workflow": "two_jig",
   "placement": {
     "jig_size_mm": [
-      115.0,
-      52.25,
-      13.4
+      57.5,
+      119.0,
+      12.0
     ],
     "pcb_rest_height_mm": 12.0,
     "lead_clearance_mm": 10.0,
@@ -961,77 +946,62 @@
     "resolution_mm": 0.25,
     "board_bbox_in_jig_mm": [
       6.0,
-      6.0,
+      72.8,
       22.5,
-      46.0
+      112.8
     ],
     "orientation": "PCB bottom side up; jig X = board X, jig Y = board Y (the board turned over about its X axis)",
-    "stops": [
-      {
-        "side": "left",
-        "at": [
-          141.75,
-          -89.75
-        ]
-      },
-      {
-        "side": "right",
-        "at": [
-          158.25,
-          -89.75
-        ]
-      }
-    ],
+    "stops": [],
     "lead_wells": 0,
     "bottom_pockets": [
-      "D4",
-      "J7",
-      "J8",
-      "D10",
-      "C18",
-      "C16",
-      "D15",
       "C14",
+      "C15",
+      "C16",
+      "C17",
+      "C18",
+      "C19",
+      "C20",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
       "D8",
       "D9",
-      "D16",
-      "D1",
-      "D5",
-      "D3",
-      "C15",
-      "J2",
-      "D19",
-      "J5",
-      "C20",
-      "D20",
-      "D6",
-      "J1",
-      "C17",
-      "D7",
-      "D14",
-      "D21",
-      "J4",
+      "D10",
       "D11",
-      "J6",
-      "C19",
+      "D12",
+      "D13",
+      "D14",
+      "D15",
+      "D16",
       "D17",
       "D18",
-      "D2",
-      "D12",
+      "D19",
+      "D20",
+      "D21",
+      "J1",
+      "J2",
       "J3",
-      "D13"
+      "J4",
+      "J5",
+      "J6",
+      "J7",
+      "J8"
     ],
     "notes": [
-      "only 2 locating stop(s) fit around this outline; place the PCB carefully",
+      "only 0 locating stop(s) fit around this outline; place the PCB carefully",
       "Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm."
     ],
     "batch": {
       "boards": 4,
-      "cols": 4,
-      "rows": 1,
+      "cols": 2,
+      "rows": 2,
       "pitch_mm": [
         28.75,
-        57.75
+        59.5
       ],
       "board_offsets_mm": [
         [
@@ -1043,12 +1013,12 @@
           0.0
         ],
         [
-          57.5,
-          0.0
+          0.0,
+          59.5
         ],
         [
-          86.25,
-          0.0
+          28.75,
+          59.5
         ]
       ],
       "sets": 1,
@@ -1056,12 +1026,56 @@
     },
     "preview_png": "StickHub-jig-placement.png",
     "mesh": {
-      "triangles": 35096,
+      "triangles": 52802,
       "unmatched_edges": 0,
-      "volume_mm3": 57345.2,
+      "volume_mm3": 66916.2,
       "watertight": true
     },
     "stl": "StickHub-jig-placement.stl"
+  },
+  "fit": {
+    "parts_checked": 89,
+    "shapes": {
+      "kicad": 86,
+      "box (typical height for USB_A height)": 1,
+      "box (default for THT (set a 'Height' field to override) height)": 1,
+      "box (default for SMD height)": 1
+    },
+    "room": {},
+    "holding_collisions": {},
+    "touching": [
+      "J9"
+    ],
+    "loose": {},
+    "side_play": {
+      "J9": {
+        "+x": 0.225,
+        "-x": 0.188,
+        "+y": 0.225,
+        "-y": 0.188
+      }
+    },
+    "side_play_limit_mm": 0.45,
+    "not_held_sideways": [],
+    "held_by_parts": {
+      "J9": {
+        "-x": "C8 0.19 mm",
+        "-y": "C8 0.19 mm"
+      }
+    },
+    "placement_collisions": {},
+    "board_contacts": {
+      "holding": 0,
+      "placement": 0
+    },
+    "stack_collisions": 0,
+    "estimated_shapes": [
+      "J1",
+      "J9",
+      "JP1"
+    ],
+    "ok": true,
+    "summary": "Fit check (89 parts, their 3D shapes): nothing touches on the way in; all 1 hand-soldered parts touch their pockets as the board lands on the support (within 0.01 mm) and are held on all four sides (0.23 to 0.23 mm of play); held by the part beside it, too close for a jig wall between them: J9 -x against C8 (0.19 mm), J9 -y against C8 (0.19 mm); the holding jig closes over the placement jig without touching it. Estimated (box) shapes: J1, J9, JP1."
   },
   "key": "hand_bottom",
   "passes": [
@@ -1092,68 +1106,83 @@
   "extra": {
     "nest_bottom": {
       "jig_size_mm": [
-        187.0,
-        70.25,
-        7.86
+        93.5,
+        140.5,
+        7.36
       ],
-      "pcb_rest_height_mm": 6.26,
-      "lead_clearance_mm": 4.26,
+      "pcb_rest_height_mm": 5.76,
+      "lead_clearance_mm": 3.76,
       "floor_mm": 2.0,
       "resolution_mm": 0.25,
       "board_bbox_in_jig_mm": [
         15.0,
-        15.0,
+        85.25,
         31.5,
-        55.0
+        125.25
       ],
       "orientation": "PCB bottom side up; jig X = board X, jig Y = board Y (the board turned over about its X axis)",
       "stops": [],
       "notes": [
-        "Rest the PCB bottom side up in the nest; the frame is flush with the board, so the stencil lies flat. Print it in PLA or PETG: it does not go into the reflow oven."
+        "Rest the PCB bottom side up in the nest; the frame is flush with the board, so the stencil lies flat. Print it in PLA or PETG: it does not go into the reflow oven.",
+        "Fit check (35 parts, their 3D shapes): the board lies flat on the nest and no part touches it."
       ],
       "kind": "paste_nest",
       "side": "bottom",
       "down_side_pockets": [
-        "D4",
-        "J7",
-        "J8",
-        "D10",
-        "C18",
-        "C16",
-        "D15",
         "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19",
+        "C20",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
         "D8",
         "D9",
-        "D16",
-        "D1",
-        "D5",
-        "D3",
-        "C15",
-        "J2",
-        "D19",
-        "J5",
-        "C20",
-        "D20",
-        "D6",
-        "C17",
-        "D7",
-        "D14",
-        "D21",
-        "J4",
+        "D10",
         "D11",
-        "J6",
-        "C19",
+        "D12",
+        "D13",
+        "D14",
+        "D15",
+        "D16",
         "D17",
         "D18",
-        "D2",
-        "D12",
+        "D19",
+        "D20",
+        "D21",
+        "J2",
         "J3",
-        "D13"
+        "J4",
+        "J5",
+        "J6",
+        "J7",
+        "J8"
       ],
+      "fit": {
+        "parts_checked": 35,
+        "shapes": {
+          "kicad": 35
+        },
+        "placement_collisions": {},
+        "board_contacts": {
+          "holding": 0,
+          "placement": 0
+        },
+        "estimated_shapes": [],
+        "ok": true,
+        "summary": "Fit check (35 parts, their 3D shapes): the board lies flat on the nest and no part touches it."
+      },
       "batch": {
         "boards": 4,
-        "cols": 4,
-        "rows": 1,
+        "cols": 2,
+        "rows": 2,
         "pitch_mm": [
           46.75,
           70.25
@@ -1168,12 +1197,12 @@
             0.0
           ],
           [
-            93.5,
-            0.0
+            0.0,
+            70.25
           ],
           [
-            140.25,
-            0.0
+            46.75,
+            70.25
           ]
         ],
         "sets": 1,
@@ -1181,9 +1210,9 @@
       },
       "preview_png": "StickHub-paste-nest-bottom.png",
       "mesh": {
-        "triangles": 46560,
+        "triangles": 51964,
         "unmatched_edges": 0,
-        "volume_mm3": 82519.5,
+        "volume_mm3": 77015.6,
         "watertight": true
       },
       "stl": "StickHub-paste-nest-bottom.stl"
@@ -1191,8 +1220,8 @@
   },
   "batch": {
     "boards_per_jig": 4,
-    "cols": 4,
-    "rows": 1,
+    "cols": 2,
+    "rows": 2,
     "sets": 1,
     "batch_count": 4,
     "bed_mm": [
@@ -1202,9 +1231,9 @@
   },
   "preview_png": "StickHub-jig.png",
   "mesh": {
-    "triangles": 92188,
+    "triangles": 99964,
     "unmatched_edges": 0,
-    "volume_mm3": 73845.2,
+    "volume_mm3": 60535.0,
     "watertight": true
   },
   "stl": "StickHub-jig.stl"

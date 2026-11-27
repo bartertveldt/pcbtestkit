@@ -1,0 +1,246 @@
+{
+ "schema": "pcbtestkit-facility/1",
+ "id": "station-1",
+ "name": "PCB TestKit catalog station 1",
+ "description": "Test station read from station-1.kicad_pcb: interface connector J1 + J2 (132 pins), 300 x 220 mm plate.",
+ "analog": {
+  "inputs": 56,
+  "max_v": 10.0
+ },
+ "power": {
+  "outputs": 8,
+  "switched": true
+ },
+ "buses": {
+  "can": {
+   "via": "fixture"
+  },
+  "usb": {
+   "via": "fixture"
+  },
+  "ethernet": {
+   "via": "fixture"
+  },
+  "uart": {
+   "via": "fixture"
+  },
+  "i2c": {
+   "via": "fixture"
+  },
+  "rs485": {
+   "via": "fixture"
+  }
+ },
+ "fixture": {
+  "plate_mm": [
+   300.0,
+   220.0
+  ],
+  "holes": [
+   {
+    "at_mm": [
+     5.0,
+     5.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     295.0,
+     5.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     5.0,
+     215.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     295.0,
+     215.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   }
+  ],
+  "connectors": [
+   {
+    "pins_across": 2,
+    "pins_along": 40,
+    "pitch_mm": 2.54,
+    "numbering": "zigzag",
+    "angle": 90.0,
+    "name": "J1",
+    "shared": true,
+    "at_mm": [
+     60.18,
+     208.0
+    ],
+    "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x40_P2.54mm_Vertical",
+    "pins": {
+     "1": "GND",
+     "2": "GND",
+     "3": "AIN1",
+     "4": "AIN2",
+     "5": "AIN3",
+     "6": "AIN4",
+     "7": "AIN5",
+     "8": "AIN6",
+     "9": "GND",
+     "10": "AIN7",
+     "11": "AIN8",
+     "12": "AIN9",
+     "13": "AIN10",
+     "14": "AIN11",
+     "15": "AIN12",
+     "16": "GND",
+     "17": "AIN13",
+     "18": "AIN14",
+     "19": "AIN15",
+     "20": "AIN16",
+     "21": "AIN17",
+     "22": "AIN18",
+     "23": "GND",
+     "24": "AIN19",
+     "25": "AIN20",
+     "26": "AIN21",
+     "27": "AIN22",
+     "28": "AIN23",
+     "29": "AIN24",
+     "30": "GND",
+     "31": "AIN25",
+     "32": "AIN26",
+     "33": "AIN27",
+     "34": "AIN28",
+     "35": "AIN29",
+     "36": "AIN30",
+     "37": "GND",
+     "38": "AIN31",
+     "39": "AIN32",
+     "40": "AIN33",
+     "41": "AIN34",
+     "42": "AIN35",
+     "43": "AIN36",
+     "44": "GND",
+     "45": "AIN37",
+     "46": "AIN38",
+     "47": "AIN39",
+     "48": "AIN40",
+     "49": "AIN41",
+     "50": "AIN42",
+     "51": "GND",
+     "52": "AIN43",
+     "53": "AIN44",
+     "54": "AIN45",
+     "55": "AIN46",
+     "56": "AIN47",
+     "57": "AIN48",
+     "58": "GND",
+     "59": "AIN49",
+     "60": "AIN50",
+     "61": "AIN51",
+     "62": "AIN52",
+     "63": "AIN53",
+     "64": "AIN54",
+     "65": "GND",
+     "66": "AIN55",
+     "67": "AIN56",
+     "68": "VOUT1",
+     "69": "VOUT2",
+     "70": "VOUT3",
+     "71": "VOUT4",
+     "72": "GND",
+     "73": "VOUT5",
+     "74": "VOUT6",
+     "75": "VOUT7",
+     "76": "VOUT8",
+     "77": "CAN_H",
+     "78": "CAN_L",
+     "79": "GND",
+     "80": "GND"
+    },
+    "model": "${KICAD8_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_2x40_P2.54mm_Vertical.step"
+   },
+   {
+    "pins_across": 2,
+    "pins_along": 26,
+    "pitch_mm": 2.54,
+    "numbering": "zigzag",
+    "angle": 90.0,
+    "name": "J2",
+    "shared": true,
+    "at_mm": [
+     173.78,
+     208.0
+    ],
+    "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x26_P2.54mm_Vertical",
+    "pins": {
+     "1": "GND",
+     "2": "GND",
+     "3": "CAN2_H",
+     "4": "CAN2_L",
+     "5": "CAN3_H",
+     "6": "CAN3_L",
+     "7": "CAN4_H",
+     "8": "CAN4_L",
+     "9": "GND",
+     "10": "UART_TX",
+     "11": "UART_RX",
+     "12": "UART2_TX",
+     "13": "UART2_RX",
+     "14": "UART3_TX",
+     "15": "UART3_RX",
+     "16": "GND",
+     "17": "UART4_TX",
+     "18": "UART4_RX",
+     "19": "I2C_SDA",
+     "20": "I2C_SCL",
+     "21": "I2C2_SDA",
+     "22": "I2C2_SCL",
+     "23": "GND",
+     "24": "I2C3_SDA",
+     "25": "I2C3_SCL",
+     "26": "I2C4_SDA",
+     "27": "I2C4_SCL",
+     "28": "RS485_A",
+     "29": "RS485_B",
+     "30": "GND",
+     "31": "RS485_2_A",
+     "32": "RS485_2_B",
+     "33": "USB_DP",
+     "34": "USB_DM",
+     "35": "USB2_DP",
+     "36": "USB2_DM",
+     "37": "GND",
+     "38": "ETH_TX_P",
+     "39": "ETH_TX_N",
+     "40": "ETH_RX_P",
+     "41": "ETH_RX_N",
+     "42": "ETH2_TX_P",
+     "43": "ETH2_TX_N",
+     "44": "ETH2_RX_P",
+     "45": "ETH2_RX_N",
+     "46": "GND",
+     "47": "DIO1",
+     "48": "DIO2",
+     "49": "DIO3",
+     "50": "DIO4",
+     "51": "GND",
+     "52": "GND"
+    },
+    "model": "${KICAD8_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_2x26_P2.54mm_Vertical.step"
+   }
+  ]
+ },
+ "station_pcb": "station-1.kicad_pcb",
+ "batch": {
+  "max_sites": 12
+ }
+}

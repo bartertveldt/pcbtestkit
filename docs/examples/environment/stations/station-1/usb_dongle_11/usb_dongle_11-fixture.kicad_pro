@@ -1,0 +1,14 @@
+{
+  "board": {
+    "design_settings": {
+      "rule_severities": {
+        "lib_footprint_issues": "ignore",
+        "lib_footprint_mismatch": "ignore"
+      }
+    }
+  },
+  "meta": {
+    "filename": "usb_dongle_11-fixture.kicad_pro",
+    "version": 3
+  }
+}

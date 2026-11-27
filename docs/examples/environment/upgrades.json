@@ -1,0 +1,1654 @@
+{
+ "currency": "EUR",
+ "value_per_board": 300.0,
+ "now": {
+  "boards_fit": 119,
+  "boards": 128,
+  "slots": 382,
+  "worth": 54139.0,
+  "cost": 16816.0,
+  "net": 37323.0,
+  "cost_parts": {
+   "total": 16816.0,
+   "stations": {
+    "station-1": 1881.0,
+    "station-2": 925.0
+   },
+   "programmers": 1140.0,
+   "fixtures": 12870.0
+  }
+ },
+ "options": [
+  {
+   "change": {
+    "kind": "supply_v",
+    "to": 48.0
+   },
+   "text": "supplies up to 48 V (now 24 V)",
+   "gain": {
+    "boards_fit": 3,
+    "fit": [
+     "hv_driver_01",
+     "hv_driver_02",
+     "hv_driver_03"
+    ],
+    "slots": 11,
+    "batches_up": [],
+    "worth": 1486.0,
+    "cost": 1065.0,
+    "net": 421.0
+   },
+   "flags": [],
+   "id": "U1"
+  },
+  {
+   "change": {
+    "kind": "ain",
+    "station": "station-1",
+    "to": 64
+   },
+   "text": "station-1: 8 more analog inputs (56 -> 64)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 2,
+    "batches_up": [
+     {
+      "board": "interf_u",
+      "from": 1,
+      "to": 2
+     },
+     {
+      "board": "tinytapeout-demo",
+      "from": 1,
+      "to": 2
+     }
+    ],
+    "worth": 210.0,
+    "cost": 240.0,
+    "net": -30.0
+   },
+   "flags": [
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U2"
+  },
+  {
+   "change": {
+    "kind": "ain",
+    "station": "station-1",
+    "to": 68
+   },
+   "text": "station-1: 12 more analog inputs (56 -> 68)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 2,
+    "batches_up": [
+     {
+      "board": "interf_u",
+      "from": 1,
+      "to": 2
+     },
+     {
+      "board": "tinytapeout-demo",
+      "from": 1,
+      "to": 2
+     }
+    ],
+    "worth": 210.0,
+    "cost": 270.0,
+    "net": -60.0
+   },
+   "flags": [
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U3"
+  },
+  {
+   "change": {
+    "kind": "ain",
+    "station": "station-1",
+    "to": 72
+   },
+   "text": "station-1: 16 more analog inputs (56 -> 72)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 2,
+    "batches_up": [
+     {
+      "board": "interf_u",
+      "from": 1,
+      "to": 2
+     },
+     {
+      "board": "tinytapeout-demo",
+      "from": 1,
+      "to": 2
+     }
+    ],
+    "worth": 210.0,
+    "cost": 300.0,
+    "net": -90.0
+   },
+   "flags": [
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U4"
+  },
+  {
+   "change": {
+    "kind": "bus",
+    "station": "station-1",
+    "bus": "i2c",
+    "to": 5
+   },
+   "text": "station-1: 1 more I2C (4 -> 5)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 2,
+    "batches_up": [
+     {
+      "board": "sensor_05",
+      "from": 4,
+      "to": 5
+     },
+     {
+      "board": "sensor_17",
+      "from": 4,
+      "to": 5
+     }
+    ],
+    "worth": 67.0,
+    "cost": 276.0,
+    "net": -209.0
+   },
+   "flags": [
+    "more I2C than limits.i2c (4)",
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U5"
+  },
+  {
+   "change": {
+    "kind": "bus",
+    "station": "station-1",
+    "bus": "uart",
+    "to": 5
+   },
+   "text": "station-1: 1 more UART (4 -> 5)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 3,
+    "batches_up": [
+     {
+      "board": "sensor_13",
+      "from": 4,
+      "to": 5
+     },
+     {
+      "board": "sensor_21",
+      "from": 4,
+      "to": 5
+     },
+     {
+      "board": "sensor_23",
+      "from": 4,
+      "to": 5
+     }
+    ],
+    "worth": 101.0,
+    "cost": 411.0,
+    "net": -310.0
+   },
+   "flags": [
+    "more UART than limits.uart (4)",
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U6"
+  },
+  {
+   "change": {
+    "kind": "bus",
+    "station": "station-1",
+    "bus": "rs485",
+    "to": 3
+   },
+   "text": "station-1: 1 more RS-485 (2 -> 3)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 9,
+    "batches_up": [
+     {
+      "board": "rs485_io_01",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "rs485_io_03",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "rs485_io_05",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "rs485_io_06",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "rs485_io_07",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "rs485_io_08",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "rs485_io_09",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "rs485_io_10",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "rs485_io_11",
+      "from": 2,
+      "to": 3
+     }
+    ],
+    "worth": 552.0,
+    "cost": 960.0,
+    "net": -408.0
+   },
+   "flags": [
+    "more RS-485 than limits.rs485 (2)",
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U7"
+  },
+  {
+   "change": {
+    "kind": "bus",
+    "station": "station-1",
+    "bus": "usb",
+    "to": 3
+   },
+   "text": "station-1: 1 more USB (2 -> 3)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 9,
+    "batches_up": [
+     {
+      "board": "usb_dongle_01",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_02",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_03",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_04",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_06",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_08",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_10",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_12",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_13",
+      "from": 2,
+      "to": 3
+     }
+    ],
+    "worth": 552.0,
+    "cost": 970.0,
+    "net": -418.0
+   },
+   "flags": [
+    "more USB than limits.usb (2)",
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U8"
+  },
+  {
+   "change": {
+    "kind": "vout",
+    "station": "station-1",
+    "to": 9
+   },
+   "text": "station-1: 1 more switched supplies (8 -> 9)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 2,
+    "batches_up": [
+     {
+      "board": "sensor_12",
+      "from": 8,
+      "to": 9
+     },
+     {
+      "board": "usb_dongle_07",
+      "from": 8,
+      "to": 9
+     }
+    ],
+    "worth": 35.0,
+    "cost": 510.0,
+    "net": -475.0
+   },
+   "flags": [
+    "more supplies than limits.supplies (8)",
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U9"
+  },
+  {
+   "change": {
+    "kind": "plate",
+    "station": "station-1",
+    "to": [
+     300.0,
+     250.0
+    ]
+   },
+   "text": "station-1: plate 300 x 250 mm (now 300 x 220 mm)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 28,
+    "batches_up": [
+     {
+      "board": "sensor_04",
+      "from": 4,
+      "to": 8
+     },
+     {
+      "board": "sensor_25",
+      "from": 4,
+      "to": 8
+     },
+     {
+      "board": "gateway_01",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "gateway_08",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "sensor_08",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "sensor_18",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "usb_dongle_05",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "CM5_MINIMA_3",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "avr_board_04",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "avr_board_05",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_01",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_02",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_05",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_07",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_09",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_10",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "power_03",
+      "from": 2,
+      "to": 3
+     }
+    ],
+    "worth": 1004.0,
+    "cost": 2330.0,
+    "net": -1326.0
+   },
+   "flags": [
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U10"
+  },
+  {
+   "change": {
+    "kind": "plate",
+    "station": "station-1",
+    "to": [
+     350.0,
+     250.0
+    ]
+   },
+   "text": "station-1: plate 350 x 250 mm (now 300 x 220 mm)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 45,
+    "batches_up": [
+     {
+      "board": "sensor_04",
+      "from": 4,
+      "to": 8
+     },
+     {
+      "board": "sensor_25",
+      "from": 4,
+      "to": 8
+     },
+     {
+      "board": "StickHub",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "ecc83-pp",
+      "from": 4,
+      "to": 6
+     },
+     {
+      "board": "ecc83-pp_v2",
+      "from": 4,
+      "to": 6
+     },
+     {
+      "board": "gateway_01",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "gateway_08",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "power_10",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "sensor_08",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "sensor_18",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "sensor_22",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "sensor_24",
+      "from": 4,
+      "to": 6
+     },
+     {
+      "board": "usb_dongle_05",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "CM5_MINIMA_3",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "avr_board_04",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "avr_board_05",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_01",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_02",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_05",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_07",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_09",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_10",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "power_01",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "power_03",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "power_07",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "power_11",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "usb_dongle_09",
+      "from": 10,
+      "to": 11
+     },
+     {
+      "board": "usb_dongle_11",
+      "from": 9,
+      "to": 10
+     }
+    ],
+    "worth": 1595.0,
+    "cost": 4016.0,
+    "net": -2421.0
+   },
+   "flags": [
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U11"
+  },
+  {
+   "change": {
+    "kind": "plate",
+    "station": "station-1",
+    "to": [
+     400.0,
+     300.0
+    ]
+   },
+   "text": "station-1: plate 400 x 300 mm (now 300 x 220 mm)",
+   "gain": {
+    "boards_fit": 0,
+    "fit": [],
+    "slots": 79,
+    "batches_up": [
+     {
+      "board": "ecc83-pp_v2",
+      "from": 4,
+      "to": 10
+     },
+     {
+      "board": "CM5_MINIMA_3",
+      "from": 3,
+      "to": 8
+     },
+     {
+      "board": "ecc83-pp",
+      "from": 4,
+      "to": 8
+     },
+     {
+      "board": "sensor_04",
+      "from": 4,
+      "to": 8
+     },
+     {
+      "board": "sensor_24",
+      "from": 4,
+      "to": 8
+     },
+     {
+      "board": "sensor_25",
+      "from": 4,
+      "to": 8
+     },
+     {
+      "board": "power_10",
+      "from": 2,
+      "to": 5
+     },
+     {
+      "board": "usb_dongle_11",
+      "from": 9,
+      "to": 12
+     },
+     {
+      "board": "RoyalBlue54L-Feather",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "StickHub",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "complex_hierarchy",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "gateway_01",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "gateway_08",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "power_01",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "power_04",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "power_05",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "power_06",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "power_07",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "power_11",
+      "from": 2,
+      "to": 4
+     },
+     {
+      "board": "sensor_07",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "sensor_08",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "sensor_18",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "sensor_22",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "usb_dongle_05",
+      "from": 6,
+      "to": 8
+     },
+     {
+      "board": "avr_board_04",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "avr_board_05",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_01",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_02",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_05",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_07",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_09",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "can_node_10",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "controller_01",
+      "from": 1,
+      "to": 2
+     },
+     {
+      "board": "controller_03",
+      "from": 1,
+      "to": 2
+     },
+     {
+      "board": "pic_programmer",
+      "from": 1,
+      "to": 2
+     },
+     {
+      "board": "power_03",
+      "from": 2,
+      "to": 3
+     },
+     {
+      "board": "power_09",
+      "from": 3,
+      "to": 4
+     },
+     {
+      "board": "usb_dongle_09",
+      "from": 10,
+      "to": 11
+     }
+    ],
+    "worth": 2923.0,
+    "cost": 5532.0,
+    "net": -2609.0
+   },
+   "flags": [
+    "the station keeps its pins: the fixtures you have still plug in"
+   ],
+   "id": "U12"
+  }
+ ],
+ "more_options": 0,
+ "paths": {
+  "value": {
+   "steps": [
+    {
+     "change": {
+      "kind": "supply_v",
+      "to": 48.0
+     },
+     "text": "supplies up to 48 V (now 24 V)",
+     "gain": {
+      "boards_fit": 3,
+      "fit": [
+       "hv_driver_01",
+       "hv_driver_02",
+       "hv_driver_03"
+      ],
+      "slots": 11,
+      "batches_up": [],
+      "worth": 1486.0,
+      "cost": 1065.0,
+      "net": 421.0
+     },
+     "flags": []
+    }
+   ],
+   "total": {
+    "boards_fit": 3,
+    "slots": 11,
+    "worth": 1486.0,
+    "cost": 1065.0,
+    "net": 421.0
+   },
+   "after": {
+    "boards_fit": 122,
+    "boards": 128,
+    "slots": 393,
+    "worth": 55625.0,
+    "cost": 17881.0,
+    "net": 37744.0
+   }
+  },
+  "fit": {
+   "steps": [
+    {
+     "change": {
+      "kind": "supply_v",
+      "to": 48.0
+     },
+     "text": "supplies up to 48 V (now 24 V)",
+     "gain": {
+      "boards_fit": 3,
+      "fit": [
+       "hv_driver_01",
+       "hv_driver_02",
+       "hv_driver_03"
+      ],
+      "slots": 11,
+      "batches_up": [],
+      "worth": 1486.0,
+      "cost": 1065.0,
+      "net": 421.0
+     },
+     "flags": []
+    }
+   ],
+   "total": {
+    "boards_fit": 3,
+    "slots": 11,
+    "worth": 1486.0,
+    "cost": 1065.0,
+    "net": 421.0
+   },
+   "after": {
+    "boards_fit": 122,
+    "boards": 128,
+    "slots": 393,
+    "worth": 55625.0,
+    "cost": 17881.0,
+    "net": 37744.0
+   }
+  },
+  "batch": {
+   "steps": [
+    {
+     "change": {
+      "kind": "plate",
+      "station": "station-1",
+      "to": [
+       400.0,
+       300.0
+      ]
+     },
+     "text": "station-1: plate 400 x 300 mm (now 300 x 220 mm)",
+     "gain": {
+      "boards_fit": 0,
+      "fit": [],
+      "slots": 79,
+      "batches_up": [
+       {
+        "board": "ecc83-pp_v2",
+        "from": 4,
+        "to": 10
+       },
+       {
+        "board": "CM5_MINIMA_3",
+        "from": 3,
+        "to": 8
+       },
+       {
+        "board": "ecc83-pp",
+        "from": 4,
+        "to": 8
+       },
+       {
+        "board": "sensor_04",
+        "from": 4,
+        "to": 8
+       },
+       {
+        "board": "sensor_24",
+        "from": 4,
+        "to": 8
+       },
+       {
+        "board": "sensor_25",
+        "from": 4,
+        "to": 8
+       },
+       {
+        "board": "power_10",
+        "from": 2,
+        "to": 5
+       },
+       {
+        "board": "usb_dongle_11",
+        "from": 9,
+        "to": 12
+       },
+       {
+        "board": "RoyalBlue54L-Feather",
+        "from": 6,
+        "to": 8
+       },
+       {
+        "board": "StickHub",
+        "from": 6,
+        "to": 8
+       },
+       {
+        "board": "complex_hierarchy",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "gateway_01",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "gateway_08",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "power_01",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "power_04",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "power_05",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "power_06",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "power_07",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "power_11",
+        "from": 2,
+        "to": 4
+       },
+       {
+        "board": "sensor_07",
+        "from": 6,
+        "to": 8
+       },
+       {
+        "board": "sensor_08",
+        "from": 6,
+        "to": 8
+       },
+       {
+        "board": "sensor_18",
+        "from": 6,
+        "to": 8
+       },
+       {
+        "board": "sensor_22",
+        "from": 6,
+        "to": 8
+       },
+       {
+        "board": "usb_dongle_05",
+        "from": 6,
+        "to": 8
+       },
+       {
+        "board": "avr_board_04",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "avr_board_05",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "can_node_01",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "can_node_02",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "can_node_05",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "can_node_07",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "can_node_09",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "can_node_10",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "controller_01",
+        "from": 1,
+        "to": 2
+       },
+       {
+        "board": "controller_03",
+        "from": 1,
+        "to": 2
+       },
+       {
+        "board": "pic_programmer",
+        "from": 1,
+        "to": 2
+       },
+       {
+        "board": "power_03",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "power_09",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_09",
+        "from": 10,
+        "to": 11
+       }
+      ],
+      "worth": 2923.0,
+      "cost": 5532.0,
+      "net": -2609.0
+     },
+     "flags": [
+      "the station keeps its pins: the fixtures you have still plug in"
+     ]
+    },
+    {
+     "change": {
+      "kind": "supply_v",
+      "to": 48.0
+     },
+     "text": "supplies up to 48 V (now 24 V)",
+     "gain": {
+      "boards_fit": 3,
+      "fit": [
+       "hv_driver_01",
+       "hv_driver_02",
+       "hv_driver_03"
+      ],
+      "slots": 12,
+      "batches_up": [],
+      "worth": 1530.0,
+      "cost": 1080.0,
+      "net": 450.0
+     },
+     "flags": []
+    },
+    {
+     "change": {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 3
+     },
+     "text": "station-1: 1 more RS-485 (2 -> 3)",
+     "gain": {
+      "boards_fit": 0,
+      "fit": [],
+      "slots": 11,
+      "batches_up": [
+       {
+        "board": "rs485_io_01",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_02",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_03",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_04",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_05",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_06",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_07",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_08",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_09",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_10",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "rs485_io_11",
+        "from": 2,
+        "to": 3
+       }
+      ],
+      "worth": 675.0,
+      "cost": 1170.0,
+      "net": -495.0
+     },
+     "flags": [
+      "more RS-485 than limits.rs485 (2)",
+      "the station keeps its pins: the fixtures you have still plug in"
+     ]
+    },
+    {
+     "change": {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 3
+     },
+     "text": "station-1: 1 more USB (2 -> 3)",
+     "gain": {
+      "boards_fit": 0,
+      "fit": [],
+      "slots": 11,
+      "batches_up": [
+       {
+        "board": "gateway_06",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "gateway_07",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_01",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_02",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_03",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_04",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_06",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_08",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_10",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_12",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "usb_dongle_13",
+        "from": 2,
+        "to": 3
+       }
+      ],
+      "worth": 676.0,
+      "cost": 1180.0,
+      "net": -504.0
+     },
+     "flags": [
+      "more USB than limits.usb (2)",
+      "more RS-485 than limits.rs485 (2)",
+      "the station keeps its pins: the fixtures you have still plug in"
+     ]
+    },
+    {
+     "change": {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 3
+     },
+     "text": "station-1: 1 more Ethernet (2 -> 3)",
+     "gain": {
+      "boards_fit": 0,
+      "fit": [],
+      "slots": 7,
+      "batches_up": [
+       {
+        "board": "gateway_02",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "gateway_03",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "gateway_04",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "gateway_05",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "gateway_09",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "gateway_10",
+        "from": 2,
+        "to": 3
+       },
+       {
+        "board": "gateway_11",
+        "from": 2,
+        "to": 3
+       }
+      ],
+      "worth": 430.0,
+      "cost": 780.0,
+      "net": -350.0
+     },
+     "flags": [
+      "more USB than limits.usb (2)",
+      "more Ethernet than limits.ethernet (2)",
+      "more RS-485 than limits.rs485 (2)",
+      "the station keeps its pins: the fixtures you have still plug in"
+     ]
+    },
+    {
+     "change": {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "rs485",
+      "to": 4
+     },
+     "text": "station-1: 1 more RS-485 (3 -> 4)",
+     "gain": {
+      "boards_fit": 0,
+      "fit": [],
+      "slots": 11,
+      "batches_up": [
+       {
+        "board": "rs485_io_01",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_02",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_03",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_04",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_05",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_06",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_07",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_08",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_09",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_10",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "rs485_io_11",
+        "from": 3,
+        "to": 4
+       }
+      ],
+      "worth": 479.0,
+      "cost": 1335.0,
+      "net": -856.0
+     },
+     "flags": [
+      "more USB than limits.usb (2)",
+      "more Ethernet than limits.ethernet (2)",
+      "more RS-485 than limits.rs485 (2)",
+      "the station keeps its pins: the fixtures you have still plug in"
+     ]
+    },
+    {
+     "change": {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "usb",
+      "to": 4
+     },
+     "text": "station-1: 1 more USB (3 -> 4)",
+     "gain": {
+      "boards_fit": 0,
+      "fit": [],
+      "slots": 11,
+      "batches_up": [
+       {
+        "board": "gateway_06",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "gateway_07",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_01",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_02",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_03",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_04",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_06",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_08",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_10",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_12",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "usb_dongle_13",
+        "from": 3,
+        "to": 4
+       }
+      ],
+      "worth": 479.0,
+      "cost": 1345.0,
+      "net": -866.0
+     },
+     "flags": [
+      "more USB than limits.usb (2)",
+      "more Ethernet than limits.ethernet (2)",
+      "more RS-485 than limits.rs485 (2)",
+      "the station keeps its pins: the fixtures you have still plug in"
+     ]
+    },
+    {
+     "change": {
+      "kind": "bus",
+      "station": "station-1",
+      "bus": "ethernet",
+      "to": 4
+     },
+     "text": "station-1: 1 more Ethernet (3 -> 4)",
+     "gain": {
+      "boards_fit": 0,
+      "fit": [],
+      "slots": 7,
+      "batches_up": [
+       {
+        "board": "gateway_02",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "gateway_03",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "gateway_04",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "gateway_05",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "gateway_09",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "gateway_10",
+        "from": 3,
+        "to": 4
+       },
+       {
+        "board": "gateway_11",
+        "from": 3,
+        "to": 4
+       }
+      ],
+      "worth": 306.0,
+      "cost": 885.0,
+      "net": -579.0
+     },
+     "flags": [
+      "more USB than limits.usb (2)",
+      "more Ethernet than limits.ethernet (2)",
+      "more RS-485 than limits.rs485 (2)",
+      "the station keeps its pins: the fixtures you have still plug in"
+     ]
+    }
+   ],
+   "total": {
+    "boards_fit": 3,
+    "slots": 149,
+    "worth": 7498.0,
+    "cost": 10262.0,
+    "net": -2764.0
+   },
+   "after": {
+    "boards_fit": 122,
+    "boards": 128,
+    "slots": 531,
+    "worth": 61637.0,
+    "cost": 20148.0,
+    "net": 41489.0
+   }
+  }
+ },
+ "notes": [
+  "Estimates from the board profiles: a build checks every board with its real fixture layout.",
+  "Worth: a board type that fits counts EUR 300.0 (value_per_board) x its priority, a batch of n 1 + 0.35 x log2(n) of that; costs are rough list prices (spec costs)."
+ ],
+ "schema": "pcbtestkit-upgrades/1"
+}

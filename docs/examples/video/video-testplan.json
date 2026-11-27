@@ -1205,6 +1205,7 @@
             "D3",
             "D4",
             "D6",
+            "J4",
             "L6",
             "P1",
             "P2",
@@ -2799,62 +2800,62 @@
       }
     },
     "assembly": {
-      "per_board_s": 2561.5,
-      "batch_s": 2561.5,
-      "parts": 44,
-      "joints": 901,
+      "per_board_s": 2595.0,
+      "batch_s": 2595.0,
+      "parts": 45,
+      "joints": 912,
       "jig_loads": 1,
       "boards_per_jig": 1
     },
-    "per_board_s": 2591.1,
+    "per_board_s": 2624.6,
     "by_batch_size": [
       {
         "boards": 1,
         "test_per_board_s": 29.6,
-        "assembly_per_board_s": 2561.5,
-        "per_board_s": 2591.1
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
       },
       {
         "boards": 2,
         "test_per_board_s": 29.6,
-        "assembly_per_board_s": 2561.5,
-        "per_board_s": 2591.1
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
       },
       {
         "boards": 3,
         "test_per_board_s": 29.6,
-        "assembly_per_board_s": 2561.5,
-        "per_board_s": 2591.1
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
       },
       {
         "boards": 4,
         "test_per_board_s": 29.6,
-        "assembly_per_board_s": 2561.5,
-        "per_board_s": 2591.1
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
       },
       {
         "boards": 5,
         "test_per_board_s": 29.6,
-        "assembly_per_board_s": 2561.5,
-        "per_board_s": 2591.1
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
       },
       {
         "boards": 6,
         "test_per_board_s": 29.6,
-        "assembly_per_board_s": 2561.5,
-        "per_board_s": 2591.1
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
       },
       {
         "boards": 7,
         "test_per_board_s": 29.6,
-        "assembly_per_board_s": 2561.5,
-        "per_board_s": 2591.1
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
       },
       {
         "boards": 8,
         "test_per_board_s": 29.6,
-        "assembly_per_board_s": 2561.5,
-        "per_board_s": 2591.1
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
       }
     ],
     "suggested_batch": 1,

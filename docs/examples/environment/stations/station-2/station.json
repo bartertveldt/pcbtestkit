@@ -1,0 +1,837 @@
+{
+  "schema": "pcbtestkit-station/1",
+  "generator": "PCB TestKit 1.1.2",
+  "station": {
+    "id": "station-2",
+    "name": "PCB TestKit catalog station 2",
+    "analog_inputs": 32,
+    "max_input_v": 10.0,
+    "shared": true,
+    "buses": {},
+    "plate_mm": [
+      400.0,
+      300.0
+    ],
+    "connectors": [
+      "J1"
+    ],
+    "max_sites": 12,
+    "driver": false
+  },
+  "station_source": "station-2.kicad_pcb",
+  "capacity": {
+    "shared": true,
+    "max_sites": 12,
+    "plate_mm": [
+      400.0,
+      300.0
+    ],
+    "inputs": 32,
+    "supplies": 0,
+    "gnd_pins": 9,
+    "buses": {},
+    "dio": 4
+  },
+  "connector": {
+    "name": "J1",
+    "pins_across": 2,
+    "pins_along": 23,
+    "pitch_mm": 2.54,
+    "numbering": "zigzag",
+    "functions": {
+      "1": "GND",
+      "2": "GND",
+      "3": "AIN1",
+      "4": "AIN2",
+      "5": "AIN3",
+      "6": "AIN4",
+      "7": "AIN5",
+      "8": "AIN6",
+      "9": "GND",
+      "10": "AIN7",
+      "11": "AIN8",
+      "12": "AIN9",
+      "13": "AIN10",
+      "14": "AIN11",
+      "15": "AIN12",
+      "16": "GND",
+      "17": "AIN13",
+      "18": "AIN14",
+      "19": "AIN15",
+      "20": "AIN16",
+      "21": "AIN17",
+      "22": "AIN18",
+      "23": "GND",
+      "24": "AIN19",
+      "25": "AIN20",
+      "26": "AIN21",
+      "27": "AIN22",
+      "28": "AIN23",
+      "29": "AIN24",
+      "30": "GND",
+      "31": "AIN25",
+      "32": "AIN26",
+      "33": "AIN27",
+      "34": "AIN28",
+      "35": "AIN29",
+      "36": "AIN30",
+      "37": "GND",
+      "38": "AIN31",
+      "39": "AIN32",
+      "40": "DIO1",
+      "41": "DIO2",
+      "42": "DIO3",
+      "43": "DIO4",
+      "44": "GND",
+      "45": "GND",
+      "46": "NC"
+    }
+  },
+  "connectors": [
+    {
+      "name": "J1",
+      "pins_across": 2,
+      "pins_along": 23,
+      "pitch_mm": 2.54,
+      "numbering": "zigzag",
+      "functions": {
+        "1": "GND",
+        "2": "GND",
+        "3": "AIN1",
+        "4": "AIN2",
+        "5": "AIN3",
+        "6": "AIN4",
+        "7": "AIN5",
+        "8": "AIN6",
+        "9": "GND",
+        "10": "AIN7",
+        "11": "AIN8",
+        "12": "AIN9",
+        "13": "AIN10",
+        "14": "AIN11",
+        "15": "AIN12",
+        "16": "GND",
+        "17": "AIN13",
+        "18": "AIN14",
+        "19": "AIN15",
+        "20": "AIN16",
+        "21": "AIN17",
+        "22": "AIN18",
+        "23": "GND",
+        "24": "AIN19",
+        "25": "AIN20",
+        "26": "AIN21",
+        "27": "AIN22",
+        "28": "AIN23",
+        "29": "AIN24",
+        "30": "GND",
+        "31": "AIN25",
+        "32": "AIN26",
+        "33": "AIN27",
+        "34": "AIN28",
+        "35": "AIN29",
+        "36": "AIN30",
+        "37": "GND",
+        "38": "AIN31",
+        "39": "AIN32",
+        "40": "DIO1",
+        "41": "DIO2",
+        "42": "DIO3",
+        "43": "DIO4",
+        "44": "GND",
+        "45": "GND",
+        "46": "NC"
+      }
+    }
+  ],
+  "boards": [
+    {
+      "name": "video",
+      "size_mm": [
+        312.0,
+        106.7
+      ],
+      "needs": {
+        "channels": 32,
+        "supply": false,
+        "buses": []
+      },
+      "max_by": {
+        "inputs": 1,
+        "station limit": 12
+      },
+      "limit": "inputs",
+      "requested": null,
+      "supply_v": null,
+      "probe_side": "bottom",
+      "probes": 34,
+      "batch": 1,
+      "status": "ok",
+      "channels": 32,
+      "inputs_used": 32,
+      "inputs_total": 32,
+      "utilization_pct": 100.0,
+      "supplies_used": 0,
+      "supplies_total": 0,
+      "buses": {},
+      "seconds": 24.9,
+      "station": "station-2",
+      "project": "video",
+      "folder": "video",
+      "outputs": {
+        "spec": "video/video-spec.json",
+        "testplan": "video/video-testplan.json",
+        "nest_stl": "video/video-fixture-nest.stl",
+        "nest_preview": "video/video-fixture-nest.png",
+        "nest_press_stl": "video/video-fixture-press-plate.stl",
+        "nest_press_preview": "video/video-fixture-press-plate.png",
+        "nest_adapter_stl": "video/video-fixture-clamp-adapter.stl",
+        "nest_adapter_preview": "video/video-fixture-clamp-adapter.png",
+        "fixture": "video/video-fixture.kicad_pcb",
+        "fixture_project": "video/video-fixture.kicad_pro",
+        "fixture_probes": "video/video-fixture-probes.csv",
+        "fixture_meta": "video/video-fixture.json",
+        "jig_stl": "video/video-jig.stl",
+        "jig_scad": "video/video-jig.scad",
+        "jig_preview": "video/video-jig.png",
+        "jig_place_stl": "video/video-jig-placement.stl",
+        "jig_place_preview": "video/video-jig-placement.png",
+        "jig_nest_bottom_stl": "video/video-paste-nest-bottom.stl",
+        "jig_nest_bottom_preview": "video/video-paste-nest-bottom.png",
+        "jig_meta": "video/video-jig.json",
+        "runner": "video/runner",
+        "guide": "video/video-guide.html",
+        "report": "video/video-report.html"
+      },
+      "warnings": [],
+      "fixture": {
+        "sites": [
+          {
+            "site": 1,
+            "offset": [
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "outline": {
+          "x_min": 9.61,
+          "y_min": -40.46,
+          "x_max": 409.61,
+          "y_max": 259.54,
+          "width": 400.0,
+          "height": 300.0
+        },
+        "connector": [
+          {
+            "ref": "J1",
+            "name": "J1",
+            "site": 1,
+            "shared": true
+          }
+        ],
+        "drc": null,
+        "routing": {
+          "connections": 42,
+          "unrouted_connections": 8
+        }
+      },
+      "nest": {
+        "enabled": true,
+        "style": "slide",
+        "entry": "front",
+        "heights": {
+          "work": 6.0,
+          "tips": 7.5,
+          "rest": 10.55,
+          "gap": 3.05,
+          "travel": 4.55,
+          "ledge": 2.0,
+          "wall": 5.1,
+          "boss": 6.45,
+          "bottom_rest": 8.55,
+          "bottom_work": 4.0,
+          "standoff": 15,
+          "adapter": 14.7,
+          "finger": 14.1,
+          "plate": 5.0,
+          "plate_top_work": 26.7
+        }
+      },
+      "pins": [
+        {
+          "pin": 1,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 2,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 3,
+          "function": "AIN1",
+          "signal": "CH01",
+          "site": 1
+        },
+        {
+          "pin": 4,
+          "function": "AIN2",
+          "signal": "CH02",
+          "site": 1
+        },
+        {
+          "pin": 5,
+          "function": "AIN3",
+          "signal": "CH03",
+          "site": 1
+        },
+        {
+          "pin": 6,
+          "function": "AIN4",
+          "signal": "CH04",
+          "site": 1
+        },
+        {
+          "pin": 7,
+          "function": "AIN5",
+          "signal": "CH05",
+          "site": 1
+        },
+        {
+          "pin": 8,
+          "function": "AIN6",
+          "signal": "CH06",
+          "site": 1
+        },
+        {
+          "pin": 9,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 10,
+          "function": "AIN7",
+          "signal": "CH07",
+          "site": 1
+        },
+        {
+          "pin": 11,
+          "function": "AIN8",
+          "signal": "CH08",
+          "site": 1
+        },
+        {
+          "pin": 12,
+          "function": "AIN9",
+          "signal": "CH09",
+          "site": 1
+        },
+        {
+          "pin": 13,
+          "function": "AIN10",
+          "signal": "CH10",
+          "site": 1
+        },
+        {
+          "pin": 14,
+          "function": "AIN11",
+          "signal": "CH11",
+          "site": 1
+        },
+        {
+          "pin": 15,
+          "function": "AIN12",
+          "signal": "CH12",
+          "site": 1
+        },
+        {
+          "pin": 16,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 17,
+          "function": "AIN13",
+          "signal": "CH13",
+          "site": 1
+        },
+        {
+          "pin": 18,
+          "function": "AIN14",
+          "signal": "CH14",
+          "site": 1
+        },
+        {
+          "pin": 19,
+          "function": "AIN15",
+          "signal": "CH15",
+          "site": 1
+        },
+        {
+          "pin": 20,
+          "function": "AIN16",
+          "signal": "CH16",
+          "site": 1
+        },
+        {
+          "pin": 21,
+          "function": "AIN17",
+          "signal": "CH17",
+          "site": 1
+        },
+        {
+          "pin": 22,
+          "function": "AIN18",
+          "signal": "CH18",
+          "site": 1
+        },
+        {
+          "pin": 23,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 24,
+          "function": "AIN19",
+          "signal": "CH19",
+          "site": 1
+        },
+        {
+          "pin": 25,
+          "function": "AIN20",
+          "signal": "CH20",
+          "site": 1
+        },
+        {
+          "pin": 26,
+          "function": "AIN21",
+          "signal": "CH21",
+          "site": 1
+        },
+        {
+          "pin": 27,
+          "function": "AIN22",
+          "signal": "CH22",
+          "site": 1
+        },
+        {
+          "pin": 28,
+          "function": "AIN23",
+          "signal": "CH23",
+          "site": 1
+        },
+        {
+          "pin": 29,
+          "function": "AIN24",
+          "signal": "CH24",
+          "site": 1
+        },
+        {
+          "pin": 30,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 31,
+          "function": "AIN25",
+          "signal": "CH25",
+          "site": 1
+        },
+        {
+          "pin": 32,
+          "function": "AIN26",
+          "signal": "CH26",
+          "site": 1
+        },
+        {
+          "pin": 33,
+          "function": "AIN27",
+          "signal": "CH27",
+          "site": 1
+        },
+        {
+          "pin": 34,
+          "function": "AIN28",
+          "signal": "CH28",
+          "site": 1
+        },
+        {
+          "pin": 35,
+          "function": "AIN29",
+          "signal": "CH29",
+          "site": 1
+        },
+        {
+          "pin": 36,
+          "function": "AIN30",
+          "signal": "CH30",
+          "site": 1
+        },
+        {
+          "pin": 37,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 38,
+          "function": "AIN31",
+          "signal": "CH31",
+          "site": 1
+        },
+        {
+          "pin": 39,
+          "function": "AIN32",
+          "signal": "CH32",
+          "site": 1
+        },
+        {
+          "pin": 40,
+          "function": "DIO1",
+          "signal": "NC",
+          "site": null
+        },
+        {
+          "pin": 41,
+          "function": "DIO2",
+          "signal": "NC",
+          "site": null
+        },
+        {
+          "pin": 42,
+          "function": "DIO3",
+          "signal": "NC",
+          "site": null
+        },
+        {
+          "pin": 43,
+          "function": "DIO4",
+          "signal": "NC",
+          "site": null
+        },
+        {
+          "pin": 44,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 45,
+          "function": "GND",
+          "signal": "GND",
+          "site": null
+        },
+        {
+          "pin": 46,
+          "function": "NC",
+          "signal": "NC",
+          "site": null
+        }
+      ],
+      "pins_by": {
+        "J1": [
+          {
+            "pin": 1,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 2,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 3,
+            "function": "AIN1",
+            "signal": "CH01",
+            "site": 1
+          },
+          {
+            "pin": 4,
+            "function": "AIN2",
+            "signal": "CH02",
+            "site": 1
+          },
+          {
+            "pin": 5,
+            "function": "AIN3",
+            "signal": "CH03",
+            "site": 1
+          },
+          {
+            "pin": 6,
+            "function": "AIN4",
+            "signal": "CH04",
+            "site": 1
+          },
+          {
+            "pin": 7,
+            "function": "AIN5",
+            "signal": "CH05",
+            "site": 1
+          },
+          {
+            "pin": 8,
+            "function": "AIN6",
+            "signal": "CH06",
+            "site": 1
+          },
+          {
+            "pin": 9,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 10,
+            "function": "AIN7",
+            "signal": "CH07",
+            "site": 1
+          },
+          {
+            "pin": 11,
+            "function": "AIN8",
+            "signal": "CH08",
+            "site": 1
+          },
+          {
+            "pin": 12,
+            "function": "AIN9",
+            "signal": "CH09",
+            "site": 1
+          },
+          {
+            "pin": 13,
+            "function": "AIN10",
+            "signal": "CH10",
+            "site": 1
+          },
+          {
+            "pin": 14,
+            "function": "AIN11",
+            "signal": "CH11",
+            "site": 1
+          },
+          {
+            "pin": 15,
+            "function": "AIN12",
+            "signal": "CH12",
+            "site": 1
+          },
+          {
+            "pin": 16,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 17,
+            "function": "AIN13",
+            "signal": "CH13",
+            "site": 1
+          },
+          {
+            "pin": 18,
+            "function": "AIN14",
+            "signal": "CH14",
+            "site": 1
+          },
+          {
+            "pin": 19,
+            "function": "AIN15",
+            "signal": "CH15",
+            "site": 1
+          },
+          {
+            "pin": 20,
+            "function": "AIN16",
+            "signal": "CH16",
+            "site": 1
+          },
+          {
+            "pin": 21,
+            "function": "AIN17",
+            "signal": "CH17",
+            "site": 1
+          },
+          {
+            "pin": 22,
+            "function": "AIN18",
+            "signal": "CH18",
+            "site": 1
+          },
+          {
+            "pin": 23,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 24,
+            "function": "AIN19",
+            "signal": "CH19",
+            "site": 1
+          },
+          {
+            "pin": 25,
+            "function": "AIN20",
+            "signal": "CH20",
+            "site": 1
+          },
+          {
+            "pin": 26,
+            "function": "AIN21",
+            "signal": "CH21",
+            "site": 1
+          },
+          {
+            "pin": 27,
+            "function": "AIN22",
+            "signal": "CH22",
+            "site": 1
+          },
+          {
+            "pin": 28,
+            "function": "AIN23",
+            "signal": "CH23",
+            "site": 1
+          },
+          {
+            "pin": 29,
+            "function": "AIN24",
+            "signal": "CH24",
+            "site": 1
+          },
+          {
+            "pin": 30,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 31,
+            "function": "AIN25",
+            "signal": "CH25",
+            "site": 1
+          },
+          {
+            "pin": 32,
+            "function": "AIN26",
+            "signal": "CH26",
+            "site": 1
+          },
+          {
+            "pin": 33,
+            "function": "AIN27",
+            "signal": "CH27",
+            "site": 1
+          },
+          {
+            "pin": 34,
+            "function": "AIN28",
+            "signal": "CH28",
+            "site": 1
+          },
+          {
+            "pin": 35,
+            "function": "AIN29",
+            "signal": "CH29",
+            "site": 1
+          },
+          {
+            "pin": 36,
+            "function": "AIN30",
+            "signal": "CH30",
+            "site": 1
+          },
+          {
+            "pin": 37,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 38,
+            "function": "AIN31",
+            "signal": "CH31",
+            "site": 1
+          },
+          {
+            "pin": 39,
+            "function": "AIN32",
+            "signal": "CH32",
+            "site": 1
+          },
+          {
+            "pin": 40,
+            "function": "DIO1",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 41,
+            "function": "DIO2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 42,
+            "function": "DIO3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 43,
+            "function": "DIO4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 44,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 45,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 46,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          }
+        ]
+      },
+      "programming": []
+    }
+  ],
+  "warnings": [],
+  "title": "PCB TestKit catalog station 2",
+  "boards_ok": 1,
+  "video": {
+    "ok": true,
+    "path": "station-compatibility.mp4",
+    "duration_s": 12.6,
+    "clips": {
+      "made": 2,
+      "kept": 0
+    },
+    "shown": 1,
+    "board_types": 1
+  },
+  "image": "station.png"
+}

@@ -107,12 +107,12 @@
   ],
   "outline_mode": "rect",
   "outline": {
-    "x_min": 79.0,
-    "y_min": 25.25,
-    "x_max": 181.0,
-    "y_max": 184.58,
-    "width": 102.0,
-    "height": 159.33
+    "x_min": 79.5,
+    "y_min": 25.75,
+    "x_max": 180.5,
+    "y_max": 184.08,
+    "width": 101.0,
+    "height": 158.33
   },
   "pogo_count": 8,
   "nets": 11,
@@ -122,7 +122,7 @@
     "unrouted_nets": [],
     "connections": 26,
     "unrouted_connections": 0,
-    "length_mm": 527.3,
+    "length_mm": 523.1,
     "vias": 11,
     "grid_mm": 0.254,
     "passes": 1,
@@ -139,6 +139,11 @@
   },
   "plate_fit": true,
   "plate_fits_cols": [],
+  "site_mm": [
+    87.0,
+    144.33
+  ],
+  "site_spacing_mm": 3.0,
   "nest": {
     "enabled": true,
     "style": "slide",
@@ -188,7 +193,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 6 screw, standoff to fixture board (from below)"
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
       },
       {
         "qty": 4,
@@ -214,7 +219,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
       },
       {
         "qty": 2,

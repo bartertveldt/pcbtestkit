@@ -1,5 +1,5 @@
 site,probe,dut_net,role,x_mm,y_mm,drill_mm,tip,channel,header_pin,divider_ratio
 1,PP01,"GND",ground,150.8914,107.0232,1.40,spear,,,
-2,PP01,"GND",ground,205.5014,107.0232,1.40,spear,,,
-3,PP01,"GND",ground,260.1114,107.0232,1.40,spear,,,
-4,PP01,"GND",ground,314.7214,107.0232,1.40,spear,,,
+2,PP01,"GND",ground,228.8694,107.0232,1.40,spear,,,
+3,PP01,"GND",ground,150.8914,194.1452,1.40,spear,,,
+4,PP01,"GND",ground,228.8694,194.1452,1.40,spear,,,

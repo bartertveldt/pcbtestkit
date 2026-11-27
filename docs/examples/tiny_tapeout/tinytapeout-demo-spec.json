@@ -1,7 +1,7 @@
 {
   "schema": "pcbtestkit/spec@1",
-  "generator": "PCB TestKit 1.1.1",
-  "generated": "2026-11-26T17:41:02",
+  "generator": "PCB TestKit 1.1.2",
+  "generated": "2026-11-27T15:28:38",
   "source": {
     "board": "tinytapeout-demo.kicad_pcb",
     "schematic": "tinytapeout-demo.kicad_sch",

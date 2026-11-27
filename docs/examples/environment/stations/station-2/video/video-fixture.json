@@ -1,0 +1,708 @@
+{
+  "sites": [
+    {
+      "site": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 61.595,
+          "y": 107.315,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP02",
+          "x": 61.595,
+          "y": 102.235,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 119.533,
+          "y": 148.463,
+          "fixture_net": "TP_+3.3V"
+        },
+        {
+          "probe": "PP04",
+          "x": 75.946,
+          "y": 98.907,
+          "fixture_net": "TP_+5F"
+        },
+        {
+          "probe": "PP05",
+          "x": 188.595,
+          "y": 142.621,
+          "fixture_net": "TP_+5V"
+        },
+        {
+          "probe": "PP06",
+          "x": 311.277,
+          "y": 127.889,
+          "fixture_net": "TP_VAA"
+        },
+        {
+          "probe": "PP07",
+          "x": 335.915,
+          "y": 102.235,
+          "fixture_net": "TP_BLANK-"
+        },
+        {
+          "probe": "PP08",
+          "x": 175.895,
+          "y": 137.795,
+          "fixture_net": "TP_EA1"
+        },
+        {
+          "probe": "PP09",
+          "x": 170.815,
+          "y": 134.112,
+          "fixture_net": "TP_EA2"
+        },
+        {
+          "probe": "PP10",
+          "x": 175.895,
+          "y": 134.112,
+          "fixture_net": "TP_EA3"
+        },
+        {
+          "probe": "PP11",
+          "x": 186.055,
+          "y": 134.112,
+          "fixture_net": "TP_EA4"
+        },
+        {
+          "probe": "PP12",
+          "x": 92.71,
+          "y": 142.875,
+          "fixture_net": "TP_EA5"
+        },
+        {
+          "probe": "PP13",
+          "x": 87.63,
+          "y": 142.875,
+          "fixture_net": "TP_EA6"
+        },
+        {
+          "probe": "PP14",
+          "x": 105.41,
+          "y": 135.89,
+          "fixture_net": "TP_EA7"
+        },
+        {
+          "probe": "PP15",
+          "x": 90.17,
+          "y": 135.89,
+          "fixture_net": "TP_EA9"
+        },
+        {
+          "probe": "PP16",
+          "x": 105.12,
+          "y": 127.0,
+          "fixture_net": "TP_EA10"
+        },
+        {
+          "probe": "PP17",
+          "x": 100.04,
+          "y": 127.0,
+          "fixture_net": "TP_EA11"
+        },
+        {
+          "probe": "PP18",
+          "x": 94.96,
+          "y": 127.0,
+          "fixture_net": "TP_EA12"
+        },
+        {
+          "probe": "PP19",
+          "x": 92.42,
+          "y": 127.0,
+          "fixture_net": "TP_EA13"
+        },
+        {
+          "probe": "PP20",
+          "x": 102.87,
+          "y": 142.875,
+          "fixture_net": "TP_EA14"
+        },
+        {
+          "probe": "PP21",
+          "x": 97.79,
+          "y": 142.875,
+          "fixture_net": "TP_EA15"
+        },
+        {
+          "probe": "PP22",
+          "x": 186.055,
+          "y": 142.621,
+          "fixture_net": "TP_EQ0"
+        },
+        {
+          "probe": "PP23",
+          "x": 180.975,
+          "y": 142.621,
+          "fixture_net": "TP_EQ1"
+        },
+        {
+          "probe": "PP24",
+          "x": 175.895,
+          "y": 142.621,
+          "fixture_net": "TP_EQ2"
+        },
+        {
+          "probe": "PP25",
+          "x": 173.355,
+          "y": 142.621,
+          "fixture_net": "TP_EQ3"
+        },
+        {
+          "probe": "PP26",
+          "x": 168.275,
+          "y": 142.621,
+          "fixture_net": "TP_EQ4"
+        },
+        {
+          "probe": "PP27",
+          "x": 180.975,
+          "y": 137.795,
+          "fixture_net": "TP_EQ5"
+        },
+        {
+          "probe": "PP28",
+          "x": 186.055,
+          "y": 137.795,
+          "fixture_net": "TP_EQ6"
+        },
+        {
+          "probe": "PP29",
+          "x": 168.275,
+          "y": 137.795,
+          "fixture_net": "TP_EQ7"
+        },
+        {
+          "probe": "PP30",
+          "x": 333.375,
+          "y": 102.235,
+          "fixture_net": "TP_CLKCDA"
+        },
+        {
+          "probe": "PP31",
+          "x": 318.897,
+          "y": 125.349,
+          "fixture_net": "TP_CSYNCIN-"
+        },
+        {
+          "probe": "PP32",
+          "x": 88.773,
+          "y": 99.695,
+          "fixture_net": "TP_DQ8"
+        },
+        {
+          "probe": "PP33",
+          "x": 88.773,
+          "y": 97.155,
+          "fixture_net": "TP_DQ9"
+        },
+        {
+          "probe": "PP34",
+          "x": 88.773,
+          "y": 94.615,
+          "fixture_net": "TP_DQ10"
+        }
+      ],
+      "net_prefix": "",
+      "program": []
+    }
+  ],
+  "warnings": [
+    "the router left 8 of 42 connection(s) unrouted (TP_EA3, TP_EA7, TP_EA12, TP_EQ4, TP_EQ5, TP_EQ7, TP_CSYNCIN-, TP_DQ10): route them in KiCad before ordering"
+  ],
+  "channel_map": [
+    {
+      "site": 1,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 3,
+      "dut_net": "+3.3V",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 4,
+      "dut_net": "+5F",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 5,
+      "dut_net": "+5V",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 6,
+      "dut_net": "/ESVIDEO-RVB/VAA",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 7,
+      "dut_net": "/BLANK-",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 8,
+      "dut_net": "/buspci.sch/EA1",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH07",
+      "header": "J1",
+      "pin": 10,
+      "dut_net": "/buspci.sch/EA2",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH08",
+      "header": "J1",
+      "pin": 11,
+      "dut_net": "/buspci.sch/EA3",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH09",
+      "header": "J1",
+      "pin": 12,
+      "dut_net": "/buspci.sch/EA4",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH10",
+      "header": "J1",
+      "pin": 13,
+      "dut_net": "/buspci.sch/EA5",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH11",
+      "header": "J1",
+      "pin": 14,
+      "dut_net": "/buspci.sch/EA6",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH12",
+      "header": "J1",
+      "pin": 15,
+      "dut_net": "/buspci.sch/EA7",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH13",
+      "header": "J1",
+      "pin": 17,
+      "dut_net": "/buspci.sch/EA9",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH14",
+      "header": "J1",
+      "pin": 18,
+      "dut_net": "/buspci.sch/EA10",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH15",
+      "header": "J1",
+      "pin": 19,
+      "dut_net": "/buspci.sch/EA11",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH16",
+      "header": "J1",
+      "pin": 20,
+      "dut_net": "/buspci.sch/EA12",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH17",
+      "header": "J1",
+      "pin": 21,
+      "dut_net": "/buspci.sch/EA13",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH18",
+      "header": "J1",
+      "pin": 22,
+      "dut_net": "/buspci.sch/EA14",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH19",
+      "header": "J1",
+      "pin": 24,
+      "dut_net": "/buspci.sch/EA15",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH20",
+      "header": "J1",
+      "pin": 25,
+      "dut_net": "/buspci.sch/EQ0",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH21",
+      "header": "J1",
+      "pin": 26,
+      "dut_net": "/buspci.sch/EQ1",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH22",
+      "header": "J1",
+      "pin": 27,
+      "dut_net": "/buspci.sch/EQ2",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH23",
+      "header": "J1",
+      "pin": 28,
+      "dut_net": "/buspci.sch/EQ3",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH24",
+      "header": "J1",
+      "pin": 29,
+      "dut_net": "/buspci.sch/EQ4",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH25",
+      "header": "J1",
+      "pin": 31,
+      "dut_net": "/buspci.sch/EQ5",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH26",
+      "header": "J1",
+      "pin": 32,
+      "dut_net": "/buspci.sch/EQ6",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH27",
+      "header": "J1",
+      "pin": 33,
+      "dut_net": "/buspci.sch/EQ7",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH28",
+      "header": "J1",
+      "pin": 34,
+      "dut_net": "/CLKCDA",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH29",
+      "header": "J1",
+      "pin": 35,
+      "dut_net": "/CSYNCIN-",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH30",
+      "header": "J1",
+      "pin": 36,
+      "dut_net": "/DQ8",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH31",
+      "header": "J1",
+      "pin": 38,
+      "dut_net": "/DQ9",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH32",
+      "header": "J1",
+      "pin": 39,
+      "dut_net": "/DQ10",
+      "divider_ratio": 1.0
+    }
+  ],
+  "outline_mode": "rect",
+  "outline": {
+    "x_min": 9.61,
+    "y_min": -40.46,
+    "x_max": 409.61,
+    "y_max": 259.54,
+    "width": 400.0,
+    "height": 300.0
+  },
+  "pogo_count": 34,
+  "nets": 33,
+  "routing": {
+    "nets": 33,
+    "routed_nets": 25,
+    "unrouted_nets": [
+      "TP_EA3",
+      "TP_EA7",
+      "TP_EA12",
+      "TP_EQ4",
+      "TP_EQ5",
+      "TP_EQ7",
+      "TP_CSYNCIN-",
+      "TP_DQ10"
+    ],
+    "connections": 42,
+    "unrouted_connections": 8,
+    "length_mm": 4167.9,
+    "vias": 43,
+    "grid_mm": 0.3175,
+    "passes": 2,
+    "best_pass": 2,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5
+  },
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  },
+  "plate_fit": true,
+  "plate_fits_cols": [],
+  "site_mm": [
+    339.039,
+    182.01
+  ],
+  "site_spacing_mm": 3.0,
+  "facility": {
+    "id": "station-2",
+    "connectors": [
+      {
+        "ref": "J1",
+        "name": "J1",
+        "site": 1,
+        "shared": true
+      }
+    ],
+    "plate_mm": [
+      400.0,
+      300.0
+    ]
+  },
+  "nest": {
+    "enabled": true,
+    "style": "slide",
+    "entry": "front",
+    "clamp": "toggle",
+    "heights": {
+      "work": 6.0,
+      "tips": 7.5,
+      "rest": 10.55,
+      "gap": 3.05,
+      "travel": 4.55,
+      "ledge": 2.0,
+      "wall": 5.1,
+      "boss": 6.45,
+      "bottom_rest": 8.55,
+      "bottom_work": 4.0,
+      "standoff": 15,
+      "adapter": 14.7,
+      "finger": 14.1,
+      "plate": 5.0,
+      "plate_top_work": 26.7
+    },
+    "board_mm": [
+      106.68,
+      312.04,
+      1.600198
+    ],
+    "spring": {
+      "free_mm": 10.0,
+      "solid_mm": 3.5,
+      "rest_mm": 8.55,
+      "work_mm": 4.0
+    },
+    "bom": [
+      {
+        "qty": 1,
+        "part": "nest (print, PETG)",
+        "file": "nest"
+      },
+      {
+        "qty": 4,
+        "part": "M3 hex standoff, female-female, 15 mm"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw + M3 large washer (DIN 9021, 9 mm), on top of each standoff"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
+      },
+      {
+        "qty": 4,
+        "part": "compression spring, outer 8 mm, wire 0.5 mm, free length 10 mm (solid 3.5 mm or less)"
+      },
+      {
+        "qty": 1,
+        "part": "vertical toggle clamp, about 25 kg, flanged base (e.g. GH-101-A)"
+      },
+      {
+        "qty": 1,
+        "part": "clamp adapter (print)",
+        "file": "adapter"
+      },
+      {
+        "qty": 1,
+        "part": "press plate (print)",
+        "file": "press"
+      },
+      {
+        "qty": 4,
+        "part": "M4 x 12 screw + M4 nut, clamp to adapter (nuts in the adapter's channels)"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
+      },
+      {
+        "qty": 2,
+        "part": "nut + washer for the clamp's spindle, one each side of the press plate"
+      }
+    ],
+    "warnings": [],
+    "gap_reason": "U5",
+    "extents": {
+      "left": 12.5,
+      "right": 12.5,
+      "top": 46.25,
+      "bottom": 10.0
+    },
+    "fingers": 19,
+    "files": {
+      "nest": {
+        "stl": "video-fixture-nest.stl",
+        "preview_png": "video-fixture-nest.png",
+        "print": 1,
+        "size_mm": [
+          122.0,
+          338.2,
+          6.45
+        ]
+      },
+      "press": {
+        "stl": "video-fixture-press-plate.stl",
+        "preview_png": "video-fixture-press-plate.png",
+        "print": 1,
+        "size_mm": [
+          110.5,
+          320.8,
+          19.1
+        ]
+      },
+      "adapter": {
+        "stl": "video-fixture-clamp-adapter.stl",
+        "preview_png": "video-fixture-clamp-adapter.png",
+        "print": 1,
+        "size_mm": [
+          40.0,
+          38.0,
+          14.7
+        ]
+      }
+    },
+    "mesh": {
+      "nest": {
+        "triangles": 197948,
+        "unmatched_edges": 0,
+        "volume_mm3": 15699.0,
+        "watertight": true
+      },
+      "press": {
+        "triangles": 122934,
+        "unmatched_edges": 0,
+        "volume_mm3": 179567.7,
+        "watertight": true
+      },
+      "adapter": {
+        "triangles": 12708,
+        "unmatched_edges": 0,
+        "volume_mm3": 15426.1,
+        "watertight": true
+      }
+    },
+    "refs": [
+      {
+        "site": 1,
+        "posts": [
+          "NP1",
+          "NP2",
+          "NP3",
+          "NP4"
+        ],
+        "adapter": [
+          "NK1",
+          "NK2",
+          "NK3",
+          "NK4"
+        ],
+        "nest": "N1",
+        "clamp": "K1"
+      }
+    ]
+  }
+}

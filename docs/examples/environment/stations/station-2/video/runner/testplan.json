@@ -1,0 +1,3021 @@
+{
+  "schema": "pcbtestkit/testplan@1",
+  "board": {
+    "name": "video",
+    "revision": "1.A"
+  },
+  "probe_side": "bottom",
+  "probe_side_reason": "auto: bottom side scored higher (bottom 46, top 5)",
+  "probe_side_eval": {
+    "bottom": {
+      "power_nets": 5,
+      "nets": 33,
+      "test_pads": 0,
+      "component_pads": 2,
+      "supply_reached": false,
+      "score": 46
+    },
+    "top": {
+      "power_nets": 2,
+      "nets": 7,
+      "test_pads": 0,
+      "component_pads": 8,
+      "supply_reached": false,
+      "score": 5
+    }
+  },
+  "pogo": {
+    "family": "P75",
+    "mount": "receptacle",
+    "pitch_mm": 1.91,
+    "drill_mm": 1.4,
+    "pad_mm": 1.9,
+    "min_spacing_mm": 2.4,
+    "min_target_mm": 0.9,
+    "probe_clearance_mm": 6.0
+  },
+  "adc": {
+    "max_input_v": 10.0
+  },
+  "facility": {
+    "id": "station-2",
+    "name": "PCB TestKit catalog station 2",
+    "analog_inputs": 32,
+    "max_input_v": 10.0,
+    "shared": true,
+    "buses": {},
+    "plate_mm": [
+      400.0,
+      300.0
+    ],
+    "connectors": [
+      {
+        "name": "J1",
+        "site": 1,
+        "shared": true,
+        "sites": 1,
+        "pins": [
+          {
+            "pin": 1,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 2,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 3,
+            "function": "AIN1",
+            "signal": "CH01",
+            "site": 1
+          },
+          {
+            "pin": 4,
+            "function": "AIN2",
+            "signal": "CH02",
+            "site": 1
+          },
+          {
+            "pin": 5,
+            "function": "AIN3",
+            "signal": "CH03",
+            "site": 1
+          },
+          {
+            "pin": 6,
+            "function": "AIN4",
+            "signal": "CH04",
+            "site": 1
+          },
+          {
+            "pin": 7,
+            "function": "AIN5",
+            "signal": "CH05",
+            "site": 1
+          },
+          {
+            "pin": 8,
+            "function": "AIN6",
+            "signal": "CH06",
+            "site": 1
+          },
+          {
+            "pin": 9,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 10,
+            "function": "AIN7",
+            "signal": "CH07",
+            "site": 1
+          },
+          {
+            "pin": 11,
+            "function": "AIN8",
+            "signal": "CH08",
+            "site": 1
+          },
+          {
+            "pin": 12,
+            "function": "AIN9",
+            "signal": "CH09",
+            "site": 1
+          },
+          {
+            "pin": 13,
+            "function": "AIN10",
+            "signal": "CH10",
+            "site": 1
+          },
+          {
+            "pin": 14,
+            "function": "AIN11",
+            "signal": "CH11",
+            "site": 1
+          },
+          {
+            "pin": 15,
+            "function": "AIN12",
+            "signal": "CH12",
+            "site": 1
+          },
+          {
+            "pin": 16,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 17,
+            "function": "AIN13",
+            "signal": "CH13",
+            "site": 1
+          },
+          {
+            "pin": 18,
+            "function": "AIN14",
+            "signal": "CH14",
+            "site": 1
+          },
+          {
+            "pin": 19,
+            "function": "AIN15",
+            "signal": "CH15",
+            "site": 1
+          },
+          {
+            "pin": 20,
+            "function": "AIN16",
+            "signal": "CH16",
+            "site": 1
+          },
+          {
+            "pin": 21,
+            "function": "AIN17",
+            "signal": "CH17",
+            "site": 1
+          },
+          {
+            "pin": 22,
+            "function": "AIN18",
+            "signal": "CH18",
+            "site": 1
+          },
+          {
+            "pin": 23,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 24,
+            "function": "AIN19",
+            "signal": "CH19",
+            "site": 1
+          },
+          {
+            "pin": 25,
+            "function": "AIN20",
+            "signal": "CH20",
+            "site": 1
+          },
+          {
+            "pin": 26,
+            "function": "AIN21",
+            "signal": "CH21",
+            "site": 1
+          },
+          {
+            "pin": 27,
+            "function": "AIN22",
+            "signal": "CH22",
+            "site": 1
+          },
+          {
+            "pin": 28,
+            "function": "AIN23",
+            "signal": "CH23",
+            "site": 1
+          },
+          {
+            "pin": 29,
+            "function": "AIN24",
+            "signal": "CH24",
+            "site": 1
+          },
+          {
+            "pin": 30,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 31,
+            "function": "AIN25",
+            "signal": "CH25",
+            "site": 1
+          },
+          {
+            "pin": 32,
+            "function": "AIN26",
+            "signal": "CH26",
+            "site": 1
+          },
+          {
+            "pin": 33,
+            "function": "AIN27",
+            "signal": "CH27",
+            "site": 1
+          },
+          {
+            "pin": 34,
+            "function": "AIN28",
+            "signal": "CH28",
+            "site": 1
+          },
+          {
+            "pin": 35,
+            "function": "AIN29",
+            "signal": "CH29",
+            "site": 1
+          },
+          {
+            "pin": 36,
+            "function": "AIN30",
+            "signal": "CH30",
+            "site": 1
+          },
+          {
+            "pin": 37,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 38,
+            "function": "AIN31",
+            "signal": "CH31",
+            "site": 1
+          },
+          {
+            "pin": 39,
+            "function": "AIN32",
+            "signal": "CH32",
+            "site": 1
+          },
+          {
+            "pin": 40,
+            "function": "DIO1",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 41,
+            "function": "DIO2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 42,
+            "function": "DIO3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 43,
+            "function": "DIO4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 44,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 45,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 46,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          }
+        ]
+      }
+    ],
+    "max_sites": 12,
+    "driver": false,
+    "bus_checks": [],
+    "capacity": {
+      "shared": true,
+      "max_sites": 12,
+      "plate_mm": [
+        400.0,
+        300.0
+      ],
+      "inputs": 32,
+      "supplies": 0,
+      "gnd_pins": 9,
+      "buses": {},
+      "dio": 4,
+      "boards": {
+        "count": 1,
+        "limit": "inputs",
+        "by": {
+          "inputs": 1,
+          "station limit": 12
+        }
+      }
+    }
+  },
+  "supply": {
+    "net": null,
+    "voltage": null,
+    "reason": "no power net reaches a connector; set supply.net",
+    "current_limit_a": 0.5
+  },
+  "main_ground": "GND",
+  "probes": [
+    {
+      "id": "PP01",
+      "net": "GND",
+      "role": "ground",
+      "x": 61.595,
+      "y": 107.315,
+      "source": "tht",
+      "label": "P1.2",
+      "target_mm": 3.048,
+      "tip": "crown",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP02",
+      "net": "GND",
+      "role": "ground",
+      "x": 61.595,
+      "y": 102.235,
+      "source": "tht",
+      "label": "P1.2",
+      "target_mm": 3.048,
+      "tip": "crown",
+      "channel": null,
+      "header_pin": null,
+      "divider": null,
+      "expected": null,
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP03",
+      "net": "+3.3V",
+      "role": "measure",
+      "x": 119.533,
+      "y": 148.463,
+      "source": "smd",
+      "label": "C68.1",
+      "target_mm": 1.3,
+      "tip": "spear",
+      "channel": "CH01",
+      "header_pin": 3,
+      "divider": null,
+      "expected": {
+        "nominal_v": 3.3,
+        "min_v": 3.135,
+        "max_v": 3.465,
+        "voltage_source": "net name"
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP04",
+      "net": "+5F",
+      "role": "measure",
+      "x": 75.946,
+      "y": 98.907,
+      "source": "smd",
+      "label": "C55.1",
+      "target_mm": 1.3,
+      "tip": "spear",
+      "channel": "CH02",
+      "header_pin": 4,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP05",
+      "net": "+5V",
+      "role": "measure",
+      "x": 188.595,
+      "y": 142.621,
+      "source": "tht",
+      "label": "RR1.1",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH03",
+      "header_pin": 5,
+      "divider": null,
+      "expected": {
+        "nominal_v": 5.0,
+        "min_v": 4.75,
+        "max_v": 5.25,
+        "voltage_source": "net name"
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP06",
+      "net": "/ESVIDEO-RVB/VAA",
+      "role": "measure",
+      "x": 311.277,
+      "y": 127.889,
+      "source": "tht",
+      "label": "U8.1",
+      "target_mm": 1.397,
+      "tip": "crown",
+      "channel": "CH04",
+      "header_pin": 6,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP07",
+      "net": "/BLANK-",
+      "role": "measure",
+      "x": 335.915,
+      "y": 102.235,
+      "source": "tht",
+      "label": "U9.7",
+      "target_mm": 1.397,
+      "tip": "crown",
+      "channel": "CH05",
+      "header_pin": 7,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP08",
+      "net": "/buspci.sch/EA1",
+      "role": "measure",
+      "x": 175.895,
+      "y": 137.795,
+      "source": "tht",
+      "label": "RR2.6",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH06",
+      "header_pin": 8,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP09",
+      "net": "/buspci.sch/EA2",
+      "role": "measure",
+      "x": 170.815,
+      "y": 134.112,
+      "source": "tht",
+      "label": "RR3.8",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH07",
+      "header_pin": 10,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP10",
+      "net": "/buspci.sch/EA3",
+      "role": "measure",
+      "x": 175.895,
+      "y": 134.112,
+      "source": "tht",
+      "label": "RR3.6",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH08",
+      "header_pin": 11,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP11",
+      "net": "/buspci.sch/EA4",
+      "role": "measure",
+      "x": 186.055,
+      "y": 134.112,
+      "source": "tht",
+      "label": "RR3.2",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH09",
+      "header_pin": 12,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP12",
+      "net": "/buspci.sch/EA5",
+      "role": "measure",
+      "x": 92.71,
+      "y": 142.875,
+      "source": "tht",
+      "label": "RR4.4",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH10",
+      "header_pin": 13,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP13",
+      "net": "/buspci.sch/EA6",
+      "role": "measure",
+      "x": 87.63,
+      "y": 142.875,
+      "source": "tht",
+      "label": "RR4.2",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH11",
+      "header_pin": 14,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP14",
+      "net": "/buspci.sch/EA7",
+      "role": "measure",
+      "x": 105.41,
+      "y": 135.89,
+      "source": "tht",
+      "label": "RR5.9",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH12",
+      "header_pin": 15,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP15",
+      "net": "/buspci.sch/EA9",
+      "role": "measure",
+      "x": 90.17,
+      "y": 135.89,
+      "source": "tht",
+      "label": "RR5.3",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH13",
+      "header_pin": 17,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP16",
+      "net": "/buspci.sch/EA10",
+      "role": "measure",
+      "x": 105.12,
+      "y": 127.0,
+      "source": "tht",
+      "label": "RR6.9",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH14",
+      "header_pin": 18,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP17",
+      "net": "/buspci.sch/EA11",
+      "role": "measure",
+      "x": 100.04,
+      "y": 127.0,
+      "source": "tht",
+      "label": "RR6.7",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH15",
+      "header_pin": 19,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP18",
+      "net": "/buspci.sch/EA12",
+      "role": "measure",
+      "x": 94.96,
+      "y": 127.0,
+      "source": "tht",
+      "label": "RR6.5",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH16",
+      "header_pin": 20,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP19",
+      "net": "/buspci.sch/EA13",
+      "role": "measure",
+      "x": 92.42,
+      "y": 127.0,
+      "source": "tht",
+      "label": "RR6.4",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH17",
+      "header_pin": 21,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP20",
+      "net": "/buspci.sch/EA14",
+      "role": "measure",
+      "x": 102.87,
+      "y": 142.875,
+      "source": "tht",
+      "label": "RR4.8",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH18",
+      "header_pin": 22,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP21",
+      "net": "/buspci.sch/EA15",
+      "role": "measure",
+      "x": 97.79,
+      "y": 142.875,
+      "source": "tht",
+      "label": "RR4.6",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH19",
+      "header_pin": 24,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP22",
+      "net": "/buspci.sch/EQ0",
+      "role": "measure",
+      "x": 186.055,
+      "y": 142.621,
+      "source": "tht",
+      "label": "RR1.2",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH20",
+      "header_pin": 25,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP23",
+      "net": "/buspci.sch/EQ1",
+      "role": "measure",
+      "x": 180.975,
+      "y": 142.621,
+      "source": "tht",
+      "label": "RR1.4",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH21",
+      "header_pin": 26,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP24",
+      "net": "/buspci.sch/EQ2",
+      "role": "measure",
+      "x": 175.895,
+      "y": 142.621,
+      "source": "tht",
+      "label": "RR1.6",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH22",
+      "header_pin": 27,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP25",
+      "net": "/buspci.sch/EQ3",
+      "role": "measure",
+      "x": 173.355,
+      "y": 142.621,
+      "source": "tht",
+      "label": "RR1.7",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH23",
+      "header_pin": 28,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP26",
+      "net": "/buspci.sch/EQ4",
+      "role": "measure",
+      "x": 168.275,
+      "y": 142.621,
+      "source": "tht",
+      "label": "RR1.9",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH24",
+      "header_pin": 29,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP27",
+      "net": "/buspci.sch/EQ5",
+      "role": "measure",
+      "x": 180.975,
+      "y": 137.795,
+      "source": "tht",
+      "label": "RR2.4",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH25",
+      "header_pin": 31,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP28",
+      "net": "/buspci.sch/EQ6",
+      "role": "measure",
+      "x": 186.055,
+      "y": 137.795,
+      "source": "tht",
+      "label": "RR2.2",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH26",
+      "header_pin": 32,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP29",
+      "net": "/buspci.sch/EQ7",
+      "role": "measure",
+      "x": 168.275,
+      "y": 137.795,
+      "source": "tht",
+      "label": "RR2.9",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH27",
+      "header_pin": 33,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP30",
+      "net": "/CLKCDA",
+      "role": "measure",
+      "x": 333.375,
+      "y": 102.235,
+      "source": "tht",
+      "label": "U9.9",
+      "target_mm": 1.397,
+      "tip": "crown",
+      "channel": "CH28",
+      "header_pin": 34,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP31",
+      "net": "/CSYNCIN-",
+      "role": "measure",
+      "x": 318.897,
+      "y": 125.349,
+      "source": "tht",
+      "label": "U8.8",
+      "target_mm": 1.397,
+      "tip": "crown",
+      "channel": "CH29",
+      "header_pin": 35,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP32",
+      "net": "/DQ8",
+      "role": "measure",
+      "x": 88.773,
+      "y": 99.695,
+      "source": "tht",
+      "label": "RR8.9",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH30",
+      "header_pin": 36,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP33",
+      "net": "/DQ9",
+      "role": "measure",
+      "x": 88.773,
+      "y": 97.155,
+      "source": "tht",
+      "label": "RR8.8",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH31",
+      "header_pin": 38,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    },
+    {
+      "id": "PP34",
+      "net": "/DQ10",
+      "role": "measure",
+      "x": 88.773,
+      "y": 94.615,
+      "source": "tht",
+      "label": "RR8.7",
+      "target_mm": 1.6,
+      "tip": "crown",
+      "channel": "CH32",
+      "header_pin": 39,
+      "divider": null,
+      "expected": {
+        "nominal_v": null,
+        "min_v": null,
+        "max_v": null,
+        "voltage_source": null
+      },
+      "side": "bottom",
+      "pogo": null
+    }
+  ],
+  "header": [
+    {
+      "pin": 3,
+      "signal": "CH01",
+      "function": "AIN1",
+      "net": "+3.3V"
+    },
+    {
+      "pin": 4,
+      "signal": "CH02",
+      "function": "AIN2",
+      "net": "+5F"
+    },
+    {
+      "pin": 5,
+      "signal": "CH03",
+      "function": "AIN3",
+      "net": "+5V"
+    },
+    {
+      "pin": 6,
+      "signal": "CH04",
+      "function": "AIN4",
+      "net": "/ESVIDEO-RVB/VAA"
+    },
+    {
+      "pin": 7,
+      "signal": "CH05",
+      "function": "AIN5",
+      "net": "/BLANK-"
+    },
+    {
+      "pin": 8,
+      "signal": "CH06",
+      "function": "AIN6",
+      "net": "/buspci.sch/EA1"
+    },
+    {
+      "pin": 10,
+      "signal": "CH07",
+      "function": "AIN7",
+      "net": "/buspci.sch/EA2"
+    },
+    {
+      "pin": 11,
+      "signal": "CH08",
+      "function": "AIN8",
+      "net": "/buspci.sch/EA3"
+    },
+    {
+      "pin": 12,
+      "signal": "CH09",
+      "function": "AIN9",
+      "net": "/buspci.sch/EA4"
+    },
+    {
+      "pin": 13,
+      "signal": "CH10",
+      "function": "AIN10",
+      "net": "/buspci.sch/EA5"
+    },
+    {
+      "pin": 14,
+      "signal": "CH11",
+      "function": "AIN11",
+      "net": "/buspci.sch/EA6"
+    },
+    {
+      "pin": 15,
+      "signal": "CH12",
+      "function": "AIN12",
+      "net": "/buspci.sch/EA7"
+    },
+    {
+      "pin": 17,
+      "signal": "CH13",
+      "function": "AIN13",
+      "net": "/buspci.sch/EA9"
+    },
+    {
+      "pin": 18,
+      "signal": "CH14",
+      "function": "AIN14",
+      "net": "/buspci.sch/EA10"
+    },
+    {
+      "pin": 19,
+      "signal": "CH15",
+      "function": "AIN15",
+      "net": "/buspci.sch/EA11"
+    },
+    {
+      "pin": 20,
+      "signal": "CH16",
+      "function": "AIN16",
+      "net": "/buspci.sch/EA12"
+    },
+    {
+      "pin": 21,
+      "signal": "CH17",
+      "function": "AIN17",
+      "net": "/buspci.sch/EA13"
+    },
+    {
+      "pin": 22,
+      "signal": "CH18",
+      "function": "AIN18",
+      "net": "/buspci.sch/EA14"
+    },
+    {
+      "pin": 24,
+      "signal": "CH19",
+      "function": "AIN19",
+      "net": "/buspci.sch/EA15"
+    },
+    {
+      "pin": 25,
+      "signal": "CH20",
+      "function": "AIN20",
+      "net": "/buspci.sch/EQ0"
+    },
+    {
+      "pin": 26,
+      "signal": "CH21",
+      "function": "AIN21",
+      "net": "/buspci.sch/EQ1"
+    },
+    {
+      "pin": 27,
+      "signal": "CH22",
+      "function": "AIN22",
+      "net": "/buspci.sch/EQ2"
+    },
+    {
+      "pin": 28,
+      "signal": "CH23",
+      "function": "AIN23",
+      "net": "/buspci.sch/EQ3"
+    },
+    {
+      "pin": 29,
+      "signal": "CH24",
+      "function": "AIN24",
+      "net": "/buspci.sch/EQ4"
+    },
+    {
+      "pin": 31,
+      "signal": "CH25",
+      "function": "AIN25",
+      "net": "/buspci.sch/EQ5"
+    },
+    {
+      "pin": 32,
+      "signal": "CH26",
+      "function": "AIN26",
+      "net": "/buspci.sch/EQ6"
+    },
+    {
+      "pin": 33,
+      "signal": "CH27",
+      "function": "AIN27",
+      "net": "/buspci.sch/EQ7"
+    },
+    {
+      "pin": 34,
+      "signal": "CH28",
+      "function": "AIN28",
+      "net": "/CLKCDA"
+    },
+    {
+      "pin": 35,
+      "signal": "CH29",
+      "function": "AIN29",
+      "net": "/CSYNCIN-"
+    },
+    {
+      "pin": 36,
+      "signal": "CH30",
+      "function": "AIN30",
+      "net": "/DQ8"
+    },
+    {
+      "pin": 38,
+      "signal": "CH31",
+      "function": "AIN31",
+      "net": "/DQ9"
+    },
+    {
+      "pin": 39,
+      "signal": "CH32",
+      "function": "AIN32",
+      "net": "/DQ10"
+    }
+  ],
+  "sequence": [
+    {
+      "id": "S1",
+      "name": "Visual inspection",
+      "type": "manual",
+      "power": "off",
+      "items": [
+        {
+          "id": "VIS-POLARITY",
+          "check": "Polarity/orientation correct",
+          "refs": [
+            "C56",
+            "C57",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "D6"
+          ]
+        },
+        {
+          "id": "VIS-PIN1",
+          "check": "IC pin-1 orientation matches silkscreen",
+          "refs": [
+            "U1",
+            "U2",
+            "U3",
+            "U4",
+            "U5",
+            "U6",
+            "U7",
+            "U8",
+            "U9",
+            "U10",
+            "U11",
+            "U12",
+            "U13",
+            "U14",
+            "U15",
+            "U16",
+            "U17",
+            "U18",
+            "U19",
+            "U20",
+            "U21",
+            "U22",
+            "U23",
+            "U24"
+          ]
+        },
+        {
+          "id": "VIS-THT",
+          "check": "Through-hole joints filled, leads clipped <= 1.5 mm",
+          "refs": [
+            "C49",
+            "C50",
+            "CV1",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "D6",
+            "J4",
+            "L6",
+            "P1",
+            "P2",
+            "P3",
+            "P4",
+            "P5",
+            "P8",
+            "P9",
+            "P10",
+            "P11",
+            "P12",
+            "RR1",
+            "RR2",
+            "RR3",
+            "RR4",
+            "RR5",
+            "RR6",
+            "RR7",
+            "RR8",
+            "U1",
+            "U8",
+            "U9",
+            "U12",
+            "U13",
+            "U14",
+            "U15",
+            "U16",
+            "U17",
+            "U18",
+            "U19",
+            "U21",
+            "W4",
+            "W5",
+            "X1",
+            "X2",
+            "X3"
+          ]
+        },
+        {
+          "id": "VIS-BRIDGES",
+          "check": "No solder bridges on fine-pitch parts",
+          "refs": [
+            "U10",
+            "U11",
+            "U22",
+            "U23",
+            "U24"
+          ]
+        },
+        {
+          "id": "VIS-MLCC-CRACK",
+          "check": "No cracked MLCCs near the board edge",
+          "refs": [
+            "C1",
+            "C35",
+            "C39",
+            "C40",
+            "C41",
+            "C63",
+            "C8"
+          ]
+        }
+      ],
+      "phase": "unpowered"
+    },
+    {
+      "id": "S2",
+      "name": "Unpowered short check (rails to GND)",
+      "type": "resistance",
+      "power": "off",
+      "optional": true,
+      "checks": [
+        {
+          "id": "R_+3.3V",
+          "channel": "CH01",
+          "net": "+3.3V",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_+5F",
+          "channel": "CH02",
+          "net": "+5F",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_+5V",
+          "channel": "CH03",
+          "net": "+5V",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        },
+        {
+          "id": "R_VAA",
+          "channel": "CH04",
+          "net": "/ESVIDEO-RVB/VAA",
+          "reference_net": "GND",
+          "min_ohm": 100.0
+        }
+      ],
+      "note": "Needs the source-resistor circuit described in runner/README; skipped otherwise.",
+      "phase": "unpowered"
+    },
+    {
+      "id": "S4",
+      "name": "Rail voltages",
+      "type": "voltage",
+      "power": "on",
+      "checks": [
+        {
+          "id": "V_+3.3V",
+          "channel": "CH01",
+          "net": "+3.3V",
+          "min_v": 3.135,
+          "max_v": 3.465,
+          "nominal_v": 3.3
+        },
+        {
+          "id": "V_+5F",
+          "channel": "CH02",
+          "net": "+5F",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        },
+        {
+          "id": "V_+5V",
+          "channel": "CH03",
+          "net": "+5V",
+          "min_v": 4.75,
+          "max_v": 5.25,
+          "nominal_v": 5.0
+        },
+        {
+          "id": "V_VAA",
+          "channel": "CH04",
+          "net": "/ESVIDEO-RVB/VAA",
+          "min_v": null,
+          "max_v": null,
+          "nominal_v": null,
+          "learn": true
+        }
+      ],
+      "phase": "powered"
+    },
+    {
+      "id": "S5",
+      "name": "Signal levels (idle)",
+      "type": "voltage",
+      "power": "on",
+      "checks": [
+        {
+          "id": "V_BLANK-",
+          "channel": "CH05",
+          "net": "/BLANK-",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA1",
+          "channel": "CH06",
+          "net": "/buspci.sch/EA1",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA2",
+          "channel": "CH07",
+          "net": "/buspci.sch/EA2",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA3",
+          "channel": "CH08",
+          "net": "/buspci.sch/EA3",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA4",
+          "channel": "CH09",
+          "net": "/buspci.sch/EA4",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA5",
+          "channel": "CH10",
+          "net": "/buspci.sch/EA5",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA6",
+          "channel": "CH11",
+          "net": "/buspci.sch/EA6",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA7",
+          "channel": "CH12",
+          "net": "/buspci.sch/EA7",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA9",
+          "channel": "CH13",
+          "net": "/buspci.sch/EA9",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA10",
+          "channel": "CH14",
+          "net": "/buspci.sch/EA10",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA11",
+          "channel": "CH15",
+          "net": "/buspci.sch/EA11",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA12",
+          "channel": "CH16",
+          "net": "/buspci.sch/EA12",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA13",
+          "channel": "CH17",
+          "net": "/buspci.sch/EA13",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA14",
+          "channel": "CH18",
+          "net": "/buspci.sch/EA14",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EA15",
+          "channel": "CH19",
+          "net": "/buspci.sch/EA15",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EQ0",
+          "channel": "CH20",
+          "net": "/buspci.sch/EQ0",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EQ1",
+          "channel": "CH21",
+          "net": "/buspci.sch/EQ1",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EQ2",
+          "channel": "CH22",
+          "net": "/buspci.sch/EQ2",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EQ3",
+          "channel": "CH23",
+          "net": "/buspci.sch/EQ3",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EQ4",
+          "channel": "CH24",
+          "net": "/buspci.sch/EQ4",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EQ5",
+          "channel": "CH25",
+          "net": "/buspci.sch/EQ5",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EQ6",
+          "channel": "CH26",
+          "net": "/buspci.sch/EQ6",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_EQ7",
+          "channel": "CH27",
+          "net": "/buspci.sch/EQ7",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_CLKCDA",
+          "channel": "CH28",
+          "net": "/CLKCDA",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_CSYNCIN-",
+          "channel": "CH29",
+          "net": "/CSYNCIN-",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_DQ8",
+          "channel": "CH30",
+          "net": "/DQ8",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_DQ9",
+          "channel": "CH31",
+          "net": "/DQ9",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        },
+        {
+          "id": "V_DQ10",
+          "channel": "CH32",
+          "net": "/DQ10",
+          "min_v": null,
+          "max_v": null,
+          "learn": true,
+          "learn_tolerance_v": 0.15
+        }
+      ],
+      "phase": "powered"
+    }
+  ],
+  "coverage": {
+    "nets_total": 371,
+    "nets_probed": 33,
+    "power_nets": 5,
+    "power_nets_probed": 5,
+    "untestable": [
+      {
+        "net": "/ACCES_RAM-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/ACQ_ON",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/ADR2",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/ADR3",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/ADR4",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/ADR5",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/ADR6",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/BE-0",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/BE-1",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/BE-2",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/BE-3",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/BLUE_IN",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/BLUE_OUT",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/BPCLK",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/BT812_RD-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/BT812_WR-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD0",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD1",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD2",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD3",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD4",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD5",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD6",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD7",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD8",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD9",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD10",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD11",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD12",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD13",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD14",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD15",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD16",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD17",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD18",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD19",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD20",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD21",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD22",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD23",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD24",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD25",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD26",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD27",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD28",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD29",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD30",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_AD31",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_CLK",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_C{slash}BE0#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_C{slash}BE1#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_C{slash}BE2#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_C{slash}BE3#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_DEVSEL#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_FRAME#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_GNT#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_IDSEL",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_INTA#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_IRDY#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_LOCK#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_PAR",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_PERR#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_REQ#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_RST#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_SERR#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_STOP#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/buspci.sch/P_TRDY#",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/C_OUT",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/CAS0-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/CAS1-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/CAS2-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/CAS3-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/CLAMP",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/CLKCAD",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/CSYNC-OUT",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ0",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ1",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ2",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ3",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ4",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ5",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ6",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ7",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ11",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ12",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ13",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ14",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ15",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ16",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ17",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ18",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ19",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ20",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ21",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ22",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ23",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ24",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ25",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ26",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ27",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ28",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ29",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ30",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/DQ31",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/ESVIDEO-RVB/OE_RVB-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/ESVIDEO-RVB/REF+",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/F_PALIN",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/14MHZOUT",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/CCLK",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/graphic/CLK10MHz",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/graphic/CSIO-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/DIN",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/graphic/DONE",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/graphic/HDOUT",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/HDREFOUT",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA0",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA1",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA2",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA3",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA4",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA5",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA6",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA7",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA8",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IA9",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/ICAS-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/ID0",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/ID1",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/ID2",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/ID3",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IOE-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IRAS-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/IWR-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/LED",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/graphic/PROG*",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/graphic/RESERV1",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/VOSC",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/graphic/X_DIN",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/graphic/XTAL_I",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/GREEN_IN",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/GREEN_OUT",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/HD_PAL-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/IRQ-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/IRQ_SRL",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/modul/CHROM",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/modul/CVBS",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/modul/CVBSOUT",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/modul/LUM",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA0",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA1",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA2",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA3",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA4",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA5",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA6",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA7",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA8",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA9",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/MXA10",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/OE_PAL-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/pal-ntsc.sch/C-VIDEO",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/pal-ntsc.sch/VAF",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/pal-ntsc.sch/Y-VIDEO",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/pal-ntsc.sch/Y_SYNC",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/PCA0",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/PCA1",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/PCA2",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/PTADR-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/PTATN-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/PTBE-0",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/PTBE-1",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/PTBE-2",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/PTBE-3",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/PTBURST",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/PTNUM0",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/PTNUM1",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/PTRDY-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/PTWR",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/RAS0-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RAS1-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RAS2-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RAS3-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RAS4-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RAS5-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RAS6-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RAS7-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RDCAD-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RDCDA-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RDEMPTY",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/RDFIFO-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RED_IN",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/RED_OUT",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/SELECT-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/SYSRST-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/TVB0",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVB1",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVB2",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVB3",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVB4",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVB5",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVB6",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVB7",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVG0",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVG1",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVG2",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVG3",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVG4",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVG5",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVG6",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVG7",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVI0",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVI1",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVR0",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVR1",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVR2",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVR3",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVR4",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVR5",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVR6",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVR7",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM0",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM1",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM2",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM3",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM4",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM5",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM6",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM7",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM8",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM9",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM10",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM11",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM12",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM13",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM14",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM15",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM16",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM17",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM18",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM19",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM20",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM21",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM22",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM23",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM24",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM25",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM26",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM27",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM28",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM29",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM30",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/TVRAM31",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/VD_PAL-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/WRAM-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/WRCAD-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/WRCDA-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/WRFIFDO-",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/WRFULL",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/WRITE_RAM",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/X_CLK",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/X_DATA",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/X_DONE",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/X_IRQ",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/X_PROG-",
+        "reason": "no accessible pad on the bottom side"
+      },
+      {
+        "net": "/Y_OUT",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/{slash}PCRD",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "/{slash}PCWR",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(BUS1-PRSNT1#)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(BUS1-PRSNT2#)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(C49-Pad1)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(CV1-Pad1)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(P4-P1)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(U10-XTAL1_IN)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(U10-XTAL1_OUT)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(U20-OSC)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(U23-P87)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(U23-PGCK4)",
+        "reason": "channel limit (32) reached"
+      },
+      {
+        "net": "Net-(U23-SGCK3)",
+        "reason": "channel limit (32) reached"
+      }
+    ],
+    "percent": 8.9
+  },
+  "fixture_keepouts": [],
+  "plates": [
+    "bottom"
+  ],
+  "headers": null,
+  "probe_side_hint": null,
+  "stack": [],
+  "after_test": [],
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  },
+  "program": null,
+  "firmware": {
+    "programmed": [],
+    "firmware_nets": []
+  },
+  "warnings": [],
+  "timing": {
+    "assumptions": {
+      "board_handling_s": 8.0,
+      "serial_entry_s": 3.0,
+      "visual_s": 15.0,
+      "short_check_s": 0.5,
+      "read_s": 0.05,
+      "bus_s": 3.0,
+      "place_part_s": 6.0,
+      "solder_joint_s": 2.5,
+      "jig_cycle_s": 45.0,
+      "program_s": 30.0
+    },
+    "batch": 1,
+    "test": {
+      "one_board_s": 29.6,
+      "sequential_s": 29.6,
+      "batch_s": 29.6,
+      "per_board_s": 29.6,
+      "saved_s": 0.0,
+      "timeline": [
+        {
+          "site": 1,
+          "segments": [
+            {
+              "phase": "load, check, power up",
+              "start": 0.0,
+              "end": 28.0
+            },
+            {
+              "phase": "checks",
+              "start": 28.0,
+              "end": 29.6
+            }
+          ]
+        }
+      ],
+      "phases_s": {
+        "unpowered": 17.0,
+        "powered": 1.6
+      }
+    },
+    "assembly": {
+      "per_board_s": 2595.0,
+      "batch_s": 2595.0,
+      "parts": 45,
+      "joints": 912,
+      "jig_loads": 1,
+      "boards_per_jig": 1
+    },
+    "per_board_s": 2624.6,
+    "by_batch_size": [
+      {
+        "boards": 1,
+        "test_per_board_s": 29.6,
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
+      },
+      {
+        "boards": 2,
+        "test_per_board_s": 29.6,
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
+      },
+      {
+        "boards": 3,
+        "test_per_board_s": 29.6,
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
+      },
+      {
+        "boards": 4,
+        "test_per_board_s": 29.6,
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
+      },
+      {
+        "boards": 5,
+        "test_per_board_s": 29.6,
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
+      },
+      {
+        "boards": 6,
+        "test_per_board_s": 29.6,
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
+      },
+      {
+        "boards": 7,
+        "test_per_board_s": 29.6,
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
+      },
+      {
+        "boards": 8,
+        "test_per_board_s": 29.6,
+        "assembly_per_board_s": 2595.0,
+        "per_board_s": 2624.6
+      }
+    ],
+    "suggested_batch": 1,
+    "note": "Estimates; set your own durations in 'timing' in pcbtestkit.json. The runner records the real ones in every result file."
+  }
+}

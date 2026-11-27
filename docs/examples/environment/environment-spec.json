@@ -1,0 +1,74 @@
+{
+  "schema": "pcbtestkit-environment-spec/1",
+  "name": "PCB TestKit catalog",
+  "max_stations": 3,
+  "min_boards_per_station": 1,
+  "rebalance": false,
+  "plate_mm": [
+    300.0,
+    220.0
+  ],
+  "large_plate_mm": [
+    400.0,
+    300.0
+  ],
+  "sockets": {
+    "max": 2,
+    "pins": 80,
+    "gnd_every": 6
+  },
+  "limits": {
+    "analog_inputs": 96,
+    "supplies": 8,
+    "can": 4,
+    "uart": 4,
+    "i2c": 4,
+    "rs485": 2,
+    "usb": 2,
+    "ethernet": 2
+  },
+  "ain_group": 4,
+  "dio": 4,
+  "analog": {
+    "max_v": 10.0
+  },
+  "supplies": {
+    "max_v": 24.0,
+    "max_current_a": 3.0
+  },
+  "max_batch": 12,
+  "batch_weight": 0.35,
+  "priorities": {},
+  "nest": true,
+  "router": {
+    "weight": 1.6,
+    "max_passes": 2,
+    "last_resort_expansions": 500000
+  },
+  "visuals": {
+    "quality": "best"
+  },
+  "video_quality": null,
+  "exclude": [],
+  "layout": "auto",
+  "coverage_first": true,
+  "costs": {
+    "currency": "EUR",
+    "value_per_board": 300.0,
+    "station": 600.0,
+    "socket": 25.0,
+    "ain_group": 30.0,
+    "supply": 60.0,
+    "high_voltage_supply": 90.0,
+    "can": 20.0,
+    "uart": 6.0,
+    "i2c": 6.0,
+    "rs485": 15.0,
+    "usb": 25.0,
+    "ethernet": 45.0,
+    "programmer": 60.0,
+    "plate_dm2": 5.0,
+    "fixture": 60.0,
+    "fixture_site": 15.0
+  }
+}

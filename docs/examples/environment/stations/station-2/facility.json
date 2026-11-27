@@ -1,0 +1,156 @@
+{
+ "schema": "pcbtestkit-facility/1",
+ "id": "station-2",
+ "name": "PCB TestKit catalog station 2",
+ "description": "Test station read from station-2.kicad_pcb: interface connector J1 (46 pins), 400 x 300 mm plate.",
+ "analog": {
+  "inputs": 32,
+  "max_v": 10.0
+ },
+ "power": {
+  "outputs": 0,
+  "switched": true
+ },
+ "buses": {},
+ "fixture": {
+  "plate_mm": [
+   400.0,
+   300.0
+  ],
+  "holes": [
+   {
+    "at_mm": [
+     5.0,
+     5.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     395.0,
+     5.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     5.0,
+     295.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     395.0,
+     295.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     200.0,
+     5.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     200.0,
+     295.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     5.0,
+     150.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   },
+   {
+    "at_mm": [
+     395.0,
+     150.0
+    ],
+    "d_mm": 3.2,
+    "label": "M3"
+   }
+  ],
+  "connectors": [
+   {
+    "pins_across": 2,
+    "pins_along": 23,
+    "pitch_mm": 2.54,
+    "numbering": "zigzag",
+    "angle": 90.0,
+    "name": "J1",
+    "shared": true,
+    "at_mm": [
+     170.79,
+     288.0
+    ],
+    "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x23_P2.54mm_Vertical",
+    "pins": {
+     "1": "GND",
+     "2": "GND",
+     "3": "AIN1",
+     "4": "AIN2",
+     "5": "AIN3",
+     "6": "AIN4",
+     "7": "AIN5",
+     "8": "AIN6",
+     "9": "GND",
+     "10": "AIN7",
+     "11": "AIN8",
+     "12": "AIN9",
+     "13": "AIN10",
+     "14": "AIN11",
+     "15": "AIN12",
+     "16": "GND",
+     "17": "AIN13",
+     "18": "AIN14",
+     "19": "AIN15",
+     "20": "AIN16",
+     "21": "AIN17",
+     "22": "AIN18",
+     "23": "GND",
+     "24": "AIN19",
+     "25": "AIN20",
+     "26": "AIN21",
+     "27": "AIN22",
+     "28": "AIN23",
+     "29": "AIN24",
+     "30": "GND",
+     "31": "AIN25",
+     "32": "AIN26",
+     "33": "AIN27",
+     "34": "AIN28",
+     "35": "AIN29",
+     "36": "AIN30",
+     "37": "GND",
+     "38": "AIN31",
+     "39": "AIN32",
+     "40": "DIO1",
+     "41": "DIO2",
+     "42": "DIO3",
+     "43": "DIO4",
+     "44": "GND",
+     "45": "GND",
+     "46": "NC"
+    },
+    "model": "${KICAD8_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_2x23_P2.54mm_Vertical.step"
+   }
+  ]
+ },
+ "station_pcb": "station-2.kicad_pcb",
+ "batch": {
+  "max_sites": 12
+ }
+}

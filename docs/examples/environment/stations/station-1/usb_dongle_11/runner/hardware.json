@@ -1,0 +1,101 @@
+{
+  "_comment": "Map test channels to your ADC hardware. Types: ads1115, mcp3008, serial (MCU firmware), simulated.",
+  "adc": {
+    "type": "ads1115",
+    "i2c_bus": 1,
+    "addresses": [
+      "0x48",
+      "0x49",
+      "0x4A",
+      "0x4B"
+    ],
+    "fsr_v": 4.096
+  },
+  "channel_map": "auto",
+  "channel_map_example": {
+    "CH01": {
+      "device": "0x48",
+      "input": 0
+    },
+    "CH02": {
+      "device": "0x48",
+      "input": 1
+    },
+    "CH03": {
+      "device": "0x48",
+      "input": 2
+    },
+    "CH04": {
+      "device": "0x48",
+      "input": 3
+    }
+  },
+  "power": [
+    {
+      "type": "gpio",
+      "pin": 17,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 22,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 23,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 24,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 25,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 5,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 6,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 12,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 13,
+      "active_high": true
+    }
+  ],
+  "current_sensor": {
+    "type": "none",
+    "_example": {
+      "type": "ina219",
+      "address": "0x40",
+      "shunt_ohm": 0.1
+    }
+  },
+  "resistance": {
+    "type": "none",
+    "_example": {
+      "type": "source_resistor",
+      "gpio": 27,
+      "r_ref_ohm": 1000,
+      "v_source": 3.3
+    }
+  },
+  "adc_max_v": 10.0,
+  "site": 1,
+  "_batch_comment": "Batch fixture with 9 sites (one board each; every board's supply and channels on the fixture's batch connector, or on its own header with fixture.batch_connector per_site). With channel_map 'auto', site k uses the ADC inputs right after site k-1's (4 per site, 36 in all: more than 4 ADS1115 on one bus: use mcp3008 or a serial MCU). 'power' has one entry per site so each board is switched on only while it is tested; override a site in 'sites', e.g. {\"2\": {\"channel_map\": {...}, \"power\": {...}}}.",
+  "sites": {}
+}

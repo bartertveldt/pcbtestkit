@@ -1,6 +1,6 @@
 {
   "schema": "pcbtestkit-station/1",
-  "generator": "PCB TestKit 1.1.1",
+  "generator": "PCB TestKit 1.1.2",
   "station": {
     "id": "test_station",
     "name": "PCB TestKit test station",
@@ -129,6 +129,97 @@
       "80": "GND"
     }
   },
+  "connectors": [
+    {
+      "name": "J1",
+      "pins_across": 2,
+      "pins_along": 40,
+      "pitch_mm": 2.54,
+      "numbering": "zigzag",
+      "functions": {
+        "1": "GND",
+        "2": "GND",
+        "3": "AIN1",
+        "4": "AIN2",
+        "5": "AIN3",
+        "6": "AIN4",
+        "7": "AIN5",
+        "8": "AIN6",
+        "9": "AIN7",
+        "10": "AIN8",
+        "11": "AIN9",
+        "12": "AIN10",
+        "13": "AIN11",
+        "14": "AIN12",
+        "15": "AIN13",
+        "16": "AIN14",
+        "17": "AIN15",
+        "18": "AIN16",
+        "19": "AIN17",
+        "20": "AIN18",
+        "21": "AIN19",
+        "22": "AIN20",
+        "23": "AIN21",
+        "24": "AIN22",
+        "25": "AIN23",
+        "26": "AIN24",
+        "27": "AIN25",
+        "28": "AIN26",
+        "29": "AIN27",
+        "30": "AIN28",
+        "31": "AIN29",
+        "32": "AIN30",
+        "33": "AIN31",
+        "34": "AIN32",
+        "35": "GND",
+        "36": "GND",
+        "37": "VOUT1",
+        "38": "VOUT2",
+        "39": "VOUT3",
+        "40": "VOUT4",
+        "41": "GND",
+        "42": "GND",
+        "43": "CAN_H",
+        "44": "CAN_L",
+        "45": "CAN2_H",
+        "46": "CAN2_L",
+        "47": "UART_TX",
+        "48": "UART_RX",
+        "49": "UART2_TX",
+        "50": "UART2_RX",
+        "51": "GND",
+        "52": "GND",
+        "53": "I2C_SDA",
+        "54": "I2C_SCL",
+        "55": "I2C2_SDA",
+        "56": "I2C2_SCL",
+        "57": "I2C3_SDA",
+        "58": "I2C3_SCL",
+        "59": "I2C4_SDA",
+        "60": "I2C4_SCL",
+        "61": "GND",
+        "62": "GND",
+        "63": "DIO1",
+        "64": "DIO2",
+        "65": "DIO3",
+        "66": "DIO4",
+        "67": "DIO5",
+        "68": "DIO6",
+        "69": "DIO7",
+        "70": "DIO8",
+        "71": "NC",
+        "72": "NC",
+        "73": "NC",
+        "74": "NC",
+        "75": "NC",
+        "76": "NC",
+        "77": "NC",
+        "78": "NC",
+        "79": "GND",
+        "80": "GND"
+      }
+    }
+  ],
   "boards": [
     {
       "name": "sample_sensor",
@@ -152,6 +243,9 @@
       },
       "limit": "plate",
       "requested": null,
+      "supply_v": 12.0,
+      "probe_side": "bottom",
+      "probes": 8,
       "cols": 2,
       "batch": 2,
       "status": "ok",
@@ -164,7 +258,7 @@
       "buses": {
         "i2c": 2
       },
-      "seconds": 2.4,
+      "seconds": 4.5,
       "folder": "sample_sensor",
       "outputs": {
         "spec": "sample_sensor/sample_sensor-spec.json",
@@ -205,16 +299,16 @@
           {
             "site": 2,
             "offset": [
-              98.044,
+              90.17,
               0.0
             ]
           }
         ],
         "outline": {
-          "x_min": 49.04,
-          "y_min": 15.31,
-          "x_max": 309.04,
-          "y_max": 205.31,
+          "x_min": 45.17,
+          "y_min": 11.31,
+          "x_max": 305.17,
+          "y_max": 201.31,
           "width": 260.0,
           "height": 190.0
         },
@@ -225,7 +319,34 @@
             "site": 1,
             "shared": true
           }
-        ]
+        ],
+        "drc": null,
+        "routing": {
+          "connections": 47,
+          "unrouted_connections": 0
+        }
+      },
+      "nest": {
+        "enabled": true,
+        "style": "slide",
+        "entry": "front",
+        "heights": {
+          "work": 6.0,
+          "tips": 7.5,
+          "rest": 9.3,
+          "gap": 1.8,
+          "travel": 3.3,
+          "ledge": 2.0,
+          "wall": 5.1,
+          "boss": 7.7,
+          "bottom_rest": 7.3,
+          "bottom_work": 4.0,
+          "standoff": 15,
+          "adapter": 20.4,
+          "finger": 19.8,
+          "plate": 5.0,
+          "plate_top_work": 32.4
+        }
       },
       "pins": [
         {
@@ -709,7 +830,494 @@
           "site": null
         }
       ],
-      "probe_side": "bottom"
+      "pins_by": {
+        "J1": [
+          {
+            "pin": 1,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 2,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 3,
+            "function": "AIN1",
+            "signal": "CH01",
+            "site": 1
+          },
+          {
+            "pin": 4,
+            "function": "AIN2",
+            "signal": "CH02",
+            "site": 1
+          },
+          {
+            "pin": 5,
+            "function": "AIN3",
+            "signal": "CH03",
+            "site": 1
+          },
+          {
+            "pin": 6,
+            "function": "AIN4",
+            "signal": "CH01",
+            "site": 2
+          },
+          {
+            "pin": 7,
+            "function": "AIN5",
+            "signal": "CH02",
+            "site": 2
+          },
+          {
+            "pin": 8,
+            "function": "AIN6",
+            "signal": "CH03",
+            "site": 2
+          },
+          {
+            "pin": 9,
+            "function": "AIN7",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 10,
+            "function": "AIN8",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 11,
+            "function": "AIN9",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 12,
+            "function": "AIN10",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 13,
+            "function": "AIN11",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 14,
+            "function": "AIN12",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 15,
+            "function": "AIN13",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 16,
+            "function": "AIN14",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 17,
+            "function": "AIN15",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 18,
+            "function": "AIN16",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 19,
+            "function": "AIN17",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 20,
+            "function": "AIN18",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 21,
+            "function": "AIN19",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 22,
+            "function": "AIN20",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 23,
+            "function": "AIN21",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 24,
+            "function": "AIN22",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 25,
+            "function": "AIN23",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 26,
+            "function": "AIN24",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 27,
+            "function": "AIN25",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 28,
+            "function": "AIN26",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 29,
+            "function": "AIN27",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 30,
+            "function": "AIN28",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 31,
+            "function": "AIN29",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 32,
+            "function": "AIN30",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 33,
+            "function": "AIN31",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 34,
+            "function": "AIN32",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 35,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 36,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 37,
+            "function": "VOUT1",
+            "signal": "VIN",
+            "site": 1
+          },
+          {
+            "pin": 38,
+            "function": "VOUT2",
+            "signal": "VIN",
+            "site": 2
+          },
+          {
+            "pin": 39,
+            "function": "VOUT3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 40,
+            "function": "VOUT4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 41,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 42,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 43,
+            "function": "CAN_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 44,
+            "function": "CAN_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 45,
+            "function": "CAN2_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 46,
+            "function": "CAN2_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 47,
+            "function": "UART_TX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 48,
+            "function": "UART_RX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 49,
+            "function": "UART2_TX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 50,
+            "function": "UART2_RX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 51,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 52,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 53,
+            "function": "I2C_SDA",
+            "signal": "I2C_SDA",
+            "site": 1
+          },
+          {
+            "pin": 54,
+            "function": "I2C_SCL",
+            "signal": "I2C_SCL",
+            "site": 1
+          },
+          {
+            "pin": 55,
+            "function": "I2C2_SDA",
+            "signal": "I2C_SDA",
+            "site": 2
+          },
+          {
+            "pin": 56,
+            "function": "I2C2_SCL",
+            "signal": "I2C_SCL",
+            "site": 2
+          },
+          {
+            "pin": 57,
+            "function": "I2C3_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 58,
+            "function": "I2C3_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 59,
+            "function": "I2C4_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 60,
+            "function": "I2C4_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 61,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 62,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 63,
+            "function": "DIO1",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 64,
+            "function": "DIO2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 65,
+            "function": "DIO3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 66,
+            "function": "DIO4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 67,
+            "function": "DIO5",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 68,
+            "function": "DIO6",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 69,
+            "function": "DIO7",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 70,
+            "function": "DIO8",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 71,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 72,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 73,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 74,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 75,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 76,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 77,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 78,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 79,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 80,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          }
+        ]
+      },
+      "programming": [],
+      "video": {
+        "ok": true
+      }
     },
     {
       "name": "StickHub",
@@ -728,7 +1336,10 @@
       },
       "limit": "supplies",
       "requested": null,
-      "cols": 4,
+      "supply_v": null,
+      "probe_side": "bottom",
+      "probes": 1,
+      "entry": "left",
       "batch": 4,
       "status": "ok",
       "channels": 0,
@@ -738,7 +1349,7 @@
       "supplies_used": 4,
       "supplies_total": 4,
       "buses": {},
-      "seconds": 1.3,
+      "seconds": 1.0,
       "folder": "StickHub",
       "outputs": {
         "spec": "StickHub/StickHub-spec.json",
@@ -779,30 +1390,30 @@
           {
             "site": 2,
             "offset": [
-              54.61,
+              77.978,
               0.0
             ]
           },
           {
             "site": 3,
             "offset": [
-              109.22,
-              0.0
+              0.0,
+              87.122
             ]
           },
           {
             "site": 4,
             "offset": [
-              163.83,
-              0.0
+              77.978,
+              87.122
             ]
           }
         ],
         "outline": {
-          "x_min": 101.97,
-          "y_min": 4.77,
-          "x_max": 361.97,
-          "y_max": 194.77,
+          "x_min": 77.23,
+          "y_min": 66.39,
+          "x_max": 337.23,
+          "y_max": 256.39,
           "width": 260.0,
           "height": 190.0
         },
@@ -813,7 +1424,34 @@
             "site": 1,
             "shared": true
           }
-        ]
+        ],
+        "drc": null,
+        "routing": {
+          "connections": 15,
+          "unrouted_connections": 0
+        }
+      },
+      "nest": {
+        "enabled": true,
+        "style": "slide",
+        "entry": "left",
+        "heights": {
+          "work": 6.0,
+          "tips": 7.5,
+          "rest": 9.3,
+          "gap": 1.8,
+          "travel": 3.3,
+          "ledge": 2.0,
+          "wall": 5.1,
+          "boss": 7.7,
+          "bottom_rest": 7.3,
+          "bottom_work": 4.0,
+          "standoff": 15,
+          "adapter": 8.6,
+          "finger": 8.0,
+          "plate": 5.0,
+          "plate_top_work": 20.6
+        }
       },
       "pins": [
         {
@@ -1297,7 +1935,494 @@
           "site": null
         }
       ],
-      "probe_side": "bottom"
+      "pins_by": {
+        "J1": [
+          {
+            "pin": 1,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 2,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 3,
+            "function": "AIN1",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 4,
+            "function": "AIN2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 5,
+            "function": "AIN3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 6,
+            "function": "AIN4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 7,
+            "function": "AIN5",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 8,
+            "function": "AIN6",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 9,
+            "function": "AIN7",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 10,
+            "function": "AIN8",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 11,
+            "function": "AIN9",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 12,
+            "function": "AIN10",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 13,
+            "function": "AIN11",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 14,
+            "function": "AIN12",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 15,
+            "function": "AIN13",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 16,
+            "function": "AIN14",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 17,
+            "function": "AIN15",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 18,
+            "function": "AIN16",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 19,
+            "function": "AIN17",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 20,
+            "function": "AIN18",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 21,
+            "function": "AIN19",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 22,
+            "function": "AIN20",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 23,
+            "function": "AIN21",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 24,
+            "function": "AIN22",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 25,
+            "function": "AIN23",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 26,
+            "function": "AIN24",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 27,
+            "function": "AIN25",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 28,
+            "function": "AIN26",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 29,
+            "function": "AIN27",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 30,
+            "function": "AIN28",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 31,
+            "function": "AIN29",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 32,
+            "function": "AIN30",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 33,
+            "function": "AIN31",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 34,
+            "function": "AIN32",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 35,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 36,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 37,
+            "function": "VOUT1",
+            "signal": "VIN",
+            "site": 1
+          },
+          {
+            "pin": 38,
+            "function": "VOUT2",
+            "signal": "VIN",
+            "site": 2
+          },
+          {
+            "pin": 39,
+            "function": "VOUT3",
+            "signal": "VIN",
+            "site": 3
+          },
+          {
+            "pin": 40,
+            "function": "VOUT4",
+            "signal": "VIN",
+            "site": 4
+          },
+          {
+            "pin": 41,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 42,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 43,
+            "function": "CAN_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 44,
+            "function": "CAN_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 45,
+            "function": "CAN2_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 46,
+            "function": "CAN2_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 47,
+            "function": "UART_TX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 48,
+            "function": "UART_RX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 49,
+            "function": "UART2_TX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 50,
+            "function": "UART2_RX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 51,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 52,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 53,
+            "function": "I2C_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 54,
+            "function": "I2C_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 55,
+            "function": "I2C2_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 56,
+            "function": "I2C2_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 57,
+            "function": "I2C3_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 58,
+            "function": "I2C3_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 59,
+            "function": "I2C4_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 60,
+            "function": "I2C4_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 61,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 62,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 63,
+            "function": "DIO1",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 64,
+            "function": "DIO2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 65,
+            "function": "DIO3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 66,
+            "function": "DIO4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 67,
+            "function": "DIO5",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 68,
+            "function": "DIO6",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 69,
+            "function": "DIO7",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 70,
+            "function": "DIO8",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 71,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 72,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 73,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 74,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 75,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 76,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 77,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 78,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 79,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 80,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          }
+        ]
+      },
+      "programming": [],
+      "video": {
+        "ok": true
+      }
     },
     {
       "name": "RoyalBlue54L-Feather",
@@ -1309,33 +2434,29 @@
       "needs": {
         "channels": 4,
         "supply": true,
-        "buses": [
-          "i2c",
-          "uart"
-        ]
+        "buses": []
       },
       "max_by": {
         "inputs": 8,
-        "supplies": 4,
-        "i2c buses": 4,
-        "uart buses": 2
+        "supplies": 4
       },
-      "limit": "uart buses",
+      "limit": "supplies",
       "requested": null,
+      "supply_v": 5.0,
+      "probe_side": "top",
+      "probes": 6,
+      "entry": "left",
       "cols": 2,
-      "batch": 2,
+      "batch": 4,
       "status": "ok",
       "channels": 4,
-      "inputs_used": 8,
+      "inputs_used": 16,
       "inputs_total": 32,
-      "utilization_pct": 25.0,
-      "supplies_used": 2,
+      "utilization_pct": 50.0,
+      "supplies_used": 4,
       "supplies_total": 4,
-      "buses": {
-        "i2c": 2,
-        "uart": 2
-      },
-      "seconds": 1.9,
+      "buses": {},
+      "seconds": 5.6,
       "folder": "RoyalBlue54L-Feather",
       "outputs": {
         "spec": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-spec.json",
@@ -1361,7 +2482,9 @@
         "guide": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-guide.html",
         "report": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-report.html"
       },
-      "warnings": [],
+      "warnings": [
+        "station test_station serves 2 board(s) of this type at once (limited by its uart buses); the batch has 4: the other boards get no inputs, supply or bus on the connector"
+      ],
       "fixture": {
         "sites": [
           {
@@ -1374,16 +2497,30 @@
           {
             "site": 2,
             "offset": [
-              96.52,
+              119.888,
               0.0
+            ]
+          },
+          {
+            "site": 3,
+            "offset": [
+              0.0,
+              77.978
+            ]
+          },
+          {
+            "site": 4,
+            "offset": [
+              119.888,
+              77.978
             ]
           }
         ],
         "outline": {
-          "x_min": 66.62,
-          "y_min": 17.68,
-          "x_max": 326.62,
-          "y_max": 207.68,
+          "x_min": 96.49,
+          "y_min": 70.8,
+          "x_max": 356.49,
+          "y_max": 260.8,
           "width": 260.0,
           "height": 190.0
         },
@@ -1394,7 +2531,34 @@
             "site": 1,
             "shared": true
           }
-        ]
+        ],
+        "drc": null,
+        "routing": {
+          "connections": 87,
+          "unrouted_connections": 0
+        }
+      },
+      "nest": {
+        "enabled": true,
+        "style": "slide",
+        "entry": "left",
+        "heights": {
+          "work": 6.0,
+          "tips": 7.5,
+          "rest": 10.3,
+          "gap": 2.8,
+          "travel": 4.3,
+          "ledge": 2.0,
+          "wall": 5.1,
+          "boss": 6.7,
+          "bottom_rest": 8.3,
+          "bottom_work": 4.0,
+          "standoff": 15,
+          "adapter": 7.6,
+          "finger": 3.0,
+          "plate": 5.0,
+          "plate_top_work": 15.6
+        }
       },
       "pins": [
         {
@@ -1460,50 +2624,50 @@
         {
           "pin": 11,
           "function": "AIN9",
-          "signal": "NC",
-          "site": null
+          "signal": "CH01",
+          "site": 3
         },
         {
           "pin": 12,
           "function": "AIN10",
-          "signal": "NC",
-          "site": null
+          "signal": "CH02",
+          "site": 3
         },
         {
           "pin": 13,
           "function": "AIN11",
-          "signal": "NC",
-          "site": null
+          "signal": "CH03",
+          "site": 3
         },
         {
           "pin": 14,
           "function": "AIN12",
-          "signal": "NC",
-          "site": null
+          "signal": "CH04",
+          "site": 3
         },
         {
           "pin": 15,
           "function": "AIN13",
-          "signal": "NC",
-          "site": null
+          "signal": "CH01",
+          "site": 4
         },
         {
           "pin": 16,
           "function": "AIN14",
-          "signal": "NC",
-          "site": null
+          "signal": "CH02",
+          "site": 4
         },
         {
           "pin": 17,
           "function": "AIN15",
-          "signal": "NC",
-          "site": null
+          "signal": "CH03",
+          "site": 4
         },
         {
           "pin": 18,
           "function": "AIN16",
-          "signal": "NC",
-          "site": null
+          "signal": "CH04",
+          "site": 4
         },
         {
           "pin": 19,
@@ -1628,14 +2792,14 @@
         {
           "pin": 39,
           "function": "VOUT3",
-          "signal": "NC",
-          "site": null
+          "signal": "VIN",
+          "site": 3
         },
         {
           "pin": 40,
           "function": "VOUT4",
-          "signal": "NC",
-          "site": null
+          "signal": "VIN",
+          "site": 4
         },
         {
           "pin": 41,
@@ -1736,26 +2900,26 @@
         {
           "pin": 57,
           "function": "I2C3_SDA",
-          "signal": "NC",
-          "site": null
+          "signal": "I2C_SDA",
+          "site": 3
         },
         {
           "pin": 58,
           "function": "I2C3_SCL",
-          "signal": "NC",
-          "site": null
+          "signal": "I2C_SCL",
+          "site": 3
         },
         {
           "pin": 59,
           "function": "I2C4_SDA",
-          "signal": "NC",
-          "site": null
+          "signal": "I2C_SDA",
+          "site": 4
         },
         {
           "pin": 60,
           "function": "I2C4_SCL",
-          "signal": "NC",
-          "site": null
+          "signal": "I2C_SCL",
+          "site": 4
         },
         {
           "pin": 61,
@@ -1878,7 +3042,494 @@
           "site": null
         }
       ],
-      "probe_side": "top"
+      "pins_by": {
+        "J1": [
+          {
+            "pin": 1,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 2,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 3,
+            "function": "AIN1",
+            "signal": "CH01",
+            "site": 1
+          },
+          {
+            "pin": 4,
+            "function": "AIN2",
+            "signal": "CH02",
+            "site": 1
+          },
+          {
+            "pin": 5,
+            "function": "AIN3",
+            "signal": "CH03",
+            "site": 1
+          },
+          {
+            "pin": 6,
+            "function": "AIN4",
+            "signal": "CH04",
+            "site": 1
+          },
+          {
+            "pin": 7,
+            "function": "AIN5",
+            "signal": "CH01",
+            "site": 2
+          },
+          {
+            "pin": 8,
+            "function": "AIN6",
+            "signal": "CH02",
+            "site": 2
+          },
+          {
+            "pin": 9,
+            "function": "AIN7",
+            "signal": "CH03",
+            "site": 2
+          },
+          {
+            "pin": 10,
+            "function": "AIN8",
+            "signal": "CH04",
+            "site": 2
+          },
+          {
+            "pin": 11,
+            "function": "AIN9",
+            "signal": "CH01",
+            "site": 3
+          },
+          {
+            "pin": 12,
+            "function": "AIN10",
+            "signal": "CH02",
+            "site": 3
+          },
+          {
+            "pin": 13,
+            "function": "AIN11",
+            "signal": "CH03",
+            "site": 3
+          },
+          {
+            "pin": 14,
+            "function": "AIN12",
+            "signal": "CH04",
+            "site": 3
+          },
+          {
+            "pin": 15,
+            "function": "AIN13",
+            "signal": "CH01",
+            "site": 4
+          },
+          {
+            "pin": 16,
+            "function": "AIN14",
+            "signal": "CH02",
+            "site": 4
+          },
+          {
+            "pin": 17,
+            "function": "AIN15",
+            "signal": "CH03",
+            "site": 4
+          },
+          {
+            "pin": 18,
+            "function": "AIN16",
+            "signal": "CH04",
+            "site": 4
+          },
+          {
+            "pin": 19,
+            "function": "AIN17",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 20,
+            "function": "AIN18",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 21,
+            "function": "AIN19",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 22,
+            "function": "AIN20",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 23,
+            "function": "AIN21",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 24,
+            "function": "AIN22",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 25,
+            "function": "AIN23",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 26,
+            "function": "AIN24",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 27,
+            "function": "AIN25",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 28,
+            "function": "AIN26",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 29,
+            "function": "AIN27",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 30,
+            "function": "AIN28",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 31,
+            "function": "AIN29",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 32,
+            "function": "AIN30",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 33,
+            "function": "AIN31",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 34,
+            "function": "AIN32",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 35,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 36,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 37,
+            "function": "VOUT1",
+            "signal": "VIN",
+            "site": 1
+          },
+          {
+            "pin": 38,
+            "function": "VOUT2",
+            "signal": "VIN",
+            "site": 2
+          },
+          {
+            "pin": 39,
+            "function": "VOUT3",
+            "signal": "VIN",
+            "site": 3
+          },
+          {
+            "pin": 40,
+            "function": "VOUT4",
+            "signal": "VIN",
+            "site": 4
+          },
+          {
+            "pin": 41,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 42,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 43,
+            "function": "CAN_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 44,
+            "function": "CAN_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 45,
+            "function": "CAN2_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 46,
+            "function": "CAN2_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 47,
+            "function": "UART_TX",
+            "signal": "UART_TX",
+            "site": 1
+          },
+          {
+            "pin": 48,
+            "function": "UART_RX",
+            "signal": "UART_RX",
+            "site": 1
+          },
+          {
+            "pin": 49,
+            "function": "UART2_TX",
+            "signal": "UART_TX",
+            "site": 2
+          },
+          {
+            "pin": 50,
+            "function": "UART2_RX",
+            "signal": "UART_RX",
+            "site": 2
+          },
+          {
+            "pin": 51,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 52,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 53,
+            "function": "I2C_SDA",
+            "signal": "I2C_SDA",
+            "site": 1
+          },
+          {
+            "pin": 54,
+            "function": "I2C_SCL",
+            "signal": "I2C_SCL",
+            "site": 1
+          },
+          {
+            "pin": 55,
+            "function": "I2C2_SDA",
+            "signal": "I2C_SDA",
+            "site": 2
+          },
+          {
+            "pin": 56,
+            "function": "I2C2_SCL",
+            "signal": "I2C_SCL",
+            "site": 2
+          },
+          {
+            "pin": 57,
+            "function": "I2C3_SDA",
+            "signal": "I2C_SDA",
+            "site": 3
+          },
+          {
+            "pin": 58,
+            "function": "I2C3_SCL",
+            "signal": "I2C_SCL",
+            "site": 3
+          },
+          {
+            "pin": 59,
+            "function": "I2C4_SDA",
+            "signal": "I2C_SDA",
+            "site": 4
+          },
+          {
+            "pin": 60,
+            "function": "I2C4_SCL",
+            "signal": "I2C_SCL",
+            "site": 4
+          },
+          {
+            "pin": 61,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 62,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 63,
+            "function": "DIO1",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 64,
+            "function": "DIO2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 65,
+            "function": "DIO3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 66,
+            "function": "DIO4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 67,
+            "function": "DIO5",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 68,
+            "function": "DIO6",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 69,
+            "function": "DIO7",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 70,
+            "function": "DIO8",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 71,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 72,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 73,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 74,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 75,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 76,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 77,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 78,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 79,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 80,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          }
+        ]
+      },
+      "programming": [],
+      "video": {
+        "ok": true
+      }
     },
     {
       "name": "pic_programmer",
@@ -1899,6 +3550,10 @@
       },
       "limit": "plate",
       "requested": null,
+      "supply_v": null,
+      "probe_side": "bottom",
+      "probes": 14,
+      "entry": "left",
       "batch": 1,
       "status": "ok",
       "channels": 11,
@@ -1908,7 +3563,7 @@
       "supplies_used": 1,
       "supplies_total": 4,
       "buses": {},
-      "seconds": 2.5,
+      "seconds": 4.7,
       "folder": "pic_programmer",
       "outputs": {
         "spec": "pic_programmer/pic_programmer-spec.json",
@@ -1934,9 +3589,7 @@
         "guide": "pic_programmer/pic_programmer-guide.html",
         "report": "pic_programmer/pic_programmer-report.html"
       },
-      "warnings": [
-        "the nests are turned: the boards slide in from the left (fixture.nest.entry), so they fit the facility's plate"
-      ],
+      "warnings": [],
       "fixture": {
         "sites": [
           {
@@ -1949,9 +3602,9 @@
         ],
         "outline": {
           "x_min": 41.8,
-          "y_min": 24.98,
+          "y_min": 16.98,
           "x_max": 301.8,
-          "y_max": 214.98,
+          "y_max": 206.98,
           "width": 260.0,
           "height": 190.0
         },
@@ -1962,7 +3615,34 @@
             "site": 1,
             "shared": true
           }
-        ]
+        ],
+        "drc": null,
+        "routing": {
+          "connections": 59,
+          "unrouted_connections": 0
+        }
+      },
+      "nest": {
+        "enabled": true,
+        "style": "slide",
+        "entry": "left",
+        "heights": {
+          "work": 6.0,
+          "tips": 7.5,
+          "rest": 9.3,
+          "gap": 1.8,
+          "travel": 3.3,
+          "ledge": 2.0,
+          "wall": 5.1,
+          "boss": 7.7,
+          "bottom_rest": 7.3,
+          "bottom_work": 4.0,
+          "standoff": 15,
+          "adapter": 14.6,
+          "finger": 14.0,
+          "plate": 5.0,
+          "plate_top_work": 26.6
+        }
       },
       "pins": [
         {
@@ -2446,7 +4126,494 @@
           "site": null
         }
       ],
-      "probe_side": "bottom"
+      "pins_by": {
+        "J1": [
+          {
+            "pin": 1,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 2,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 3,
+            "function": "AIN1",
+            "signal": "CH01",
+            "site": 1
+          },
+          {
+            "pin": 4,
+            "function": "AIN2",
+            "signal": "CH02",
+            "site": 1
+          },
+          {
+            "pin": 5,
+            "function": "AIN3",
+            "signal": "CH03",
+            "site": 1
+          },
+          {
+            "pin": 6,
+            "function": "AIN4",
+            "signal": "CH04",
+            "site": 1
+          },
+          {
+            "pin": 7,
+            "function": "AIN5",
+            "signal": "CH05",
+            "site": 1
+          },
+          {
+            "pin": 8,
+            "function": "AIN6",
+            "signal": "CH06",
+            "site": 1
+          },
+          {
+            "pin": 9,
+            "function": "AIN7",
+            "signal": "CH07",
+            "site": 1
+          },
+          {
+            "pin": 10,
+            "function": "AIN8",
+            "signal": "CH08",
+            "site": 1
+          },
+          {
+            "pin": 11,
+            "function": "AIN9",
+            "signal": "CH09",
+            "site": 1
+          },
+          {
+            "pin": 12,
+            "function": "AIN10",
+            "signal": "CH10",
+            "site": 1
+          },
+          {
+            "pin": 13,
+            "function": "AIN11",
+            "signal": "CH11",
+            "site": 1
+          },
+          {
+            "pin": 14,
+            "function": "AIN12",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 15,
+            "function": "AIN13",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 16,
+            "function": "AIN14",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 17,
+            "function": "AIN15",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 18,
+            "function": "AIN16",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 19,
+            "function": "AIN17",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 20,
+            "function": "AIN18",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 21,
+            "function": "AIN19",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 22,
+            "function": "AIN20",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 23,
+            "function": "AIN21",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 24,
+            "function": "AIN22",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 25,
+            "function": "AIN23",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 26,
+            "function": "AIN24",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 27,
+            "function": "AIN25",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 28,
+            "function": "AIN26",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 29,
+            "function": "AIN27",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 30,
+            "function": "AIN28",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 31,
+            "function": "AIN29",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 32,
+            "function": "AIN30",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 33,
+            "function": "AIN31",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 34,
+            "function": "AIN32",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 35,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 36,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 37,
+            "function": "VOUT1",
+            "signal": "VIN",
+            "site": 1
+          },
+          {
+            "pin": 38,
+            "function": "VOUT2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 39,
+            "function": "VOUT3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 40,
+            "function": "VOUT4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 41,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 42,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 43,
+            "function": "CAN_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 44,
+            "function": "CAN_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 45,
+            "function": "CAN2_H",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 46,
+            "function": "CAN2_L",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 47,
+            "function": "UART_TX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 48,
+            "function": "UART_RX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 49,
+            "function": "UART2_TX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 50,
+            "function": "UART2_RX",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 51,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 52,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 53,
+            "function": "I2C_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 54,
+            "function": "I2C_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 55,
+            "function": "I2C2_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 56,
+            "function": "I2C2_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 57,
+            "function": "I2C3_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 58,
+            "function": "I2C3_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 59,
+            "function": "I2C4_SDA",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 60,
+            "function": "I2C4_SCL",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 61,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 62,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 63,
+            "function": "DIO1",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 64,
+            "function": "DIO2",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 65,
+            "function": "DIO3",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 66,
+            "function": "DIO4",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 67,
+            "function": "DIO5",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 68,
+            "function": "DIO6",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 69,
+            "function": "DIO7",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 70,
+            "function": "DIO8",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 71,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 72,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 73,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 74,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 75,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 76,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 77,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 78,
+            "function": "NC",
+            "signal": "NC",
+            "site": null
+          },
+          {
+            "pin": 79,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          },
+          {
+            "pin": 80,
+            "function": "GND",
+            "signal": "GND",
+            "site": null
+          }
+        ]
+      },
+      "programming": [],
+      "video": {
+        "ok": true
+      }
     }
   ],
   "warnings": [],
@@ -2454,7 +4621,13 @@
   "video": {
     "ok": true,
     "path": "station-compatibility.mp4",
-    "duration_s": 24.2
+    "duration_s": 27.6,
+    "clips": {
+      "made": 5,
+      "kept": 0
+    },
+    "shown": 4,
+    "board_types": 4
   },
   "image": "station.png"
 }

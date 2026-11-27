@@ -1,7 +1,7 @@
 {
   "schema": "pcbtestkit/spec@1",
-  "generator": "PCB TestKit 1.1.1",
-  "generated": "2026-11-26T17:24:15",
+  "generator": "PCB TestKit 1.1.2",
+  "generated": "2026-11-27T15:06:05",
   "source": {
     "board": "video.kicad_pcb",
     "schematic": "video.kicad_sch",
@@ -10015,6 +10015,7 @@
         "D3",
         "D4",
         "D6",
+        "J4",
         "L6",
         "P1",
         "P2",
@@ -11231,7 +11232,7 @@
       "id": "ASM-PROCESS",
       "severity": "minor",
       "category": "assembly",
-      "title": "Assembly process: SMT top (40 parts) + SMT bottom (103 parts) + THT (44 parts: wave, selective or hand soldering)",
+      "title": "Assembly process: SMT top (40 parts) + SMT bottom (103 parts) + THT (45 parts: wave, selective or hand soldering)",
       "detail": "Each extra process step adds cost and handling (handling = flex & ESD exposure). Bottom SMD + THT usually needs selective soldering or a wave pallet.",
       "recommendation": "The generated solder jig holds the THT parts for hand soldering.",
       "refs": [
@@ -11243,6 +11244,7 @@
         "D3",
         "D4",
         "D6",
+        "J4",
         "L6",
         "P1",
         "P2",
@@ -11284,11 +11286,21 @@
       "data": {
         "smd_top": 40,
         "smd_bottom": 103,
-        "tht": 44
+        "tht": 45
       }
     },
     {
       "uid": "F014",
+      "id": "REL-MOUNTING",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "No mounting holes on a 312 x 107 mm board",
+      "detail": "Unsupported boards flex and vibrate; the fixture also needs tooling holes for alignment.",
+      "recommendation": "Add >= 3 mounting holes (they double as test-fixture guide-pin holes).",
+      "count": 1
+    },
+    {
+      "uid": "F015",
       "id": "ELEC-ESD",
       "severity": "minor",
       "category": "electrical",
@@ -11320,7 +11332,7 @@
       ]
     },
     {
-      "uid": "F015",
+      "uid": "F016",
       "id": "REL-POWER-TRACKS",
       "severity": "minor",
       "category": "electrical",
@@ -11364,7 +11376,7 @@
       ]
     },
     {
-      "uid": "F016",
+      "uid": "F017",
       "id": "TEST-TESTPOINTS",
       "severity": "minor",
       "category": "testability",
@@ -11374,7 +11386,7 @@
       "count": 1
     },
     {
-      "uid": "F017",
+      "uid": "F018",
       "id": "DOC-CAP-RATING",
       "severity": "minor",
       "category": "documentation",
@@ -11414,7 +11426,7 @@
       "count": 1
     },
     {
-      "uid": "F018",
+      "uid": "F019",
       "id": "MFG-TECH-CLASS",
       "severity": "info",
       "category": "manufacturing",
@@ -11446,7 +11458,7 @@
       }
     },
     {
-      "uid": "F019",
+      "uid": "F020",
       "id": "TEST-SIGNAL-ACCESS",
       "severity": "info",
       "category": "testability",
@@ -11839,26 +11851,26 @@
       "items_truncated": 253
     },
     {
-      "uid": "F020",
+      "uid": "F021",
       "id": "DOC-MPN",
       "severity": "info",
       "category": "documentation",
       "title": "No manufacturer part numbers in the schematic",
       "detail": "The BOM relies on generic values; the assembler chooses parts.",
       "recommendation": "Add an MPN field (or LCSC/Digikey numbers) to control what gets assembled.",
-      "count": 185
+      "count": 186
     }
   ],
   "summary": {
     "counts": {
       "critical": 1,
       "major": 6,
-      "minor": 10,
+      "minor": 11,
       "info": 3
     },
-    "score": 29,
+    "score": 27,
     "verdict": "not ready",
-    "total": 20,
+    "total": 21,
     "waived": 0
   },
   "decision_log": [],

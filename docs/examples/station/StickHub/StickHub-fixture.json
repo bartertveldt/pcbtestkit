@@ -22,7 +22,7 @@
     {
       "site": 2,
       "offset": [
-        54.61,
+        77.978,
         0.0
       ],
       "header": "J1",
@@ -30,7 +30,7 @@
       "probes": [
         {
           "probe": "PP01",
-          "x": 205.5014,
+          "x": 228.8694,
           "y": 107.0232,
           "fixture_net": "GND"
         }
@@ -41,16 +41,16 @@
     {
       "site": 3,
       "offset": [
-        109.22,
-        0.0
+        0.0,
+        87.122
       ],
       "header": "J1",
       "power_terminal": null,
       "probes": [
         {
           "probe": "PP01",
-          "x": 260.1114,
-          "y": 107.0232,
+          "x": 150.8914,
+          "y": 194.1452,
           "fixture_net": "GND"
         }
       ],
@@ -60,16 +60,16 @@
     {
       "site": 4,
       "offset": [
-        163.83,
-        0.0
+        77.978,
+        87.122
       ],
       "header": "J1",
       "power_terminal": null,
       "probes": [
         {
           "probe": "PP01",
-          "x": 314.7214,
-          "y": 107.0232,
+          "x": 228.8694,
+          "y": 194.1452,
           "fixture_net": "GND"
         }
       ],
@@ -81,10 +81,10 @@
   "channel_map": [],
   "outline_mode": "rect",
   "outline": {
-    "x_min": 101.97,
-    "y_min": 4.77,
-    "x_max": 361.97,
-    "y_max": 194.77,
+    "x_min": 77.23,
+    "y_min": 66.39,
+    "x_max": 337.23,
+    "y_max": 256.39,
     "width": 260.0,
     "height": 190.0
   },
@@ -96,7 +96,7 @@
     "unrouted_nets": [],
     "connections": 15,
     "unrouted_connections": 0,
-    "length_mm": 370.5,
+    "length_mm": 391.7,
     "vias": 0,
     "grid_mm": 0.254,
     "passes": 1,
@@ -106,13 +106,18 @@
   },
   "batch": {
     "count": 4,
-    "cols": 4,
-    "rows": 1,
+    "cols": 2,
+    "rows": 2,
     "spacing_mm": 10.0,
     "source": "batch"
   },
   "plate_fit": true,
   "plate_fits_cols": [],
+  "site_mm": [
+    74.978,
+    84.122
+  ],
+  "site_spacing_mm": 3.0,
   "facility": {
     "id": "test_station",
     "connectors": [
@@ -131,7 +136,7 @@
   "nest": {
     "enabled": true,
     "style": "slide",
-    "entry": "front",
+    "entry": "left",
     "clamp": "toggle",
     "heights": {
       "work": 6.0,
@@ -151,8 +156,8 @@
       "plate_top_work": 20.6
     },
     "board_mm": [
-      40.0,
       16.5,
+      40.0,
       1.6
     ],
     "spring": {
@@ -177,7 +182,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 6 screw, standoff to fixture board (from below)"
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
       },
       {
         "qty": 4,
@@ -203,7 +208,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
       },
       {
         "qty": 2,
@@ -215,10 +220,10 @@
     ],
     "gap_reason": "U1",
     "extents": {
-      "left": 12.5,
-      "right": 12.5,
-      "top": 46.25,
-      "bottom": 10.0
+      "left": 10.0,
+      "right": 46.25,
+      "top": 12.5,
+      "bottom": 12.5
     },
     "fingers": 0,
     "files": {
@@ -227,8 +232,8 @@
         "preview_png": "StickHub-fixture-nest.png",
         "print": 4,
         "size_mm": [
-          55.5,
-          42.8,
+          32.0,
+          66.2,
           7.7
         ]
       },
@@ -237,8 +242,8 @@
         "preview_png": "StickHub-fixture-press-plate.png",
         "print": 4,
         "size_mm": [
-          44.0,
-          25.2,
+          20.5,
+          48.8,
           5.0
         ]
       },
@@ -255,15 +260,15 @@
     },
     "mesh": {
       "nest": {
-        "triangles": 34788,
+        "triangles": 28610,
         "unmatched_edges": 0,
-        "volume_mm3": 4238.8,
+        "volume_mm3": 3801.9,
         "watertight": true
       },
       "press": {
-        "triangles": 4198,
+        "triangles": 3850,
         "unmatched_edges": 0,
-        "volume_mm3": 4477.5,
+        "volume_mm3": 4390.6,
         "watertight": true
       },
       "adapter": {

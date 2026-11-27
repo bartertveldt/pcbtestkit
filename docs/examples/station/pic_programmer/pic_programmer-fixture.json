@@ -98,9 +98,7 @@
       "program": []
     }
   ],
-  "warnings": [
-    "the nests are turned: the boards slide in from the left (fixture.nest.entry), so they fit the facility's plate"
-  ],
+  "warnings": [],
   "channel_map": [
     {
       "site": 1,
@@ -194,9 +192,9 @@
   "outline_mode": "rect",
   "outline": {
     "x_min": 41.8,
-    "y_min": 24.98,
+    "y_min": 16.98,
     "x_max": 301.8,
-    "y_max": 214.98,
+    "y_max": 206.98,
     "width": 260.0,
     "height": 190.0
   },
@@ -208,11 +206,11 @@
     "unrouted_nets": [],
     "connections": 59,
     "unrouted_connections": 0,
-    "length_mm": 2572.7,
-    "vias": 48,
+    "length_mm": 2336.8,
+    "vias": 50,
     "grid_mm": 0.254,
-    "passes": 3,
-    "best_pass": 3,
+    "passes": 4,
+    "best_pass": 4,
     "track_mm": 0.25,
     "power_track_mm": 0.5
   },
@@ -225,6 +223,11 @@
   },
   "plate_fit": true,
   "plate_fits_cols": [],
+  "site_mm": [
+    218.27,
+    151.14
+  ],
+  "site_spacing_mm": 3.0,
   "facility": {
     "id": "test_station",
     "connectors": [
@@ -289,7 +292,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 6 screw, standoff to fixture board (from below)"
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
       },
       {
         "qty": 4,
@@ -315,7 +318,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
       },
       {
         "qty": 2,

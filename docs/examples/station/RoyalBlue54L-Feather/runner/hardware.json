@@ -5,7 +5,9 @@
     "i2c_bus": 1,
     "addresses": [
       "0x48",
-      "0x49"
+      "0x49",
+      "0x4A",
+      "0x4B"
     ],
     "fsr_v": 4.096
   },
@@ -38,6 +40,16 @@
       "type": "gpio",
       "pin": 22,
       "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 23,
+      "active_high": true
+    },
+    {
+      "type": "gpio",
+      "pin": 24,
+      "active_high": true
     }
   ],
   "current_sensor": {
@@ -59,6 +71,6 @@
   },
   "adc_max_v": 3.3,
   "site": 1,
-  "_batch_comment": "Batch fixture with 2 sites (one board each; every board's supply and channels on the fixture's batch connector, or on its own header with fixture.batch_connector per_site). With channel_map 'auto', site k uses the ADC inputs right after site k-1's (4 per site, 8 in all: 2 x ADS1115). 'power' has one entry per site so each board is switched on only while it is tested; override a site in 'sites', e.g. {\"2\": {\"channel_map\": {...}, \"power\": {...}}}.",
+  "_batch_comment": "Batch fixture with 4 sites (one board each; every board's supply and channels on the fixture's batch connector, or on its own header with fixture.batch_connector per_site). With channel_map 'auto', site k uses the ADC inputs right after site k-1's (4 per site, 16 in all: 4 x ADS1115). 'power' has one entry per site so each board is switched on only while it is tested; override a site in 'sites', e.g. {\"2\": {\"channel_map\": {...}, \"power\": {...}}}.",
   "sites": {}
 }

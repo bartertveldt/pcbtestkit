@@ -52,7 +52,7 @@
     {
       "site": 2,
       "offset": [
-        96.52,
+        119.888,
         0.0
       ],
       "header": "J1",
@@ -60,42 +60,140 @@
       "probes": [
         {
           "probe": "PP01",
-          "x": 246.13,
+          "x": 269.498,
           "y": 99.595,
           "fixture_net": "S2_VIN"
         },
         {
           "probe": "PP02",
-          "x": 248.26,
+          "x": 271.628,
           "y": 98.045,
           "fixture_net": "GND"
         },
         {
           "probe": "PP03",
-          "x": 241.545,
+          "x": 264.913,
           "y": 100.59,
           "fixture_net": "GND"
         },
         {
           "probe": "PP04",
-          "x": 255.26,
+          "x": 278.628,
           "y": 101.308,
           "fixture_net": "S2_TP_+BATT"
         },
         {
           "probe": "PP05",
-          "x": 242.77,
+          "x": 266.138,
           "y": 111.705,
           "fixture_net": "S2_TP_Net-_JP1-A"
         },
         {
           "probe": "PP06",
-          "x": 245.055,
+          "x": 268.423,
           "y": 108.67,
           "fixture_net": "S2_TP_VSYS"
         }
       ],
       "net_prefix": "S2_",
+      "program": []
+    },
+    {
+      "site": 3,
+      "offset": [
+        0.0,
+        77.978
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 149.61,
+          "y": 177.573,
+          "fixture_net": "S3_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 151.74,
+          "y": 176.023,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 145.025,
+          "y": 178.568,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 158.74,
+          "y": 179.286,
+          "fixture_net": "S3_TP_+BATT"
+        },
+        {
+          "probe": "PP05",
+          "x": 146.25,
+          "y": 189.683,
+          "fixture_net": "S3_TP_Net-_JP1-A"
+        },
+        {
+          "probe": "PP06",
+          "x": 148.535,
+          "y": 186.648,
+          "fixture_net": "S3_TP_VSYS"
+        }
+      ],
+      "net_prefix": "S3_",
+      "program": []
+    },
+    {
+      "site": 4,
+      "offset": [
+        119.888,
+        77.978
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 269.498,
+          "y": 177.573,
+          "fixture_net": "S4_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 271.628,
+          "y": 176.023,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 264.913,
+          "y": 178.568,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 278.628,
+          "y": 179.286,
+          "fixture_net": "S4_TP_+BATT"
+        },
+        {
+          "probe": "PP05",
+          "x": 266.138,
+          "y": 189.683,
+          "fixture_net": "S4_TP_Net-_JP1-A"
+        },
+        {
+          "probe": "PP06",
+          "x": 268.423,
+          "y": 186.648,
+          "fixture_net": "S4_TP_VSYS"
+        }
+      ],
+      "net_prefix": "S4_",
       "program": []
     }
   ],
@@ -164,42 +262,111 @@
       "pin": 10,
       "dut_net": "VSYS",
       "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 11,
+      "dut_net": "/Debugger/USB.VBUS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 12,
+      "dut_net": "+BATT",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 13,
+      "dut_net": "Net-(JP1-A)",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 3,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 14,
+      "dut_net": "VSYS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 15,
+      "dut_net": "/Debugger/USB.VBUS",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 16,
+      "dut_net": "+BATT",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 17,
+      "dut_net": "Net-(JP1-A)",
+      "divider_ratio": 1.82
+    },
+    {
+      "site": 4,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 18,
+      "dut_net": "VSYS",
+      "divider_ratio": 1.82
     }
   ],
   "outline_mode": "rect",
   "outline": {
-    "x_min": 66.62,
-    "y_min": 17.68,
-    "x_max": 326.62,
-    "y_max": 207.68,
+    "x_min": 96.49,
+    "y_min": 70.8,
+    "x_max": 356.49,
+    "y_max": 260.8,
     "width": 260.0,
     "height": 190.0
   },
-  "pogo_count": 12,
-  "nets": 25,
+  "pogo_count": 24,
+  "nets": 45,
   "routing": {
-    "nets": 17,
-    "routed_nets": 17,
+    "nets": 33,
+    "routed_nets": 33,
     "unrouted_nets": [],
-    "connections": 49,
+    "connections": 87,
     "unrouted_connections": 0,
-    "length_mm": 1541.7,
-    "vias": 22,
+    "length_mm": 3737.7,
+    "vias": 90,
     "grid_mm": 0.254,
-    "passes": 1,
-    "best_pass": 1,
+    "passes": 2,
+    "best_pass": 2,
     "track_mm": 0.25,
     "power_track_mm": 0.5
   },
   "batch": {
-    "count": 2,
+    "count": 4,
     "cols": 2,
-    "rows": 1,
+    "rows": 2,
     "spacing_mm": 10.0,
     "source": "batch"
   },
   "plate_fit": true,
   "plate_fits_cols": [],
+  "site_mm": [
+    116.888,
+    74.978
+  ],
+  "site_spacing_mm": 3.0,
   "facility": {
     "id": "test_station",
     "connectors": [
@@ -218,7 +385,7 @@
   "nest": {
     "enabled": true,
     "style": "slide",
-    "entry": "front",
+    "entry": "left",
     "clamp": "toggle",
     "heights": {
       "work": 6.0,
@@ -238,8 +405,8 @@
       "plate_top_work": 15.6
     },
     "board_mm": [
-      22.86,
       58.42,
+      22.86,
       1.6
     ],
     "spring": {
@@ -264,7 +431,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 6 screw, standoff to fixture board (from below)"
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
       },
       {
         "qty": 4,
@@ -290,7 +457,7 @@
       },
       {
         "qty": 4,
-        "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
       },
       {
         "qty": 2,
@@ -300,37 +467,37 @@
     "warnings": [],
     "gap_reason": "J4",
     "extents": {
-      "left": 12.5,
-      "right": 12.5,
-      "top": 46.25,
-      "bottom": 10.0
+      "left": 10.0,
+      "right": 46.25,
+      "top": 12.5,
+      "bottom": 12.5
     },
-    "fingers": 8,
+    "fingers": 7,
     "files": {
       "nest": {
         "stl": "RoyalBlue54L-Feather-fixture-nest.stl",
         "preview_png": "RoyalBlue54L-Feather-fixture-nest.png",
-        "print": 2,
+        "print": 4,
         "size_mm": [
-          38.2,
-          84.5,
+          73.8,
+          49.0,
           6.7
         ]
       },
       "press": {
         "stl": "RoyalBlue54L-Feather-fixture-press-plate.stl",
         "preview_png": "RoyalBlue54L-Feather-fixture-press-plate.png",
-        "print": 2,
+        "print": 4,
         "size_mm": [
-          26.8,
-          67.0,
+          62.2,
+          31.5,
           8.0
         ]
       },
       "adapter": {
         "stl": "RoyalBlue54L-Feather-fixture-clamp-adapter.stl",
         "preview_png": "RoyalBlue54L-Feather-fixture-clamp-adapter.png",
-        "print": 2,
+        "print": 4,
         "size_mm": [
           40.0,
           38.0,
@@ -340,15 +507,15 @@
     },
     "mesh": {
       "nest": {
-        "triangles": 31714,
+        "triangles": 44598,
         "unmatched_edges": 0,
-        "volume_mm3": 3808.3,
+        "volume_mm3": 4809.8,
         "watertight": true
       },
       "press": {
-        "triangles": 17788,
+        "triangles": 15316,
         "unmatched_edges": 0,
-        "volume_mm3": 8466.4,
+        "volume_mm3": 9008.3,
         "watertight": true
       },
       "adapter": {
@@ -392,6 +559,40 @@
         ],
         "nest": "N2",
         "clamp": "K2"
+      },
+      {
+        "site": 3,
+        "posts": [
+          "NP9",
+          "NP10",
+          "NP11",
+          "NP12"
+        ],
+        "adapter": [
+          "NK9",
+          "NK10",
+          "NK11",
+          "NK12"
+        ],
+        "nest": "N3",
+        "clamp": "K3"
+      },
+      {
+        "site": 4,
+        "posts": [
+          "NP13",
+          "NP14",
+          "NP15",
+          "NP16"
+        ],
+        "adapter": [
+          "NK13",
+          "NK14",
+          "NK15",
+          "NK16"
+        ],
+        "nest": "N4",
+        "clamp": "K4"
       }
     ]
   }

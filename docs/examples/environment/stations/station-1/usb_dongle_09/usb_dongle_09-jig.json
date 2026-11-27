@@ -1,0 +1,248 @@
+{
+  "jig_size_mm": [
+    176.0,
+    49.75,
+    6.7
+  ],
+  "support_height_mm": 5.5,
+  "floor_mm": 2.0,
+  "resolution_mm": 0.25,
+  "board_bbox_in_jig_mm": [
+    3.3,
+    3.3,
+    27.5,
+    18.8
+  ],
+  "side": "top",
+  "orientation": "PCB top side faces down into the jig; jig X = board X, jig Y = board Y (view from above shows the board's bottom side)",
+  "parts_to_place": [],
+  "pockets": [
+    {
+      "ref": "C1",
+      "type": "relief",
+      "center": [
+        16.0,
+        7.0
+      ],
+      "size_mm": [
+        4.0,
+        3.0
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 192
+    },
+    {
+      "ref": "C2",
+      "type": "relief",
+      "center": [
+        19.875,
+        7.0
+      ],
+      "size_mm": [
+        3.75,
+        3.0
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 1.8,
+      "part_height_mm": 0.8,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 180
+    },
+    {
+      "ref": "U1",
+      "type": "relief",
+      "center": [
+        9.875,
+        10.125
+      ],
+      "size_mm": [
+        9.25,
+        9.75
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "box (default for SMD height)",
+      "cells": 1443
+    }
+  ],
+  "posts": [],
+  "pocket_floor": "shaped",
+  "room": {},
+  "ignored": {},
+  "notes": [
+    "Shape estimated as a box for 7 part(s): TP1, TP2, TP3, TP4, TP5, TP6, U1. Their fit can't be guaranteed: add a 3D model, set jig.heights, or leave them out with jig.ignore.",
+    "Pockets follow each part's 3D shape; a hold pocket's floor is the part's own top, so every part touches its pocket as the board lands (jig.hold_depth_offset_mm +0.00 mm).",
+    "Two-jig workflow: put the PCB top side up in the placement jig, fit the parts, put this holding jig on top (pockets down), turn the stack over, lift off the placement jig and solder from above.",
+    "Fit check (9 parts, their 3D shapes): nothing touches on the way in; all 0 hand-soldered parts touch their pockets as the board lands on the support (within 0.01 mm); the holding jig closes over the placement jig without touching it. Estimated (box) shapes: TP1, TP2, TP3, TP4, TP5, TP6, U1.",
+    "Batch of 10 boards: every jig holds all of them (5 x 2)."
+  ],
+  "scad": "usb_dongle_09-jig.scad",
+  "workflow": "two_jig",
+  "placement": {
+    "jig_size_mm": [
+      181.25,
+      55.0,
+      13.4
+    ],
+    "pcb_rest_height_mm": 12.0,
+    "lead_clearance_mm": 10.0,
+    "floor_mm": 2.0,
+    "resolution_mm": 0.25,
+    "board_bbox_in_jig_mm": [
+      6.0,
+      33.5,
+      30.2,
+      49.0
+    ],
+    "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
+    "stops": [
+      {
+        "side": "right",
+        "at": [
+          124.2,
+          112.92
+        ]
+      }
+    ],
+    "lead_wells": 0,
+    "bottom_pockets": [
+      "TP1",
+      "TP2",
+      "TP3",
+      "TP4",
+      "TP5",
+      "TP6"
+    ],
+    "notes": [
+      "only 1 locating stop(s) fit around this outline; place the PCB carefully",
+      "Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm."
+    ],
+    "batch": {
+      "boards": 10,
+      "cols": 5,
+      "rows": 2,
+      "pitch_mm": [
+        36.25,
+        27.5
+      ],
+      "board_offsets_mm": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          36.25,
+          0.0
+        ],
+        [
+          72.5,
+          0.0
+        ],
+        [
+          108.75,
+          0.0
+        ],
+        [
+          145.0,
+          0.0
+        ],
+        [
+          0.0,
+          27.5
+        ],
+        [
+          36.25,
+          27.5
+        ],
+        [
+          72.5,
+          27.5
+        ],
+        [
+          108.75,
+          27.5
+        ],
+        [
+          145.0,
+          27.5
+        ]
+      ],
+      "sets": 1,
+      "batch_count": 10
+    },
+    "preview_png": "usb_dongle_09-jig-placement.png",
+    "mesh": {
+      "triangles": 53434,
+      "unmatched_edges": 0,
+      "volume_mm3": 109169.7,
+      "watertight": true
+    },
+    "stl": "usb_dongle_09-jig-placement.stl"
+  },
+  "fit": {
+    "parts_checked": 9,
+    "shapes": {
+      "box (default for SMD height)": 7,
+      "kicad": 2
+    },
+    "room": {},
+    "holding_collisions": {},
+    "touching": [],
+    "loose": {},
+    "side_play": {},
+    "side_play_limit_mm": 0.45,
+    "not_held_sideways": [],
+    "held_by_parts": {},
+    "placement_collisions": {},
+    "board_contacts": {
+      "holding": 0,
+      "placement": 0
+    },
+    "stack_collisions": 0,
+    "estimated_shapes": [
+      "TP1",
+      "TP2",
+      "TP3",
+      "TP4",
+      "TP5",
+      "TP6",
+      "U1"
+    ],
+    "ok": true,
+    "summary": "Fit check (9 parts, their 3D shapes): nothing touches on the way in; all 0 hand-soldered parts touch their pockets as the board lands on the support (within 0.01 mm); the holding jig closes over the placement jig without touching it. Estimated (box) shapes: TP1, TP2, TP3, TP4, TP5, TP6, U1."
+  },
+  "key": null,
+  "passes": [
+    {
+      "pass": 1,
+      "process": "smt",
+      "side": "top",
+      "parts": 3,
+      "jig": null
+    }
+  ],
+  "extra": {},
+  "batch": {
+    "boards_per_jig": 10,
+    "cols": 5,
+    "rows": 2,
+    "sets": 1,
+    "batch_count": 10,
+    "bed_mm": [
+      220.0,
+      220.0
+    ]
+  },
+  "preview_png": "usb_dongle_09-jig.png",
+  "mesh": {
+    "triangles": 51448,
+    "unmatched_edges": 0,
+    "volume_mm3": 34499.9,
+    "watertight": true
+  },
+  "stl": "usb_dongle_09-jig.stl"
+}
