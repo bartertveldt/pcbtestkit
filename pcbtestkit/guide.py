@@ -207,6 +207,11 @@ GUIDE_CSS = CSS + """
 :root{--jig:#f6b24b;--hold:#d9480f;--holdtxt:#fff;--relief:#c99a52;--post:#8a6a33;--wire:#2f7d4f;--i2c:#3a6ea5;--pwr:#d13438;--card:#fff;--fg:#1d1d1f}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--jig:#b27a26;--relief:#8a6a3a;--card:#1f1f22;--fg:#eee}}
 .shot{width:100%;border-radius:10px;border:1px solid var(--line);background:#cfd3e0}
+.fitok,.fitbad{border-radius:10px;padding:10px 14px;margin:10px 0;border:1px solid var(--line)}
+.fitok{background:#e8f5ec;border-color:#9ccfab}.fitbad{background:#fdecea;border-color:#e6a39b}
+.fitok ul,.fitbad ul{margin:6px 0 0 18px;padding:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .fitok{background:#16301f;border-color:#2e6b42}
+:root:not([data-theme="light"]) .fitbad{background:#3a1714;border-color:#7a3028}}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin:12px 0}
 .step{display:flex;gap:12px;margin:10px 0}.num{flex:0 0 30px;height:30px;border-radius:50%;background:#2f7d4f;color:#fff;
 display:flex;align-items:center;justify-content:center;font-weight:700}.cap{font-size:12px;color:var(--muted);margin-top:4px}
@@ -328,6 +333,27 @@ def _step_html(n: int, text: str, img: Optional[str] = None, cap: str = "") -> s
     if pic:
         pic = "<div style='margin-top:8px;max-width:760px'>%s<div class='cap'>%s</div></div>" % (pic, _e(cap))
     return "<div class='step'><div class='num'>%d</div><div style='flex:1'>%s%s</div></div>" % (n, text, pic)
+
+
+def _fit_box(jig: Dict[str, Any], paths: Dict[str, str]) -> str:
+    """The fit check of every jig set (cut to the parts' 3D shapes), as a short box."""
+    rows = []
+    sets = [("%s side" % jig.get("side", "top"), jig)] + [(k.replace("hand_", "").replace("nest_", "paste nest, ") +
+                                                           (" side" if k.startswith("hand_") else ""), e)
+                                                          for k, e in sorted((jig.get("extra") or {}).items())]
+    for label, j in sets:
+        f = j.get("fit")
+        if not f:
+            continue
+        rows.append("<li><b>%s:</b> %s</li>" % (_e(label), _e(f["summary"])))
+    if not rows:
+        return ""
+    ok = all((j.get("fit") or {}).get("ok", True) for _, j in sets)
+    more = (" <code>jig-fit-check/</code> has the board and every jig in its working position, in KiCad's 3D coordinates: "
+            "open them together in any STL viewer." if paths.get("jig_fit_check") else "")
+    return ("<div class='%s'><b>%s</b> The jigs are cut to every part's 3D shape (KiCad's 3D export); the check compares "
+            "each part with each jig.%s<ul class='small'>%s</ul></div>" % (
+                "fitok" if ok else "fitbad", "Fit check passed." if ok else "Fit check FAILED.", more, "".join(rows)))
 
 
 def _hand_steps(design, jig: Dict[str, Any], side: str, stl: str, place_stl: str, im: Optional[Dict[str, str]] = None) -> str:
@@ -661,6 +687,7 @@ def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Opt
                      pocket_map_svg(jig)))
         h.append("<p class='small muted'>Print <code>%s</code> as it is (pockets face up, no supports): PLA or PETG, 0.2 mm layers, "
                  "3 walls. The pocket map is the jig as it lies on your desk.</p>" % _e(os.path.basename(paths.get("jig_stl", "jig.stl"))))
+        h.append(_fit_box(jig, paths))
         h.append(_hand_steps(design, jig, side0, paths.get("jig_stl", "jig.stl"), paths.get("jig_place_stl", "jig-placement.stl"), im))
         if not jig.get("placement"):        # single-jig workflow: parts in the pockets, PCB lowered onto them
             h.append("<div class='grid2'><div>%s<div class='cap'>Parts in their pockets, PCB coming down (top side facing the jig)</div></div>"

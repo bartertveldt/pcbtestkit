@@ -24,7 +24,7 @@ R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo
 | [`set_net_specs`](#set_net_specs) | W | yes | Set expected voltage limits / kind / test inclusion for one or more nets (batch up to 200) |
 | [`set_supply`](#set_supply) | W | yes | Set how the tester powers the DUT: net, voltage, current limit, idle current window |
 | [`set_test_options`](#set_test_options) | W | yes | Test-plan options (probe side, pogo family, signal policy, include/exclude nets, channels, ADC range...) |
-| [`set_jig_options`](#set_jig_options) | W |  | Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances |
+| [`set_jig_options`](#set_jig_options) | W |  | Solder-jig options: workflow (two jigs or one), which parts it holds, parts or 3D models it leaves out, part heights, clearances |
 | [`set_fixture_options`](#set_fixture_options) | W |  | Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes), every board's nest and clamp (nest_*) |
 | [`set_batch_and_programming`](#set_batch_and_programming) | W |  | Batch size (boards per fixture and jig set) and programming: headers, fixture connector type, flash command |
 | [`set_facility`](#set_facility) | W |  | Pick the test facility (tester) the fixture plugs into, by id from get_schema('facilities'): its channel count and range, fixed connector and plate, buses and runner driver |
@@ -227,12 +227,16 @@ Test-plan options (probe side, pogo family, signal policy, include/exclude nets,
 
 ### set_jig_options
 
-Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances. See get_schema('jig_options').
+Solder-jig options: workflow (two jigs or one), which parts it holds, parts or 3D models it leaves out, part heights, clearances. See get_schema('jig_options').
 
 | Argument | Type | Description |
 |---|---|---|
 | `parts` | array \| string | Refs to hold, or 'auto' (all THT). |
-| `exclude` | array of string |  |
+| `exclude` | array of string | Refs the jig doesn't hold (still cleared). |
+| `ignore` | array of string | Left out of the jigs completely (no pocket, no 3D model, no stand-in): refs, values or footprint names, wildcards allowed, e.g. an enclosure drawn in the KiCad files. |
+| `ignore_models` | array of string | 3D model files the jigs leave out, e.g. '*case*.step' (a part whose every model is left out is ignored). |
+| `pocket_floor` | shaped \| flat | shaped (default): pockets follow each part's 3D shape; flat: one depth per part. |
+| `overhang_clearance_mm` | number | Placement jig: room around leads and overhanging parts. |
 | `heights` | object | {ref: body height above PCB in mm} |
 | `relief_all_top` | boolean |  |
 | `resolution_mm` | number |  |

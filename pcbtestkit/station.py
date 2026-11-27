@@ -273,7 +273,8 @@ def board_outputs(job: Dict[str, Any]) -> Dict[str, Any]:
     if job.get("render_workers"):                             # boards side by side share the cores
         ov["visuals"] = dict(ov.get("visuals") or {}, workers=int(job["render_workers"]))
     bdir = os.path.join(out_dir, b["folder"])
-    flags = {"visuals": job.get("visuals", True), "video": job.get("board_videos", False)}
+    flags = {"visuals": job.get("visuals", True), "video": job.get("board_videos", False),
+             "jig_fit_check": job.get("jig_fit_check", False)}
     try:
         key = _stamp_key(b["project"], fac, int(b["batch"]), ov, flags)
     except (OSError, ValueError) as exc:

@@ -12,6 +12,7 @@
 | `<board>-fixture.json`, `-fixture-probes.csv` | Fixture sites, channel map, every pogo position | `read_output file=fixture` |
 | `<board>-jig.stl`, `.scad`, `.png`, `.json` | Holding jig (3D print), editable OpenSCAD, pocket map, metadata of both jigs | `read_output file=jig` |
 | `<board>-jig-placement.stl`, `.png` | Placement jig of the two-jig workflow (PCB top side up while fitting parts) | `read_output file=jig pointer=/placement` |
+| `jig-fit-check/*.stl` | The board with its parts and each jig in its working position, in KiCad's 3D coordinates (for viewing) | `read_output file=jig pointer=/fit` (the check itself) |
 | `<board>-report.html` | All findings with a board map | Don't read (large). Use `list_findings`. |
 | `<board>-guide.html` | Visual step-by-step guide with KiCad renders | Don't read (large, embedded images). |
 | `<board>-explainer.mp4` | 3D-animated explainer (only with `--video`) | Binary. |
@@ -31,7 +32,7 @@ pcbtestkit api read_output --project P --args '{"file":"spec","pointer":"/electr
 | spec | `/board`, `/summary`, `/technology/required`, `/technology/ordered`, `/manufacturing/fab_limits`, `/electrical/supply`, `/electrical/power_nets`, `/acceptance_criteria` | `/assembly/components`, `/electrical/nets`, `/findings`, `/manufacturing/measured`, `/decision_log` |
 | testplan | `/probe_side`, `/probe_side_reason`, `/pogo`, `/adc`, `/supply`, `/coverage`, `/header`, `/warnings`, `/batch`, `/program`, `/facility`, `/firmware/programmed`, `/timing/per_board_s`, `/timing/suggested_batch`, `/timing/test`, `/timing/assembly` | `/probes`, `/sequence` (use `/probes/0`, `/sequence/2`, ...), `/firmware/firmware_nets`, `/timing/by_batch_size`, `/timing/test/timeline` |
 | fixture | `/pogo_count`, `/outline_mode`, `/warnings`, `/sites`, `/nest/heights`, `/nest/bom` | `/channel_map`, `/nets` |
-| jig | `/workflow`, `/jig_size_mm`, `/support_height_mm`, `/parts_to_place`, `/notes`, `/mesh`, `/placement/lead_clearance_mm`, `/placement/stops` | `/pockets`, `/posts` |
+| jig | `/fit/ok`, `/fit/summary`, `/workflow`, `/jig_size_mm`, `/support_height_mm`, `/parts_to_place`, `/notes`, `/mesh`, `/placement/lead_clearance_mm`, `/placement/stops` | `/pockets`, `/posts`, `/fit/side_play` |
 
 Pointers follow RFC 6901: `/a/b/0`. A missing pointer returns `BAD_POINTER` with the keys that exist.
 Prefer the live tools over files when possible: `get_overview`, `list_findings`, `get_testplan`, `check_classes`

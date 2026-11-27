@@ -184,13 +184,19 @@ DEFAULTS: Dict[str, Any] = {
     },
     "jig": {
         "parts": "auto",            # auto | [refs]
-        "exclude": [],
+        "exclude": [],              # not held by the jig (they still get a clearance pocket)
+        # left out of the jigs completely (no pocket, no 3D model, no stand-in box): references, values or footprint
+        # names, wildcards allowed (e.g. "ENC1", "*Enclosure*"); and 3D model files to leave out (e.g. "*case*.step")
+        "ignore": [],
+        "ignore_models": [],
         "relief_all_top": True,
         "resolution_mm": 0.25,
-        "hold_clearance_mm": 0.25,
+        # pockets follow every part's real 3D shape (KiCad's 3D export); "flat": one depth per part, its highest point
+        "pocket_floor": "shaped",
+        "hold_clearance_mm": 0.15,  # at least this all round (a cell's edge, so up to one resolution step more)
         "relief_clearance_mm": 0.8,
         "relief_extra_depth_mm": 1.0,
-        "hold_depth_offset_mm": 0.1,
+        "hold_depth_offset_mm": 0.0,  # 0: every part touches its pocket floor the moment the PCB lands
         "floor_mm": 2.0,
         "rim_mm": 3.0,
         "rim_height_mm": 1.2,
@@ -209,6 +215,7 @@ DEFAULTS: Dict[str, Any] = {
         "stop_width_mm": 2.5,
         "stop_clearance_mm": 0.15,
         "bottom_part_clearance_mm": 0.8,
+        "overhang_clearance_mm": 0.5,    # placement jig: room around leads and parts that hang below the board's face
         # boards with parts on both sides: one jig set per hand-soldered side, in this order
         "sides": "auto",                 # auto (top then bottom, where there are hand-soldered parts) | ["bottom", "top"] | ...
         "smt_first": "auto",             # SMD side reflowed first: auto (the side with fewer parts) | top | bottom
@@ -227,7 +234,8 @@ DEFAULTS: Dict[str, Any] = {
                                     # own: soft shadows, reflections; about 6x slower than standard)
     },
     "outputs": {"spec": True, "testplan": True, "fixture": True, "jig": True, "report": True, "runner": True,
-                "guide": True, "visuals": True, "video": False, "keep_scenes": False},
+                "guide": True, "visuals": True, "video": False, "keep_scenes": False,
+                "jig_fit_check": True},     # jig-fit-check/: the jigs in place on the board, in KiCad's 3D coordinates
     # the guide's 3D stills: basic | standard (shadows) | best (+ anti-aliasing: the default) | high (KiCad's own soft
     # shadows and reflections: hardly different, about 6x slower than best)
     "visuals": {"quality": "best", "width": 1600, "height": 1000,

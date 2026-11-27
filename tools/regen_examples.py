@@ -94,6 +94,8 @@ def main() -> int:
                 json.dump(SHOWCASE[name], fh, indent=1)
             board = os.path.join(tmp, name)
         cmd = [sys.executable, "-m", "pcbtestkit", "run", board, "-q", "--no-kicad", "--out", out]
+        if name != "sample_sensor":             # the fit-check STLs of a big board are large: one example has them
+            cmd.append("--no-jig-fit-files")
         if not a.no_video:
             cmd.append("--video")
         print("==", name, "...", flush=True)

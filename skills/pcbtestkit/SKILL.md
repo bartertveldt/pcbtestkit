@@ -71,7 +71,9 @@ Exit codes: 0 ok, 1 findings/violations/tool error (the JSON says which), 2 bad 
   `upgrade_environment` with `confirm=true` (keeps every station pin: existing fixtures still fit). Long runs:
   `--background --when-done sleep|shutdown [--lid]`.
 - **Solder jigs:** placement + holding jig per board side, paste-print nest for the second SMD side, as many boards
-  per jig as fit the printer bed.
+  per jig as fit the printer bed. Cut to the parts' 3D shapes (KiCad's export): every hand-soldered part touches its
+  pocket as the board lands, nothing else touches; `fit` in `*-jig.json` is the check. Leave parts or models out with
+  `set_jig_options {"ignore": [...], "ignore_models": [...]}`.
 - **Runner:** Raspberry Pi / MCU (or the facility's driver); batch flow, results with per-step timings.
 - **Guide, report, video:** the video shows assembly with both jig sets, the batch on the fixture and the test
   with the tested copper lighting up; it renders in a background job and can be finished from kept frames.

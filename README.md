@@ -336,21 +336,41 @@ PCB TestKit makes **two jigs that work as a pair**:
 
 1. **Placement jig** (`<board>-jig-placement.stl`): the PCB lies in it **top side up**, on a flat bed with a well
    under every through-hole, so you fit the parts the normal way and the leads have room below the board. Short
-   stops around the edge locate the board; holes take the holding jig's posts; pockets clear bottom-side parts.
+   stops around the edge locate the board; holes take the holding jig's posts; pockets clear bottom-side parts,
+   leads, and connectors that reach past the board's edge.
 2. Fit the hand-soldered parts.
-3. **Holding jig** (`<board>-jig.stl`): put it on top, pockets down. Each part sits in a snug pocket, the posts go
-   through the mounting holes, and its rim is notched where the placement jig's stops are, so the two close
-   over the PCB without touching (this is checked on every export).
+3. **Holding jig** (`<board>-jig.stl`): put it on top, pockets down. Each part sits in a pocket cut to its own 3D
+   shape, the posts go through the mounting holes, and its rim is notched where the placement jig's stops are, so
+   the two close over the PCB without touching.
 4. Turn the stack over and lift off the placement jig: every lead points up and every part is held flush.
 5. Solder from above, clip the leads, lift the board out with the finger notches.
 
+**An exact fit.** The jigs are cut to every part's real 3D shape, as KiCad's own 3D export draws it (`kicad-cli`,
+KiCad 8 or later; STEP and VRML models alike, with each model's offset and rotation). A hold pocket's floor is its
+part's own top surface, grown sideways by `jig.hold_clearance_mm` (0.15 mm), so **every hand-soldered part touches
+its pocket at the moment the board's face lands on the support**, within the 0.01 mm height step, and before that
+nothing touches anything: no part, lead or overhanging connector reaches into either jig, the bare board clears the
+stops, rim and posts, and the two jigs clear each other. Sideways every part is held on all four sides: it can slide
+at least the clearance and less than the clearance plus one cell of the jig's grid (`jig.resolution_mm`, 0.25 mm:
+0.15 to 0.4 mm of play; 0.1 mm makes it 0.15 to 0.25 mm, with larger files). Where two parts stand closer together
+than a jig wall needs, each holds the other on that side (the check names them). Every export checks all of this against
+the 3D shapes with its own exact method, including how far each part slides each way (`fit` in `*-jig.json`, and
+the guide), and says which parts it could only estimate (no 3D model: a box from the courtyard and height). `jig-fit-check/` has the board and each jig in its working position, in
+KiCad's 3D coordinates, to open together in any STL viewer.
+
 Details:
 
-- Print both STLs as they are (watertight, no supports). The holding jig also comes as `.scad` for OpenSCAD.
-- The STLs are made by the plugin's own mesher from the board and the part heights: no AI, no network, and the same
-  file on every run for the same board and settings.
+- Print both STLs as they are (watertight, no supports). The holding jig also comes as `.scad` for OpenSCAD (the
+  same shape, one labelled group of cuts per pocket).
+- The STLs are made by the plugin's own mesher from the board and the parts' 3D shapes: no AI, no network, and the
+  same file on every run for the same board and settings.
 - Leads must fit in the wells: trim them to the length printed in the guide (10 mm by default) or raise `jig.placement_clearance_mm`.
-- Holding-jig pocket depth is the part height + 0.1 mm. Heights come from, in order: config, a `Height` field, the 3D model (VRML/STEP from your KiCad library), footprint-name rules, defaults. `*-jig.json` lists the source of each height; fix wrong ones with `jig.heights`.
+- Leave parts out of the jigs completely (no pocket, no 3D model, no stand-in box), e.g. an enclosure drawn in the
+  KiCad files: `"jig": {"ignore": ["ENC1", "*Enclosure*"]}` (references, values or footprint names, wildcards),
+  `"ignore_models": ["*case*.step"]` for 3D model files, `--jig-ignore` / `--jig-ignore-models` on the command line,
+  or "Leave out of the jigs" in the KiCad dialog. Footprints without pads are never in the jigs.
+- `jig.heights` sets a part's height where its model is generic: its shape is stretched to it.
+  `jig.pocket_floor: "flat"` makes every pocket one depth (its part's highest point) instead of its shape.
 - Prefer the old single-jig method (parts dropped into the holding jig, PCB lowered onto them)? Set `"jig": {"workflow": "single"}`.
 
 ### Parts on both sides

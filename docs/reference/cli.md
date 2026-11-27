@@ -30,8 +30,9 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
                       [--environment ENVIRONMENT] [--station STATION] [--remember-environment]
                       [--no-environment] [--facility FACILITY]
                       [--program-connector {same,swd10,jtag20,avr_isp6,pic_icsp6,pins}]
-                      [--outline {rect,outline}] [--jig-parts JIG_PARTS] [--no-fixture]
-                      [--no-route] [--no-jig] [--no-runner] [--no-visuals] [--video]
+                      [--outline {rect,outline}] [--jig-parts JIG_PARTS] [--jig-ignore JIG_IGNORE]
+                      [--jig-ignore-models JIG_IGNORE_MODELS] [--no-fixture] [--no-route]
+                      [--no-jig] [--no-jig-fit-files] [--no-runner] [--no-visuals] [--video]
                       [--video-fps VIDEO_FPS] [--video-stills]
                       [--video-quality {basic,standard,best,high}]
                       [--image-quality {basic,standard,best,high}] [--background] [-q]
@@ -60,9 +61,12 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
 | `--program-connector` | programming connector per board on the fixture (default: a copy of the board's header) (one of: same, swd10, jtag20, avr_isp6, pic_icsp6, pins) |
 | `--outline` | (one of: rect, outline) |
 | `--jig-parts` | comma separated refs (default: all THT) |
+| `--jig-ignore` | parts the jigs leave out completely (no pocket, no 3D model, no stand-in): comma separated refs, values or footprint names, wildcards allowed, e.g. ENC1,*Enclosure* |
+| `--jig-ignore-models` | 3D model files the jigs leave out, comma separated, e.g. '*case*.step' |
 | `--no-fixture` |  |
 | `--no-route` | leave the fixture board unrouted (ratsnest only) |
 | `--no-jig` |  |
+| `--no-jig-fit-files` | leave out jig-fit-check/ (the board and its jigs in place, in KiCad's 3D coordinates; the fit check itself always runs) |
 | `--no-runner` |  |
 | `--no-visuals` | skip the KiCad 3D renders in the guide |
 | `--video` | also render the explainer video: real 3D animation rendered with KiCad (needs ffmpeg; several minutes) |

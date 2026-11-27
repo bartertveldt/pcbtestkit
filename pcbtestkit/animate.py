@@ -917,7 +917,7 @@ class Stage:
         try:
             jc["resolution_mm"] = max(0.5, float(old or 0.25))
             grids: Dict[str, Dict[str, Any]] = {}
-            build_jigs(self.design, grids=grids)
+            build_jigs(self.design, grids=grids, check=False)   # the picture only: the printed jigs were checked
             g = grids.get(self.side) or grids                   # this jig set's side ("holding" = the first pass)
             hold = JigMesh.from_grid(g["holding"])
             place_ = JigMesh.from_grid(g["placement"]) if g.get("placement", {}).get("H") else None

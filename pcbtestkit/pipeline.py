@@ -176,9 +176,12 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
         paths["jig_preview"] = os.path.join(out_dir, "%s-jig.png" % name)
         paths["jig_place_stl"] = os.path.join(out_dir, "%s-jig-placement.stl" % name)
         paths["jig_place_preview"] = os.path.join(out_dir, "%s-jig-placement.png" % name)
+        fit_dir = os.path.join(out_dir, "jig-fit-check") if want.get("jig_fit_check", True) else None
         jig = build_jigs(design, paths["jig_stl"], paths["jig_scad"], paths["jig_preview"],
                          paths["jig_place_stl"], paths["jig_place_preview"],
-                         file_for=lambda tag, ext: os.path.join(out_dir, "%s-%s.%s" % (name, tag, ext)))
+                         file_for=lambda tag, ext: os.path.join(out_dir, "%s-%s.%s" % (name, tag, ext)), fit_dir=fit_dir)
+        if fit_dir and os.path.isdir(fit_dir):
+            paths["jig_fit_check"] = fit_dir
         if "placement" not in jig:                       # single-jig workflow
             for k in ("jig_place_stl", "jig_place_preview"):
                 paths.pop(k, None)

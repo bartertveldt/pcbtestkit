@@ -48,6 +48,7 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `pcbtestkit/analysis.py`, `classify.py`, `measure.py`, `geometry.py` | Weak-point checks, part/net classification, board measurement streams. |
 | `pcbtestkit/classsys/` | Fab class-system engine; one JSON per system in `systems/`. Data, not code. |
 | `pcbtestkit/testplan.py`, `fixture.py`, `router.py`, `jig.py`, `kicad_writer.py` | Test plan, fixture PCB writer, its two-layer autorouter, solder-jig mesher, KiCad file writer. |
+| `pcbtestkit/parts3d.py`, `jigfit.py` | Every part's real 3D shape (KiCad's own 3D export, cached; VRML; a box) and exact envelopes the jigs are cut to; the independent fit check of every jig against those shapes. |
 | `pcbtestkit/facility.py`, `facilities/` | Test facilities (the tester a fixture plugs into: connector, plate, buses, runner driver). Data, not code; see `docs/FACILITIES.md`. Also stations (a shared connector) and `facility_from_pcb`. |
 | `pcbtestkit/station.py`, `station_video.py` | Several board types on one station: batch per board type (`station plan/run`), `station.html`, the station video. |
 | `pcbtestkit/nest.py` | Every board's nest (rails, sprung standoffs) and toggle clamp: geometry, printable heightmaps, 3D models. |

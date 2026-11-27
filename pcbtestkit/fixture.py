@@ -234,7 +234,8 @@ class FixtureBuilder:
         if kind == "same" and fp is not None:
             # SMD pads on both copper layers (an edge-mount connector straddles the board's edge): the fixture cannot
             # have it in the middle of its board, so it gets a pin header with the same pinout
-            sides = {("B.Cu" in p.layers) != bool(fp.local_flipped) for p in fp.pads if p.has_copper and not p.is_tht}
+            sides = {("B.Cu" in p.layers) != bool(fp.local_flipped) for p in fp.pads
+                     if not p.is_tht and not p.is_npth and ("F.Cu" in p.layers or "B.Cu" in p.layers)}
             if len(sides) > 1:
                 kind = "pins"
                 self.warnings.append("programming connector for %s: it is an edge-mount part (pads on both sides); "

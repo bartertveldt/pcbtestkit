@@ -57,6 +57,37 @@ All notable changes. Versions follow [Semantic Versioning](https://semver.org).
   (40 tools in all).
 - A station board's second socket with only a bus or two on it is read (an upgraded station's new socket).
 
+### Solder jigs that fit exactly
+- **Cut to the parts' real 3D shapes.** The jigs come from KiCad's own 3D export of the board (`kicad-cli pcb export
+  glb`, KiCad 8+, cached; `pcbtestkit/parts3d.py`): every model, STEP or VRML, with its offset and rotation, as
+  KiCad's 3D viewer and STL export draw it. Boards made with an older KiCad find their models too (old library
+  variables and `.wrl` names resolve to the installed STEP models). Without kicad-cli: the VRML model, else a box.
+- **Every hand-soldered part touches its pocket the moment the board lands.** A hold pocket's floor is the part's own
+  top surface (`jig.hold_depth_offset_mm` is now 0, was +0.1 mm), shaped to it (`jig.pocket_floor: "flat"` for one
+  depth per part), grown sideways by `jig.hold_clearance_mm` (now 0.15 mm, guaranteed: every cell is cut wherever its
+  square comes that close). Before, pockets were boxes from the courtyard or fab outline and the model's points: on
+  the 128-board catalog all 432 hand-soldered parts sat 0.1 to 0.6 mm loose.
+- **Nothing touches on the way in.** The placement jig is cut away wherever a lead, a bottom-side part or a connector
+  reaching past the board's edge would meet it (`jig.overhang_clearance_mm`, `jig.bottom_part_clearance_mm`), and its
+  stops keep away from them; the holding jig's rim is cut over overhanging parts; the bare board clears the rim, stops
+  and posts by their clearances (whole cells, not cell centres); a post stops short of a part under its mounting
+  hole; on thin boards the rim ends above the board's underside. Before: 224 parts reached into a placement jig, 66
+  into a holding jig, and on 37 boards the bare board touched a jig.
+- **Held on all four sides.** Every hand-soldered part can slide at least `jig.hold_clearance_mm` and less than that
+  plus one grid cell (`jig.resolution_mm`) in +x, -x, +y and -y before it meets a wall, or the part beside it where
+  the two are too close for a wall between them (`held_by_parts`); the check measures it (`side_play`) and fails a
+  part that nothing holds. Clearance pockets near a hand-soldered part never take its floor or walls.
+- **Checked on every export** (`pcbtestkit/jigfit.py`, written apart from the builder): each part's triangles against
+  each jig's surface, exactly; the result is `fit` in `*-jig.json`, a note in the guide, and which parts only had an
+  estimated shape. The whole 128-board catalog passes (every jig set, both sides, paste nests).
+- **`jig-fit-check/`**: the board with its parts and every jig in its working position, in KiCad's 3D coordinates
+  (open them together, or with KiCad's own STL export). The OpenSCAD file now has exactly the STL's shape.
+- **Leave parts out of the jigs** (no pocket, no 3D model, no stand-in): `jig.ignore` (references, values or
+  footprint names, wildcards), `jig.ignore_models` (3D model files, e.g. an enclosure), `--jig-ignore` /
+  `--jig-ignore-models`, *Leave out of the jigs* in the KiCad dialog, `set_jig_options` for AI assistants.
+  Footprints without pads are never in the jigs.
+- A D-sub footprint named "..._MountingHolesOffset..." is no longer taken for a mounting hole.
+
 ### Long runs: background, lid closed, then sleep or shut down
 - `environment plan/build --when-done sleep|hibernate|shutdown [--grace 120]`, `--lid`, `--no-keep-awake`,
   `environment stay-on DIR` (`pcbtestkit/power.py`). A run keeps the computer awake (by default), also with the lid

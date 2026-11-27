@@ -388,12 +388,14 @@ class MainDialog(wx.Dialog):
     def _jig(self, nb, cfg):
         p = wx.Panel(nb)
         s = wx.BoxSizer(wx.VERTICAL)
-        s.Add(wx.StaticText(p, label="Tick the parts that are hand-soldered. They get snug pockets; every other part on "
-                                     "the same side gets a clearance pocket.\nParts on both sides: each side gets its own jig set "
-                                     "(the second one has pockets for the parts already soldered)."), 0, wx.ALL, 8)
+        s.Add(wx.StaticText(p, label="Tick the parts that are hand-soldered. Their pockets follow the part's 3D shape, so each "
+                                     "touches its pocket as the board lands; every other part gets a clearance pocket.\nParts "
+                                     "on both sides: each side gets its own jig set (the second one has pockets for the parts "
+                                     "already soldered). Parts marked LEFT OUT are ignored by the jigs completely."), 0, wx.ALL, 8)
         self.jig_parts = [fp for fp in sorted(self.design.components(), key=lambda f: (f.side != "top", C.natural_key(f.ref)))
                           if not C.is_mounting_hole(fp)]
         self.jig_heights = dict((cfg["jig"].get("heights") or {}))
+        self.jig_ignore = [str(x) for x in (cfg["jig"].get("ignore") or [])]
         self.jig_list = wx.CheckListBox(p, choices=[self._jig_label(fp) for fp in self.jig_parts])
         self.jig_list.SetFont(wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         parts = cfg["jig"].get("parts")
@@ -405,12 +407,22 @@ class MainDialog(wx.Dialog):
         b1, b2 = wx.Button(p, label="Select all THT"), wx.Button(p, label="Clear")
         b3 = wx.Button(p, label="Set height of selected part...")
         b3.Bind(wx.EVT_BUTTON, self.on_height)
+        b4 = wx.Button(p, label="Leave out of the jigs / take back")
+        b4.SetToolTip("No pocket, no 3D model and no stand-in for this part (an enclosure or a part fitted later)")
+        b4.Bind(wx.EVT_BUTTON, self.on_ignore)
         b1.Bind(wx.EVT_BUTTON, lambda e: [self.jig_list.Check(i, fp.is_tht) for i, fp in enumerate(self.jig_parts)])
         b2.Bind(wx.EVT_BUTTON, lambda e: [self.jig_list.Check(i, False) for i in range(len(self.jig_parts))])
         row.Add(b1, 0, wx.RIGHT, 6)
         row.Add(b2, 0, wx.RIGHT, 18)
-        row.Add(b3, 0)
+        row.Add(b3, 0, wx.RIGHT, 6)
+        row.Add(b4, 0)
         s.Add(row, 0, wx.ALL, 8)
+        mrow = wx.BoxSizer(wx.HORIZONTAL)
+        mrow.Add(wx.StaticText(p, label="3D model files to leave out (e.g. *enclosure*, case.step):"), 0,
+                 wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 6)
+        self.jig_ignore_models = wx.TextCtrl(p, value=", ".join(str(x) for x in (cfg["jig"].get("ignore_models") or [])))
+        mrow.Add(self.jig_ignore_models, 1)
+        s.Add(mrow, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
         g2 = wx.FlexGridSizer(0, 2, 6, 8)
         self.jig_side_opts = [("auto", "auto (top, then bottom)"), (["top"], "top side only"), (["bottom"], "bottom side only"),
                               (["top", "bottom"], "top, then bottom"), (["bottom", "top"], "bottom, then top")]
@@ -437,7 +449,23 @@ class MainDialog(wx.Dialog):
             h, src = float(self.jig_heights[fp.ref]), "set by you"
         else:
             h, src = self.design.height_of(fp)
-        return "%-6s %-6s %-18s %-34s %s  h=%.1f mm (%s)" % (fp.ref, fp.side, fp.value[:18], fp.name[:34], fp.mount.upper(), h, src[:28])
+        mark = "LEFT OUT  " if fp.ref in getattr(self, "jig_ignore", []) else ""
+        return "%s%-6s %-6s %-18s %-34s %s  h=%.1f mm (%s)" % (mark, fp.ref, fp.side, fp.value[:18], fp.name[:34],
+                                                           fp.mount.upper(), h, src[:28])
+
+    def on_ignore(self, _evt):
+        i = self.jig_list.GetSelection()
+        if i == wx.NOT_FOUND:
+            wx.MessageBox("Select a part in the list first.", "PCB TestKit")
+            return
+        fp = self.jig_parts[i]
+        if fp.ref in self.jig_ignore:
+            self.jig_ignore.remove(fp.ref)
+        else:
+            self.jig_ignore.append(fp.ref)
+        checked = self.jig_list.IsChecked(i) and fp.ref not in self.jig_ignore
+        self.jig_list.SetString(i, self._jig_label(fp))
+        self.jig_list.Check(i, checked)
 
     def on_height(self, _evt):
         i = self.jig_list.GetSelection()
@@ -591,7 +619,10 @@ class MainDialog(wx.Dialog):
                           self.weak_reason.GetValue())
         self.problems += apply_stack_edits(u, self._stack_after(), set(self.design.board.by_ref))
         jg = u.setdefault("jig", {})
-        jg["parts"] = [fp.ref for i, fp in enumerate(self.jig_parts) if self.jig_list.IsChecked(i)]
+        jg["parts"] = [fp.ref for i, fp in enumerate(self.jig_parts) if self.jig_list.IsChecked(i)
+                       and fp.ref not in self.jig_ignore]
+        jg["ignore"] = list(self.jig_ignore)
+        jg["ignore_models"] = [x.strip() for x in self.jig_ignore_models.GetValue().replace(";", ",").split(",") if x.strip()]
         jg["sides"] = self.jig_side_opts[max(0, self.jig_sides.GetSelection())][0]
         jg["paste_nest"] = self.nest_opts[max(0, self.nest.GetSelection())][0]
         if self.jig_heights:

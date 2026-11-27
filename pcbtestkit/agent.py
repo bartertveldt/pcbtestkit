@@ -924,6 +924,7 @@ _RANGES = {"pogo_drill_mm": (0.4, 3.0), "max_channels": (1, 512), "edge_keepout_
            "placement_clearance_mm": (2, 40), "placement_border_mm": (3, 30), "lead_well_margin_mm": (0, 5),
            "stop_length_mm": (3, 30), "stop_width_mm": (1, 10), "stop_clearance_mm": (0, 1),
            "bottom_part_clearance_mm": (0, 5), "stack_clearance_mm": (0, 10), "lead_relief_mm": (0, 10),
+           "overhang_clearance_mm": (0, 5),
            "nest_border_mm": (5, 50),
            "divider_r_bottom_rail": (100, 1e6), "divider_r_bottom_signal": (1e3, 1e7),
            "track_mm": (0.1, 2.0), "power_track_mm": (0.1, 5.0), "clearance_mm": (0.1, 2.0), "via_mm": (0.3, 2.0),
@@ -984,7 +985,16 @@ def _probe_notes(ws: Workspace, nets: List[str]) -> List[str]:
 
 JIG_OPTS = {
     "parts": {"type": ["array", "string"], "items": {"type": "string"}, "description": "Refs to hold, or 'auto' (all THT)."},
-    "exclude": {"type": "array", "items": {"type": "string"}},
+    "exclude": {"type": "array", "items": {"type": "string"}, "description": "Refs the jig doesn't hold (still cleared)."},
+    "ignore": {"type": "array", "items": {"type": "string"},
+               "description": "Left out of the jigs completely (no pocket, no 3D model, no stand-in): refs, values or "
+                              "footprint names, wildcards allowed, e.g. an enclosure drawn in the KiCad files."},
+    "ignore_models": {"type": "array", "items": {"type": "string"},
+                      "description": "3D model files the jigs leave out, e.g. '*case*.step' (a part whose every model "
+                                     "is left out is ignored)."},
+    "pocket_floor": {"type": "string", "enum": ["shaped", "flat"],
+                     "description": "shaped (default): pockets follow each part's 3D shape; flat: one depth per part."},
+    "overhang_clearance_mm": {"type": "number", "description": "Placement jig: room around leads and overhanging parts."},
     "heights": {"type": "object", "description": "{ref: body height above PCB in mm}"},
     "relief_all_top": {"type": "boolean"}, "resolution_mm": {"type": "number"}, "hold_clearance_mm": {"type": "number"},
     "relief_clearance_mm": {"type": "number"}, "relief_extra_depth_mm": {"type": "number"},
@@ -1009,7 +1019,8 @@ JIG_OPTS = {
 }
 
 
-@tool("set_jig_options", "Solder-jig options: workflow (two jigs or one), which parts it holds, part heights, clearances. "
+@tool("set_jig_options", "Solder-jig options: workflow (two jigs or one), which parts it holds, parts or 3D models it leaves "
+      "out, part heights, clearances. "
       "See get_schema('jig_options').",
       {"properties": dict(JIG_OPTS, **WRITE_COMMON)}, read_only=False, writes=True)
 def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False, confirm: bool = False, **opts):
@@ -1020,6 +1031,18 @@ def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False,
         opts["parts"] = [ws.resolve_ref(r).ref for r in opts["parts"]]
     if "exclude" in opts:
         opts["exclude"] = [ws.resolve_ref(r).ref for r in opts["exclude"]]
+    for k in ("ignore", "ignore_models"):
+        if k in opts and opts[k] is not None:
+            if not isinstance(opts[k], list) or not all(isinstance(x, str) and x.strip() for x in opts[k]):
+                raise ToolError("BAD_VALUE", "%s must be a list of names or wildcard patterns" % k)
+            opts[k] = [x.strip() for x in opts[k]]
+    if opts.get("ignore"):
+        import fnmatch
+        keys = [k.lower() for fp in d.components() for k in (fp.ref, fp.value, fp.lib_id, fp.lib_id.rpartition(":")[2]) if k]
+        unknown = [p for p in opts["ignore"] if not any(fnmatch.fnmatchcase(k, p.lower()) for k in keys)]
+        if unknown:
+            raise ToolError("UNKNOWN_PART", "no part matches %s" % ", ".join(unknown),
+                            hint="use refs, values or footprint names as list_parts returns them; wildcards: * and ?")
     if "sides" in opts and opts["sides"] is not None:
         sd = opts["sides"]
         sd = [sd] if isinstance(sd, str) and sd != "auto" else sd
@@ -1036,7 +1059,7 @@ def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False,
     for k in [k for k in opts if k in ("parts", "exclude", "heights")]:
         pass
     clean = {k: v for k, v in opts.items() if v is not None}
-    special = {k: clean.pop(k) for k in ("parts", "exclude", "heights", "sides") if k in clean}
+    special = {k: clean.pop(k) for k in ("parts", "exclude", "heights", "sides", "ignore", "ignore_models") if k in clean}
     res = None
     if clean:
         res = _set_section(ws, "jig", clean, JIG_OPTS, rationale, dry_run, confirm)

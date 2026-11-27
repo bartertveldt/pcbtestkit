@@ -312,12 +312,15 @@ Solder-jig parts (auto = all THT), pocket clearances and depths, part heights by
   "jig": {
     "parts": "auto",
     "exclude": [],
+    "ignore": [],
+    "ignore_models": [],
     "relief_all_top": true,
     "resolution_mm": 0.25,
-    "hold_clearance_mm": 0.25,
+    "pocket_floor": "shaped",
+    "hold_clearance_mm": 0.15,
     "relief_clearance_mm": 0.8,
     "relief_extra_depth_mm": 1.0,
-    "hold_depth_offset_mm": 0.1,
+    "hold_depth_offset_mm": 0.0,
     "floor_mm": 2.0,
     "rim_mm": 3.0,
     "rim_height_mm": 1.2,
@@ -334,6 +337,7 @@ Solder-jig parts (auto = all THT), pocket clearances and depths, part heights by
     "stop_width_mm": 2.5,
     "stop_clearance_mm": 0.15,
     "bottom_part_clearance_mm": 0.8,
+    "overhang_clearance_mm": 0.5,
     "sides": "auto",
     "smt_first": "auto",
     "paste_nest": "auto",
@@ -376,7 +380,8 @@ Which files a run writes by default.
     "guide": true,
     "visuals": true,
     "video": false,
-    "keep_scenes": false
+    "keep_scenes": false,
+    "jig_fit_check": true
   }
 }
 ```

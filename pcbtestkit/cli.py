@@ -54,6 +54,9 @@ def _overrides(args) -> Dict[str, Any]:
         overrides.setdefault("fixture", {})["route"] = False
     if getattr(args, "jig_parts", None):
         overrides.setdefault("jig", {})["parts"] = [p.strip() for p in args.jig_parts.split(",") if p.strip()]
+    for opt, key in (("jig_ignore", "ignore"), ("jig_ignore_models", "ignore_models")):
+        if getattr(args, opt, None):
+            overrides.setdefault("jig", {})[key] = [p.strip() for p in getattr(args, opt).split(",") if p.strip()]
     if getattr(args, "fab", None):
         overrides["fab_profile"] = args.fab
     if getattr(args, "class_system", None):
@@ -91,6 +94,8 @@ def cmd_run(args) -> int:
     from .pipeline import run_pipeline
     d = _design(args)
     outputs = {"fixture": not args.no_fixture, "jig": not args.no_jig, "runner": not args.no_runner}
+    if getattr(args, "no_jig_fit_files", False):
+        outputs["jig_fit_check"] = False
     if args.no_visuals:
         outputs["visuals"] = False
     if args.video:
@@ -928,9 +933,15 @@ def build_parser() -> argparse.ArgumentParser:
                    help="programming connector per board on the fixture (default: a copy of the board's header)")
     p.add_argument("--outline", choices=["rect", "outline"])
     p.add_argument("--jig-parts", help="comma separated refs (default: all THT)")
+    p.add_argument("--jig-ignore", help="parts the jigs leave out completely (no pocket, no 3D model, no stand-in): comma "
+                                        "separated refs, values or footprint names, wildcards allowed, e.g. ENC1,*Enclosure*")
+    p.add_argument("--jig-ignore-models", help="3D model files the jigs leave out, comma separated, e.g. '*case*.step'")
     p.add_argument("--no-fixture", action="store_true")
     p.add_argument("--no-route", action="store_true", help="leave the fixture board unrouted (ratsnest only)")
     p.add_argument("--no-jig", action="store_true")
+    p.add_argument("--no-jig-fit-files", action="store_true",
+                   help="leave out jig-fit-check/ (the board and its jigs in place, in KiCad's 3D coordinates; the fit "
+                        "check itself always runs)")
     p.add_argument("--no-runner", action="store_true")
     p.add_argument("--no-visuals", action="store_true", help="skip the KiCad 3D renders in the guide")
     p.add_argument("--video", action="store_true",

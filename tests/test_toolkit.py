@@ -15,6 +15,8 @@ import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
+# the same part shapes on every machine (KiCad's 3D export only where a test asks for it: TestKiCadShapes)
+os.environ.setdefault("PCBTESTKIT_NO_KICAD_3D", "1")
 sys.path.insert(0, os.path.join(ROOT, "examples"))
 
 import make_sample  # noqa: E402
@@ -112,7 +114,7 @@ class TestPlanFixtureJig(Base):
         self.assertGreater(r["mesh"]["volume_mm3"], 0)
         self.assertEqual(sorted(r["parts_to_place"]), ["C1", "C2", "J2", "J3", "U1"])
         holds = {p["ref"]: p for p in r["pockets"] if p["type"] == "hold"}
-        self.assertAlmostEqual(holds["U1"]["depth_mm"], holds["U1"]["part_height_mm"] + 0.1, places=2)
+        self.assertAlmostEqual(holds["U1"]["depth_mm"], holds["U1"]["part_height_mm"], places=2)   # exact: no offset
 
 
 class TestAgentAPI(Base):
@@ -427,6 +429,284 @@ class TestAnimation(Base):
         self.assertIn("into its nest", press["caption"])
         still = storyboard(d, spec, plan, None, None, {"images": {}}, out_dir, out_dir, {})
         self.assertFalse([s for s in still if s["kind"] == "anim"])
+
+
+def _cyl_x(ref, cx, cy, r, length, z0, n=24):
+    """A cylinder lying along x (an axial part) on the plane z0, as a part mesh."""
+    import math
+    from pcbtestkit.parts3d import PartMesh
+    tris, zc = [], z0 + r
+    ring = [(math.cos(2 * math.pi * k / n) * r, math.sin(2 * math.pi * k / n) * r) for k in range(n)]
+    x0, x1 = cx - length / 2.0, cx + length / 2.0
+    for k in range(n):
+        (ya, za), (yb, zb) = ring[k], ring[(k + 1) % n]
+        p = [(x0, cy + ya, zc + za), (x1, cy + ya, zc + za), (x1, cy + yb, zc + zb), (x0, cy + yb, zc + zb)]
+        tris += [p[0] + p[1] + p[2], p[0] + p[2] + p[3], (x0, cy, zc) + p[0] + p[3], (x1, cy, zc) + p[2] + p[1]]
+    return PartMesh(ref, tris, "vrml")
+
+
+def _box(ref, x0, y0, x1, y1, z0, z1):
+    from pcbtestkit.parts3d import box_mesh
+    m = box_mesh(ref, [(x0, y0), (x1, y0), (x1, y1), (x0, y1)], z0, z1)
+    m.source = "vrml"                       # count it as a real shape
+    return m
+
+
+class TestJigFit(Base):
+    """Jigs cut to the parts' real 3D shapes: every hand-soldered part touches its pocket the moment the board lands,
+    nothing else touches anything on the way in (pcbtestkit.parts3d, pcbtestkit.jigfit)."""
+
+    def _with(self, d, **shapes):
+        from pcbtestkit import parts3d as P3
+        ms = P3.part_meshes(d)
+        ms.update(shapes)
+        return d
+
+    def _depth(self, g, x, y):
+        """mm below the support plane of the holding jig at board point (x, y)."""
+        i, j = int((x - g["ox"]) / g["res"]), int((y - g["oy"]) / g["res"])
+        return (int(round(g["support"] * 100)) - g["H"][j][i]) / 100.0
+
+    def test_every_part_touches_nothing_collides(self):
+        from pcbtestkit.jig import build_jigs
+        d = self.design()
+        j = build_jigs(d, grids={})
+        f = j["fit"]
+        self.assertTrue(f["ok"], f["summary"])
+        self.assertEqual(sorted(f["touching"]), sorted(j["parts_to_place"]))
+        self.assertEqual(f["holding_collisions"], {})
+        self.assertEqual(f["placement_collisions"], {})
+        self.assertEqual(f["board_contacts"], {"holding": 0, "placement": 0})
+        self.assertEqual(f["stack_collisions"], 0)
+        for key, e in j["extra"].items():
+            self.assertTrue(e["fit"]["ok"], "%s: %s" % (key, e["fit"]["summary"]))
+        # held sideways: every part slides at least its clearance and less than clearance + one grid cell
+        self.assertEqual(sorted(f["side_play"]), sorted(j["parts_to_place"]))
+        for ref, p in f["side_play"].items():
+            for way, v in p.items():
+                self.assertGreaterEqual(v, 0.15, (ref, way))
+                self.assertLess(v, f["side_play_limit_mm"], (ref, way))
+        self.assertEqual(f["not_held_sideways"], [])
+        self.assertIn("Fit check", j["notes"][-1] if "Fit check" in j["notes"][-1] else " ".join(j["notes"]))
+
+    def test_pocket_follows_the_shape(self):
+        """An axial part lying down: the pocket is a cradle (deepest under the top of the cylinder, shallower on its
+        flanks) and the part touches it along the top; "flat" pockets are one depth all over."""
+        from pcbtestkit.jig import build_jigs
+        for floor in ("shaped", "flat"):
+            d = self.design(jig={"pocket_floor": floor})
+            fp = d.board.by_ref["C1"]
+            t = d.board.thickness
+            self._with(d, C1=_cyl_x("C1", fp.x, fp.y, 3.0, 10.0, t))
+            grids = {}
+            j = build_jigs(d, grids=grids)
+            self.assertTrue(j["fit"]["ok"], j["fit"]["summary"])
+            self.assertIn("C1", j["fit"]["touching"])
+            g = grids["holding"]
+            self.assertAlmostEqual(self._depth(g, fp.x, fp.y), 6.0, delta=0.011)
+            flank = self._depth(g, fp.x, fp.y + 2.2)
+            if floor == "shaped":
+                self.assertLess(flank, 5.7)
+                self.assertGreater(flank, 5.0)
+            else:
+                self.assertAlmostEqual(flank, 6.0, delta=0.011)
+
+    def test_the_check_finds_errors(self):
+        from pcbtestkit import jigfit as F
+        from pcbtestkit.jig import Q, build_jigs, present_parts, select_parts, view_meshes
+        loose = build_jigs(self.design(jig={"hold_depth_offset_mm": 0.1}))["fit"]
+        self.assertFalse(loose["ok"])
+        self.assertEqual(sorted(loose["loose"]), sorted(loose["touching"] + list(loose["loose"])))
+        self.assertTrue(all(abs(v - 0.1) < 0.012 for v in loose["loose"].values()))
+        tight = build_jigs(self.design(jig={"hold_depth_offset_mm": -0.1}))["fit"]
+        self.assertEqual(len(tight["holding_collisions"]), 5)
+        self.assertIn("FIT CHECK FAILED", tight["summary"])
+        # one cell raised by 0.05 mm under the top of a part is found
+        d = self.design()
+        grids = {}
+        j = build_jigs(d, grids=grids)
+        g = grids["holding"]
+        sel = select_parts(d)[0]
+        ms = view_meshes(d, present_parts(d, sel, None))
+        top = max(ms["U1"].tris, key=lambda tr: max(tr[2], tr[5], tr[8]))
+        i, k = int((top[0] - g["ox"]) / g["res"]), int((top[1] - g["oy"]) / g["res"])
+        g["H"][k][i] += 5
+        hit = F.check_holding(d, g, ms, list(ms), [p.ref for p in sel], Q)
+        self.assertTrue(0.04 <= hit["collisions"]["U1"] <= 0.05, hit["collisions"])     # less the pocket's rounding
+        self.assertTrue(j["fit"]["ok"])
+        g["H"][k][i] -= 5
+        # a wall cut away on one side: the part slides that way, and only that way
+        x1 = max(v for tr in ms["U1"].tris for v in (tr[0], tr[3], tr[6]))
+        for jj in range(g["ny"]):
+            for ii in range(g["nx"]):
+                if g["ox"] + ii * g["res"] > x1:
+                    g["H"][jj][ii] = 0
+        p, by = F.side_play(d, g, ms["U1"], Q, 0.15, 0.45)
+        self.assertEqual((p["+x"], by["+x"]), (0.45, ""))                    # nothing holds it that way
+        self.assertLess(p["-x"], 0.45)
+        self.assertEqual(by["-x"], "jig")
+
+    def test_overhanging_connector(self):
+        """A part reaching 5 mm past the board's edge and 3 mm below its face: the placement jig is cut away under
+        it, no locating stop sits there, and the holding jig's rim is cut over it."""
+        from pcbtestkit.jig import build_jigs
+        d = self.design()
+        t = d.board.thickness
+        self._with(d, J1=_box("J1", 95.0, 100.0, 106.0, 108.0, t - 3.0, t + 3.0))
+        grids = {}
+        j = build_jigs(d, grids=grids)
+        self.assertTrue(j["fit"]["ok"], j["fit"]["summary"])
+        A = grids["placement"]
+        i, k = int((97.0 - A["ax0"]) / A["res"]), int((A["ay1"] - 104.0) / A["res"])
+        self.assertLessEqual(A["H"][k][i] / 100.0, A["rest"] + t - 3.0 - 0.5 + 1e-6)
+        for s in j["placement"]["stops"]:
+            if s["side"] == "left":                         # a stop reaches about 8 mm along the edge
+                self.assertFalse(100.0 - 8.0 < s["at"][1] < 108.0 + 8.0, s)
+        self.assertGreater(self._depth(grids["holding"], 97.0, 104.0), 3.0)       # cut through the rim
+
+    def test_ignored_parts_and_models(self):
+        from pcbtestkit.jig import build_jigs, jig_ignored
+        d = self.design(jig={"ignore": ["C1", "*PinHeader*"], "ignore_models": ["*TO-220*"]})
+        ign = jig_ignored(d)
+        self.assertEqual(ign["C1"], "jig.ignore")
+        self.assertEqual(ign["J2"], "jig.ignore")                       # by footprint name
+        self.assertEqual(ign["U1"], "its 3D model is in jig.ignore_models")
+        j = build_jigs(d)
+        self.assertEqual(sorted(j["parts_to_place"]), ["C2", "J3"])
+        self.assertFalse({"C1", "J2", "U1"} & {p["ref"] for p in j["pockets"]})
+        self.assertTrue(j["fit"]["ok"])
+        self.assertEqual(j["fit"]["parts_checked"], len([f for f in d.components() if not f.ref.startswith("H")]) - 3)
+        self.assertEqual(set(j["ignored"]), {"C1", "J2", "U1"})
+        from pcbtestkit.agent import Workspace
+        ws = Workspace(self.pcb, persist=False)
+        self.assertEqual(ws.call("set_jig_options", {"ignore": ["NOPE*"]})["error"]["code"], "UNKNOWN_PART")
+        self.assertTrue(ws.call("set_jig_options", {"ignore": ["C1"], "ignore_models": ["*case*"]})["ok"])
+
+    def test_post_stops_short_of_a_part_under_the_hole(self):
+        from pcbtestkit.jig import build_jigs
+        d = self.design()
+        self._with(d, C9=_box("C9", 103.0, 83.0, 105.0, 85.0, -1.0, 0.0))       # under H1, on the bottom side
+        grids = {}
+        j = build_jigs(d, grids=grids)
+        self.assertTrue(j["fit"]["ok"], j["fit"]["summary"])
+        self.assertIn("H1", [p["hole"] for p in j["posts"]])
+        g = grids["holding"]
+        S = int(round(g["support"] * 100))
+        i, k = int((104.0 - g["ox"]) / g["res"]), int((84.0 - g["oy"]) / g["res"])
+        self.assertLessEqual(g["H"][k][i], S + int(round((d.board.thickness - 0.2) * 100)))   # ends 0.2 mm above C9
+        i, k = int((156.0 - g["ox"]) / g["res"]), int((84.0 - g["oy"]) / g["res"])
+        self.assertEqual(g["H"][k][i], S + int(round((d.board.thickness + 1.0) * 100)))      # H2: full length
+
+    def test_thin_board_rim(self):
+        from pcbtestkit.jig import build_jigs
+        d = self.design()
+        d.board.thickness = 1.0
+        j = build_jigs(d, grids={})
+        self.assertTrue(j["fit"]["ok"], j["fit"]["summary"])
+        self.assertTrue(any("rim height 0.70 mm" in n for n in j["notes"]))
+
+    def test_fit_files_line_up_in_kicad_coordinates(self):
+        import struct
+        from pcbtestkit import parts3d as P3
+        from pcbtestkit.jig import build_jigs
+        d = self.design()
+        out = os.path.join(self.tmp, "fitfiles")
+        j = build_jigs(d, grids={}, fit_dir=out)
+        names = sorted(os.listdir(out))
+        self.assertEqual(names, sorted(["README.txt", "sample_sensor-top-board.stl", "sample_sensor-top-holding-jig.stl",
+                                        "sample_sensor-top-placement-jig.stl", "sample_sensor-paste-nest-top-board.stl",
+                                        "sample_sensor-paste-nest-top-nest.stl"]))
+
+        def zrange(name):
+            with open(os.path.join(out, name), "rb") as fh:
+                b = fh.read()
+            n = struct.unpack_from("<I", b, 80)[0]
+            zs = [struct.unpack_from("<12f", b, 84 + 50 * k)[z] for k in range(n) for z in (5, 8, 11)]
+            return min(zs), max(zs)
+        top, bot = P3.kicad_seats(d)
+        t = d.board.thickness
+        lo, hi = zrange("sample_sensor-top-holding-jig.stl")
+        self.assertAlmostEqual(hi, top + j["support_height_mm"], delta=0.01)       # its base, on top of the stack
+        self.assertAlmostEqual(lo, top - t - 1.0, delta=0.011)                      # the posts' tips
+        lo, hi = zrange("sample_sensor-top-placement-jig.stl")
+        self.assertAlmostEqual(hi, bot + t - 0.2, delta=0.011)                      # the stops
+        self.assertAlmostEqual(lo, bot - j["placement"]["pcb_rest_height_mm"], delta=0.011)
+        self.assertEqual(j["fit_files"][0], "sample_sensor-top-board.stl")
+
+    def test_board_text_for_kicad_export(self):
+        from pcbtestkit.parts3d import board_for_export, model_matches
+        txt = ('(footprint "X" (model "${KIPRJMOD}/3d/Case_Top.STEP" (offset (xyz 0 0 0)))\n'
+               ' (model "rel/thing.wrl" (offset (xyz 0 0 0))) (model "${NOT_SET}/a.step" (hide yes)))')
+        out = board_for_export(txt, "/proj", ["case*"])
+        self.assertNotIn("Case_Top", out)
+        self.assertIn('(model "/proj/rel/thing.wrl" (offset (xyz 0 0 0)))', out)
+        self.assertIn('(model "${NOT_SET}/a.step" (hide yes))', out)
+        self.assertTrue(model_matches("${X}/a/b/Case_Top.STEP", ["case*"]))
+        self.assertFalse(model_matches("${X}/a/b/R_0603.step", ["case*"]))
+
+    def test_read_kicad_glb(self):
+        """The reader of KiCad's 3D export (binary glTF): node transforms and KiCad's seating planes, top and bottom."""
+        import json
+        import struct
+        from pcbtestkit import parts3d as P3
+        d = self.design()
+        fps = {r: [d.board.by_ref[r]] for r in ("R1", "C9")}
+        r1, c9 = fps["R1"][0], fps["C9"][0]
+        pos = struct.pack("<9f", 0, 0, 0, 0.001, 0, 0, 0, 0.002, 0)
+        idx = struct.pack("<3H", 0, 1, 2) + b"\0\0"
+        blob = pos + idx
+        js = {"asset": {"version": "2.0"}, "scene": 0, "scenes": [{"nodes": [0]}],
+              "nodes": [{"children": [1, 3]},
+                        {"name": "R1", "translation": [r1.x / 1000.0, 0.001595, r1.y / 1000.0], "children": [2]},
+                        {"mesh": 0},
+                        {"name": "C9", "translation": [c9.x / 1000.0, -0.000085, c9.y / 1000.0],
+                         "rotation": [1.0, 0.0, 0.0, 0.0], "children": [2]}],
+              "meshes": [{"primitives": [{"attributes": {"POSITION": 0}, "indices": 1, "mode": 4}]}],
+              "buffers": [{"byteLength": len(blob)}],
+              "bufferViews": [{"buffer": 0, "byteOffset": 0, "byteLength": 36}, {"buffer": 0, "byteOffset": 36, "byteLength": 6}],
+              "accessors": [{"bufferView": 0, "componentType": 5126, "count": 3, "type": "VEC3"},
+                            {"bufferView": 1, "componentType": 5123, "count": 3, "type": "SCALAR"}]}
+        jb = json.dumps(js).encode()
+        jb += b" " * (-len(jb) % 4)
+        data = struct.pack("<III", 0x46546C67, 2, 12 + 8 + len(jb) + 8 + len(blob)) + struct.pack("<II", len(jb), 0x4E4F534A) + jb \
+            + struct.pack("<II", len(blob), 0x004E4942) + blob
+        path = os.path.join(self.tmp, "t.glb")
+        with open(path, "wb") as fh:
+            fh.write(data)
+        nodes = P3.read_glb(path)
+        self.assertEqual([n[0] for n in nodes], ["R1", "C9"])
+        ms = P3._from_glb(d, path, fps)
+        t = d.board.thickness
+        a = ms[id(r1)].tris[0]
+        self.assertAlmostEqual(a[0], r1.x, places=4)
+        self.assertAlmostEqual(a[2], t, places=4)                 # on the top face
+        self.assertAlmostEqual(a[8], t + 2.0, places=4)           # 2 mm up
+        b = ms[id(c9)].tris[0]
+        self.assertAlmostEqual(b[2], 0.0, places=4)               # on the bottom face
+        self.assertAlmostEqual(b[8], -2.0, places=4)              # 2 mm down (turned over about X)
+
+
+class TestKiCadShapes(Base):
+    """With kicad-cli (KiCad 8+): the shapes come from KiCad's own 3D export and the jigs fit them."""
+
+    def test_jigs_fit_kicads_shapes(self):
+        from unittest import mock
+        from pcbtestkit.kicad_cli import find_kicad_cli
+        if not find_kicad_cli():
+            self.skipTest("kicad-cli not found")
+        env = {k: v for k, v in os.environ.items() if k != "PCBTESTKIT_NO_KICAD_3D"}
+        env["PCBTESTKIT_HOME"] = os.path.join(self.tmp, "home3d")
+        with mock.patch.dict(os.environ, env, clear=True):
+            from pcbtestkit import parts3d as P3
+            from pcbtestkit.jig import build_jigs
+            d = self.design()
+            ms = P3.part_meshes(d)
+            kicad = [r for r, m in ms.items() if m.source == "kicad"]
+            if not kicad:
+                self.skipTest("KiCad's 3D library is not installed")
+            j = build_jigs(d)
+            self.assertTrue(j["fit"]["ok"], j["fit"]["summary"])
+            self.assertTrue(set(j["fit"]["touching"]) >= {p for p in j["parts_to_place"] if p in kicad})
 
 
 class TestTwoJigWorkflow(Base):
@@ -874,6 +1154,22 @@ class TestStackedAndTwoSided(unittest.TestCase):
         bb, bv = d.board.outline_bbox(), v.board.outline_bbox()
         self.assertAlmostEqual(bv.y0, -bb.y1)
         self.assertEqual(len(v.components()), len(d.components()))
+
+    def test_every_jig_set_fits(self):
+        """Both sides' jig sets and the paste nest pass the fit check, the bottom set's parts included (the check
+        works in the turned-over board's frame, like the jigs)."""
+        from pcbtestkit.jig import build_jigs, jig_of
+        jig = build_jigs(self.design())
+        self.assertTrue(jig["fit"]["ok"], jig["fit"]["summary"])
+        self.assertEqual(sorted(jig["fit"]["touching"]), sorted(jig["parts_to_place"]))
+        bot = jig_of(jig, "hand_bottom")
+        self.assertTrue(bot["fit"]["ok"], bot["fit"]["summary"])
+        self.assertEqual(bot["fit"]["touching"], ["J7"])
+        self.assertEqual(sorted(bot["fit"]["side_play"]), ["J7"])
+        self.assertTrue(jig_of(jig, "nest_top")["fit"]["ok"])
+        # the bottom set is really checked: its pocket made 0.2 mm too shallow is found
+        tight = jig_of(build_jigs(self.design(jig={"hold_depth_offset_mm": -0.2})), "hand_bottom")["fit"]
+        self.assertAlmostEqual(tight["holding_collisions"].get("J7", 0), 0.2, delta=0.012)
 
     def test_jig_set_per_side(self):
         from pcbtestkit.jig import assembly_passes, build_jigs, jig_of, stack_collisions

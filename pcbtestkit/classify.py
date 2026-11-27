@@ -276,7 +276,9 @@ def is_fiducial(fp: Footprint) -> bool:
 
 
 def is_mounting_hole(fp: Footprint) -> bool:
-    if "mountinghole" in fp.lib_id.lower() or has_prefix(fp, "H", "MH"):
+    lib, _, name = fp.lib_id.lower().rpartition(":")
+    # the MountingHole library or a footprint named so (not e.g. "DSUB-9_..._MountingHolesOffset9.12mm")
+    if lib.startswith("mountinghole") or name.startswith("mountinghole") or has_prefix(fp, "H", "MH"):
         return True
     return bool(fp.pads) and all((p.is_npth or (p.is_tht and not p.net)) and p.drill >= 2.0 for p in fp.pads)
 
