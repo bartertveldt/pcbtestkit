@@ -47,6 +47,142 @@ class Base(unittest.TestCase):
         return Design.load(self.pcb, overrides=over or None)
 
 
+class TestPages(Base):
+    """The HTML pages: one design, a strict Content-Security-Policy, everything from a board escaped, breadcrumbs."""
+
+    PAYLOADS = ("<script>alert(1)</script>", "<img src=x onerror=alert(2)>", "<svg onload=alert(3)>")
+
+    def test_policy_and_script_hash(self):
+        import base64
+        import hashlib
+        from pcbtestkit import htmlkit as K
+        page = K.head("t", script=True) + K.footer("g", script=True)
+        want = base64.b64encode(hashlib.sha256(K.TABLE_JS.encode()).digest()).decode()
+        self.assertIn("'sha256-%s'" % want, page)                    # the one script the page runs is allowed by hash
+        self.assertIn("<script>%s</script>" % K.TABLE_JS, page)
+        for d in ("default-src 'none'", "base-uri 'none'", "form-action 'none'", "object-src 'none'"):
+            self.assertIn(d, page)
+        self.assertIn("script-src 'none'", K.head("t"))
+        self.assertNotRegex(page, r"(src|href)=['\"]https?://")       # nothing from the network
+
+    def test_board_pages_escape_everything(self):
+        work = os.path.join(self.tmp, "evil")
+        shutil.copytree(self.proj, work)
+        pcb = os.path.join(work, "sample_sensor.kicad_pcb")
+        with open(pcb, encoding="utf-8") as fh:
+            txt = fh.read()
+        txt = txt.replace('"+3V3"', '"+3V3%s"' % self.PAYLOADS[1]).replace('(title "', '(title "%s' % self.PAYLOADS[0], 1)
+        with open(pcb, "w", encoding="utf-8") as fh:
+            fh.write(txt)
+        out = os.path.join(work, "out")
+        d = Design.load(pcb)
+        res = run_pipeline(d, out_dir=out, include_kicad=False, outputs={"visuals": False, "video": False})
+        for key in ("guide", "report"):
+            with open(res["paths"][key], encoding="utf-8") as fh:
+                page = fh.read()
+            self.assertIn("Content-Security-Policy", page, key)
+            self.assertIn("<!--pcbtk:context-->", page, key)
+            for bad in self.PAYLOADS[:2]:
+                self.assertNotIn(bad, page, key)
+            self.assertIn("&lt;script&gt;alert(1)", page, key)
+            self.assertNotIn(self.tmp, page, key)                        # no local paths in shared pages
+        with open(res["paths"]["guide"], encoding="utf-8") as fh:
+            self.assertIn("href='sample_sensor-report.html'", fh.read())   # the guide links its report
+
+    def test_no_local_paths_in_any_output(self):
+        out = os.path.join(self.tmp, "shared")
+        res = run_pipeline(Design.load(self.pcb), out_dir=out, include_kicad=False, outputs={"visuals": False, "video": False})
+        home = os.path.expanduser("~")
+        checked = 0
+        for dirpath, _dirs, files in os.walk(res["out_dir"]):
+            for f in files:
+                if os.path.splitext(f)[1].lower() in (".stl", ".png", ".mp4", ".glb", ".pyc"):
+                    continue
+                with open(os.path.join(dirpath, f), "rb") as fh:
+                    text = fh.read().decode("utf-8", "replace")
+                for bad in (self.tmp, os.path.realpath(self.tmp), home):
+                    self.assertNotIn(bad, text, "%s holds a local path" % f)
+                checked += 1
+        self.assertGreater(checked, 15)
+
+    def test_station_and_catalog_pages_escape_everything(self):
+        from pcbtestkit.environment import environment_html, explain_board
+        from pcbtestkit.station import station_html
+        x = self.PAYLOADS
+        st = {"capacity": {"inputs": 8, "supplies": 2, "buses": {"i2c": 1}, "dio": 0, "plate_mm": [200, 150]},
+              "station": {"name": "S" + x[0]}, "generator": "PCB TestKit", "station_source": x[1], "warnings": [x[2]],
+              "connectors": [], "boards": [
+                  {"name": "B" + x[0], "status": "ok", "batch": 2, "channels": 3, "inputs_used": 6, "inputs_total": 8,
+                   "supplies_used": 2, "supplies_total": 2, "buses": {"i2c": 1}, "size_mm": [40, 30], "limit": x[1],
+                   "folder": "b", "outputs": {"guide": "b/b-guide.html"}},
+                  {"name": "C" + x[2], "status": "too big", "reason": x[0], "size_mm": [300, 200]}]}
+        board = {"name": "B" + x[0], "folder": "b", "status": "compatible", "batch": 2, "station": "S1", "limit": "plate",
+                 "size_mm": [40, 30], "channels": 3, "probes": 5, "probe_side": "bottom", "coverage_pct": 100.0,
+                 "supply": {"needed": True, "net": x[1], "voltage": 5.0}, "buses": ["i2c"], "programming": ["swd"],
+                 "title": x[2], "parts": 12, "tht": 3, "layers": 2, "guide": "stations/S1/b/b-guide.html"}
+        env = {"name": "Lab" + x[0], "generator": "PCB TestKit", "summary": {
+            "boards": 2, "compatible": 1, "incompatible": 1, "errors": 0, "excluded": 0, "stations": 0, "board_slots": 2,
+            "compatible_pct": 50.0}, "stations": [], "warnings": [x[1]],
+            "boards": [board, {"name": "N" + x[1], "folder": "n", "status": "incompatible", "reason": x[2], "size_mm": [9, 9]}],
+            "ranking": [{"rank": 1, "name": board["name"], "folder": "b", "priority": 1.0, "status": "compatible",
+                         "station": "S1", "batch": 2, "limit": x[0], "buses": [], "programming": [], "reason": ""}]}
+        for page in (station_html(st), environment_html(env)):
+            self.assertIn("Content-Security-Policy", page)
+            for bad in x:
+                self.assertNotIn(bad, page)
+        self.assertIn("2 per batch on S1", explain_board(board))
+        self.assertIn("12 parts (3 hand-soldered)", explain_board(board))
+
+    def test_breadcrumbs_are_replaced_not_stacked(self):
+        from pcbtestkit import htmlkit as K
+        p = os.path.join(self.tmp, "page.html")
+        with open(p, "w", encoding="utf-8") as fh:
+            fh.write(K.head("x") + K.hero("k", "t") + K.footer("g"))
+        self.assertTrue(K.set_context(p, K.crumbs([("../station.html", "S1"), (None, "board")])))
+        self.assertTrue(K.set_context(p, K.crumbs([("../../index.html", "Lab"), ("../station.html", "S1"), (None, "board")])))
+        with open(p, encoding="utf-8") as fh:
+            text = fh.read()
+        self.assertEqual(text.count("class='crumbs'"), 1)
+        self.assertIn("href='../../index.html'>Lab</a>", text)
+
+
+class TestReleaseTools(unittest.TestCase):
+    """Release builds are reproducible and come with an SBOM and release notes."""
+
+    def test_reproducible_zip_sbom_and_notes(self):
+        import hashlib
+        sys.path.insert(0, os.path.join(ROOT, "tools"))
+        import build_pcm
+        import release_notes
+        import sbom
+        from pcbtestkit import __version__
+        tmp = tempfile.mkdtemp(prefix="pcbtk_rel_")
+        try:
+            os.environ["SOURCE_DATE_EPOCH"] = "1767225600"
+            shas = []
+            for k in ("a", "b"):
+                res = build_pcm.build(os.path.join(tmp, k))
+                with open(res["zip"], "rb") as fh:
+                    shas.append(hashlib.sha256(fh.read()).hexdigest())
+            self.assertEqual(shas[0], shas[1])                          # the same source gives the same zip
+            out = os.path.join(tmp, "sbom.cdx.json")
+            self.assertEqual(sbom.main(["--out", out, res["zip"]]), 0)
+            with open(out, encoding="utf-8") as fh:
+                doc = json.load(fh)
+            self.assertEqual((doc["bomFormat"], doc["specVersion"]), ("CycloneDX", "1.6"))
+            self.assertEqual(doc["metadata"]["component"]["version"], __version__)
+            self.assertEqual(doc["metadata"]["timestamp"], "2026-01-01T00:00:00Z")
+            files = [c for c in doc["components"] if c["type"] == "file"]
+            self.assertEqual(files[0]["hashes"][0]["content"], shas[1])
+            self.assertEqual(doc["dependencies"][0]["dependsOn"], [])  # standard library only
+            notes = release_notes.notes(__version__)
+            self.assertIn("gh attestation verify", notes)
+            self.assertNotIn("See CHANGELOG.md.", notes)                # the version has its changelog section
+        finally:
+            os.environ.pop("SOURCE_DATE_EPOCH", None)
+            shutil.rmtree(tmp, ignore_errors=True)
+
+
 class TestParsing(Base):
     def test_sexpr_roundtrip(self):
         node = sexpr.parse('(a "x \\"q\\"" (b 1 2) (c yes))')
@@ -2970,6 +3106,21 @@ class TestEnvironmentBuild(unittest.TestCase):
             if b["status"] == "compatible":
                 self.assertTrue(os.path.exists(os.path.join(out, b["guide"])), b["name"])
                 self.assertGreaterEqual(b["batch"], 1)
+        # the catalog page: a card per board linking its guide, the reason for every board that does not fit, and
+        # breadcrumbs from every station page and board page back to it
+        with open(os.path.join(out, "index.html"), encoding="utf-8") as fh:
+            page = fh.read()
+        self.assertIn("id='catalog'", page)
+        self.assertIn("Content-Security-Policy", page)
+        for b in data["boards"]:
+            if b["status"] == "compatible":
+                self.assertIn("href='%s'" % b["guide"], page)
+                self.assertIn("%d per batch" % b["batch"], page)
+                with open(os.path.join(out, b["guide"]), encoding="utf-8") as fh:
+                    self.assertIn("href='../../../index.html'>Lab A</a>", fh.read())
+        self.assertIn("48 V", page)
+        with open(os.path.join(out, st["page"]), encoding="utf-8") as fh:
+            self.assertIn("href='../../index.html'>Lab A</a>", fh.read())
         with open(os.path.join(out, "requirements.md"), encoding="utf-8") as fh:
             req = fh.read()
         self.assertIn("Analog inputs", req)

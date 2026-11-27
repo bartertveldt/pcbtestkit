@@ -5,6 +5,7 @@ plan, a pogo-pin test fixture PCB, a 3D-printed solder jig, a Raspberry Pi test 
 video. Built so AI assistants can drive it cheaply.**
 
 [![CI](https://github.com/bartertveldt/pcbtestkit/actions/workflows/ci.yml/badge.svg)](https://github.com/bartertveldt/pcbtestkit/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/bartertveldt/pcbtestkit/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartertveldt/pcbtestkit/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![KiCad 8-10](https://img.shields.io/badge/KiCad-8%20%7C%209%20%7C%2010-314cb0)
 ![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-3776ab)
@@ -38,6 +39,7 @@ the placement jig comes off and every lead is soldered.*
 - [Examples](#examples)
 - [Validation](#validation)
 - [Limitations](#limitations)
+- [Security and privacy](#security-and-privacy)
 - [Development](#development)
 - [License](#license)
 
@@ -54,9 +56,10 @@ the placement jig comes off and every lead is soldered.*
 | **`<board>-fixture.kicad_pcb`** | A bed-of-nails fixture PCB: pogo pins at the probe points, a header for the Pi/MCU, dividers, a power terminal, guide-pin holes from the board's mounting holes, cut-outs for tall parts and stacked boards, routed on two layers by the built-in router. One site per board for a batch, all on one connector in the middle; two plates (`-fixture-top` / `-fixture-bottom`) when probing both sides. |
 | **`<board>-jig-placement.stl`, `<board>-jig.stl` / `.scad`** | Two 3D-printable solder jigs that work as a pair: fit the hand-soldered parts with the PCB top side up in the placement jig, close the holding jig over them, turn the stack over, lift off the placement jig and solder. Every part stays flush and square. Parts on both sides: a jig set per side (`-jig-bottom*.stl`) and a paste-print nest for the second SMD side. For a batch every jig holds several boards (as many as fit your printer bed). |
 | **`runner/`** | A Raspberry Pi / microcontroller test runner that executes the plan board by board through a batch, programs each board through the fixture, with MicroPython firmware for RP2040/ESP32 front-ends. Testing with your own tester instead? Describe it as a [test facility](docs/FACILITIES.md): its fixed connector, plate, buses (CAN, USB, Ethernet, ...) and runner driver. |
+| **`<board>-guide.html`** | Start here: a step-by-step visual guide with KiCad 3D renders and the explainer video. It covers what to fix, how to build the fixture, how to test and how to use the jigs. |
 | **`<board>-report.html`** | Everything above on one page, with a board map. |
-| **`<board>-guide.html`** | A step-by-step visual guide with KiCad 3D renders: what to fix, how to build the fixture, how to test, how to use the jig. |
 | **`<board>-explainer.mp4`** | Optional ~50 s video with real 3D animation rendered by KiCad: assembly, jig, fixture, test. |
+| **`station.html`, `index.html`** | For a test station: every board type on it, with its videos. For a whole catalog: every board with its batch size, station and a short explanation, linked to its guide. See [The pages](#the-pages-one-board-a-station-a-catalog). |
 | **AI interface** | 35 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
 
 Everything runs locally. The core uses only the Python standard library and reads KiCad 6-10 files directly, so
@@ -517,6 +520,24 @@ background. How it decides, every setting and the reasons a board does not fit: 
 
 ## Visual guide and explainer video
 
+### The pages: one board, a station, a catalog
+
+Every run writes pages you can open in any browser, offline, on a computer or a phone at the workstation. All pages
+share one design: a header with the verdict and the key numbers, a row of links to the sections, cards and tables
+you can sort and filter. They follow your system's light or dark theme and print cleanly. What you get depends on the
+run:
+
+| Run | Page | What is on it |
+|---|---|---|
+| One board (`run`, the KiCad dialog) | `<board>-guide.html` | Start here. The explainer video, renders of the board, what to fix before ordering, how to build the fixture, run a test and hand-solder with the jigs. It links `<board>-report.html`: every finding, the board map, the test scheme, the fixture and the jigs. |
+| A station (`station run`) | `station.html` | The station video and render, what the station offers, a card per board type (render, boards per fixture, what it uses, what limits it, its guide, report, fixture and runner), every board type's explainer, the pin maps and how to swap fixtures. |
+| A catalog (`environment build`) | `index.html` | The environment video, every station with its video and exactly what it needs, then **the whole catalog**: a card per board with its render (or its outline to scale), batch size, station, rank and a short explanation, and links to its guide, report, fixture, runner and explainer. Search and filter find a board among hundreds. Then the boards that don't fit and why, the layouts compared, what limits the boards, the upgrade options and the full ranking. |
+
+A board's guide and report link back to their station page and catalog, so you can move between the levels.
+
+The pages load nothing from the internet. Each one carries a strict Content-Security-Policy, and every name that comes
+from a board is escaped (see [Security and privacy](#security-and-privacy)).
+
 `<board>-guide.html` is a page for whoever builds and runs the tester, with photoreal KiCad renders of the board,
 the fixture and pins, the board lowering onto them, the printed jig and the parts in their pockets.
 
@@ -646,9 +667,10 @@ Every key with its default: [docs/reference/config.md](docs/reference/config.md)
 
 ## Examples
 
-[docs/examples/](docs/examples/README.md) has complete outputs (spec, plan, fixture, jig, report, guide, video)
-for three boards: the bundled sample sensor (seeded weak points), and KiCad's demos *pic_programmer* (55
-hand-soldered parts) and *video* (a 312 mm, 4-layer PCI card).
+[docs/examples/](docs/examples/README.md) has complete outputs (spec, plan, fixture, jigs, report, guide, video).
+They cover four boards: the bundled sample sensor (seeded weak points), and KiCad's demos *pic_programmer* (55
+hand-soldered parts), *tiny_tapeout* (a batch of four programmed at once) and *video* (a 312 mm, 4-layer PCI card).
+They also include a test station for four board types, and a test environment for a catalog of 128 boards.
 
 ## Validation
 
@@ -680,6 +702,24 @@ Checked against KiCad 10.0.8 and the 19 demo projects that ship with it (19,069 
 
 ---
 
+## Security and privacy
+
+- **Private by design.** PCB TestKit runs on your computer: no accounts, no telemetry, no network connections. The
+  generated pages load nothing from the internet, and the files you share contain no local paths or user names.
+  [PRIVACY.md](PRIVACY.md) lists what is stored where, and what changes when you connect an AI assistant.
+- **Reporting a vulnerability.** Report it privately through
+  [GitHub's private reporting](https://github.com/bartertveldt/pcbtestkit/security/advisories/new), not in an issue.
+  [SECURITY.md](SECURITY.md) covers response times, coordinated disclosure, the safe harbour, the scope, and how the
+  project relates to the EU Cyber Resilience Act.
+- **Verifiable releases.** Every release has `SHA256SUMS`, a CycloneDX SBOM and signed build provenance:
+  `gh attestation verify pcbtestkit-<version>-kicad-pcm.zip --repo bartertveldt/pcbtestkit`. The KiCad package is
+  reproducible, byte for byte.
+- **Licences.** [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) covers the software.
+  [docs/examples/LICENSES.md](docs/examples/LICENSES.md) covers the example outputs made from KiCad's demo boards,
+  which keep their authors' licences.
+
+---
+
 ## Development
 
 ```bash
@@ -696,5 +736,6 @@ KiCad / Claude Code marketplaces: [docs/PUBLISHING.md](docs/PUBLISHING.md). Chan
 
 [MIT](LICENSE) © 2026 Bart Ertveldt.
 
-The example outputs in `docs/examples/pic_programmer` and `docs/examples/video` were generated from demo projects
-that ship with KiCad (© the KiCad developers); the board designs themselves are not included in this repository.
+Most example outputs in `docs/examples/` were made from demo projects that ship with KiCad. They keep the licence of
+the board they were made from and credit its authors: see [docs/examples/LICENSES.md](docs/examples/LICENSES.md).
+The board designs themselves are not in this repository.

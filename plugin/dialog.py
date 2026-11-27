@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import pathlib
 import sys
 import traceback
 import webbrowser
@@ -18,9 +19,34 @@ from ..pcbtestkit.project import Design
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def _fit_size(parent, w: int, h: int) -> wx.Size:
+    """The dialog's size, no bigger than the screen it opens on (small laptop screens)."""
+    try:
+        idx = wx.Display.GetFromWindow(parent) if parent else 0
+        area = wx.Display(idx if idx >= 0 else 0).GetClientArea()
+        return wx.Size(min(w, area.width - 40), min(h, area.height - 40))
+    except Exception:  # noqa: BLE001 - a size is never worth an error
+        return wx.Size(w, h)
+
+
+def _open_page(path: str) -> None:
+    """Open a generated page in the browser (a proper file:// URL: Windows drive letters, spaces)."""
+    webbrowser.open(pathlib.Path(path).resolve().as_uri())
+
+
+def _open_folder(path: str) -> None:
+    import subprocess
+    if sys.platform == "darwin":
+        subprocess.Popen(["open", path])
+    elif os.name == "nt":
+        os.startfile(path)  # type: ignore[attr-defined]
+    else:
+        subprocess.Popen(["xdg-open", path])
+
+
 class MainDialog(wx.Dialog):
     def __init__(self, parent, board_path: str):
-        super().__init__(parent, title="PCB TestKit %s" % __version__, size=(860, 760),
+        super().__init__(parent, title="PCB TestKit %s" % __version__, size=_fit_size(parent, 860, 760),
                          style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
         self.board_path = board_path
         self.problems = []
@@ -50,6 +76,9 @@ class MainDialog(wx.Dialog):
         run = wx.Button(self, label="Generate")
         close = wx.Button(self, wx.ID_CANCEL, "Close")
         run.SetDefault()
+        save.SetToolTip("Save these settings in pcbtestkit.json next to the board (nothing is generated)")
+        run.SetToolTip("Check the board and write the guide, report, fixture, jigs and runner (Enter)")
+        self.SetMinSize(wx.Size(680, 520))
         save.Bind(wx.EVT_BUTTON, lambda e: self.save_settings(True))
         many.Bind(wx.EVT_BUTTON, self.on_many)
         run.Bind(wx.EVT_BUTTON, self.on_generate)
@@ -838,8 +867,16 @@ class MainDialog(wx.Dialog):
             nxt += ("\n\nThe video could NOT be made: %s\nThe whole error is in %s. The frames rendered so far are kept "
                     "in visuals/scenes: generate again with the same settings and they are reused, so only the MP4 is "
                     "made again." % (vid.get("reason"), os.path.basename(vid.get("error_file") or "")))
-        msg = ("%s - score %d/100\n%s\n\nTest coverage: %s%% of nets\n\nFiles written to:\n%s\n\n%s\n\nOpen the HTML report now?") % (
+        msg = ("%s - score %d/100\n%s\n\nTest coverage: %s%% of nets\n\nFiles written to:\n%s\n\n%s\n\nThe production "
+               "guide is the place to start: it links the findings report, the files and the video.") % (
             s["verdict"].upper(), s["score"], ", ".join("%d %s" % (v, k) for k, v in s["counts"].items() if v),
             res["coverage"]["percent"], res["out_dir"], nxt)
-        if wx.MessageBox(msg, "PCB TestKit", wx.YES_NO | wx.ICON_INFORMATION) == wx.YES and res["paths"].get("report"):
-            webbrowser.open("file://" + res["paths"]["report"])
+        page = res["paths"].get("guide") or res["paths"].get("report")
+        dlg = wx.MessageDialog(self, msg, "PCB TestKit - done", wx.YES_NO | wx.CANCEL | wx.ICON_INFORMATION)
+        dlg.SetYesNoCancelLabels("Open the guide", "Open the folder", "Close")
+        ans = dlg.ShowModal()
+        dlg.Destroy()
+        if ans == wx.ID_YES and page:
+            _open_page(page)
+        elif ans == wx.ID_NO:
+            _open_folder(res["out_dir"])

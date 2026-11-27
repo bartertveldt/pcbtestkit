@@ -21,7 +21,8 @@ progress window, and KiCad stays usable.
 
 ```
 <out>/
-  index.html             start here: every station's needs, the ranking, what does not fit and why
+  index.html             start here: the catalog (a card per board: batch, station, explanation, links to its
+                         guide and video), every station with its video and needs, the ranking, what does not fit
   requirements.md        what each station must offer, exactly (to build or buy it)
   ranking.csv            every board: rank, station, batch, what limits it, what it needs, why not
   boards.csv             every board's profile: channels, supply, buses, programming, size, probes, coverage
@@ -34,7 +35,8 @@ progress window, and KiCad stays usable.
   stations/station-1/
     station-1.kicad_pcb  the station's top: plate, mounting holes, interface socket(s) J1 (J2), its electronics
     facility.json        the station as a test facility (what the fixtures are made for)
-    station.html         capacity, every board type's pins on the socket(s), how to swap fixtures
+    station.html         its video, capacity, a card and the explainer of every board type, their pins on the
+                         socket(s), how to swap fixtures
     station-compatibility.mp4   every fixture sliding onto the station, its boards dropping into their nests
     station_video_parts/ its clips: a later build renders only new board types and joins them after these
     <board>/             one folder per board type: guide, report, fixture, nest and clamp parts, jigs, runner

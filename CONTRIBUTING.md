@@ -50,6 +50,12 @@ python3 tools/regen_examples.py              # about 35 min, needs KiCad 9+ and 
 python3 tools/regen_examples.py --no-video   # a few minutes
 ```
 
+## Security
+
+Please report vulnerabilities privately, as [SECURITY.md](SECURITY.md) describes, not in an issue or a pull
+request. Don't attach board files you are not allowed to publish, and leave no personal data or credentials in
+commits: secret scanning with push protection is on for this repository.
+
 ## Releasing
 
 See [docs/PUBLISHING.md](docs/PUBLISHING.md).

@@ -141,6 +141,8 @@ def cmd_run(args) -> int:
                 " (as many as it allows: %s)" % env.get("limit") if env.get("auto") else ""))
         for w in res["fixture_warnings"] + res["warnings"]:
             print("  ! %s" % w)
+        if res["paths"].get("guide"):
+            print("\nStart here: %s" % res["paths"]["guide"])
     return 0
 
 

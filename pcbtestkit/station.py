@@ -25,6 +25,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from . import __version__
 from . import facility as F
+from . import htmlkit as K
 
 SCHEMA = "pcbtestkit-station/1"
 
@@ -246,7 +247,7 @@ def _stamp_key(project: str, fac: Dict[str, Any], batch: int, ov: Dict[str, Any]
         if p and os.path.exists(p):
             with open(p, "rb") as fh:
                 h.update(fh.read())
-    h.update(json.dumps([_inline(fac), batch, ov, flags, __version__], sort_keys=True, default=str).encode())
+    h.update(json.dumps([_inline(fac), batch, ov, flags, __version__, K.PAGE_REV], sort_keys=True, default=str).encode())
     return h.hexdigest()
 
 
@@ -421,10 +422,34 @@ def run_station(spec: str, projects: List[str], out_dir: str, batches: Optional[
         json.dump(shared, fh, indent=2, default=str)
         fh.write("\n")
     with open(os.path.join(out_dir, "station.html"), "w", encoding="utf-8") as fh:
-        fh.write(station_html(st))
+        fh.write(station_html(st, out_dir))
+    link_pages(st, out_dir)
     st["paths"] = {"station_json": "station.json", "station_html": "station.html"}
     step("Done", 1.0)
     return st
+
+
+def link_pages(st: Dict[str, Any], out_dir: str, parents: Sequence[Tuple[str, str]] = ()) -> int:
+    """Breadcrumbs from every board type's guide and report up to this station's page (and its ``parents``:
+    (href relative to the station's folder, label), e.g. the test environment), and from the station's page up to
+    its parents. Returns how many pages were linked."""
+    name = (st.get("station") or {}).get("name") or st.get("title") or "Test station"
+    n = 0
+    if parents:
+        n += K.set_context(os.path.join(out_dir, "station.html"), K.crumbs(list(parents) + [(None, name)]))
+    for b in st.get("boards") or []:
+        o = b.get("outputs") or {}
+        if b.get("status") != "ok" or not o:
+            continue
+        up = [("../" + href, label) for href, label in parents] + [("../station.html", name)]
+        banner = ("<div class='callout info small' style='margin:0 0 14px'>Tested on <b>%s</b>: %d board%s per fixture%s. "
+                  "<a href='../station.html'>Station page</a></div>" % (
+                      K.esc(name), int(b.get("batch") or 1), "" if int(b.get("batch") or 1) == 1 else "s",
+                      (", limited by %s" % K.esc(b["limit"])) if b.get("limit") else ""))
+        for key, what in (("guide", "guide"), ("report", "report")):
+            if o.get(key):
+                n += K.set_context(os.path.join(out_dir, o[key]), K.crumbs(up + [(None, "%s %s" % (b["name"], what))]) + banner)
+    return n
 
 
 def _project_name(path: str) -> str:
@@ -466,7 +491,7 @@ def connector_svg(conn: Dict[str, Any], pins: List[Dict[str, Any]]) -> str:
         i, j = ((n - 1) % across, (n - 1) // across) if zig else ((n - 1) // along, (n - 1) % along)
         x, y = 10 + j * cell, 10 + i * cell
         q = by.get(n, {})
-        fn = conn["functions"].get(n, "NC")
+        fn = conn["functions"].get(n) or conn["functions"].get(str(n)) or "NC"       # str keys after a JSON round trip
         site = q.get("site")
         fill = SITE_COLORS[(site - 1) % len(SITE_COLORS)] if site else ("#555" if fn == "GND" else "none")
         out.append("<rect x='%d' y='%d' width='%d' height='%d' rx='3' fill='%s' stroke='var(--line)'><title>pin %d: %s%s</title></rect>"
@@ -478,79 +503,148 @@ def connector_svg(conn: Dict[str, Any], pins: List[Dict[str, Any]]) -> str:
     return "".join(out)
 
 
-def station_html(st: Dict[str, Any]) -> str:
-    e = html.escape
+def _thumb(base: Optional[str], folder: str) -> Optional[str]:
+    """A board's 3D render next to the page (relative), if its outputs have one."""
+    if not base or not folder:
+        return None
+    return K.first_existing(base, ["%s/visuals/%s" % (folder, n) for n in ("dut_iso.png", "dut_top.png")])
+
+
+def _explain_station_board(b: Dict[str, Any]) -> str:
+    """One sentence on a board type on a station: what it uses and what sets its batch."""
+    bits = ["%d x %d measured channel%s" % (b["batch"], b.get("channels", 0), "" if b.get("channels") == 1 else "s")]
+    if b.get("supplies_used"):
+        bits.append("%d switched suppl%s" % (b["supplies_used"], "y" if b["supplies_used"] == 1 else "ies"))
+    if b.get("buses"):
+        bits.append(", ".join("%s x%d" % (k.upper(), v) for k, v in sorted(b["buses"].items())))
+    if b.get("programming"):
+        bits.append("programmed over %s" % "/".join(p.upper() for p in b["programming"]))
+    why = "; the batch is set by %s" % b["limit"] if b.get("limit") else ""
+    return "Uses %s%s." % (", ".join(bits), why)
+
+
+def station_html(st: Dict[str, Any], out_dir: Optional[str] = None) -> str:
+    """The station page: the station (render, swap video, what it offers), every board type on it (render, batch,
+    what it uses, its outputs and explainer video), the pin maps and how to swap fixtures. ``out_dir``: the folder
+    the page goes into (renders and videos are shown when they are there)."""
+    e = K.esc
     cap, stn = st["capacity"], st["station"]
-    h = ["<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>",
-         "<title>%s - test station</title>" % e(stn["name"]),
-         "<style>:root{--fg:#1d1d1f;--bg:#fff;--muted:#6b6b70;--line:#d9d9de;--card:#f6f6f8;--ok:#2f7d4f;--no:#c0392b}"
-         "@media (prefers-color-scheme:dark){:root{--fg:#eee;--bg:#161618;--muted:#9a9aa0;--line:#3a3a3e;--card:#1f1f22}}"
-         "body{font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;color:var(--fg);background:var(--bg);margin:0 auto;"
-         "max-width:1100px;padding:16px}h1{font-size:26px;margin:.2em 0}h2{margin-top:1.6em;border-bottom:1px solid var(--line)}"
-         "table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;"
-         "vertical-align:top}th{color:var(--muted);font-weight:600}.wrap{overflow-x:auto}.muted{color:var(--muted)}"
-         ".ok{color:var(--ok);font-weight:600}.no{color:var(--no);font-weight:600}img{max-width:100%;border-radius:8px}"
-         ".card{background:var(--card);border-radius:10px;padding:12px 14px;margin:12px 0}.chips span{display:inline-block;"
-         "border-radius:10px;padding:1px 8px;margin:2px;color:#fff;font-size:12px}</style></head><body>"]
-    h.append("<h1>Test station: %s</h1>" % e(stn["name"]))
-    h.append("<p class='muted'>One station, %d board type%s: every fixture is the station's %s mm plate with the mating "
-             "connector %s in the same place, so swapping a fixture is all it takes to test another board. Generated "
-             "by %s from %s.</p>" % (len(st["boards"]), "" if len(st["boards"]) == 1 else "s",
-                                     " x ".join("%g" % v for v in (cap.get("plate_mm") or ["?", "?"])),
-                                     e((st.get("connector") or {}).get("name", "")), e(st["generator"]), e(st["station_source"])))
-    if st.get("image"):
-        h.append("<p><img src='%s' alt='The test station'></p>" % e(st["image"]))
-    if (st.get("video") or {}).get("ok"):
-        h.append("<p><video controls src='%s' style='max-width:100%%'></video></p>" % e(st["video"]["path"]))
-    h.append("<h2>What the station offers</h2><div class='wrap'><table><tr><th>Analog inputs</th><th>Switched supplies</th>"
-             "<th>Buses (instances)</th><th>Digital lines</th><th>Plate</th></tr>")
-    h.append("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s mm</td></tr></table></div>" % (
-        cap.get("inputs", "-"), cap.get("supplies", "-"),
-        ", ".join("%s x%d" % (b.upper(), n) for b, n in sorted((cap.get("buses") or {}).items())) or "-",
-        cap.get("dio", "-"), " x ".join("%g" % v for v in (cap.get("plate_mm") or []))))
-    h.append("<h2>Board types on the station</h2><div class='wrap'><table><tr><th>Board</th><th>Boards per fixture</th>"
-             "<th>Inputs used</th><th>Supplies</th><th>Buses</th><th>Limited by</th><th>Outputs</th></tr>")
-    for b in st["boards"]:
-        if b.get("status") != "ok":
-            h.append("<tr><td><b>%s</b><div class='muted'>%s mm</div></td><td class='no'>%s</td><td colspan='4'>%s</td><td></td></tr>"
-                     % (e(b["name"]), " x ".join("%g" % v for v in b.get("size_mm") or []), e(b.get("status", "")),
-                        e(b.get("reason", ""))))
-            continue
+    boards = st["boards"]
+    ok = [b for b in boards if b.get("status") == "ok"]
+    off = [b for b in boards if b.get("status") != "ok"]
+    plate = " x ".join("%g" % v for v in (cap.get("plate_mm") or [])) or "?"
+    conns = st.get("connectors") or ([st["connector"]] if st.get("connector") else [])
+    cname = " + ".join(c.get("name", "") for c in conns) or (st.get("connector") or {}).get("name", "")
+    vid = st.get("video") or {}
+    have_vid = bool(vid.get("ok") and vid.get("path"))
+    vids = [(b, (b.get("outputs") or {}).get("video")) for b in ok]
+    vids = [(b, v) for b, v in vids if v and (out_dir is None or os.path.exists(os.path.join(out_dir, v)))]
+    title = stn["name"]
+    lead = ("One station, %d board type%s: every fixture is the station's %s mm plate with the mating connector %s in "
+            "the same place, so swapping a fixture is all it takes to test another board." % (
+                len(boards), "" if len(boards) == 1 else "s", plate, cname or "-"))
+    slots = sum(int(b.get("batch") or 0) for b in ok)
+    pills = [("%d of %d board types fit" % (len(ok), len(boards)), "ok" if not off else "warn"),
+             ("%d boards per full load" % slots, "info")]
+    if off:
+        pills.append(("%d do not fit" % len(off), "bad"))
+    stats = [(len(ok), "board types", ""), (slots, "boards, all fixtures", ""), (cap.get("inputs", "-"), "analog inputs", ""),
+             (cap.get("supplies", "-"), "switched supplies", ""), ("%s mm" % plate, "plate", "")]
+    actions = [("#video" if have_vid else "", "Watch the station video", True), ("#boards", "Board types", False),
+               ("#swap", "Swapping fixtures", False)]
+    h = [K.head("%s - test station" % title, lead, script=True),
+         K.hero("Test station", title, lead, pills, stats, actions),
+         K.nav([("video", "Station") if have_vid or st.get("image") else ("", ""), ("offers", "What it offers"),
+                ("boards", "Board types"), ("videos", "Videos") if vids else ("", ""),
+                ("pins", "Pin maps") if conns else ("", ""), ("swap", "Swapping"), ("notes", "Notes") if st.get("warnings") else ("", "")]),
+         "<main id='content'>"]
+    # ---- the station -----------------------------------------------------------------------------
+    media = []
+    if have_vid:
+        media.append(K.video(vid["path"], "Every fixture on the station", "%d board type%s%s" % (
+            len(ok), "" if len(ok) == 1 else "s", (", %d s" % vid["duration_s"]) if vid.get("duration_s") else ""),
+            poster=st.get("image") or ""))
+    elif st.get("image"):
+        media.append("<img class='shot' src='%s' alt='The test station (KiCad 3D render)'>" % e(st["image"]))
+    rows = [("Analog inputs", cap.get("inputs", "-")), ("Switched supplies", cap.get("supplies", "-")),
+            ("Buses (instances)", ", ".join("%s x%d" % (b.upper(), n) for b, n in sorted((cap.get("buses") or {}).items())) or "-"),
+            ("Digital lines", cap.get("dio", "-")), ("Plate", "%s mm" % plate), ("Connector", cname or "-")]
+    table = "<div class='wrap'><table><thead><tr><th>The station offers</th><th></th></tr></thead><tbody>%s</tbody></table></div>" % (
+        "".join("<tr><td>%s</td><td><b>%s</b></td></tr>" % (e(k), e(v)) for k, v in rows))
+    h.append("<section id='video'><div class='station'><div>%s</div><div id='offers'>%s<p class='small muted'>Generated by %s "
+             "from %s.</p></div></div></section>" % ("".join(media), table, e(st.get("generator", "")),
+                                                    e(st.get("station_source", ""))))
+    # ---- board types -----------------------------------------------------------------------------
+    h.append("<section id='boards'><h2>Board types on the station</h2><p class='muted'>Each card is one fixture: how "
+             "many boards it takes at once, what they use of the station and everything made for it.</p>")
+    h.append(K.filter_tools("bcards", "Find a board type", (("", "All"), ("ok", "Fit"), ("off", "Do not fit")) if off else (),
+                            len(boards)))
+    h.append("<div class='boards' id='bcards'>")
+    for b in ok:
         o = b.get("outputs") or {}
-        links = " &middot; ".join("<a href='%s'>%s</a>" % (e(o[k]), lab) for k, lab in (
-            ("guide", "guide"), ("report", "report"), ("fixture", "fixture PCB"), ("video", "video"), ("runner", "runner")) if k in o)
-        h.append("<tr><td><b>%s</b><div class='muted'>%s mm</div></td><td class='ok'>%d</td><td>%s</td><td>%s</td><td>%s</td>"
+        th = _thumb(out_dir, b.get("folder", ""))
+        thumb = ("<img loading='lazy' src='%s' alt='%s, KiCad 3D render'>" % (e(th), e(b["name"])) if th
+                 else K.board_shape(b.get("size_mm"), b["name"]))
+        name = ("<a href='%s'>%s</a>" % (e(o["guide"]), e(b["name"]))) if o.get("guide") else e(b["name"])
+        facts = ["<span class='fact big'>%d per fixture</span>" % b["batch"],
+                 "<span class='fact'>%s mm</span>" % e(" x ".join("%g" % v for v in b.get("size_mm") or [])),
+                 "<span class='fact'>%s of %s inputs</span>" % (b.get("inputs_used", "-"), b.get("inputs_total") or "-")]
+        if b.get("probe_side"):
+            facts.append("<span class='fact'>probes %s</span>" % e(b["probe_side"]))
+        links = "".join("<a href='%s'>%s</a>" % (e(o[k]), lab) for k, lab in (
+            ("guide", "Guide"), ("report", "Report"), ("fixture", "Fixture PCB"), ("video", "Video"), ("runner", "Runner"))
+            if o.get(k))
+        h.append("<article class='bcard' data-row='ok'><div class='thumb'>%s</div><div class='body'><h3>%s</h3>"
+                 "<div class='facts'>%s</div><p class='why'>%s</p><div class='links'>%s</div></div></article>" % (
+                     thumb, name, "".join(facts), e(_explain_station_board(b)), links))
+    for b in off:
+        h.append("<article class='bcard off' data-row='off'><div class='thumb'>%s</div><div class='body'><h3>%s</h3>"
+                 "<div class='facts'><span class='fact'>%s</span></div><p class='why'>%s</p></div></article>" % (
+                     K.board_shape(b.get("size_mm"), b["name"]), e(b["name"]), e(b.get("status", "")), e(b.get("reason", ""))))
+    h.append("</div>")
+    h.append("<div class='wrap'><table class='sortable'><thead><tr><th>Board</th><th class='r' data-num>Per fixture</th>"
+             "<th>Inputs used</th><th>Supplies</th><th>Buses</th><th>Limited by</th></tr></thead><tbody>")
+    for b in ok:
+        h.append("<tr><td><b>%s</b><div class='muted small'>%s mm</div></td><td class='r ok'>%d</td><td>%s</td><td>%s</td>"
                  "<td>%s</td><td>%s</td></tr>" % (
-                     e(b["name"]), " x ".join("%g" % v for v in b["size_mm"]), b["batch"],
+                     e(b["name"]), e(" x ".join("%g" % v for v in b["size_mm"])), b["batch"],
                      "%d x %d = %d of %s (%s%%)" % (b["batch"], b["channels"], b["inputs_used"], b.get("inputs_total") or "-",
                                                     b.get("utilization_pct") if b.get("utilization_pct") is not None else "-"),
-                     "%d of %s" % (b["supplies_used"], b.get("supplies_total") or "-") if b["supplies_used"] else "-",
-                     ", ".join("%s x%d" % (k.upper(), v) for k, v in sorted(b.get("buses", {}).items())) or "-",
-                     e(b.get("limit") or "-"), links or "-"))
-    h.append("</table></div>")
-    conns = st.get("connectors") or ([st["connector"]] if st.get("connector") else [])
+                     "%d of %s" % (b["supplies_used"], b.get("supplies_total") or "-") if b.get("supplies_used") else "-",
+                     e(", ".join("%s x%d" % (k.upper(), v) for k, v in sorted(b.get("buses", {}).items())) or "-"),
+                     e(b.get("limit") or "-")))
+    h.append("</tbody></table></div></section>")
+    # ---- every board type's explainer --------------------------------------------------------------
+    if vids:
+        h.append("<section id='videos'><h2>Every board type's explainer</h2><p class='muted'>Assembly, the jigs, the "
+                 "fixture and the test of each board type, rendered by KiCad.</p><div class='gallery'>")
+        for b, v in vids:
+            th = _thumb(out_dir, b.get("folder", ""))
+            h.append(K.video(v, b["name"], "%d per fixture" % b["batch"], poster=th or "", preload="none"))
+        h.append("</div></section>")
+    # ---- pin maps ----------------------------------------------------------------------------------
     if conns:
-        h.append("<h2>%s %s: which board uses which pin</h2>" % ("Connectors" if len(conns) > 1 else "Connector",
-                                                               e(" + ".join(c["name"] for c in conns))))
-        for b in st["boards"]:
-            if b.get("status") != "ok":
-                continue
+        h.append("<section id='pins'><h2>%s %s: which board uses which pin</h2>" % (
+            "Connectors" if len(conns) > 1 else "Connector", e(cname)))
+        for b in ok:
             chips = "".join("<span style='background:%s'>board %d</span>" % (SITE_COLORS[(k - 1) % len(SITE_COLORS)], k)
                             for k in range(1, b["batch"] + 1))
-            maps = "".join(("<div class='muted'>%s</div>" % e(c["name"]) if len(conns) > 1 else "") +
+            maps = "".join(("<div class='muted small'>%s</div>" % e(c["name"]) if len(conns) > 1 else "") +
                            connector_svg(c, (b.get("pins_by") or {}).get(c["name"]) or (b.get("pins") or [] if len(conns) == 1 else []))
                            for c in conns)
-            h.append("<div class='card'><b>%s</b> <span class='chips'>%s<span style='background:#555'>GND</span></span>%s</div>"
-                     % (e(b["name"]), chips, maps))
-    h.append("<h2>Swapping to another board type</h2><ol><li>Switch the station's supplies off and unscrew the fixture.</li>"
-             "<li>Plug the next board type's fixture onto connector %s and screw it down in the same holes.</li>"
-             "<li>Run that board's runner (its folder below): its testplan.json knows which station pins its boards use.</li>"
-             "<li>Every board has its own nest and toggle clamp on the fixture: slide a board into each nest up to the stop "
+            h.append("<div class='card' style='margin:14px 0'><b>%s</b> <span class='chips'>%s<span style='background:#555'>GND"
+                     "</span></span>%s</div>" % (e(b["name"]), chips, maps))
+        h.append("</section>")
+    # ---- swapping ----------------------------------------------------------------------------------
+    steps = ["Switch the station's supplies off and unscrew the fixture.",
+             "Plug the next board type's fixture onto connector %s and screw it down in the same holes." % e(cname or "-"),
+             "Run that board's runner (its folder above): its <code>testplan.json</code> knows which station pins its boards use.",
+             "Every board has its own nest and toggle clamp on the fixture: slide a board into each nest up to the stop "
              "(above the pogo pins), close its clamp, and the runner tests the boards one by one; open a clamp to take "
-             "that board off.%s</li></ol>" % (
-                 e(" + ".join(c["name"] for c in conns)),
-                 "".join(" %s: from the %s." % (e(b["name"]), e(b["entry"])) for b in st["boards"] if b.get("entry"))))
+             "that board off.%s" % "".join(" %s: from the %s." % (e(b["name"]), e(b["entry"])) for b in boards if b.get("entry"))]
+    h.append("<section id='swap'><h2>Swapping to another board type</h2>%s</section>" % "".join(
+        "<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, s) for i, s in enumerate(steps)))
     if st.get("warnings"):
-        h.append("<h2>Notes</h2><ul>%s</ul>" % "".join("<li>%s</li>" % e(w) for w in st["warnings"]))
-    h.append("</body></html>")
+        h.append("<section id='notes'><h2>Notes</h2><ul>%s</ul></section>" % "".join("<li>%s</li>" % e(w) for w in st["warnings"]))
+    h.append(K.footer(st.get("generator", ""), script=True))
     return "\n".join(h)

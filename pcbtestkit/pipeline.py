@@ -279,6 +279,8 @@ def run_pipeline(design: Design, out_dir: Optional[str] = None, outputs: Optiona
                              "The folder is removed once the video is made.\n\n%s\n" % (why, log))
                 video = {"ok": False, "reason": why, "error_file": paths["video_error"]}
         from .guide import build_guide
+        if want.get("report", True):            # the guide links to the report, which is written below
+            paths["report"] = os.path.join(out_dir, "%s-report.html" % name)
         paths["guide"] = os.path.join(out_dir, "%s-guide.html" % name)
         with open(paths["guide"], "w", encoding="utf-8") as fh:
             fh.write(build_guide(design, spec, plan, fixture, jig, visuals, paths))

@@ -32,7 +32,6 @@ from __future__ import annotations
 
 import csv
 import hashlib
-import html
 import io
 import json
 import math
@@ -45,6 +44,7 @@ from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from . import __version__
 from . import facility as F
+from . import htmlkit as K
 from . import station_board as SB
 
 SCHEMA = "pcbtestkit-environment/1"
@@ -53,7 +53,7 @@ MARKER = ".pcbtestkit-environment"
 BUSES = ("can", "uart", "i2c", "rs485", "usb", "ethernet")
 ENTRIES = ("front", "left")
 QUALITIES = ("basic", "standard", "best", "high")      # kicad-cli ray tracing (see visuals.RAYTRACE_PRESETS)
-PROFILE_REV = 3          # bumped when the fixture layout changes what a board profile says (sites are re-measured)
+PROFILE_REV = 4          # bumped when the fixture layout changes what a board profile says (sites are re-measured)
 
 SPEC_DEFAULTS: Dict[str, Any] = {
     "schema": SPEC_SCHEMA,
@@ -330,6 +330,8 @@ def profile_board(job: Dict[str, Any]) -> Dict[str, Any]:
             "programming": [{"protocol": h.get("protocol") or "?", "ref": h.get("ref")} for h in (plan.get("program") or {}).get("headers") or []],
             "probe_side": plan.get("probe_side"), "probes": len(plan.get("probes") or []),
             "coverage_pct": (plan.get("coverage") or {}).get("percent"),
+            "title": str(d.board.title_block.get("title") or "").strip()[:80], "parts": len(d.components()),
+            "tht": sum(1 for fp in d.components() if any(pd.is_tht for pd in fp.pads)),
         })
         if plan.get("probe_side") == "both":
             prof["issues"].append("probed from both sides (two fixture plates): a station takes one-sided fixtures; set "
@@ -1188,6 +1190,8 @@ def _environment(profs, models, ests, rows, spec, facs, sources, warns, work_dir
                 "size_mm": p.get("size_mm"), "channels": p.get("channels"), "supply": p.get("supply"),
                 "buses": p.get("buses") or [], "programming": sorted({x["protocol"] for x in p.get("programming") or []}),
                 "probe_side": p.get("probe_side"), "probes": p.get("probes"), "coverage_pct": p.get("coverage_pct"),
+                "title": p.get("title") or "", "layers": len(p["layers"]) if isinstance(p.get("layers"), list) else p.get("layers"),
+                "parts": p.get("parts"), "tht": p.get("tht"),
                 "estimates": {models[i]["name"]: {"batch": e["batch"], "limit": e["limit"]} for i, e in enumerate(e_all)},
                 # what upgrades.py needs to estimate the board on a changed station without profiling it again
                 "site_mm": p.get("site"), "spacing_mm": p.get("spacing_mm"), "issues": list(p.get("issues") or [])}
@@ -1421,91 +1425,221 @@ def ranking_csv(env: Dict[str, Any]) -> str:
     return buf.getvalue()
 
 
-def environment_html(env: Dict[str, Any]) -> str:
-    e = html.escape
+def explain_board(b: Dict[str, Any]) -> str:
+    """One or two sentences on a board in the catalog: what it is, how it is tested and what sets its batch."""
+    sz = b.get("size_mm") or []
+    what = []
+    if b.get("title") and b["title"].strip().lower() != str(b.get("name", "")).strip().lower():
+        what.append(b["title"])
+    shape = ("%g x %g mm" % (sz[0], sz[1])) if len(sz) == 2 else ""
+    if b.get("layers"):
+        shape += (", " if shape else "") + "%d layers" % int(b["layers"])
+    if b.get("parts"):
+        shape += (", " if shape else "") + "%d parts" % int(b["parts"])
+        if b.get("tht"):
+            shape += " (%d hand-soldered)" % int(b["tht"])
+    if shape:
+        what.append(shape)
+    test = []
+    if b.get("probes") is not None:
+        test.append("%d probe%s%s" % (b["probes"], "" if b["probes"] == 1 else "s",
+                                      (" from the %s" % b["probe_side"]) if b.get("probe_side") in ("top", "bottom") else ""))
+    if b.get("coverage_pct") is not None:
+        test.append("%g%% of nets covered" % b["coverage_pct"])
+    if b.get("channels") is not None:
+        test.append("%d measured channel%s" % (b["channels"], "" if b["channels"] == 1 else "s"))
+    sp = b.get("supply") or {}
+    if sp.get("needed") and sp.get("net"):
+        test.append("powered on %s%s" % (sp["net"], (" at %g V" % sp["voltage"]) if sp.get("voltage") is not None else ""))
+    if b.get("buses"):
+        test.append(" and ".join(x.upper() for x in b["buses"]) + " checked")
+    if b.get("programming"):
+        test.append("programmed over " + "/".join(x.upper() for x in b["programming"]))
+    out = ". ".join(what)
+    if test:
+        out += (". " if out else "") + ", ".join(test)
+    if b.get("status") == "compatible":
+        out += ". %d per batch on %s%s." % (b.get("batch") or 0, b.get("station") or "-",
+                                            (", limited by %s" % b["limit"]) if b.get("limit") else "")
+    elif b.get("reason"):
+        out += ". Does not fit: %s." % b["reason"].rstrip(".")
+    return out.strip()
+
+
+def _board_files(b: Dict[str, Any], out_dir: Optional[str]) -> Dict[str, str]:
+    """A board's guide, report, explainer, fixture and render in the environment (relative paths that exist)."""
+    g = b.get("guide")
+    if not g:
+        return {}
+    stem = g[:-len("-guide.html")] if g.endswith("-guide.html") else os.path.splitext(g)[0]
+    folder = os.path.dirname(g)
+    cand = {"guide": g, "report": stem + "-report.html", "video": stem + "-explainer.mp4", "fixture": stem + "-fixture.kicad_pcb",
+            "thumb": folder + "/visuals/dut_iso.png", "runner": folder + "/runner"}
+    if out_dir is None:
+        return {"guide": g}
+    return {k: v for k, v in cand.items() if os.path.exists(os.path.join(out_dir, v))}
+
+
+def _board_card(b: Dict[str, Any], files: Dict[str, str], station_page: Optional[str], rank: Optional[int]) -> str:
+    e = K.esc
+    fits = b.get("status") == "compatible"
+    thumb = ("<img loading='lazy' src='%s' alt='%s, KiCad 3D render'>" % (e(files["thumb"]), e(b["name"])) if files.get("thumb")
+             else K.board_shape(b.get("size_mm"), b["name"]))
+    name = "<a href='%s'>%s</a>" % (e(files["guide"]), e(b["name"])) if files.get("guide") else e(b["name"])
+    facts = []
+    if fits:
+        facts.append("<span class='fact big'>%d per batch</span>" % (b.get("batch") or 0))
+        facts.append("<span class='fact'>%s</span>" % e(b.get("station") or "-"))
+    else:
+        facts.append("<span class='fact'>%s</span>" % e({"incompatible": "does not fit", "error": "could not be read",
+                                                          "excluded": "left out"}.get(b.get("status"), b.get("status"))))
+    if rank:
+        facts.append("<span class='fact'>rank %d</span>" % rank)
+    links = [("guide", "Guide"), ("report", "Report"), ("fixture", "Fixture PCB"), ("runner", "Runner")]
+    lk = "".join("<a href='%s'>%s</a>" % (e(files[k]), lab) for k, lab in links if files.get(k))
+    if station_page and fits:
+        lk += "<a href='%s'>Station</a>" % e(station_page)
+    vid = ("<details><summary class='small'>&#9654; Watch the explainer</summary>%s</details>" % K.video(
+        files["video"], b["name"], poster=files.get("thumb", ""), preload="none")) if files.get("video") else ""
+    if fits and not files.get("guide"):
+        lk += "<span class='muted small'>Outputs not kept in this copy</span>"
+    return ("<article class='bcard%s' data-row='%s'><div class='thumb'>%s</div><div class='body'><h3>%s</h3>"
+            "<div class='facts'>%s</div><p class='why'>%s</p>%s<div class='links'>%s</div></div></article>" % (
+                "" if fits else " off", "ok" if fits else "off", thumb, name, "".join(facts), e(explain_board(b)), vid, lk))
+
+
+def environment_html(env: Dict[str, Any], out_dir: Optional[str] = None) -> str:
+    """The test environment's page (index.html): the environment video, every station (its swap video and what it
+    needs), the whole catalog with a card per board (render, batch, station, a short explanation, its explainer and
+    links to its guide, report and fixture), the boards that do not fit and why, layouts, upgrades and the ranking.
+    ``out_dir``: the folder the page goes into (renders, videos and pages are linked when they are there)."""
+    e = K.esc
     s = env["summary"]
-    css = ("body{font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#f6f6f4;color:#1d1d1f}"
-           "main{max-width:1200px;margin:0 auto;padding:24px 16px 64px}h1{font-size:24px;margin:0 0 4px}"
-           "h2{font-size:18px;margin:30px 0 10px}.muted{color:#666}.cards{display:grid;grid-template-columns:repeat(auto-fit,"
-           "minmax(150px,1fr));gap:10px;margin:16px 0}.card{background:#fff;border:1px solid #e3e3e0;border-radius:10px;padding:12px}"
-           ".card b{font-size:22px;display:block}table{border-collapse:collapse;width:100%;background:#fff;font-size:13px}"
-           "th,td{border-bottom:1px solid #eee;padding:6px 8px;text-align:left;vertical-align:top}th{background:#fafafa}"
-           ".ok{color:#0a7d42;font-weight:600}.no{color:#b3261e;font-weight:600}.wrap{overflow-x:auto}"
-           "video,img{max-width:100%;border-radius:8px}.st{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}"
-           "@media(max-width:800px){.st{grid-template-columns:1fr}}"
-           "a{color:#0b62c4}td:nth-child(4),td:nth-child(5){white-space:nowrap}"
-           "@media (prefers-color-scheme:dark){body{background:#161618;color:#eee}.card,table{background:#1f1f22;border-color:#333}"
-           "th{background:#26262a}td,th{border-color:#333}.muted{color:#aaa}a{color:#6cb4ff}}")
-    h = ["<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
-         "<title>%s</title><style>%s</style></head><body><main>" % (e(env.get("name") or "Test environment"), css),
-         "<h1>%s</h1><div class='muted'>%s &middot; %d boards</div>" % (e(env.get("name") or "Test environment"), e(env["generator"]), s["boards"]),
-         ("<video controls preload='metadata' src='%s' style='margin:12px 0'></video>" % e(env["video"]) if env.get("video") else ""),
-         "<div class='cards'><div class='card'><b>%d of %d</b>boards fit (%s%%)</div><div class='card'><b>%d</b>station(s)</div>"
-         "<div class='card'><b>%d</b>boards per full load</div><div class='card'><b>%d</b>do not fit</div>"
-         "<div class='card'><b>%d</b>could not be read</div></div>" % (
-             s["compatible"], s["boards"], s["compatible_pct"], s["stations"], s["board_slots"], s["incompatible"], s["errors"])]
+    title = env.get("name") or "Test environment"
+    boards = env["boards"]
+    ranks = {r["folder"]: r["rank"] for r in env.get("ranking") or []}
+    pages = {st["name"]: st.get("page") for st in env["stations"]}
+    fit = sorted([b for b in boards if b["status"] == "compatible"], key=lambda b: ranks.get(b["folder"], 10 ** 6))
+    nofit = sorted([b for b in boards if b["status"] != "compatible"], key=lambda b: ranks.get(b["folder"], 10 ** 6))
+    files = {b["folder"]: _board_files(b, out_dir) for b in boards}
+    have_vid = bool(env.get("video")) and (out_dir is None or os.path.exists(os.path.join(out_dir, env["video"])))
+    lead = ("%d boards, %d station%s: %d fit (%s%%), %d boards per full load of every fixture. Every station's fixtures "
+            "share one connector; every board that fits has its own guide, fixture, nest and clamp, jigs and runner." % (
+                s["boards"], s["stations"], "" if s["stations"] == 1 else "s", s["compatible"], s["compatible_pct"],
+                s["board_slots"]))
+    pills = [("%s%% of the catalog fits" % s["compatible_pct"], "ok" if s["compatible_pct"] >= 90 else "warn")]
+    if s.get("incompatible"):
+        pills.append(("%d do not fit" % s["incompatible"], "warn"))
+    if s.get("errors"):
+        pills.append(("%d could not be read" % s["errors"], "bad"))
+    pills.append((env.get("generator", ""), ""))
+    stats = [(s["boards"], "boards in the catalog", ""), (s["compatible"], "fit a station", "ok"),
+             (s["stations"], "station%s" % ("" if s["stations"] == 1 else "s"), ""), (s["board_slots"], "boards per full load", ""),
+             (s["incompatible"] + s.get("errors", 0), "do not fit", "warn" if s["incompatible"] + s.get("errors", 0) else "")]
+    cur = ((env.get("spec") or {}).get("costs") or {}).get("currency", "EUR")
+    chosen = next((l for l in env.get("layouts") or [] if l.get("chosen")), None)
+    if chosen:
+        stats.append(("%s %s" % (cur, "{:,.0f}".format(chosen["net"])), "net worth of the layout", ""))
+    actions = [("#video" if have_vid else "", "Watch the overview", True), ("#catalog", "Browse the catalog", False),
+               ("requirements.md", "What the stations need", False)]
+    if out_dir is not None and not env.get("_constraints"):            # the page made again from environment.json
+        try:
+            with open(os.path.join(out_dir, "constraints.json"), encoding="utf-8") as fh:
+                cons = json.load(fh).get("boards")
+            with open(os.path.join(out_dir, "upgrades.json"), encoding="utf-8") as fh:
+                env = dict(env, _constraints=cons, _upgrades=json.load(fh))
+        except (OSError, ValueError, AttributeError):
+            pass
+    from . import upgrades as U
+    upg = U.html_sections(env)
+    h = [K.head(title, lead, script=True), K.hero("Test environment", title, lead, pills, stats, actions),
+         K.nav([("video", "Overview") if have_vid else ("", ""), ("stations", "Stations"), ("catalog", "Catalog"),
+                ("nofit", "Do not fit") if nofit else ("", ""), ("layouts", "Layouts") if env.get("layouts") else ("", ""),
+                ("limits", "Limits") if upg else ("", ""), ("upgrades", "Upgrades") if upg else ("", ""),
+                ("ranking", "Ranking"), ("files", "Files")]),
+         "<main id='content'>"]
+    if have_vid:
+        h.append("<section id='video'>%s</section>" % K.video(env["video"], "The test environment",
+                                                              "every station with the fixtures of its boards"))
+    # ---- stations ------------------------------------------------------------------------------------
+    h.append("<section id='stations'><h2>The stations</h2><p class='muted'>Each station is one tester: a plate with one "
+             "connector that every fixture plugs into. Swap the fixture to test another board type.</p>")
     for st in env["stations"]:
         rq = st["requirements"]
         link = st.get("page")
-        h.append("<h2>%s%s</h2>" % (e(st["title"]), " (existing)" if st["fixed"] else ""))
         media = []
-        if st.get("image"):
-            media.append("<img src='%s' alt='%s'>" % (e(st["image"]), e(st["name"])))
-        if st.get("video"):
-            media.append("<video controls preload='metadata' src='%s'></video>" % e(st["video"]))
-        rows = ["<tr><td>Plate</td><td>%g x %g mm</td><td>%d holes; %g x %g mm for the boards</td></tr>" % (
+        sv = st.get("video")
+        if sv and (out_dir is None or os.path.exists(os.path.join(out_dir, sv))):
+            media.append(K.video(sv, "%s: every fixture on it" % st["title"], "%d board types" % rq["boards"],
+                                 poster=st.get("image") or "", preload="none"))
+        elif st.get("image"):
+            media.append("<img class='shot' loading='lazy' src='%s' alt='%s'>" % (e(st["image"]), e(st["name"])))
+        rows = ["<tr><td>Plate</td><td><b>%g x %g mm</b></td><td>%d holes; %g x %g mm for the boards</td></tr>" % (
             st["plate_mm"][0], st["plate_mm"][1], rq["holes"], rq["free_area_mm"][0], rq["free_area_mm"][1])]
-        rows += ["<tr><td>Socket %s</td><td>%d pins</td><td>%s</td></tr>" % (e(so["ref"] or ""), so["pins"], e(so["type"]))
+        rows += ["<tr><td>Socket %s</td><td><b>%d pins</b></td><td>%s</td></tr>" % (e(so["ref"] or ""), so["pins"], e(so["type"]))
                  for so in rq["sockets"]]
         a = rq["analog_inputs"]
-        rows.append("<tr><td>Analog inputs</td><td>%d</td><td>0..%g V; %s; most at once %d%s</td></tr>" % (
+        rows.append("<tr><td>Analog inputs</td><td><b>%d</b></td><td>0..%g V; %s; most at once %d%s</td></tr>" % (
             a["count"], a["range_v"][1], e(a["suggested"]), a["used_max"], (" (%s)" % e(a["driven_by"])) if a["driven_by"] else ""))
         sp = rq["supplies"]
-        rows.append("<tr><td>Switched supplies</td><td>%d</td><td>%s%s</td></tr>" % (
+        rows.append("<tr><td>Switched supplies</td><td><b>%d</b></td><td>%s%s</td></tr>" % (
             sp["count"], e(sp["what"]), ", up to %g A" % sp["max_current_a"] if sp["max_current_a"] else ""))
         for bus, b in rq["buses"].items():
-            rows.append("<tr><td>%s</td><td>%d</td><td>%s<div class='muted'>%s</div></td></tr>" % (
-                "Ethernet" if bus == "ethernet" else bus.upper(), b["instances"], e(b["what"]),
+            rows.append("<tr><td>%s</td><td><b>%d</b></td><td>%s<div class='muted small'>%s</div></td></tr>" % (
+                "Ethernet" if bus == "ethernet" else e(bus.upper()), b["instances"], e(b["what"]),
                 e(", ".join(b["boards"][:6]) + (" ..." if len(b["boards"]) > 6 else ""))))
         if rq["dio"]:
-            rows.append("<tr><td>Digital lines</td><td>%d</td><td>spare</td></tr>" % rq["dio"])
+            rows.append("<tr><td>Digital lines</td><td><b>%d</b></td><td>spare</td></tr>" % rq["dio"])
         for proto, pg in sorted(rq["programming"].items()):
-            rows.append("<tr><td>%s</td><td>%d</td><td>one per board of the largest batch<div class='muted'>%s</div></td></tr>" % (
-                e(pg["what"]), pg["programmers"], e(", ".join(pg["boards"][:6]) + (" ..." if len(pg["boards"]) > 6 else ""))))
-        if plate_note(st):
-            media.append("<p class='muted'>%s</p>" % e(plate_note(st)))
-        h.append("<div class='st'><div>%s<p>Takes <b>%d</b> board types, %d boards per load in all.%s</p></div>"
-                 "<div class='wrap'><table><tr><th>Needs</th><th>Count</th><th></th></tr>%s</table></div></div>" % (
-                     "".join(media), rq["boards"], rq["board_slots"],
-                     " <a href='%s'>Station page (pin maps, every board type's outputs)</a>" % e(link) if link else "",
+            rows.append("<tr><td>%s</td><td><b>%d</b></td><td>one per board of the largest batch<div class='muted small'>%s</div>"
+                        "</td></tr>" % (e(pg["what"]), pg["programmers"],
+                                        e(", ".join(pg["boards"][:6]) + (" ..." if len(pg["boards"]) > 6 else ""))))
+        note = plate_note(st)
+        h.append("<h3>%s%s</h3><div class='station'><div>%s<p>Takes <b>%d</b> board types, <b>%d</b> boards per load in all."
+                 "</p>%s%s</div><div class='wrap'><table><thead><tr><th>It needs</th><th>Count</th><th></th></tr></thead>"
+                 "<tbody>%s</tbody></table></div></div>" % (
+                     e(st["title"]), " <span class='pill'>existing</span>" if st["fixed"] else "", "".join(media),
+                     rq["boards"], rq["board_slots"], ("<p class='small muted'>%s</p>" % e(note)) if note else "",
+                     ("<p><a class='btn' href='%s'>Station page: pin maps and every board type</a></p>" % e(link)) if link else "",
                      "".join(rows)))
-    from . import upgrades as U
+    h.append("</section>")
+    # ---- the catalog ---------------------------------------------------------------------------------
+    h.append("<section id='catalog'><h2>The catalog</h2><p class='muted'>Every board that fits, best first: its batch "
+             "(boards per fixture), its station and what limits it. A board's name opens its production guide.</p>")
+    h.append(K.filter_tools("cards", "Find a board, a station, a bus ...", (), len(fit)))
+    h.append("<div class='boards' id='cards'>%s</div></section>" % "".join(
+        _board_card(b, files[b["folder"]], pages.get(b.get("station")), ranks.get(b["folder"])) for b in fit))
+    if nofit:
+        h.append("<section id='nofit'><h2>Boards that do not fit</h2><p class='muted'>Why each one fits no station; "
+                 "<a href='#limits'>What limits the boards</a> has the cheapest change that would take it.</p>"
+                 "<div class='boards'>%s</div></section>" % "".join(
+                     _board_card(b, files[b["folder"]], None, ranks.get(b["folder"])) for b in nofit))
+    # ---- layouts, limits and upgrades ------------------------------------------------------------------
     if env.get("layouts"):
-        cur = ((env.get("spec") or {}).get("costs") or {}).get("currency", "EUR")
-        h.append("<h2>Layouts compared</h2><p class='muted'>Every way of laying out the stations that was looked at, "
-                 "estimated from the board profiles: what the boards that fit are worth (value_per_board, more for "
-                 "bigger batches) minus what the stations, programmers and fixtures cost. The chosen one is in bold; "
-                 "<code>--layout NAME</code> (spec <code>layout</code>) takes another.%s</p><div class='wrap'><table><tr>"
-                 "<th>Layout</th><th>Stations</th><th>Boards that fit</th><th>Boards per load</th><th>Worth</th>"
-                 "<th>Cost</th><th>Net</th></tr>" % ((" " + e(env["layouts_note"][:1].upper() + env["layouts_note"][1:]) + ".")
-                                                      if env.get("layouts_note") else ""))
+        h.append("<section id='layouts'><h2>Layouts compared</h2><p class='muted'>Every way of laying out the stations "
+                 "that was looked at, estimated from the board profiles: what the boards that fit are worth "
+                 "(value_per_board, more for bigger batches) minus what the stations, programmers and fixtures cost. The "
+                 "chosen one is in bold; <code>--layout NAME</code> (spec <code>layout</code>) takes another.%s</p>"
+                 "<div class='wrap'><table class='sortable'><thead><tr><th>Layout</th><th>Stations</th>"
+                 "<th class='r' data-num>Boards that fit</th><th class='r' data-num>Boards per load</th>"
+                 "<th class='r' data-num>Worth</th><th class='r' data-num>Cost</th><th class='r' data-num>Net</th></tr></thead><tbody>" % (
+                     (" " + e(env["layouts_note"][:1].upper() + env["layouts_note"][1:]) + ".") if env.get("layouts_note") else ""))
         for lay in env["layouts"]:
             sts = "<br>".join("%s: %s, %d boards, %g x %g mm" % (e(x["name"]), e(x.get("focus") or "-"), x["boards"],
                                                                 x["plate_mm"][0], x["plate_mm"][1]) for x in lay["stations"])
             b0, b1 = ("<b>", "</b>") if lay["chosen"] else ("", "")
-            h.append("<tr><td>%s%s%s<div class='muted'>%s</div></td><td>%s</td><td>%d</td><td>%d</td><td>%s %s</td>"
-                     "<td>%s %s</td><td>%s%s %s%s</td></tr>" % (
-                         b0, e(lay["name"]), b1, e(lay["title"]), sts, lay["boards_fit"], lay["slots"], cur,
-                         "{:,.0f}".format(lay["worth"]), cur, "{:,.0f}".format(lay["cost"]), b0, cur,
+            h.append("<tr><td>%s%s%s<div class='muted small'>%s</div></td><td class='small'>%s</td><td class='r'>%d</td>"
+                     "<td class='r'>%d</td><td class='r' data-v='%s'>%s %s</td><td class='r' data-v='%s'>%s %s</td>"
+                     "<td class='r' data-v='%s'>%s%s %s%s</td></tr>" % (
+                         b0, e(lay["name"]), b1, e(lay["title"]), sts, lay["boards_fit"], lay["slots"], lay["worth"], cur,
+                         "{:,.0f}".format(lay["worth"]), lay["cost"], cur, "{:,.0f}".format(lay["cost"]), lay["net"], b0, cur,
                          "{:,.0f}".format(lay["net"]), b1))
-        h.append("</table></div>")
-    h.append(U.html_sections(env))
-    h.append("<h2>Ranking</h2><p class='muted'>Boards that fit first, by priority and batch size; then the ones that do not, "
-             "by priority and by how few pins they would need. <a href='ranking.csv'>ranking.csv</a></p>"
-             "<div class='wrap'><table><tr><th>#</th><th>Board</th><th>Priority</th><th>Station</th><th>Batch</th>"
-             "<th>Limited by</th><th>Needs per board</th><th>Programming</th><th>Fixture</th><th>Why not</th></tr>")
+        h.append("</tbody></table></div></section>")
+    if upg:
+        h.append("<section>%s</section>" % upg)
+    # ---- ranking ----------------------------------------------------------------------------------------
     fixture_note = {}
-    for b_ in env["boards"]:
+    for b_ in boards:
         ro = b_.get("routing") or {}
         if b_.get("status") != "compatible":
             continue
@@ -1516,36 +1650,56 @@ def environment_html(env: Dict[str, Any]) -> str:
             fixture_note[b_["folder"]] = "routed" if not left else "%d of %d to route in KiCad" % (left, ro["connections"])
         elif b_.get("outputs_dir"):
             fixture_note[b_["folder"]] = "not routed"
-    pages = {st["name"]: st.get("page_dir") for st in env["stations"]}
-    for r in env["ranking"]:
+    h.append("<section id='ranking'><h2>Ranking</h2><p class='muted'>Boards that fit first, by priority and batch size; "
+             "then the ones that do not, by priority and by how few pins they would need. Click a column to sort. "
+             "<a href='ranking.csv'>ranking.csv</a></p>")
+    h.append(K.filter_tools("rank", "Filter the ranking", (("", "All boards"), ("ok", "Fit"), ("off", "Do not fit")),
+                            len(env.get("ranking") or [])))
+    h.append("<div class='wrap'><table class='sortable' id='rank'><thead><tr><th class='r' data-num>#</th><th>Board</th>"
+             "<th class='r' data-num>Priority</th><th>Station</th><th class='r' data-num>Batch</th><th>Limited by</th>"
+             "<th>Needs per board</th><th>Programming</th><th>Fixture</th><th>Why not</th></tr></thead><tbody>")
+    for r in env.get("ranking") or []:
         needs = "%s ch" % (r.get("channels") if r.get("channels") is not None else "?")
         if r.get("supply_v") is not None:
             needs += ", %g V" % r["supply_v"]
         if r["buses"]:
             needs += ", " + " ".join(x.upper() for x in r["buses"])
-        name = e(r["name"])
-        if r["status"] == "compatible" and pages.get(r.get("station")):
-            guide = next((b.get("guide") for b in env["boards"] if b["folder"] == r["folder"]), None)
-            if guide:
-                name = "<a href='%s'>%s</a>" % (e(guide), name)
-        h.append("<tr><td>%d</td><td>%s</td><td>%g</td><td>%s</td><td class='%s'>%s</td><td>%s</td><td>%s</td><td>%s</td>"
-                 "<td>%s</td><td>%s</td></tr>" % (r["rank"], name, r["priority"], e(r.get("station") or "-"),
-                                                  "ok" if r["status"] == "compatible" else "no",
-                                                  r["batch"] if r["status"] == "compatible" else e(r["status"]),
-                                                  e(r.get("limit") or "-"), e(needs), e(" ".join(r["programming"]) or "-"),
-                                                  e(fixture_note.get(r["folder"], "-")), e(r.get("reason") or "")))
-    h.append("</table></div>")
+        g = (files.get(r["folder"]) or {}).get("guide")
+        name = "<a href='%s'>%s</a>" % (e(g), e(r["name"])) if g else e(r["name"])
+        ok = r["status"] == "compatible"
+        h.append("<tr data-row='%s'><td class='r'>%d</td><td>%s</td><td class='r'>%g</td><td>%s</td><td class='r %s' data-v='%s'>%s</td>"
+                 "<td>%s</td><td>%s</td><td>%s</td><td>%s</td><td class='small'>%s</td></tr>" % (
+                     "ok" if ok else "off", r["rank"], name, r["priority"], e(r.get("station") or "-"), "ok" if ok else "no",
+                     r["batch"] if ok else -1, r["batch"] if ok else e(r["status"]), e(r.get("limit") or "-"), e(needs),
+                     e(" ".join(r["programming"]).upper() or "-"), e(fixture_note.get(r["folder"], "-")), e(r.get("reason") or "")))
+    h.append("</tbody></table></div></section>")
     if env.get("warnings"):
-        h.append("<h2>Notes</h2><ul>%s</ul>" % "".join("<li>%s</li>" % e(w) for w in env["warnings"][:60]))
-    h.append("<h2>Files</h2><ul><li><a href='requirements.md'>requirements.md</a>: what every station needs</li>"
+        h.append("<section id='notes'><h2>Notes</h2><ul>%s</ul></section>" % "".join(
+            "<li>%s</li>" % e(w) for w in env["warnings"][:60]))
+    h.append("<section id='files'><h2>Files</h2><ul><li><a href='requirements.md'>requirements.md</a>: what every station needs</li>"
              "<li><a href='environment.json'>environment.json</a>: everything, machine-readable</li>"
              "<li><a href='environment-spec.json'>environment-spec.json</a>: the settings (edit and build again)</li>"
              "<li><a href='constraints.md'>constraints.md</a>: what limits every board, what one more per fixture "
              "needs; <a href='upgrades.md'>upgrades.md</a>: the upgrade options with what they gain and cost</li>"
              "<li><a href='ranking.csv'>ranking.csv</a>, <a href='boards.csv'>boards.csv</a>, "
-             "<a href='constraints.csv'>constraints.csv</a></li></ul>")
-    h.append("</main></body></html>")
+             "<a href='constraints.csv'>constraints.csv</a></li></ul></section>")
+    h.append(K.footer(env.get("generator", ""), script=True))
     return "".join(h)
+
+
+def link_stations(env: Dict[str, Any], out_dir: str) -> int:
+    """Breadcrumbs from every station page and every board page in the environment back to its index.html."""
+    from .station import link_pages
+    n = 0
+    for st in env.get("stations") or []:
+        sdir = os.path.join(out_dir, "stations", st["name"])
+        try:
+            with open(os.path.join(sdir, "station.json"), encoding="utf-8") as fh:
+                sj = json.load(fh)
+        except (OSError, ValueError):
+            continue
+        n += link_pages(sj, sdir, [("../../index.html", env.get("name") or "Test environment")])
+    return n
 
 
 def boards_csv(env: Dict[str, Any]) -> str:
@@ -1595,7 +1749,8 @@ def write_docs(env: Dict[str, Any], out_dir: str) -> Dict[str, str]:
     except Exception as exc:  # noqa: BLE001 - the analysis must never cost the build its documents
         env.setdefault("warnings", []).append("the constraints and upgrade options could not be worked out: %r" % exc)
     with open(os.path.join(out_dir, files["index"]), "w", encoding="utf-8") as fh:
-        fh.write(environment_html(env))
+        fh.write(environment_html(env, out_dir))
+    link_stations(env, out_dir)
     with open(os.path.join(out_dir, MARKER), "w", encoding="utf-8") as fh:
         fh.write("PCB TestKit environment %s\n" % __version__)
     return files

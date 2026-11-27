@@ -43,18 +43,37 @@ the social preview image `docs/media/social-preview.png`.
 
 ## 4. Release
 
-1. Bump the version in `pcbtestkit/__init__.py` and `.claude-plugin/plugin.json`; add a `CHANGELOG.md` section.
+1. Bump the version in `pcbtestkit/__init__.py` and `.claude-plugin/plugin.json`, and add a `## <version> (date)`
+   section to `CHANGELOG.md`. The release notes are taken from that section (`tools/release_notes.py`).
 2. `python3 -m unittest discover -s tests && python3 tools/gen_docs.py --check`
-3. Commit, then tag and push:
+3. Commit, push the branch and wait for CI to pass on every OS. Then tag and push:
 
    ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
+   git tag -a v1.2.0 -m "PCB TestKit 1.2.0"
+   git push origin v1.2.0
    ```
 
-The **Release** workflow builds `pcbtestkit-<version>-kicad-pcm.zip` and the Python wheel, and attaches them
-plus the KiCad repository entry (`metadata.json` with the download URL, SHA-256 and sizes) to a GitHub release.
-Anyone can then install the zip with KiCad: *Plugin and Content Manager > Install from File...*.
+The **Release** workflow runs the tests again, then builds and publishes the release:
+
+- `pcbtestkit-<version>-kicad-pcm.zip` (reproducible: file times from the tagged commit);
+- the Python wheel and sdist;
+- the KiCad repository entry (`kicad-pcm-metadata.json` with the download URL, SHA-256 and sizes);
+- the CycloneDX SBOM (`pcbtestkit-<version>.cdx.json`);
+- `SHA256SUMS`;
+- signed build provenance for every file.
+
+Anyone can then install the zip with KiCad (*Plugin and Content Manager > Install from File...*) and check it:
+
+```bash
+gh attestation verify pcbtestkit-1.2.0-kicad-pcm.zip --repo bartertveldt/pcbtestkit
+```
+
+**A failed release build.** Never move or reuse a tag that has been pushed. Fix the problem on the branch, bump the
+version, and tag again. Mark the failed version in `CHANGELOG.md` as `(tagged <date>, not published: part of
+<next>)`, and its changes go into the next release's notes.
+
+**Security fixes.** Prepare the fix in the advisory's private fork (Security tab > the advisory > *Start a temporary
+private fork*). Release it as above, then publish the advisory (see [SECURITY.md](../SECURITY.md)).
 
 ## 5. KiCad Plugin and Content Manager (official repository)
 
@@ -138,6 +157,9 @@ points at the PyPI package. Check that the name `pcbtestkit` is still free on Py
 - [x] commit author set to your noreply address
 - [x] CI green
 - [x] tag pushed, release has the PCM zip, wheel and `metadata.json`
+- [ ] release has `SHA256SUMS`, the SBOM and attestations (`gh attestation verify` passes)
+- [ ] repository settings: private vulnerability reporting, secret scanning with push protection, Dependabot
+      alerts, and branch protection on `main` (require CI to pass)
 - [ ] release zip installed and used on other machines and KiCad versions (5a)
 - [ ] `tools/build_pcm.py --submission <tag>` passes (5b)
 - [ ] merge request to gitlab.com/kicad/addons/metadata (5c)

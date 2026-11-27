@@ -32,7 +32,8 @@ sys.path.insert(0, ROOT)
 
 PLACEHOLDER = "YOUR-GITHUB-USER"
 # what goes into plugins/: the SWIG action plugin package (KiCad 8-10)
-PLUGIN_FILES = ["__init__.py", "LICENSE", "plugin", "pcbtestkit", "resources"]
+PLUGIN_FILES = ["__init__.py", "LICENSE", "SECURITY.md", "PRIVACY.md", "THIRD_PARTY_NOTICES.md", "plugin", "pcbtestkit",
+                "resources"]
 SKIP_DIRS = {"__pycache__", ".pcbtestkit", "production_test"}
 SKIP_EXT = {".pyc", ".pyo"}
 
@@ -252,6 +253,24 @@ def plugin_files():
                 yield full, os.path.relpath(full, ROOT).replace(os.sep, "/")
 
 
+def _zip_time() -> tuple:
+    """The time every file in the zip gets: SOURCE_DATE_EPOCH (the release workflow sets it to the tagged commit's
+    time) or 1980-01-01, so the same source always gives the same zip, byte for byte."""
+    import time
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    if not epoch:
+        return (1980, 1, 1, 0, 0, 0)
+    return tuple(time.gmtime(max(315532800, int(epoch)))[:6])
+
+
+def _put(z: zipfile.ZipFile, name: str, data: bytes) -> None:
+    info = zipfile.ZipInfo(name, date_time=_zip_time())
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.external_attr = (0o100644 & 0xFFFF) << 16          # a regular file, rw-r--r--, whatever the checkout had
+    info.create_system = 3
+    z.writestr(info, data)
+
+
 def build(out_dir: str) -> dict:
     ver = version()
     meta = load_metadata(ver)
@@ -263,12 +282,14 @@ def build(out_dir: str) -> dict:
     zpath = os.path.join(out_dir, "pcbtestkit-%s-kicad-pcm.zip" % ver)
     install_size = 0
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr("metadata.json", json.dumps(meta, indent=2) + "\n")
+        _put(z, "metadata.json", (json.dumps(meta, indent=2) + "\n").encode())
         install_size += len(json.dumps(meta, indent=2)) + 1
         for full, rel in plugin_files():
-            z.write(full, "plugins/" + rel)
+            with open(full, "rb") as fh:
+                _put(z, "plugins/" + rel, fh.read())
             install_size += os.path.getsize(full)
-        z.write(icon, "resources/icon.png")
+        with open(icon, "rb") as fh:
+            _put(z, "resources/icon.png", fh.read())
         install_size += os.path.getsize(icon)
     with open(zpath, "rb") as fh:
         sha = hashlib.sha256(fh.read()).hexdigest()

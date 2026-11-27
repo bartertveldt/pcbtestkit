@@ -30,8 +30,9 @@ def _open(path: str) -> None:
 
 class EnvironmentDialog(wx.Dialog):
     def __init__(self, parent, start_board: str = ""):
-        super().__init__(parent, title="PCB TestKit %s - test environment for many boards" % __version__, size=(820, 860),
-                         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
+        from .dialog import _fit_size
+        super().__init__(parent, title="PCB TestKit %s - test environment for many boards" % __version__,
+                         size=_fit_size(parent, 820, 860), style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
         self.boards: list = []
         spec = E.default_spec()
         root = wx.BoxSizer(wx.VERTICAL)

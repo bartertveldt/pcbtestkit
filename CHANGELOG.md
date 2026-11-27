@@ -2,7 +2,77 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 
-## 1.1.2 (2026-11-27)
+## 1.2.0 (2026-11-27)
+
+1.2.0 is the first published release since 1.1.0. Tags v1.1.1 and v1.1.2 exist, but their release builds failed, so
+neither was ever published. Their changes, listed below under 1.1.2 and 1.1.1, are all part of 1.2.0.
+
+### A new design for every page
+- One design for every page PCB TestKit writes. The board's **production guide** and **report**, the **station page**
+  and the **test environment page** now share one stylesheet: a header with the verdict, key numbers and buttons, a
+  row of section links that stays at the top (no side menus), cards, tables you can sort, light and dark themes
+  that follow the system, a print layout, keyboard focus outlines, a skip link, and layouts that work on a phone at
+  the workstation (`pcbtestkit/htmlkit.py`).
+- **Every video is on its page.** The guide plays the board's explainer, with a still of the board before it
+  starts. The station page plays the station video and every board type's explainer. The test environment page
+  plays the environment video and every station's video, and each board card can play that board's explainer.
+- **What you get depends on the run:**
+  - one board: the guide (the place to start), which links its report;
+  - a station: the station page has a card per board type (its render, boards per fixture, what it uses of the
+    station and what limits it, links to its guide, report, fixture and runner) and a sortable table;
+  - a catalog (`environment build`): `index.html` is the whole catalog, with a card for every board. Each card has
+    its render or its outline to scale, batch size, station, rank, a short explanation (size, layers, parts and
+    hand-soldered parts, probes and coverage, channels, supply, buses, programming, what limits its batch) and
+    links to its guide, report, fixture, runner and station. A search box and a filter find a board among
+    hundreds. The boards that don't fit get their own cards with the reason; the layouts, limits, upgrades and
+    the full ranking (sortable, filterable) follow.
+- **Breadcrumbs.** A board's guide and report on a station link back to the station page, and on a test environment
+  also to its catalog, with a line saying which station tests the board and how many boards fit per fixture.
+- Board profiles now include the title, part count and hand-soldered part count, for the catalog's explanations
+  (cached profiles are made again once).
+- Pages are made again when their design changes (`htmlkit.PAGE_REV` is part of a station board's up-to-date
+  check).
+
+### Security and privacy
+- [SECURITY.md](SECURITY.md) is now a complete vulnerability disclosure policy:
+  - private reporting through GitHub, with response and fix targets;
+  - coordinated disclosure (90 days), CVEs through GitHub advisories, credit for reporters;
+  - a safe harbour for good-faith research;
+  - the scope and threat model, and how PCB TestKit protects you;
+  - how releases are built and how to verify them;
+  - how the project relates to the EU Cyber Resilience Act and ISO/IEC 29147/30111.
+- New [PRIVACY.md](PRIVACY.md): what is stored where, no network and no telemetry, AI assistants, GitHub, and the
+  GDPR.
+- New [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [docs/examples/LICENSES.md](docs/examples/LICENSES.md).
+  The example outputs made from KiCad's demo boards now credit their authors and keep the boards' licences
+  (GPL-3.0-or-later, Apache-2.0, CERN-OHL-P/S, CC BY-SA, CC BY-NC-SA).
+- Every generated page carries a strict **Content-Security-Policy**:
+  - nothing from the network, no frames, no forms, no plugins;
+  - one script (sorting and filtering tables), allowed by its SHA-256 hash;
+  - `no-referrer` for links.
+  Every text from a board is escaped, and a test feeds HTML and script through board, station and net names and
+  the title block into all four kinds of page.
+- KiCad's dialog and the IPC entry point open pages with proper `file://` URLs. The old URLs broke on Windows drive
+  letters and on folders with spaces.
+
+### Releases you can verify
+- Every release has `SHA256SUMS`, a CycloneDX 1.6 SBOM (`pcbtestkit-<version>.cdx.json`, made by
+  `tools/sbom.py`) and signed SLSA build provenance for every file (GitHub artifact attestations):
+  `gh attestation verify <file> --repo bartertveldt/pcbtestkit`.
+- The KiCad package zip is reproducible: the same source gives the same zip, byte for byte (`SOURCE_DATE_EPOCH`).
+- The release notes come from this changelog (`tools/release_notes.py`), with install and verification steps.
+- Workflows:
+  - every action is pinned to a full commit SHA, and Dependabot keeps them current;
+  - tokens are read-only by default, and only the release job may write;
+  - checkouts keep no credentials, and the `build` tool is pinned;
+  - CodeQL scans the Python code and the workflows on every push and pull request, and once a week.
+- A pull request template, and a "Report a security vulnerability" link in the new-issue chooser.
+
+### KiCad dialogs
+- When a run finishes: *Open the guide* (the place to start), *Open the folder* or *Close*.
+- The dialogs fit smaller laptop screens, and *Save settings* and *Generate* have tooltips.
+
+## 1.1.2 (tagged 2026-11-27, not published: part of 1.2.0)
 
 ### Test environments: 100+ boards, one to three testers
 - `pcbtestkit environment plan | build | init`: give it every KiCad project you make (folders are searched, or
@@ -130,7 +200,7 @@ All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 - A programming connector that is an edge-mount part (pads on both copper layers, like an edge DB9) gets a pin header
   with its pinout on the fixture instead of a copy with every pad on one layer (which shorted them).
 
-## 1.1.1 (2026-11-26)
+## 1.1.1 (tagged 2026-11-26, not published: part of 1.2.0)
 
 ### Test stations: several board types on one tester
 - A station is a test facility whose interface connector is *shared*: every board of a batch gets the next block of

@@ -58,6 +58,7 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `plugin/environment_dialog.py` | The KiCad dialog for many boards (second action plugin). |
 | `pcbtestkit/settings.py` | Settings for every project (`~/.pcbtestkit/settings.json`, `PCBTESTKIT_HOME`): the remembered test environment, caches. |
 | `pcbtestkit/spec.py`, `report.py`, `guide.py`, `visuals.py` | Spec JSON, HTML report, visual guide, KiCad 3D renders. |
+| `pcbtestkit/htmlkit.py` | The one design every page shares (guide, report, station page, environment catalog): stylesheet, hero, video blocks, cards, sortable tables, the Content-Security-Policy and its one hashed script, breadcrumbs (`set_context`). |
 | `pcbtestkit/animate.py`, `video.py`, `video_frames.py`, `video_job.py` | 3D-animated explainer (kicad-cli per frame, ray-tracing presets), storyboard, wx captions, the background job with its progress window. |
 | `pcbtestkit/phases.py`, `timing.py` | What needs the firmware (test phases, batch programmed at once); production timing per batch size. |
 | `pcbtestkit/agent.py` | The tool registry (`@tool`), `Workspace`, guardrails, profiles. 2,000 lines: grep, don't read whole. |
@@ -65,7 +66,8 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `pcbtestkit/runner/` | Raspberry Pi / MCU test runner copied into every output. |
 | `skills/pcbtestkit/` | Agent skill. `references/{cli,tools,config}.md` are generated. |
 | `.claude-plugin/` | Claude Code plugin + marketplace manifests (skill + MCP server). |
-| `pcm/`, `tools/` | KiCad package metadata + icon; build, docs, icon and owner scripts. |
+| `pcm/`, `tools/` | KiCad package metadata + icon; build, docs, icon and owner scripts; `sbom.py` (CycloneDX SBOM) and `release_notes.py` for releases. |
+| `SECURITY.md`, `PRIVACY.md`, `THIRD_PARTY_NOTICES.md`, `docs/examples/LICENSES.md` | Disclosure policy and threat model, privacy notice, licences (the examples keep their demo boards' licences). |
 | `docs/` | Human docs; `docs/reference/` is generated; `docs/examples/` are generated outputs. |
 | `tests/test_toolkit.py`, `examples/make_sample.py` | Tests on a generated sample board with seeded weak points. |
 | `examples/make_station.py` | Generates the example test station board (`examples/station/`). |
@@ -79,6 +81,11 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 - **Relative imports only** inside the plugin: the KiCad Plugin Manager installs it under a package name derived
   from the identifier (`com_github_<owner>_pcbtestkit`).
 - **No absolute paths in output files.** Outputs are shared; write file names relative to the project/output folder.
+- **Pages go through `htmlkit`.** Escape every text from a board, a schematic or a setting with `htmlkit.esc`; load
+  nothing from the network; no inline event handlers or new scripts (the page's Content-Security-Policy allows only
+  `htmlkit.TABLE_JS` by its hash). Bump `htmlkit.PAGE_REV` when a page changes visibly.
+- **Workflows**: pin every action to a full commit SHA (with the version in a comment), keep `permissions` minimal
+  and `persist-credentials: false` on checkouts.
 - **Tools never raise**: `Workspace.call` returns `{"ok": false, "error": {"code", "message", "hint"?}}`. New tools
   use the `@tool` decorator in `agent.py`, validate their arguments, and keep descriptions to one or two sentences
   (every MCP client sends the tool list with each request).

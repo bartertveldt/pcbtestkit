@@ -7,6 +7,7 @@ AI agent tools.
 """
 import os
 import sys
+import pathlib
 import webbrowser
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -42,8 +43,9 @@ def main() -> int:
         return 1
     res = run_pipeline(Design.load(path), progress=lambda m, f: print("[%3d%%] %s" % (int(f * 100), m)))
     print("PCB TestKit: %s, score %d -> %s" % (res["summary"]["verdict"], res["summary"]["score"], res["out_dir"]))
-    if res["paths"].get("report"):
-        webbrowser.open("file://" + res["paths"]["report"])
+    page = res["paths"].get("guide") or res["paths"].get("report")
+    if page:                        # a proper file:// URL (Windows drive letters, spaces in folder names)
+        webbrowser.open(pathlib.Path(page).resolve().as_uri())
     return 0
 
 

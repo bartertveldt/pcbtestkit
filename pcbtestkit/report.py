@@ -6,6 +6,7 @@ import html
 import os
 from typing import Any, Dict, List, Optional
 
+from . import htmlkit as K
 from .project import Design
 
 SEV_COLOR = {"critical": "#d13438", "major": "#e8710a", "minor": "#c9a400", "info": "#5b7fa6"}
@@ -50,21 +51,8 @@ def board_svg(design: Design, findings: List[Dict[str, Any]], plan: Optional[Dic
     return "".join(out)
 
 
-CSS = """
-:root{--bg:#f7f7f5;--card:#fff;--fg:#1d1d1f;--muted:#666;--line:#e3e3e0;--board-bg:#e9f1ea;--edge:#222;--crt-top:#3a6ea5;
---crt-bottom:#9a4ea5;--pad-top:#c08a2d;--pad-bottom:#8a5ab5;--pad-tht:#777;--txt:#333;--probe:#0a8f5a;--gnd:#333;--sup:#d13438}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161618;--card:#1f1f22;--fg:#eee;--muted:#aaa;
---line:#333;--board-bg:#1e2a22;--edge:#ddd;--txt:#ccc;--gnd:#ddd}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:1180px;margin:0 auto;padding:24px 16px 64px}h1{font-size:24px;margin:0 0 4px}h2{font-size:18px;margin:32px 0 10px}
-.muted{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}.card b{display:block;font-size:22px}
-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;color:var(--muted);font-weight:600}
-.sev{display:inline-block;padding:1px 8px;border-radius:99px;color:#fff;font-size:12px;font-weight:600}
-.wrap{overflow-x:auto}.small{font-size:12px}code{font-size:12px}.svgbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px}
-details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;border-radius:8px;border:1px solid var(--line)}
-"""
+CSS = K.CSS          # kept for older imports: the shared stylesheet
+REPORT_CSS = ""
 
 
 def routing_note(st: Optional[Dict[str, Any]]) -> str:
@@ -83,38 +71,45 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
     s = spec["summary"]
     b = spec["board"]
     findings = spec["findings"]
-    h: List[str] = ['<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
-                    "<title>Production Test Report</title><style>%s</style></head><body><main>" % CSS]
-    h.append("<h1>%s %s</h1><div class='muted'>%s &middot; generated %s &middot; %s</div>" %
-             (_e(b["title"] or b["name"]), _e(("rev " + b["revision"]) if b["revision"] else "(no revision)"), _e(b["name"]),
-              _e(spec["generated"]), _e(spec["generator"])))
-    if outputs.get("video_error"):
-        why = next((w[len("video not made: "):] for w in design.warnings if w.startswith("video not made: ")), "")
-        h.append("<div class='small' style='color:%s'>&#9888; The explainer video could not be made: %s Details: <code>%s</code>"
-                 "</div>" % (SEV_COLOR["major"], _e(why), _e(os.path.basename(outputs["video_error"]))))
     c = s["counts"]
-    h.append("<div class='cards'>")
-    h.append("<div class='card'><span class='muted'>Readiness</span><b>%s</b><span class='muted'>score %d/100</span></div>" % (_e(s["verdict"]), s["score"]))
-    for sev in ("critical", "major", "minor", "info"):
-        h.append("<div class='card'><span class='muted'>%s</span><b style='color:%s'>%d</b></div>" % (sev, SEV_COLOR[sev], c.get(sev, 0)))
+    asm = spec["assembly"]
+    lead = "%s%s · %.1f x %.1f mm, %d copper layers, %.2f mm thick, %d components (%d SMD top, %d SMD bottom, %d THT)" % (
+        ("rev %s · " % b["revision"]) if b["revision"] else "", b["name"], b["outline_mm"]["width"], b["outline_mm"]["height"],
+        b["copper_layers"], b["thickness_mm"], asm["component_count"], asm["smd_top"], asm["smd_bottom"], asm["tht"])
+    pills = [(s["verdict"], K.tone_of_score(s["score"]))]
+    if c.get("critical"):
+        pills.append(("%d critical" % c["critical"], "bad"))
+    if c.get("major"):
+        pills.append(("%d major" % c["major"], "warn"))
+    stats = [("%d/100" % s["score"], "readiness score", K.tone_of_score(s["score"]))]
+    stats += [(c.get(sev, 0), sev, tone if c.get(sev, 0) else "") for sev, tone in
+              (("critical", "bad"), ("major", "warn"), ("minor", ""), ("info", ""))]
     if plan:
         cov = plan["coverage"]
-        h.append("<div class='card'><span class='muted'>Test coverage</span><b>%s%%</b><span class='muted'>%d/%d nets, %d/%d power</span></div>" %
-                 (cov["percent"], cov["nets_probed"], cov["nets_total"], cov["power_nets_probed"], cov["power_nets"]))
+        stats.append(("%s%%" % cov["percent"], "test coverage (%d of %d nets)" % (cov["nets_probed"], cov["nets_total"]), ""))
         tm = plan.get("timing")
         if tm:                                  # assembly + programming + test, per board, for the configured batch
             m, sec = divmod(int(round(tm["per_board_s"])), 60)
-            h.append("<div class='card'><span class='muted'>Per board (batch of %d)</span><b>%s</b><span class='muted'>"
-                     "assemble, program, test</span></div>" % (tm["batch"], "%d:%02d" % (m, sec)))
-    h.append("</div>")
-    h.append("<div class='muted small'>Board %.1f x %.1f mm, %d copper layers, %.2f mm thick, %d components (%d SMD top, %d SMD bottom, %d THT).</div>" %
-             (b["outline_mm"]["width"], b["outline_mm"]["height"], b["copper_layers"], b["thickness_mm"],
-              spec["assembly"]["component_count"], spec["assembly"]["smd_top"], spec["assembly"]["smd_bottom"], spec["assembly"]["tht"]))
+            stats.append(("%d:%02d" % (m, sec), "per board, batch of %d" % tm["batch"], ""))
+    actions = [(os.path.basename(outputs["guide"]) if outputs.get("guide") else "", "Open the production guide", True),
+               (os.path.basename(outputs["video"]) if outputs.get("video") else "", "Watch the explainer", False)]
+    h: List[str] = [K.head("%s - production test report" % (b["title"] or b["name"]),
+                           "Weak points, fab class, test scheme, fixture and jigs of %s" % (b["title"] or b["name"]), css=REPORT_CSS),
+                    K.hero("Production test report", b["title"] or b["name"], lead, pills, stats, actions),
+                    K.nav([("classes", "Fab classes") if spec.get("technology") else ("", ""), ("findings", "Weak points"),
+                           ("map", "Board map"), ("scheme", "Test scheme") if plan else ("", ""),
+                           ("fixture", "Fixture") if fixture or plan else ("", ""), ("jig", "Solder jig") if jig else ("", ""),
+                           ("files", "Files")]),
+                    "<main id='content'>"]
+    if outputs.get("video_error"):
+        why = next((w[len("video not made: "):] for w in design.warnings if w.startswith("video not made: ")), "")
+        h.append("<div class='callout warn small'>&#9888; The explainer video could not be made: %s Details: <code>%s</code>"
+                 "</div>" % (_e(why), _e(os.path.basename(outputs["video_error"]))))
 
     tech = spec.get("technology")
     if tech:
         h.extend(tech_html(tech))
-    h.append("<h2>Weak points</h2><div class='wrap'><table><tr><th>#</th><th>Severity</th><th>Finding</th><th>Why it matters / what to do</th><th>Parts / nets</th></tr>")
+    h.append("<h2 id='findings'>Weak points</h2><div class='wrap'><table><tr><th>#</th><th>Severity</th><th>Finding</th><th>Why it matters / what to do</th><th>Parts / nets</th></tr>")
     for f in findings:
         refs = ", ".join(f.get("refs", [])[:20]) + (" ..." if len(f.get("refs", [])) > 20 else "")
         nets = ", ".join(f.get("nets", [])[:10])
@@ -124,12 +119,12 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
                   _e(f["detail"]), _e(f.get("recommendation", "")), _e(refs), ("<br>" + _e(nets)) if nets else ""))
     h.append("</table></div>")
 
-    h.append("<h2>Board map</h2><div class='muted small'>Courtyards (solid = top, dashed = bottom), pads, probe points "
+    h.append("<h2 id='map'>Board map</h2><div class='muted small'>Courtyards (solid = top, dashed = bottom), pads, probe points "
              "(green = measure, red = supply, dark = ground) and finding locations (coloured dots, hover for details).</div>")
     h.append("<div class='svgbox'>%s</div>" % board_svg(design, findings, plan))
 
     if plan:
-        h.append("<h2>Test scheme</h2><div class='muted small'>Probe side: <b>%s</b> &middot; pogo %s (%s), drill %.2f mm, min pitch %.2f mm &middot; supply: %s</div>" %
+        h.append("<h2 id='scheme'>Test scheme</h2><div class='muted small'>Probe side: <b>%s</b> &middot; pogo %s (%s), drill %.2f mm, min pitch %.2f mm &middot; supply: %s</div>" %
                  (_e(plan["probe_side"]), _e(plan["pogo"]["family"]), _e(plan["pogo"]["mount"]), plan["pogo"]["drill_mm"],
                   plan["pogo"]["pitch_mm"], _e("%s @ %s V" % (plan["supply"].get("net"), plan["supply"].get("voltage")))))
         for st in plan.get("stack") or []:
@@ -161,7 +156,7 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
                 len(plan["coverage"]["untestable"]),
                 "".join("<li><code>%s</code> - %s</li>" % (_e(u["net"]), _e(u["reason"])) for u in plan["coverage"]["untestable"])))
     if fixture and fixture.get("plates"):
-        h.append("<h2>Fixture boards</h2><div class='muted small'>Two plates (probes from both sides): %s. %s</div>" % (
+        h.append("<h2 id='fixture'>Fixture boards</h2><div class='muted small'>Two plates (probes from both sides): %s. %s</div>" % (
             _e(", ".join("%s %d pogo pin(s)" % (sd, r_["pogo_count"]) for sd, r_ in fixture["plates"].items())),
             _e(routing_note(fixture.get("routing")))))
         for w in fixture.get("warnings", []):
@@ -169,7 +164,7 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
         if fixture.get("drc"):
             h.append("<div class='small muted'>KiCad DRC on the fixture: %s</div>" % _e(fixture["drc"]))
     elif fixture:
-        h.append("<h2>Fixture board</h2><div class='muted small'>%d pogo pin(s), %d site(s), outline %s. %s</div>" %
+        h.append("<h2 id='fixture'>Fixture board</h2><div class='muted small'>%d pogo pin(s), %d site(s), outline %s. %s</div>" %
                  (fixture["pogo_count"], len(fixture["sites"]), _e(fixture.get("outline_mode")),
                   _e(routing_note(fixture.get("routing")))))
         for w in fixture.get("warnings", []):
@@ -199,14 +194,14 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
     if not fixture and plan:
         mode = (design.cfg.get("fixture") or {}).get("mode", "generate")
         if mode == "own":
-            h.append("<h2>Fixture</h2><div class='muted small'>You design the fixture: %d probe point(s) with coordinates, "
+            h.append("<h2 id='fixture'>Fixture</h2><div class='muted small'>You design the fixture: %d probe point(s) with coordinates, "
                      "nets, tips and expected values are in <code>%s</code>.</div>" % (
                          len(plan["probes"]), _e(os.path.basename(outputs.get("probe_points", "probe-points.csv")))))
         elif mode == "none":
-            h.append("<h2>Fixture</h2><div class='muted small'>No fixture (manual test): measure the %d test point(s) with a "
+            h.append("<h2 id='fixture'>Fixture</h2><div class='muted small'>No fixture (manual test): measure the %d test point(s) with a "
                      "bench supply and a multimeter, following the test scheme.</div>" % len(plan["probes"]))
     if jig:
-        h.append("<h2>Solder jig</h2><div class='muted small'>%s x %s x %s mm, support plane at %s mm. Parts to place: %s.</div>" %
+        h.append("<h2 id='jig'>Solder jig</h2><div class='muted small'>%s x %s x %s mm, support plane at %s mm. Parts to place: %s.</div>" %
                  (jig["jig_size_mm"][0], jig["jig_size_mm"][1], jig["jig_size_mm"][2], jig["support_height_mm"],
                   _e(", ".join(jig["parts_to_place"]) or "none")))
         if jig.get("preview_png") and os.path.exists(jig["preview_png"]):
@@ -249,7 +244,7 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
                 what += " - the jig above"
             h.append("<li>%s</li>" % _e(what))
         h.append("</ol>")
-    h.append("<h2>Files</h2><ul>")
+    h.append("<h2 id='files'>Files</h2><ul>")
     for k, v in outputs.items():
         h.append("<li>%s: <code>%s</code></li>" % (_e(k), _e(os.path.basename(v))))
     h.append("</ul>")
@@ -257,7 +252,7 @@ def build_report(design: Design, spec: Dict[str, Any], plan: Optional[Dict[str, 
     warns = list(dict.fromkeys(list(spec.get("warnings") or []) + list(design.warnings)))
     if warns:
         h.append("<details><summary>Warnings</summary><ul>%s</ul></details>" % "".join("<li>%s</li>" % _e(w) for w in warns))
-    h.append("</main></body></html>")
+    h.append(K.footer(spec["generator"], "Generated %s." % spec["generated"]))
     return "\n".join(h)
 
 
@@ -276,7 +271,7 @@ def tech_html(tech: Dict[str, Any]) -> List[str]:
     p = tech["primary"]
     req = p["required"]
     tg = p.get("target")
-    h = ["<h2>Technology class</h2>"]
+    h = ["<h2 id='classes'>Technology class</h2>"]
     h.append("<div class='muted small'>%s (%s). Needs: <b>%s</b>%s. Ordered: <b>%s</b>%s.</div>" % (
         _e(p["name"]), _e(p["status"]), _e(req.get("class") or "finer than this system"),
         (" &middot; " + _e(", ".join(req.get("services") or []))) if req.get("services") else "",

@@ -966,7 +966,7 @@ def html_sections(env: Dict[str, Any]) -> str:
         for w in c.get("limited_by") or []:
             tally[w] = tally.get(w, 0) + 1
     no = [c for c in cons if c["status"] != "compatible"]
-    h = ["<h2>What limits the boards</h2><p class='muted'>What each board's batch is limited by on its station, and what "
+    h = ["<h2 id='limits'>What limits the boards</h2><p class='muted'>What each board's batch is limited by on its station, and what "
          "the boards that fit none lack. Per board, with what one more board per fixture would need and cost: "
          "<a href='constraints.md'>constraints.md</a> (<a href='constraints.csv'>csv</a>, "
          "<a href='constraints.json'>json</a>).</p><div class='wrap'><table><tr><th>Limited by</th><th>Board types</th></tr>"]
@@ -983,7 +983,7 @@ def html_sections(env: Dict[str, Any]) -> str:
             h.append("<tr><td>%s</td><td>%s</td></tr>" % (e(c["board"]), e(fix)))
         h.append("</table></div>")
     now = opt["now"]
-    h.append("<h2>Upgrade options</h2><p class='muted'>Now %d of %d boards fit, %d per full load; the environment costs "
+    h.append("<h2 id='upgrades'>Upgrade options</h2><p class='muted'>Now %d of %d boards fit, %d per full load; the environment costs "
              "about %s (stations, programmers, fixtures). One change at a time, best first; worth: %s per board type "
              "that fits (value_per_board), more for bigger batches; cost: the new parts and a new fixture for every "
              "board whose batch grows. <a href='upgrades.md'>upgrades.md</a> has the paths and how to make them "
