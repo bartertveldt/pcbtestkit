@@ -1199,6 +1199,221 @@ def t_set_facility(ws: Workspace, facility: str, rationale: str = "", dry_run: b
     return ws.apply(mutate, rationale, dry_run, confirm, what="set facility %s" % facility)
 
 
+@tool("set_test_environment", "Make this board's fixture and jigs for an existing test environment (a folder an "
+      "environment build made, or a station board): station (auto = the one that takes most) and batch (auto = as many "
+      "as it allows, or N); remember=true uses it for every future build. path 'none' switches it off.",
+      {"properties": dict({"path": {"type": "string"}, "station": {"type": "string"},
+                           "batch": {"description": "'auto' or a number"}, "remember": {"type": "boolean"}},
+                          **WRITE_COMMON), "required": ["path"]}, read_only=False, writes=True)
+def t_set_test_environment(ws: Workspace, path: str, station: str = "auto", batch: Any = "auto", remember: bool = False,
+                           rationale: str = "", dry_run: bool = False, confirm: bool = False):
+    from .environment import board_setup
+    p = str(path or "").strip()
+    if p.lower() not in ("none", ""):
+        p = os.path.abspath(p if os.path.isabs(p) else os.path.join(ws._d().project_dir, p))
+        if not os.path.exists(p):
+            raise ToolError("NOT_FOUND", "no test environment at %s" % p, hint="a folder with environment.json, or a station .kicad_pcb")
+    b_ = "auto" if str(batch).lower() == "auto" else int(_num(batch, "batch", 1, 64))
+    setting = {"path": p, "station": station or "auto", "batch": b_}
+    warns: List[str] = []
+    if p.lower() not in ("none", ""):
+        setup = board_setup(ws._d().board.path, setting, ws._d().config_path)
+        if setup.get("ok"):
+            warns.append("station %s, %d board(s) per batch%s" % (setup["station"], setup["batch"],
+                                                                 " (as many as it allows: %s)" % setup.get("limit") if setup.get("auto") else ""))
+        else:
+            warns.append("CONFIRM: %s" % setup.get("reason"))
+
+    def mutate(cfg):
+        cfg["environment"] = setting
+        return list(warns)
+    res = ws.apply(mutate, rationale, dry_run, confirm, what="set test environment %s" % (p or "remembered"))
+    if remember and not dry_run and p.lower() not in ("none", "") and res.get("saved", True):
+        from . import settings
+        settings.remember_environment(setting)
+    return res
+
+
+def _env_dir(ws: Workspace, path: str) -> str:
+    """An environment folder (relative to the open project's folder, else the working folder)."""
+    p = str(path or "").strip()
+    if not p:
+        raise ToolError("BAD_VALUE", "path is the test environment's folder (made by pcbtestkit environment build)")
+    if not os.path.isabs(p):
+        base = ws.design.project_dir if ws.design is not None else os.getcwd()
+        p = os.path.join(base, p)
+    p = os.path.abspath(p)
+    if not os.path.exists(os.path.join(p, "environment.json")):
+        raise ToolError("NOT_FOUND", "no environment.json in %s" % p, hint="the folder an environment build made")
+    return p
+
+
+def _env_load(ws: Workspace, path: str) -> Tuple[str, Dict[str, Any]]:
+    from .environment import _env_json
+    d = _env_dir(ws, path)
+    try:
+        return d, _env_json(d)
+    except ValueError as exc:
+        raise ToolError("BAD_ENVIRONMENT", str(exc))
+
+
+UPGRADE_ARGS = {
+    "options": {"type": "array", "items": {"type": "string"}, "description": "Option ids from get_environment (U1, ...)."},
+    "path_name": {"type": "string", "enum": ["value", "fit", "batch"], "description": "Take a path's changes: best value, "
+                  "most boards, biggest batches."},
+    "steps": {"type": "integer", "description": "Only the path's first N changes."},
+    "changes": {"type": "string", "description": "Changes of your own: 'station-1:can+1,ethernet+1,ain+8,supplies+2,"
+                "plate=400x300; supply_v=48; max_batch=16; new_station'."},
+    "fit": {"type": "array", "items": {"type": "string"}, "description": "Boards that must fit."},
+    "batch": {"type": "object", "description": "Board -> the batch it must have, e.g. {\"sensor_04\": 8}."},
+    "budget": {"type": "number", "description": "At most this much (the spec's currency)."},
+}
+
+
+def _upgrade_goal(env: Dict[str, Any], options: Optional[List[str]] = None, path_name: Optional[str] = None,
+                  steps: Optional[int] = None, changes: Optional[str] = None, fit: Optional[List[str]] = None,
+                  batch: Optional[Dict[str, Any]] = None, budget: Optional[float] = None) -> Dict[str, Any]:
+    from . import upgrades as U
+    chs: List[Dict[str, Any]] = []
+    if options or path_name:
+        opt = U.options(env)
+        ids = {o["id"]: o for o in opt["options"]}
+        for oid in options or []:
+            if str(oid).upper() not in ids:
+                raise ToolError("NOT_FOUND", "no option %s" % oid, hint="get_environment lists them (%s)" % ", ".join(ids))
+            chs.append(dict(ids[str(oid).upper()]["change"]))
+        if path_name:
+            st_ = (opt["paths"].get(path_name) or {}).get("steps") or []
+            chs += [dict(x["change"]) for x in st_[:steps or len(st_)]]
+    if changes:
+        try:
+            chs += U.parse_changes(changes)
+        except ValueError as exc:
+            raise ToolError("BAD_VALUE", str(exc))
+    for ch in chs:
+        if ch.get("kind") == "station" and "resources" in ch:
+            ch["res"] = ch.pop("resources")
+    try:
+        bt = {str(k): int(_num(v, "batch.%s" % k, 1, 64)) for k, v in (batch or {}).items()}
+        return U.plan_goal(env, fit=fit or [], batch=bt, budget=budget, changes=chs)
+    except ValueError as exc:
+        raise ToolError("BAD_VALUE", str(exc))
+
+
+@tool("get_environment", "A built test environment: its stations, layout, what limits the boards and the best upgrade "
+      "options with what they gain and cost; board=NAME gives that board's constraints.",
+      {"properties": {"path": {"type": "string"}, "board": {"type": "string"},
+                      "top": {"type": "integer", "description": "Upgrade options to list (default 8)."}},
+       "required": ["path"]})
+def t_get_environment(ws: Workspace, path: str, board: Optional[str] = None, top: int = 8):
+    from . import upgrades as U
+    d, env = _env_load(ws, path)
+    if board:
+        cons = [c for c in U.constraints(env) if str(board).lower() in (c["board"].lower(), c["folder"].lower())]
+        if not cons:
+            raise ToolError("NOT_FOUND", "no board %s in this environment" % board)
+        return {"board": cons[0]}
+    cons = U.constraints(env)
+    opt = U.options(env, top=max(1, min(30, int(top or 8))))
+    tally: Dict[str, int] = {}
+    for c in cons:
+        for w in c.get("limited_by") or []:
+            tally[w] = tally.get(w, 0) + 1
+    return {"name": env.get("name"), "summary": env["summary"], "layout": env.get("layout"),
+            "stations": [{"name": s_["name"], "rev": s_.get("rev", "A"), "focus": s_.get("focus"), "plate_mm": s_["plate_mm"],
+                          "resources": s_["resources"], "boards": len(s_["boards"]), "own": s_.get("own", False)}
+                         for s_ in env["stations"]],
+            "limited_by": dict(sorted(tally.items(), key=lambda kv: -kv[1])),
+            "fit_none": [{"board": c["board"], "fix": (c.get("to_fit") or {}).get("changes") or (c.get("to_fit") or {}).get("note"),
+                          "cost": (c.get("to_fit") or {}).get("cost")} for c in cons if c["status"] != "compatible"][:30],
+            "now": {k: v for k, v in opt["now"].items() if k != "cost_parts"}, "currency": opt["currency"],
+            "options": [{"id": o["id"], "text": o["text"], "boards_fit": o["gain"]["boards_fit"], "slots": o["gain"]["slots"],
+                         "cost": o["gain"]["cost"], "net": o["gain"]["net"], "flags": o["flags"]} for o in opt["options"]],
+            "paths": {k: {"steps": [x["text"] for x in v["steps"]], "total": v["total"]} for k, v in opt["paths"].items()},
+            "files": {"constraints": os.path.join(d, "constraints.md"), "upgrades": os.path.join(d, "upgrades.md")}}
+
+
+@tool("plan_environment_upgrade", "What changing a test environment gains and costs, without changing it: option ids, "
+      "a path, changes of your own, or goals (boards that must fit, batches, a budget) solved at the lowest cost.",
+      {"properties": dict({"path": {"type": "string"}}, **UPGRADE_ARGS), "required": ["path"]})
+def t_plan_environment_upgrade(ws: Workspace, path: str, **kw):
+    _d, env = _env_load(ws, path)
+    return _upgrade_goal(env, **kw)
+
+
+@tool("upgrade_environment", "Make a test environment upgrade and rebuild it in the background (hours for 100+ boards): "
+      "the stations keep every pin, so existing fixtures still plug in. Same arguments as plan_environment_upgrade; "
+      "needs confirm=true.",
+      {"properties": dict(dict({"path": {"type": "string"}}, **UPGRADE_ARGS),
+                          **{"dry_run": WRITE_COMMON["dry_run"], "confirm": WRITE_COMMON["confirm"],
+                             "when_done": {"type": "string", "enum": ["none", "sleep", "hibernate", "shutdown"]}}),
+       "required": ["path"]}, read_only=False)
+def t_upgrade_environment(ws: Workspace, path: str, dry_run: bool = False, confirm: bool = False,
+                          when_done: str = "none", **kw):
+    d, env = _env_load(ws, path)
+    goal = _upgrade_goal(env, **kw)
+    if not goal["changes"]:
+        return dict(goal, started=False, note="nothing to change")
+    if dry_run or not confirm:
+        return dict(goal, started=False, note="CONFIRM: call again with confirm=true to make these changes and rebuild "
+                                               "the environment in the background")
+    from .environment_job import launch
+    res = launch({"action": "upgrade", "env_dir": d, "out": d, "boards": [],
+                  "changes": [{k: v for k, v in c.items() if k != "text"} for c in goal["changes"]],
+                  "power": {"after": when_done}}, window=False)
+    if not res.get("ok"):
+        raise ToolError("NOT_STARTED", res.get("reason") or "the job did not start")
+    return dict(goal, started=True, pid=res["pid"], log=res["log"], status_tool="get_environment_job")
+
+
+@tool("add_boards_to_environment", "Add boards (project folders or .kicad_pcb files) to a built test environment in the "
+      "background: its stations stay, its boards are reused, the swap videos get the new boards. Needs confirm=true.",
+      {"properties": {"path": {"type": "string"}, "boards": {"type": "array", "items": {"type": "string"}},
+                      "new_stations": {"type": "boolean", "description": "Design a further station for new boards no "
+                                       "station takes (within max_stations; default true)."},
+                      "dry_run": WRITE_COMMON["dry_run"], "confirm": WRITE_COMMON["confirm"],
+                      "when_done": {"type": "string", "enum": ["none", "sleep", "hibernate", "shutdown"]}},
+       "required": ["path", "boards"]}, read_only=False)
+def t_add_boards_to_environment(ws: Workspace, path: str, boards: List[str], new_stations: bool = True,
+                                dry_run: bool = False, confirm: bool = False, when_done: str = "none"):
+    from .environment import discover
+    d, env = _env_load(ws, path)
+    base = ws.design.project_dir if ws.design is not None else os.getcwd()
+    full = [b if os.path.isabs(b) else os.path.abspath(os.path.join(base, b)) for b in boards or []]
+    found, warns = discover(full)
+    known = {b["folder"] for b in env.get("boards") or []}
+    new = [f for f in found if os.path.basename(os.path.dirname(f)) not in known]
+    if not found:
+        raise ToolError("NOT_FOUND", "no KiCad boards in %s" % ", ".join(boards or []), hint="project folders or .kicad_pcb files")
+    info = {"boards_found": len(found), "new": [os.path.splitext(os.path.basename(f))[0] for f in new][:40],
+            "warnings": warns[:10]}
+    if dry_run or not confirm:
+        return dict(info, started=False, note="CONFIRM: call again with confirm=true to build them into the environment")
+    from .environment_job import launch
+    res = launch({"action": "add", "env_dir": d, "out": d, "boards": found, "new_stations": bool(new_stations),
+                  "power": {"after": when_done}}, window=False)
+    if not res.get("ok"):
+        raise ToolError("NOT_STARTED", res.get("reason") or "the job did not start")
+    return dict(info, started=True, pid=res["pid"], log=res["log"], status_tool="get_environment_job")
+
+
+@tool("get_environment_job", "How far a test environment's background job is (build, add, upgrade): state, message, "
+      "fraction; and what it will do with the computer's power afterwards.",
+      {"properties": {"path": {"type": "string"}}, "required": ["path"]})
+def t_get_environment_job(ws: Workspace, path: str):
+    from . import environment_job as J
+    from . import power as PW
+    p = str(path or "")
+    p = os.path.abspath(p if os.path.isabs(p) else os.path.join(ws.design.project_dir if ws.design is not None else os.getcwd(), p))
+    st = J.status(p)
+    if not st:
+        raise ToolError("NOT_FOUND", "no environment job in %s" % p)
+    pw = PW.status(p) or {}
+    return {"state": st.get("state"), "message": st.get("message"), "fraction": st.get("fraction"),
+            "elapsed_s": st.get("elapsed_s"), "running": J.running(p), "summary": st.get("summary"),
+            "power": {k: pw.get(k) for k in ("state", "after", "describe", "at") if pw.get(k) is not None} or None}
+
+
 STACK_SCHEMA = {
     "type": "object", "additionalProperties": False,
     "properties": {

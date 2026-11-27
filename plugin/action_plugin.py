@@ -35,3 +35,30 @@ class PCBTestKitPlugin(pcbnew.ActionPlugin):
             return
         dlg.ShowModal()
         dlg.Destroy()
+
+
+class PCBTestKitEnvironmentPlugin(pcbnew.ActionPlugin):
+    """Many boards at once: the test environment (stations) every board fits, with all their fixtures and guides."""
+
+    def defaults(self):
+        self.name = "PCB TestKit - test environment for many boards"
+        self.category = "Manufacturing"
+        self.description = ("Design 1-3 test stations that a whole collection of KiCad projects fits and make every "
+                            "station, fixture, guide and swap video.")
+        self.show_toolbar_button = False
+        self.icon_file_name = os.path.join(ROOT, "resources", "icon.png")
+        self.dark_icon_file_name = os.path.join(ROOT, "resources", "icon_dark.png")
+
+    def Run(self):
+        board = pcbnew.GetBoard()
+        path = board.GetFileName() if board else ""
+        parent = wx.FindWindowByName("PcbFrame")
+        from .environment_dialog import EnvironmentDialog
+        try:
+            dlg = EnvironmentDialog(parent, path if path and os.path.exists(path) else "")
+        except Exception:
+            import traceback
+            wx.MessageBox(traceback.format_exc(), "PCB TestKit", wx.ICON_ERROR)
+            return
+        dlg.ShowModal()
+        dlg.Destroy()

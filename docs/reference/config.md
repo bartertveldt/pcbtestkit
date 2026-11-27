@@ -228,8 +228,23 @@ Fixture PCB outline, margins, N x M panel, mounting holes, dividers, routing (tr
       "tip_gap_mm": 1.0,
       "spring_free_mm": 10.0,
       "spring_solid_mm": 3.5,
-      "finger_mm": 4.0
+      "finger_mm": 4.0,
+      "site_gap_mm": 3.0
     }
+  }
+}
+```
+
+## `environment`
+
+
+
+```json
+{
+  "environment": {
+    "path": "",
+    "station": "auto",
+    "batch": "auto"
   }
 }
 ```
@@ -362,6 +377,21 @@ Which files a run writes by default.
     "visuals": true,
     "video": false,
     "keep_scenes": false
+  }
+}
+```
+
+## `visuals`
+
+
+
+```json
+{
+  "visuals": {
+    "quality": "best",
+    "width": 1600,
+    "height": 1000,
+    "workers": 0
   }
 }
 ```

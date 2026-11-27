@@ -329,8 +329,17 @@ ISO_BOTTOM = "-40,0,155"      # seen from the board's bottom side: the jig lies 
 def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]], jig: Optional[Dict[str, Any]],
                   paths: Dict[str, str], out_dir: str, size: Tuple[int, int] = (1600, 1000)) -> Dict[str, Any]:
     """Render all stills. Returns {"images": {name: png path}, "log", "available"}."""
-    rd = Renderer(out_dir, size[0], size[1])
+    vc = (design.cfg.get("visuals") or {}) if hasattr(design, "cfg") else {}
+    if vc.get("width") and vc.get("height") and tuple(size) == (1600, 1000):
+        size = (int(vc["width"]), int(vc["height"]))
+    rd = Renderer(out_dir, size[0], size[1], quality=str(vc.get("quality") or "best"))
     res: Dict[str, Any] = {"images": {}, "log": rd.log, "available": rd.available}
+    from .animate import default_workers
+    workers = int(vc.get("workers") or 0) or default_workers()
+    queue: List[Tuple[str, tuple, Dict[str, Any]]] = []      # stills to render, several at a time (see below)
+
+    def later(name: str, *a, **k) -> None:
+        queue.append((name, a, k))
     if not rd.available:
         rd.log.append("kicad-cli not found: 3D renders skipped")
         return res
@@ -344,15 +353,13 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
 
     # ---- the DUT itself -------------------------------------------------------------------
     for name, side, rot in (("dut_iso", "top", ISO_TOP), ("dut_top", "top", None), ("dut_bottom", "bottom", None)):
-        if rd.render(b.path, P(name), side=side, rotate=rot):
-            img[name] = P(name)
+        later(name, b.path, P(name), side=side, rotate=rot)
     dut_wrl = os.path.join(sd, "dut.wrl")
     have_dut_wrl = rd.export_vrml(b.path, dut_wrl, (bb.cx, bb.cy))
 
     # ---- fixture ----------------------------------------------------------------------------
     if fixture and paths.get("fixture") and os.path.exists(paths["fixture"]):
-        if rd.render(paths["fixture"], P("fixture_iso"), rotate=ISO_TOP):
-            img["fixture_iso"] = P("fixture_iso")
+        later("fixture_iso", paths["fixture"], P("fixture_iso"), rotate=ISO_TOP)
         if have_dut_wrl:
             with open(paths["fixture"], "r", encoding="utf-8") as fh:
                 fx_text = fh.read().replace("${KIPRJMOD}", sexpr_path(os.path.dirname(os.path.abspath(paths["fixture"]))))
@@ -384,8 +391,7 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
             if nest.get("enabled"):                     # in its nest, above the pins, clamp open
                 shots.insert(1, ("fixture_dut_loaded", float(nest["heights"]["travel"]), ISO_TOP, 0.8, False))
             for name, lift, rot, zoom, pressed in shots:
-                if rd.render(fixture_scene(lift, name, pressed), P(name), rotate=rot, zoom=zoom):
-                    img[name] = P(name)
+                later(name, fixture_scene(lift, name, pressed), P(name), rotate=rot, zoom=zoom)
 
     # ---- solder jig -----------------------------------------------------------------------------
     if jig and paths.get("jig_stl") and os.path.exists(paths["jig_stl"]):
@@ -401,8 +407,7 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
         plate_path = os.path.join(sd, "jig_alone.kicad_pcb")
         with open(plate_path, "w", encoding="utf-8") as fh:
             fh.write(W.board([], plate, thickness=0.2))
-        if rd.render(plate_path, P("jig_iso"), rotate=ISO_TOP, zoom=0.85):
-            img["jig_iso"] = P("jig_iso")
+        later("jig_iso", plate_path, P("jig_iso"), rotate=ISO_TOP, zoom=0.85)
         with open(b.path, "r", encoding="utf-8") as fh:
             dut_text = fh.read()
         parts = jig.get("parts_to_place", [])
@@ -429,8 +434,21 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
 
         gap = max(15.0, support * 1.1, 0.16 * max(bb.w, bb.h))
         for name, g, inj in (("jig_exploded", gap, True), ("jig_assembled", 0.0, False)):
-            if rd.render(jig_scene(g, inj, name), P(name), side="bottom", rotate=ISO_BOTTOM, zoom=0.75):
-                img[name] = P(name)
+            later(name, jig_scene(g, inj, name), P(name), side="bottom", rotate=ISO_BOTTOM, zoom=0.75)
+    # every still above at once, ``workers`` kicad-cli calls at a time (each spends ~0.5 s starting before its
+    # multi-threaded ray tracer runs, so several at once keep every core busy)
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    if rd.quality in RAYTRACE_PRESETS:
+        rd.env_for(rd.quality)                      # its settings folder, once, before the threads start
+    with ThreadPoolExecutor(max_workers=max(1, min(workers, len(queue) or 1))) as ex:
+        futs = {ex.submit(rd.render, *a, **k): name for name, a, k in queue}
+        for fut in as_completed(futs):
+            try:
+                if fut.result():
+                    img[futs[fut]] = P(futs[fut])
+            except Exception as exc:  # a still that fails is left out of the guide
+                rd.log.append("render %s failed: %r" % (futs[fut], exc))
+    if jig and paths.get("jig_stl") and os.path.exists(paths["jig_stl"]):
         # two-jig workflow: one still per step (print, fit the parts, holding jig on top, turned over, solder)
         if str(jig.get("workflow", "")) == "two_jig" and jig.get("placement"):
             try:
@@ -438,7 +456,7 @@ def build_visuals(design, plan: Dict[str, Any], fixture: Optional[Dict[str, Any]
                 st = Stage(design, plan, fixture, jig, paths, rd, out_dir, size=size, quality=rd.quality)
                 shot = st.step_stills()
                 if shot is not None:
-                    render_shots([shot], rd)
+                    render_shots([shot], rd, workers)
                     for f in shot.files:
                         img[os.path.splitext(os.path.basename(f))[0]] = f
                 rd.log.extend(st.log)

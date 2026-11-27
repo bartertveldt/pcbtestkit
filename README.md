@@ -31,6 +31,7 @@ the placement jig comes off and every lead is soldered.*
 - [The solder jigs](#the-solder-jigs)
 - [The test runner (Raspberry Pi / MCU)](#the-test-runner-raspberry-pi--mcu)
 - [Your own tester: test facilities](#your-own-tester-test-facilities)
+- [Test environments: 100+ boards, one to three testers](#test-environments-100-boards-one-to-three-testers)
 - [Visual guide and explainer video](#visual-guide-and-explainer-video)
 - [AI assistants and automation](#ai-assistants-and-automation)
 - [Configuration](#configuration-pcbtestkitjson)
@@ -56,7 +57,7 @@ the placement jig comes off and every lead is soldered.*
 | **`<board>-report.html`** | Everything above on one page, with a board map. |
 | **`<board>-guide.html`** | A step-by-step visual guide with KiCad 3D renders: what to fix, how to build the fixture, how to test, how to use the jig. |
 | **`<board>-explainer.mp4`** | Optional ~50 s video with real 3D animation rendered by KiCad: assembly, jig, fixture, test. |
-| **AI interface** | 34 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
+| **AI interface** | 35 validated tools via CLI, MCP server and Python, an agent skill, `AGENTS.md` and `llms.txt`, designed for low token use. |
 
 Everything runs locally. The core uses only the Python standard library and reads KiCad 6-10 files directly, so
 it also works on the command line, in CI and on the Pi. No AI service or account is needed for any of it: every
@@ -438,6 +439,51 @@ pcbtestkit station run  examples/station/test_station.kicad_pcb boardA/ boardB/ 
 
 The connector is found by its net names (`GND`, `AIN<n>`, `VOUT<n>`, `DIO<n>`, `CAN<n>_H/L`, `UART<n>_TX/RX`,
 `I2C<n>_SDA/SCL`, `RS485_<n>_A/B`); `--connector J1` picks it when the board has several.
+
+
+## Test environments: 100+ boards, one to three testers
+
+A line that makes many different boards wants as few testers as possible. `pcbtestkit environment` takes every KiCad
+project you make, works out what each board needs from a tester (measurement channels, a switched supply and its
+voltage, CAN, UART, I2C, RS-485, USB, Ethernet through the fixture, the programming interface, the room its fixture
+site takes) and designs the test station, or two or three, that as many of them as possible fit, with the batch of
+each board type as large as the station allows. Then it makes everything:
+
+- **Each station's own KiCad board**: the plate every fixture copies, its mounting holes, its interface socket(s)
+  with every analog input, supply, bus instance and GND named by net, and its electronics as parts.
+- **Every board type's outputs on its station**: fixture (with a nest and clamp per board of the batch), guide,
+  report, jigs, runner; optionally its explainer video.
+- **A page and a video per station**: which board uses which pins, how to swap fixtures, and every fixture sliding
+  onto the station with its boards.
+- **`index.html` and `requirements.md`**: exactly what each station must offer (inputs and range, supplies with their
+  voltages and current, each bus with the boards that use it, programmers per interface, plate, sockets), a ranking
+  of the boards (priority, batch, what limits it) and every board that does not fit with the reason.
+
+```bash
+pcbtestkit environment plan  ~/kicad-projects                          # minutes: stations, which board where
+pcbtestkit environment build ~/kicad-projects --out ~/test-environment # everything (add --video all for every explainer)
+pcbtestkit environment init --out env-spec.json                        # the settings: plate, sockets, limits, priorities
+pcbtestkit environment build ~/kicad-projects --out ~/test-environment --video all \
+    --background --lid --when-done shutdown                            # overnight: lid closed, then shut down
+pcbtestkit environment add ~/test-environment ~/kicad-projects/new-board   # new boards: the stations stay
+pcbtestkit environment upgrade ~/test-environment --fit hv_driver --budget 1500   # what it gains and costs; --apply
+```
+
+Stations are laid out by worth and cost: one main station, or stations each made for a group of boards (a
+CAN station and an Ethernet station when that pays), from rough prices you can set (`costs`). Every build documents
+what limits each board (`constraints.md`) and ranks the upgrades with what they gain and cost (`upgrades.md`);
+`environment upgrade` makes one so that every fixture you have still plugs in, and an AI assistant can do the same
+through the MCP tools (`get_environment`, `plan_environment_upgrade`, `upgrade_environment`).
+
+Your own environment: edit the spec (what your station may have), edit a generated station board in KiCad and build
+again with `--environment <out>` (its stations are kept, new ones are only designed for what they cannot take), or
+give a station of your own with `--station`. **New boards for the environment you have:** `pcbtestkit environment use
+<out>` remembers it, and from then on every `pcbtestkit run` (and the KiCad dialog) makes the board's fixture and
+jigs for the station that takes most of them, with the largest batch it allows safely (or a batch you set), so
+nothing new is ordered for the tester. In KiCad: *Tools > External Plugins > PCB TestKit - test environment for
+many boards* (or *Many boards...* in the PCB TestKit dialog) does all of it without the command line, in the
+background. How it decides, every setting and the reasons a board does not fit: [docs/ENVIRONMENTS.md](docs/ENVIRONMENTS.md).
+`examples/make_collection.py` generates a collection of 100+ varied boards to try it on.
 
 ---
 

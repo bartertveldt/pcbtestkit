@@ -36,3 +36,11 @@ pcbtestkit api read_output --project P --args '{"file":"spec","pointer":"/electr
 Pointers follow RFC 6901: `/a/b/0`. A missing pointer returns `BAD_POINTER` with the keys that exist.
 Prefer the live tools over files when possible: `get_overview`, `list_findings`, `get_testplan`, `check_classes`
 answer from the board directly and don't need a prior `run`.
+
+## A test environment's folder (`environment build --out DIR`)
+
+Read it with the tools, not the files: `get_environment` (stations, layout, what limits the boards, the best
+upgrade options, about 4 KB; `board=NAME` for one board), `plan_environment_upgrade` for what-ifs. The files, if
+you must: `environment.json` (`summary`, `stations[].requirements`, `layouts`, `boards[]`), `constraints.json`
+(`boards[]`: `limits`, `limited_by`, `next`, `to_fit`), `upgrades.json` (`options[]` with `id`, `change`, `gain`;
+`paths`), `ranking.csv`. Never read `index.html`, the station boards or anything under `stations/` whole.

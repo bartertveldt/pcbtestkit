@@ -21,7 +21,7 @@ import json
 import math
 import os
 import time
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from . import __version__
 from . import facility as F
@@ -72,7 +72,7 @@ def _inline(fac: Dict[str, Any]) -> Dict[str, Any]:
 
 def _design(project: str, fac: Dict[str, Any], count: int, overrides: Optional[Dict[str, Any]] = None):
     from .project import Design
-    ov = {"facility": _inline(fac), "batch": {"count": int(count)}}
+    ov = {"facility": _inline(fac), "batch": {"count": int(count)}, "environment": {"path": "none"}}
     for k, v in (overrides or {}).items():
         ov[k] = dict(ov.get(k) or {}, **v) if isinstance(v, dict) and isinstance(ov.get(k), dict) else v
     return Design.load(project, overrides=ov)
@@ -81,8 +81,10 @@ def _design(project: str, fac: Dict[str, Any], count: int, overrides: Optional[D
 # --------------------------------------------------------------------------- #
 # planning: how many boards of each type one fixture holds
 # --------------------------------------------------------------------------- #
-def plan_board(project: str, fac: Dict[str, Any], batch: Optional[int] = None, check_plate: bool = True) -> Dict[str, Any]:
-    """One board type on the station: what a board needs, how many fit at once and what limits it."""
+def plan_board(project: str, fac: Dict[str, Any], batch: Optional[int] = None, check_plate: bool = True,
+               hint: Optional[int] = None) -> Dict[str, Any]:
+    """One board type on the station: what a board needs, how many fit at once and what limits it. ``hint``: a
+    batch the plate probably takes (the search starts there and goes up or down instead of down from the most)."""
     from .pipeline import analyze
     t0 = time.time()
     d1 = _design(project, fac, 1)
@@ -92,7 +94,9 @@ def plan_board(project: str, fac: Dict[str, Any], batch: Optional[int] = None, c
     cap = F.capacity(fac)
     fit = F.max_sites(cap, need)
     row: Dict[str, Any] = {"name": d1.board.name, "project": os.path.abspath(project), "size_mm": [round(bb.w, 1), round(bb.h, 1)],
-                           "needs": need, "max_by": dict(fit["by"]), "limit": fit["limit"], "requested": batch}
+                           "needs": need, "max_by": dict(fit["by"]), "limit": fit["limit"], "requested": batch,
+                           "supply_v": (plan1.get("supply") or {}).get("voltage"), "probe_side": plan1.get("probe_side"),
+                           "probes": len(plan1.get("probes") or [])}
     n = fit["count"] if batch is None else min(int(batch), fit["count"])
     if batch is not None and int(batch) > fit["count"]:
         row["note"] = "%d requested; the station serves at most %d (its %s)" % (int(batch), fit["count"], fit["limit"])
@@ -110,12 +114,14 @@ def plan_board(project: str, fac: Dict[str, Any], batch: Optional[int] = None, c
         entries = [own] if (own != "front" or not nc.get("enabled", True)) else ["front", "left"]
         best, last_fx = 0, None
         for e in entries:
-            m_e, c_e, fx_e = _plate_fit(project, fac, findings, n, e if nc.get("enabled", True) else None)
+            m_e, c_e, fx_e = _plate_fit(project, fac, findings, n, e if nc.get("enabled", True) else None, hint)
             last_fx = last_fx or fx_e
             if m_e > best:
                 best, cols, entry, last_fx = m_e, c_e, e, fx_e
             if best >= n:
                 break
+        real = ((last_fx or {}).get("nest") or {}).get("entry") if (last_fx or {}).get("plate_fit", True) else None
+        entry = real or entry                       # the fixture may have turned the nests itself to fit the plate
         if entry and entry != own:
             row["entry"] = entry
         if best < n:
@@ -143,26 +149,42 @@ def plan_board(project: str, fac: Dict[str, Any], batch: Optional[int] = None, c
     return row
 
 
-def _plate_fit(project: str, fac: Dict[str, Any], findings, n: int, entry: Optional[str]):
-    """(largest batch <= n whose fixture fits the station's plate, its column count or None, the last fixture)."""
+def _plate_fit(project: str, fac: Dict[str, Any], findings, n: int, entry: Optional[str], hint: Optional[int] = None):
+    """(largest batch <= n whose fixture fits the station's plate, its column count or None, the last fixture).
+    With ``hint`` the search starts there: up while it fits, else down."""
     from .fixture import build_fixture
     from .testplan import build_testplan
     fxo: Dict[str, Any] = {"route": False}
     if entry:
         fxo["nest"] = {"entry": entry}
+    tried: Dict[int, Tuple[bool, Optional[int], Any]] = {}
+
+    def fits(m: int) -> Tuple[bool, Optional[int], Any]:
+        if m not in tried:
+            dm = _design(project, fac, m, {"fixture": fxo})
+            fx = build_fixture(dm, build_testplan(dm, findings))
+            ok, cols = bool(fx.get("plate_fit", True)), None
+            if not ok and fx.get("plate_fits_cols"):
+                c = fx["plate_fits_cols"][0]        # another column count fits: confirm it
+                dm = _design(project, fac, m, {"fixture": fxo, "batch": {"cols": c}})
+                fx2 = build_fixture(dm, build_testplan(dm, findings))
+                if fx2.get("plate_fit", True):
+                    ok, cols, fx = True, c, fx2
+            tried[m] = (ok, cols, fx)
+        return tried[m]
+    if hint and 1 <= hint < n:
+        m = int(hint)
+        if fits(m)[0]:
+            while m < n and fits(m + 1)[0]:
+                m += 1
+            return m, tried[m][1], tried[m][2]
+        n = m - 1
     last_fx = None
     for m in range(n, 0, -1):                       # largest batch whose fixture fits the station's plate
-        dm = _design(project, fac, m, {"fixture": fxo})
-        fx = build_fixture(dm, build_testplan(dm, findings))
+        ok, cols, fx = fits(m)
         last_fx = fx
-        if fx.get("plate_fit", True):
-            return m, None, fx
-        if fx.get("plate_fits_cols"):
-            c = fx["plate_fits_cols"][0]            # another column count fits: confirm it
-            dm = _design(project, fac, m, {"fixture": fxo, "batch": {"cols": c}})
-            fx = build_fixture(dm, build_testplan(dm, findings))
-            if fx.get("plate_fit", True):
-                return m, c, fx
+        if ok:
+            return m, cols, fx
     return 0, None, last_fx
 
 
@@ -194,74 +216,200 @@ def plan_station(spec: str, projects: List[str], batches: Optional[Dict[str, int
             b["folder"] = b["name"]
     return {"schema": SCHEMA, "generator": "PCB TestKit %s" % __version__, "station": F.summary(fac),
             "station_source": os.path.basename(fac.get("_station_path") or spec), "capacity": cap,
-            "connector": _connector_brief(fac), "boards": boards, "warnings": warns, "_facility": fac}
+            "connector": _connector_brief(fac), "connectors": connector_briefs(fac), "boards": boards, "warnings": warns,
+            "_facility": fac}
 
 
 def _connector_brief(fac: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    briefs = connector_briefs(fac)
+    return briefs[0] if briefs else None
+
+
+def connector_briefs(fac: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Every interface socket of the station (the shared ones; else all), for the pin maps."""
     sh = [c for c in F.connectors(fac) if c.get("shared")] or F.connectors(fac)
-    if not sh:
-        return None
-    c = sh[0]
-    return {"name": c.get("name", "TESTER"), "pins_across": int(c.get("pins_across", 2)), "pins_along": int(c["pins_along"]),
-            "pitch_mm": float(c.get("pitch_mm", 2.54)), "numbering": c.get("numbering", "zigzag"),
-            "functions": {int(k): v for k, v in c["pins"].items()}}
+    return [{"name": c.get("name", "TESTER"), "pins_across": int(c.get("pins_across", 2)), "pins_along": int(c["pins_along"]),
+             "pitch_mm": float(c.get("pitch_mm", 2.54)), "numbering": c.get("numbering", "zigzag"),
+             "functions": {int(k): v for k, v in c["pins"].items()}} for c in sh]
 
 
 # --------------------------------------------------------------------------- #
 # running: every board's outputs for its batch, the station page, the station video
 # --------------------------------------------------------------------------- #
+def _stamp_key(project: str, fac: Dict[str, Any], batch: int, ov: Dict[str, Any], flags: Dict[str, Any]) -> str:
+    """What a board's outputs on a station depend on: its files, the station, its batch and settings, the version."""
+    import hashlib
+    from .project import locate
+    h = hashlib.sha1()
+    pcb, _sch, pro = locate(project)
+    for p in (pcb, os.path.join(os.path.dirname(pcb), "pcbtestkit.json"), _sch):
+        if p and os.path.exists(p):
+            with open(p, "rb") as fh:
+                h.update(fh.read())
+    h.update(json.dumps([_inline(fac), batch, ov, flags, __version__], sort_keys=True, default=str).encode())
+    return h.hexdigest()
+
+
+STAMP = ".pcbtestkit-station.json"
+
+
+def board_outputs(job: Dict[str, Any]) -> Dict[str, Any]:
+    """One board type's outputs on a station (runs in a worker process): {"outputs", "warnings", "fixture", "pins",
+    "probe_side"} with paths relative to ``out_dir``, or {"error"}. ``resume``: reuse what an earlier run made
+    when nothing it depends on changed."""
+    from .pipeline import run_pipeline
+    fac, b, out_dir = job["fac"], job["board"], job["out_dir"]
+    ov: Dict[str, Any] = {"fixture": {} if job.get("route", True) else {"route": False}}
+    if b.get("cols"):
+        ov["batch"] = {"cols": b["cols"]}
+    if b.get("entry"):                              # the nests turned to fit the plate (see plan_board)
+        ov["fixture"]["nest"] = {"entry": b["entry"]}
+    if job.get("video_workers"):
+        ov["video"] = {"workers": int(job["video_workers"])}
+    if job.get("router") and job.get("route", True):
+        ov["fixture"]["router"] = dict(job["router"])
+    for k, v in (job.get("board_cfg") or {}).items():         # e.g. the guide renders' quality
+        ov[k] = dict(ov.get(k) or {}, **v) if isinstance(v, dict) else v
+    if job.get("render_workers"):                             # boards side by side share the cores
+        ov["visuals"] = dict(ov.get("visuals") or {}, workers=int(job["render_workers"]))
+    bdir = os.path.join(out_dir, b["folder"])
+    flags = {"visuals": job.get("visuals", True), "video": job.get("board_videos", False)}
+    try:
+        key = _stamp_key(b["project"], fac, int(b["batch"]), ov, flags)
+    except (OSError, ValueError) as exc:
+        return {"error": "%s: %s" % (type(exc).__name__, exc)}
+    stamp = os.path.join(bdir, STAMP)
+    if job.get("resume"):
+        try:
+            with open(stamp, encoding="utf-8") as fh:
+                old = json.load(fh)
+            if old.get("key") == key and all(os.path.exists(os.path.join(out_dir, v)) for v in old["result"]["outputs"].values()):
+                return dict(old["result"], reused=True)
+        except (OSError, ValueError, KeyError):
+            pass
+    try:
+        d = _design(b["project"], fac, int(b["batch"]), ov)
+        res = run_pipeline(d, out_dir=bdir, include_kicad=False, outputs=flags)
+        out: Dict[str, Any] = {"outputs": {k: os.path.relpath(v, out_dir) for k, v in res["paths"].items() if isinstance(v, str)}}
+        out["warnings"] = [w for w in res.get("fixture_warnings", []) + res.get("warnings", []) if "station" in w or "fit" in w][:6]
+        with open(res["paths"]["fixture_meta"], encoding="utf-8") as fh:
+            fxm = json.load(fh)
+        out["fixture"] = {"sites": [{"site": s_["site"], "offset": s_["offset"]} for s_ in fxm.get("sites", [])],
+                          "outline": fxm.get("outline"), "connector": (fxm.get("facility") or {}).get("connectors"),
+                          "drc": fxm.get("drc"), "routing": {k: (fxm.get("routing") or {}).get(k) for k in
+                                                             ("connections", "unrouted_connections")}}
+        out["nest"] = {k: (fxm.get("nest") or {}).get(k) for k in ("enabled", "style", "entry", "heights")}
+        with open(res["paths"]["testplan"], encoding="utf-8") as fh:
+            tp = json.load(fh)
+        out["pins"] = [q for c in (tp.get("facility") or {}).get("connectors") or [] for q in c["pins"]]
+        out["pins_by"] = {c.get("name", "TESTER"): c["pins"] for c in (tp.get("facility") or {}).get("connectors") or []}
+        out["probe_side"] = tp.get("probe_side")
+        out["programming"] = sorted({h.get("protocol") or "?" for h in (tp.get("program") or {}).get("headers") or []})
+        if res.get("video"):
+            out["video"] = {k: v for k, v in res["video"].items() if k in ("ok", "reason")}
+    except Exception as exc:  # one board must never stop the others
+        return {"error": "outputs failed: %s: %s" % (type(exc).__name__, exc)}
+    try:
+        with open(stamp, "w", encoding="utf-8") as fh:
+            json.dump({"key": key, "result": out}, fh, indent=1, default=str)
+    except OSError:
+        pass
+    return out
+
+
+def run_jobs(fn: Callable[[Dict[str, Any]], Dict[str, Any]], jobs: List[Dict[str, Any]], workers: int,
+             done: Optional[Callable[[int, int, Dict[str, Any], Dict[str, Any]], None]] = None) -> List[Dict[str, Any]]:
+    """fn over jobs, ``workers`` at a time in separate processes (1 = in this process), results in job order.
+    Falls back to one at a time when worker processes cannot be started (inside KiCad)."""
+    results: List[Optional[Dict[str, Any]]] = [None] * len(jobs)
+    n = 0
+    if workers > 1 and len(jobs) > 1:
+        try:
+            import multiprocessing
+            from concurrent.futures import ProcessPoolExecutor, as_completed
+            from concurrent.futures.process import BrokenProcessPool
+            ctx = multiprocessing.get_context("spawn")
+            with ProcessPoolExecutor(max_workers=min(workers, len(jobs)), mp_context=ctx) as ex:
+                futs = {ex.submit(fn, j): i for i, j in enumerate(jobs)}
+                for f in as_completed(futs):
+                    i = futs[f]
+                    try:
+                        results[i] = f.result()
+                    except BrokenProcessPool:        # the workers could not start: do them here (below)
+                        continue
+                    except Exception as exc:         # a worker that died
+                        results[i] = {"error": "worker failed: %s: %s" % (type(exc).__name__, exc)}
+                    n += 1
+                    if done:
+                        done(n, len(jobs), jobs[i], results[i])
+        except (OSError, ImportError, RuntimeError, NotImplementedError):
+            pass
+    for i, j in enumerate(jobs):
+        if results[i] is not None:
+            continue
+        try:
+            results[i] = fn(j)
+        except Exception as exc:
+            results[i] = {"error": "%s: %s" % (type(exc).__name__, exc)}
+        n += 1
+        if done:
+            done(n, len(jobs), j, results[i])
+    return [r or {"error": "no result"} for r in results]
+
+
 def run_station(spec: str, projects: List[str], out_dir: str, batches: Optional[Dict[str, int]] = None,
                 connector: Optional[str] = None, extra: Optional[Dict[str, Any]] = None, visuals: bool = True,
                 board_videos: bool = False, station_video: bool = False, route: bool = True,
-                progress: Optional[Callable[[str, float], None]] = None) -> Dict[str, Any]:
-    """Plan the station, then make every fitting board's outputs in <out_dir>/<board>/ and the station's page
-    (<out_dir>/station.html, station.json). Returns the station result (paths relative to out_dir)."""
-    from .pipeline import run_pipeline
+                progress: Optional[Callable[[str, float], None]] = None, planned: Optional[Dict[str, Any]] = None,
+                jobs: int = 1, resume: bool = False, video_boards: Optional[int] = None,
+                title: Optional[str] = None, router: Optional[Dict[str, Any]] = None,
+                board_cfg: Optional[Dict[str, Any]] = None, video_quality: str = "basic",
+                video_prefer: Sequence[str] = ()) -> Dict[str, Any]:
+    """Plan the station (or take ``planned``, a plan_station result), then make every fitting board's outputs in
+    <out_dir>/<board>/ (``jobs`` boards at a time; ``resume`` keeps what is still up to date) and the station's
+    page (<out_dir>/station.html, station.json); ``video_boards``: board types in the station video (the first N).
+    Returns the station result (paths relative to out_dir)."""
 
     def step(msg: str, frac: float) -> None:
         if progress:
             progress(msg, frac)
 
     os.makedirs(out_dir, exist_ok=True)
-    st = plan_station(spec, projects, batches, connector, extra, progress=lambda m, f: step(m, 0.2 * f))
+    st = planned if planned is not None else plan_station(spec, projects, batches, connector, extra,
+                                                           progress=lambda m, f: step(m, 0.2 * f))
     fac = st.pop("_facility")
+    if title:
+        st["title"] = title
     ok = [b for b in st["boards"] if b.get("status") == "ok"]
-    for i, b in enumerate(ok):
-        step("Making the outputs for %s (batch of %d)" % (b["name"], b["batch"]), 0.2 + 0.6 * i / max(1, len(ok)))
-        ov: Dict[str, Any] = {"fixture": {} if route else {"route": False}}
-        if b.get("cols"):
-            ov["batch"] = {"cols": b["cols"]}
-        if b.get("entry"):                          # the nests turned to fit the plate (see plan_board)
-            ov["fixture"]["nest"] = {"entry": b["entry"]}
-        d = _design(b["project"], fac, b["batch"], ov)
-        bdir = os.path.join(out_dir, b["folder"])
-        try:
-            res = run_pipeline(d, out_dir=bdir, include_kicad=False,
-                               outputs={"visuals": visuals, "video": board_videos})
-        except Exception as exc:
-            b.update(status="error", reason="outputs failed: %s: %s" % (type(exc).__name__, exc))
+    cores = os.cpu_count() or 2
+    work = [{"fac": b.pop("_fac", None) or fac, "board": b, "out_dir": out_dir, "route": route, "visuals": visuals, "board_videos": board_videos,
+             "resume": resume,
+             "video_workers": max(2, cores // max(1, min(int(jobs), len(ok) or 1))) if board_videos and jobs > 1 else 0,
+             "router": router, "board_cfg": board_cfg,
+             "render_workers": max(1, cores // max(1, min(int(jobs), len(ok) or 1))) if jobs > 1 else 0}
+            for b in ok]
+    step("Making the outputs for %d board type(s)" % len(ok), 0.2)
+
+    def done(n: int, total: int, job: Dict[str, Any], res: Dict[str, Any]) -> None:
+        step("Outputs %d of %d: %s%s" % (n, total, job["board"]["name"], " (up to date)" if res.get("reused") else ""),
+             0.2 + 0.6 * n / max(1, total))
+    for b, res in zip(ok, run_jobs(board_outputs, work, max(1, int(jobs)), done)):
+        if res.get("error"):
+            b.update(status="error", reason=res["error"])
             continue
-        b["outputs"] = {k: os.path.relpath(v, out_dir) for k, v in res["paths"].items() if isinstance(v, str)}
-        b["warnings"] = [w for w in res.get("fixture_warnings", []) + res.get("warnings", []) if "station" in w or "fit" in w][:6]
-        with open(res["paths"]["fixture_meta"], encoding="utf-8") as fh:
-            fxm = json.load(fh)
-        b["fixture"] = {"sites": [{"site": s["site"], "offset": s["offset"]} for s in fxm.get("sites", [])],
-                        "outline": fxm.get("outline"), "connector": (fxm.get("facility") or {}).get("connectors")}
-        with open(res["paths"]["testplan"], encoding="utf-8") as fh:
-            tp = json.load(fh)
-        b["pins"] = [q for c in (tp.get("facility") or {}).get("connectors") or [] for q in c["pins"]]
-        b["probe_side"] = tp.get("probe_side")
+        b.update({k: v for k, v in res.items() if k != "reused"})
     st["boards_ok"] = sum(1 for b in st["boards"] if b.get("status") == "ok")
     if station_video:
         step("Rendering the station video with KiCad (several minutes)", 0.82)
         from .station_video import build_station_video
         try:
             vres = build_station_video(st, fac, out_dir, progress=lambda a, n: step("Station video frame %d of %d" % (a, n),
-                                                                                        0.82 + 0.15 * a / max(1, n)))
+                                                                                        0.82 + 0.15 * a / max(1, n)),
+                                       max_boards=video_boards, quality=video_quality, prefer=video_prefer)
         except Exception as exc:  # the video is optional
             vres = {"ok": False, "reason": "%s: %s" % (type(exc).__name__, exc)}
         st["video"] = {k: (os.path.relpath(v, out_dir) if k == "path" else v) for k, v in vres.items()
-                       if k in ("ok", "path", "reason", "duration_s")}
+                       if k in ("ok", "path", "reason", "duration_s", "clips", "shown", "board_types")}
     step("Writing the station page", 0.97)
     if fac.get("_station_path"):
         img = os.path.join(out_dir, "station.png")
@@ -379,23 +527,27 @@ def station_html(st: Dict[str, Any]) -> str:
                      ", ".join("%s x%d" % (k.upper(), v) for k, v in sorted(b.get("buses", {}).items())) or "-",
                      e(b.get("limit") or "-"), links or "-"))
     h.append("</table></div>")
-    conn = st.get("connector")
-    if conn:
-        h.append("<h2>Connector %s: which board uses which pin</h2>" % e(conn["name"]))
+    conns = st.get("connectors") or ([st["connector"]] if st.get("connector") else [])
+    if conns:
+        h.append("<h2>%s %s: which board uses which pin</h2>" % ("Connectors" if len(conns) > 1 else "Connector",
+                                                               e(" + ".join(c["name"] for c in conns))))
         for b in st["boards"]:
             if b.get("status") != "ok":
                 continue
             chips = "".join("<span style='background:%s'>board %d</span>" % (SITE_COLORS[(k - 1) % len(SITE_COLORS)], k)
                             for k in range(1, b["batch"] + 1))
+            maps = "".join(("<div class='muted'>%s</div>" % e(c["name"]) if len(conns) > 1 else "") +
+                           connector_svg(c, (b.get("pins_by") or {}).get(c["name"]) or (b.get("pins") or [] if len(conns) == 1 else []))
+                           for c in conns)
             h.append("<div class='card'><b>%s</b> <span class='chips'>%s<span style='background:#555'>GND</span></span>%s</div>"
-                     % (e(b["name"]), chips, connector_svg(conn, b.get("pins") or [])))
+                     % (e(b["name"]), chips, maps))
     h.append("<h2>Swapping to another board type</h2><ol><li>Switch the station's supplies off and unscrew the fixture.</li>"
              "<li>Plug the next board type's fixture onto connector %s and screw it down in the same holes.</li>"
              "<li>Run that board's runner (its folder below): its testplan.json knows which station pins its boards use.</li>"
              "<li>Every board has its own nest and toggle clamp on the fixture: slide a board into each nest up to the stop "
              "(above the pogo pins), close its clamp, and the runner tests the boards one by one; open a clamp to take "
              "that board off.%s</li></ol>" % (
-                 e((conn or {}).get("name", "")),
+                 e(" + ".join(c["name"] for c in conns)),
                  "".join(" %s: from the %s." % (e(b["name"]), e(b["entry"])) for b in st["boards"] if b.get("entry"))))
     if st.get("warnings"):
         h.append("<h2>Notes</h2><ul>%s</ul>" % "".join("<li>%s</li>" % e(w) for w in st["warnings"]))

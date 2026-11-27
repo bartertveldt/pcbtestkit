@@ -51,10 +51,15 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `pcbtestkit/facility.py`, `facilities/` | Test facilities (the tester a fixture plugs into: connector, plate, buses, runner driver). Data, not code; see `docs/FACILITIES.md`. Also stations (a shared connector) and `facility_from_pcb`. |
 | `pcbtestkit/station.py`, `station_video.py` | Several board types on one station: batch per board type (`station plan/run`), `station.html`, the station video. |
 | `pcbtestkit/nest.py` | Every board's nest (rails, sprung standoffs) and toggle clamp: geometry, printable heightmaps, 3D models. |
+| `pcbtestkit/environment.py`, `station_board.py`, `environment_job.py` | Test environments for 100+ boards: profiling, layouts by worth and cost, the station designer, station KiCad boards (pin-stable upgrades), add / upgrade, the background job. See `docs/ENVIRONMENTS.md`. |
+| `pcbtestkit/upgrades.py` | What limits every board on its environment, upgrade options and paths, goals at the lowest cost, the cost model. |
+| `pcbtestkit/power.py` | Long runs: keep the computer awake (lid closed too), then sleep / hibernate / shut down; the job's watcher. |
+| `plugin/environment_dialog.py` | The KiCad dialog for many boards (second action plugin). |
+| `pcbtestkit/settings.py` | Settings for every project (`~/.pcbtestkit/settings.json`, `PCBTESTKIT_HOME`): the remembered test environment, caches. |
 | `pcbtestkit/spec.py`, `report.py`, `guide.py`, `visuals.py` | Spec JSON, HTML report, visual guide, KiCad 3D renders. |
 | `pcbtestkit/animate.py`, `video.py`, `video_frames.py`, `video_job.py` | 3D-animated explainer (kicad-cli per frame, ray-tracing presets), storyboard, wx captions, the background job with its progress window. |
 | `pcbtestkit/phases.py`, `timing.py` | What needs the firmware (test phases, batch programmed at once); production timing per batch size. |
-| `pcbtestkit/agent.py` | The tool registry (`@tool`), `Workspace`, guardrails, profiles. 1,500 lines: grep, don't read whole. |
+| `pcbtestkit/agent.py` | The tool registry (`@tool`), `Workspace`, guardrails, profiles. 2,000 lines: grep, don't read whole. |
 | `pcbtestkit/mcp_server.py`, `cli.py`, `quickref.py` | MCP server, CLI, the agent quick reference. |
 | `pcbtestkit/runner/` | Raspberry Pi / MCU test runner copied into every output. |
 | `skills/pcbtestkit/` | Agent skill. `references/{cli,tools,config}.md` are generated. |
@@ -63,6 +68,7 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `docs/` | Human docs; `docs/reference/` is generated; `docs/examples/` are generated outputs. |
 | `tests/test_toolkit.py`, `examples/make_sample.py` | Tests on a generated sample board with seeded weak points. |
 | `examples/make_station.py` | Generates the example test station board (`examples/station/`). |
+| `examples/make_collection.py` | Generates a collection of varied boards to try test environments on. |
 
 ### Rules
 
@@ -94,6 +100,6 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 
 - `python3 -m pcbtestkit tools --brief` (one line per tool) and `tools --name X` (one schema) instead of
   `docs/reference/tools.md` (18 KB) unless you need everything.
-- MCP: `--profile core` exposes 16 tools (about 3k tokens of tool definitions) instead of 34 (about 6k).
+- MCP: `--profile core` exposes 16 tools (about 3k tokens of tool definitions) instead of 40 (about 9k).
 - Large files to avoid reading whole: `pcbtestkit/agent.py`, `pcbtestkit/analysis.py`, `pcbtestkit/pcb.py`,
   everything under `docs/examples/`, any `.kicad_pcb`, `.stl`, `.mp4`, `.html`.

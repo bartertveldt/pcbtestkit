@@ -2119,6 +2119,27 @@ class TestNest(Base):
         for x, y in fx["nest"]["posts"] + fx["nest"]["adapter_holes"]:
             self.assertTrue(o["x_min"] + 4 < x < o["x_max"] - 4 and o["y_min"] + 4 < y < o["y_max"] - 4)
         self.assertEqual((fx["routing"] or {}).get("unrouted_connections", 0), 0)
+        # tracks may pass under a nest post on the bottom layer, under the solder mask: no opening on B.Mask
+        import re as _re
+        posts = _re.findall(r'\(footprint "PCBTestKit:NestPost_M3".*?\(layers ([^)]*)\)', text, _re.S)
+        self.assertEqual(len(posts), 4)
+        for layers in posts:
+            self.assertNotIn("*.Mask", layers)
+            self.assertNotIn("B.Mask", layers)
+        from pcbtestkit.kicad_cli import find_kicad_cli, run_drc
+        cli = find_kicad_cli()
+        if cli:                                                              # KiCad's own DRC on the fixture
+            tmp = tempfile.mkdtemp(prefix="pcbtk_drc_")
+            try:
+                pcb = os.path.join(tmp, "fx.kicad_pcb")
+                with open(pcb, "w", encoding="utf-8") as fh:
+                    fh.write(text)
+                r = run_drc(cli, pcb, parity=False) or {}
+                kinds = {v.get("type") for v in r.get("violations") or []}
+                self.assertFalse(kinds & {"solder_mask_bridge", "clearance", "hole_clearance", "shorting_items",
+                                          "tracks_crossing", "copper_edge_clearance"}, kinds)
+            finally:
+                shutil.rmtree(tmp, ignore_errors=True)
         # nests off: guide pins as before
         d2 = self.design(fixture={"nest": {"enabled": False}})
         fx2 = build_fixture(d2, build_testplan(d2, run_analysis(d2, include_kicad=False)))
@@ -2218,6 +2239,16 @@ class TestNest(Base):
         blk = lambda txt: txt[txt.index('"%s"' % nref):]                    # noqa: E731
         self.assertIn("%.5f" % -travel, blk(last)[:4000])                  # the nest pressed down at the end
         self.assertIn("(hide yes)", last)                                  # the fixture's own (open) clamp hidden
+        # the station video moves nests and clamps itself: its fixture export has their models hidden
+        from pcbtestkit.station_video import _without_nests
+        copy = _without_nests(res["paths"]["fixture"])
+        try:
+            with open(copy, encoding="utf-8") as fh:
+                hidden = fh.read()
+            self.assertEqual(hidden.count("(hide yes)") - fx_text.count("(hide yes)"), 2)   # nest + clamp, not the posts
+            self.assertEqual(os.path.dirname(copy), os.path.dirname(res["paths"]["fixture"]))
+        finally:
+            os.remove(copy)
 
     def test_set_fixture_options_for_nests(self):
         proj = os.path.join(self.tmp, "nest_opts")
@@ -2415,3 +2446,795 @@ class TestStation(unittest.TestCase):
                            capture_output=True, text=True, cwd=ROOT)
         self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
         self.assertEqual(json.loads(r.stdout)["boards"][0]["status"], "does not fit")
+
+
+def _fake_profile(name, ch=4, sup=True, v=5.0, buses=(), site=(70.0, 90.0), issues=(), prio=1.0):
+    return {"name": name, "folder": name, "pcb": "/x/%s.kicad_pcb" % name, "status": "ok", "issues": list(issues),
+            "channels": ch, "buses": list(buses), "supply": {"needed": sup, "voltage": v, "current_a": 0.5},
+            "programming": [{"protocol": "swd"}], "probe_side": "bottom", "probes": ch + 2,
+            "site": {"front": list(site), "left": [site[1], site[0]]}, "spacing_mm": 3.0, "priority": prio,
+            "size_mm": [site[0] - 30, site[1] - 60]}
+
+
+class TestEnvironmentDesign(unittest.TestCase):
+    """The environment designer on made-up boards: limits, pins, stations, assignment, ranking (no KiCad files)."""
+
+    def spec(self, **over):
+        from pcbtestkit.environment import load_spec
+        return load_spec(None, over)
+
+    def test_spec_defaults_and_validation(self):
+        from pcbtestkit.environment import default_spec, load_spec, validate_spec
+        self.assertEqual(validate_spec(default_spec()), [])
+        bad = default_spec()
+        bad.update(max_stations=0, plate_mm=[10, 10], limits={"analog_inputs": 2000, "warp": 1}, priorities={"a": -1})
+        errs = " | ".join(validate_spec(bad))
+        for frag in ("max_stations", "plate_mm[0]", "limits.analog_inputs", "limits.warp", "priorities.a"):
+            self.assertIn(frag, errs)
+        with self.assertRaises(ValueError):
+            load_spec(None, {"max_batch": 0})
+        s = load_spec(None, {"limits": {"can": 1}, "priorities": {"x": 3}})
+        self.assertEqual((s["limits"]["can"], s["limits"]["uart"], s["priorities"]), (1, 4, {"x": 3}))   # merged, not replaced
+
+    def test_design_respects_limits_and_pins(self):
+        from pcbtestkit import environment as E
+        from pcbtestkit.station_board import socket_pins
+        spec = self.spec(limits={"analog_inputs": 32, "supplies": 4, "can": 2, "uart": 2, "i2c": 2, "rs485": 1, "usb": 1,
+                                 "ethernet": 1}, large_plate_mm=[])
+        profs = [_fake_profile("s%d" % i, ch=5) for i in range(6)] + \
+                [_fake_profile("can%d" % i, ch=6, v=24.0, buses=["can"]) for i in range(3)] + \
+                [_fake_profile("eth", ch=8, v=12.0, buses=["ethernet", "usb"], site=(150, 160))]
+        dz = E.design(profs, spec)
+        self.assertEqual(len(dz["stations"]), 1)                       # one station takes them all
+        m = dz["stations"][0]
+        r = m["res"]
+        self.assertLessEqual(r["ain"], 32)
+        self.assertEqual(r["ain"] % 4, 0)                              # whole 4-channel ADCs
+        self.assertLessEqual(r["vout"], 4)
+        for bus, n in r["buses"].items():
+            self.assertLessEqual(n, spec["limits"][bus])
+        socks = socket_pins(r, 6, 80)
+        self.assertLessEqual(len(socks), 2)
+        self.assertTrue(all(len(s_) <= 80 for s_ in socks))
+        where = E.assign(profs, dz["stations"], dz["estimates"])
+        self.assertTrue(all(v == 0 for v in where.values()))
+        est = {p["folder"]: dz["estimates"][p["folder"]][0] for p in profs}
+        self.assertGreaterEqual(est["s0"]["batch"], 2)
+        self.assertEqual(est["eth"]["batch"], 1)
+        self.assertLessEqual(est["can0"]["batch"], 2)                  # 2 CAN instances at most
+
+    def test_further_stations_and_hard_limits(self):
+        from pcbtestkit import environment as E
+        spec = self.spec(plate_mm=[260, 190], large_plate_mm=[420, 320])
+        profs = [_fake_profile("small%d" % i) for i in range(4)] + \
+                [_fake_profile("huge", ch=12, site=(300, 250))] + \
+                [_fake_profile("hv", v=48.0), _fake_profile("both", issues=["probed from both sides"])]
+        dz = E.design(profs, spec)
+        self.assertEqual(len(dz["stations"]), 2)                       # the huge board gets a large station
+        self.assertEqual(dz["stations"][1]["plate"], [420.0, 320.0])
+        where = E.assign(profs, dz["stations"], dz["estimates"])
+        self.assertEqual(where["huge"], 1)
+        self.assertIsNone(where["hv"])
+        self.assertIn("48 V", E.hard_issue(profs[5], spec))
+        self.assertIn("both sides", E.hard_issue(profs[6], spec))
+        one = E.design(profs, self.spec(plate_mm=[260, 190], large_plate_mm=[420, 320], max_stations=1))
+        self.assertEqual(len(one["stations"]), 1)
+        nobig = E.design(profs, self.spec(plate_mm=[260, 190], large_plate_mm=[]))
+        self.assertEqual(len(nobig["stations"]), 1)                    # no plate takes the huge board: no 2nd station
+        est = E.estimate(profs[4], nobig["stations"][0], spec)
+        self.assertEqual(est["batch"], 0)
+        self.assertIn("300 x 250 mm", est["reason"])
+
+    def test_priorities_rank_first(self):
+        from pcbtestkit import environment as E
+        boards = [{"name": n, "folder": n, "status": st, "priority": pr, "batch": b, "channels": 4,
+                   "supply": {"needed": True, "voltage": 5.0}, "buses": [], "programming": []}
+                  for n, st, pr, b in (("a", "compatible", 1.0, 8), ("b", "compatible", 5.0, 1), ("c", "incompatible", 9.0, 0),
+                                       ("d", "compatible", 1.0, 2))]
+        names = [r["name"] for r in E.rank(boards, E.default_spec())]
+        self.assertEqual(names, ["b", "a", "d", "c"])                # priority, then batch; misfits last
+
+    def test_station_board_round_trip_with_two_sockets(self):
+        from pcbtestkit import facility as F
+        from pcbtestkit.station_board import pin_count, socket_pins, write_station
+        res = {"ain": 72, "vout": 8, "buses": {"can": 4, "uart": 4, "i2c": 2, "ethernet": 2, "usb": 1, "rs485": 1}, "dio": 8}
+        socks = socket_pins(res, 6, 80)
+        self.assertEqual(len(socks), 2)
+        for s_ in socks:
+            self.assertLessEqual(len(s_), 80)
+            for i, f in enumerate(s_):                                  # a bus instance's lines stay side by side
+                if f.endswith("_TX_P"):
+                    self.assertEqual(s_[i + 1], f.replace("_TX_P", "_TX_N"))
+        self.assertGreater(pin_count(res), sum(1 for _ in res))
+        tmp = tempfile.mkdtemp(prefix="pcbtk_stb_")
+        try:
+            pcb = write_station({"name": "st2", "title": "Two sockets", "plate_mm": [320, 240], "resources": res}, tmp)
+            fac, warns = F.facility_from_pcb(pcb)
+            self.assertEqual(warns, [])
+            self.assertEqual([c["name"] for c in fac["fixture"]["connectors"]], ["J1", "J2"])
+            cap = F.capacity(fac)
+            self.assertEqual((cap["inputs"], cap["supplies"], cap["dio"]), (72, 8, 8))
+            self.assertEqual(cap["buses"], res["buses"])
+            self.assertEqual(len(fac["fixture"]["holes"]), 6)              # mounting holes only (not the jacks' pegs)
+            conns = F.assign_pins(fac, ["CH%02d" % i for i in range(1, 13)], True,
+                                  [{"bus": "ethernet", "via": "fixture", "signals": ["ETH_TX_P", "ETH_TX_N", "ETH_RX_P", "ETH_RX_N"]}],
+                                  sites=6)
+            used = [(c["name"], q["pin"], q["site"], q["signal"]) for c in conns for q in c["pins"] if q.get("site")]
+            self.assertEqual(len({(u[0], u[1]) for u in used}), len(used))   # every pin once across both sockets
+            self.assertEqual(len({(u[2], u[3]) for u in used if u[3].startswith("CH")}), 6 * 12)
+            eth = {(u[2], u[3]) for u in used if u[3].startswith("ETH")}
+            self.assertEqual({k for k, _s in eth}, {1, 2})                   # two Ethernet instances: boards 1 and 2
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_discover_skips_outputs_and_reads_lists(self):
+        from pcbtestkit.environment import discover
+        tmp = tempfile.mkdtemp(prefix="pcbtk_disc_")
+        try:
+            for rel in ("a/a.kicad_pcb", "a/a.kicad_pro", "b/sub/b.kicad_pcb", "c/c.kicad_pcb", "c/c.kicad_pro",
+                        "c/old.kicad_pcb", "out/x/x-fixture.kicad_pcb", "out/x/x.kicad_pcb", "a-backups/a.kicad_pcb",
+                        "st/station.json", "st/b/b2.kicad_pcb"):
+                p = os.path.join(tmp, rel)
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                open(p, "w").close()
+            got, warns = discover([tmp])
+            self.assertEqual(sorted(os.path.relpath(g, tmp) for g in got), ["a/a.kicad_pcb", "b/sub/b.kicad_pcb", "c/c.kicad_pcb"])
+            lst = os.path.join(tmp, "boards.txt")
+            with open(lst, "w") as fh:
+                fh.write("# my boards\na/a.kicad_pro\nnope\nc\n")
+            got, warns = discover(["@" + lst, os.path.join(tmp, "a", "a.kicad_pcb")])
+            self.assertEqual(sorted(os.path.relpath(g, tmp) for g in got), ["a/a.kicad_pcb", "c/c.kicad_pcb"])
+            self.assertTrue(any("nope" in w for w in warns))
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+
+class TestEnvironmentBuild(unittest.TestCase):
+    """A small collection end to end: plan, build, build again (resume), keep the stations, the CLI."""
+
+    @classmethod
+    def setUpClass(cls):
+        import make_collection
+        cls.tmp = tempfile.mkdtemp(prefix="pcbtk_env_")
+        cls.col = os.path.join(cls.tmp, "boards")
+        make_collection.main(cls.col, count=5, seed=3)
+        os.makedirs(os.path.join(cls.col, "hv"), exist_ok=True)
+        b, cfg = make_collection.make_board("hv", [f for f in make_collection.FAMILIES if f[0] == "hv_driver"][0],
+                                            __import__("random").Random(1))
+        with open(os.path.join(cls.col, "hv", "hv.kicad_pcb"), "w") as fh:
+            fh.write(b.text())
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def test_plan_build_resume_and_keep(self):
+        from pcbtestkit.environment import build_environment, load_spec
+        out = os.path.join(self.tmp, "env")
+        spec = load_spec(None, {"name": "Lab A"})
+        env = build_environment([self.col], out, spec, jobs=1, visuals=False, route=False, video="none")
+        s = env["summary"]
+        self.assertEqual(s["boards"], 6)
+        self.assertGreaterEqual(s["compatible"], 4)
+        hv = [b for b in env["boards"] if b["name"] == "hv"][0]
+        self.assertEqual(hv["status"], "incompatible")
+        self.assertIn("48 V", hv["reason"])
+        for f in ("index.html", "requirements.md", "ranking.csv", "boards.csv", "environment.json", "environment-spec.json"):
+            self.assertTrue(os.path.exists(os.path.join(out, f)), f)
+        with open(os.path.join(out, "environment.json"), encoding="utf-8") as fh:
+            txt = fh.read()
+        self.assertNotIn(self.tmp, txt)                                  # shared: no local paths
+        data = json.loads(txt)
+        st = data["stations"][0]
+        self.assertTrue(os.path.exists(os.path.join(out, st["board"])))
+        self.assertTrue(os.path.exists(os.path.join(out, st["page"])))
+        for b in data["boards"]:
+            if b["status"] == "compatible":
+                self.assertTrue(os.path.exists(os.path.join(out, b["guide"])), b["name"])
+                self.assertGreaterEqual(b["batch"], 1)
+        with open(os.path.join(out, "requirements.md"), encoding="utf-8") as fh:
+            req = fh.read()
+        self.assertIn("Analog inputs", req)
+        self.assertIn("needs a 48 V supply", req)
+        with open(os.path.join(out, "ranking.csv"), encoding="utf-8") as fh:
+            rows = list(__import__("csv").DictReader(fh))
+        self.assertEqual(len(rows), 6)
+        self.assertEqual(rows[-1]["board"], "hv")
+        # again: every board's outputs are up to date and reused
+        t0 = time.time()
+        env2 = build_environment([self.col], out, spec, jobs=1, visuals=False, route=False, video="none")
+        self.assertEqual(env2["summary"]["compatible"], s["compatible"])
+        self.assertLess(time.time() - t0, 60.0)
+        # a station board edited in KiCad since: the next build keeps it instead of designing it again
+        pcb = os.path.join(out, st["board"])
+        with open(pcb, encoding="utf-8") as fh:
+            txt = fh.read()
+        with open(pcb, "w", encoding="utf-8") as fh:
+            fh.write(txt.replace("FIXTURE CONNECTOR J1", "FIXTURE CONNECTOR J1 (edited)"))
+        env4 = build_environment([self.col], out, spec, jobs=1, visuals=False, route=False, video="none")
+        self.assertTrue(env4["stations"][0]["fixed"])
+        self.assertTrue(any("edited since the last build" in w for w in env4["warnings"]), env4["warnings"])
+        with open(pcb, encoding="utf-8") as fh:
+            self.assertIn("(edited)", fh.read())
+        # an existing environment: its station is kept as it is (fixed), even when the boards change
+        env3 = build_environment([self.col], os.path.join(self.tmp, "env2"), spec, environment=out, jobs=1, visuals=False,
+                                 route=False, video="none")
+        self.assertTrue(env3["stations"][0]["fixed"])
+        self.assertEqual(env3["stations"][0]["resources"], data["stations"][0]["resources"])
+
+    def test_cli(self):
+        spec = os.path.join(self.tmp, "spec.json")
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "init", "--out", spec], capture_output=True,
+                           text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        with open(spec) as fh:
+            self.assertEqual(json.load(fh)["max_stations"], 3)
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "plan", self.col, "--spec", spec, "--json",
+                            "--jobs", "2"], capture_output=True, text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 0, r.stderr[-2000:])
+        env = json.loads(r.stdout)
+        self.assertEqual(env["summary"]["boards"], 6)
+        self.assertNotIn("_facilities", env)
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "plan", self.col, "--strict", "-q", "--jobs", "2"],
+                           capture_output=True, text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 1)                                 # hv does not fit
+        self.assertIn("Do not fit", r.stdout)
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "build", self.col], capture_output=True,
+                           text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 2)                                 # build needs --out
+
+
+class TestEnvironmentReuse(unittest.TestCase):
+    """A board made for an existing (remembered) test environment: its station, the largest safe batch or a fixed
+    one, without designing anything new."""
+
+    @classmethod
+    def setUpClass(cls):
+        import make_collection
+        from unittest import mock
+        from pcbtestkit.environment import build_environment, load_spec
+        cls.tmp = tempfile.mkdtemp(prefix="pcbtk_reuse_")
+        cls.home = mock.patch.dict(os.environ, {"PCBTESTKIT_HOME": os.path.join(cls.tmp, "home")})
+        cls.home.start()
+        col = os.path.join(cls.tmp, "made")
+        make_collection.main(col, count=3, seed=5)
+        cls.env = os.path.join(cls.tmp, "env")
+        build_environment([col], cls.env, load_spec(None, {"name": "Lab B"}), jobs=1, visuals=False, route=False, video="none")
+        cls.proj = os.path.join(cls.tmp, "sample_sensor")              # a board the environment was not made for
+        make_sample.main(cls.proj)
+        cls.hv = os.path.join(cls.tmp, "hv")
+        os.makedirs(cls.hv)
+        b, _cfg = make_collection.make_board("hv", [f for f in make_collection.FAMILIES if f[0] == "hv_driver"][0],
+                                             __import__("random").Random(1))
+        with open(os.path.join(cls.hv, "hv.kicad_pcb"), "w") as fh:
+            fh.write(b.text())
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.home.stop()
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def setUp(self):
+        from pcbtestkit import settings
+        settings.remember_environment(None)
+
+    def test_remembered_environment_auto_and_fixed_batch(self):
+        from pcbtestkit import settings
+        from pcbtestkit.environment import board_setup
+        self.assertIsNone(Design.load(self.proj).environment)          # nothing remembered: as before
+        settings.remember_environment({"path": self.env})
+        d = Design.load(self.proj)
+        env = d.environment
+        self.assertTrue(env["ok"], env)
+        self.assertEqual((env["environment"], env["station"]), ("env", "station-1"))
+        self.assertTrue(env["auto"])
+        self.assertGreaterEqual(env["batch"], 1)
+        self.assertEqual(d.cfg["batch"]["count"], env["batch"])
+        self.assertEqual(d.cfg["facility"]["id"], "station-1")       # the station's own board, read back
+        self.assertNotIn("facility", d.user_config)                   # pcbtestkit.json is not changed
+        # the largest batch: one more board would not fit what limits it
+        from pcbtestkit.station import plan_board
+        from pcbtestkit.environment import environment_stations
+        (_name, fac), = environment_stations(self.env)[0]
+        row = plan_board(d.board.path, fac, env["batch"] + 1)
+        self.assertLessEqual(row["batch"], env["batch"])
+        # a fixed batch, a station by name, none for this board
+        d2 = Design.load(self.proj, overrides={"environment": {"batch": 1, "station": "station-1"}})
+        self.assertEqual((d2.environment["batch"], d2.cfg["batch"]["count"], d2.environment["auto"]), (1, 1, False))
+        d3 = Design.load(self.proj, overrides={"environment": {"path": "none"}})
+        self.assertIsNone(d3.environment)
+        self.assertNotEqual((d3.cfg.get("facility") or "raspberry-pi"), d.cfg["facility"])
+        bad = Design.load(self.proj, overrides={"environment": {"station": "station-9"}})
+        self.assertFalse(bad.environment["ok"])
+        self.assertTrue(any("no station station-9" in w for w in bad.warnings), bad.warnings)
+        # a board no station takes: told why, made without the environment
+        hv = Design.load(self.hv)
+        self.assertFalse(hv.environment["ok"])
+        self.assertTrue(any("48 V" in w or "fits none" in w for w in hv.warnings), hv.warnings)
+        self.assertEqual(hv.cfg["batch"]["count"], 1)
+        # cached: instant, and a changed station board is read again
+        t0 = time.time()
+        Design.load(self.proj)
+        self.assertLess(time.time() - t0, 2.0)                        # uncached: seconds (a real fixture layout)
+        st_pcb = [f for f in glob.glob(os.path.join(self.env, "stations", "station-1", "*.kicad_pcb"))][0]
+        with open(st_pcb, encoding="utf-8") as fh:
+            txt = fh.read()
+        with open(st_pcb, "w", encoding="utf-8") as fh:
+            fh.write(txt.replace("FIXTURE CONNECTOR J1", "FIXTURE CONNECTOR J1 "))
+        again = board_setup(d.board.path, {"path": self.env, "station": "auto", "batch": "auto"})
+        self.assertTrue(again["ok"])
+        with open(st_pcb, "w", encoding="utf-8") as fh:
+            fh.write(txt)
+
+    def test_outputs_and_cli(self):
+        out = os.path.join(self.tmp, "run_out")
+        home = {"PCBTESTKIT_HOME": os.environ["PCBTESTKIT_HOME"]}
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "use", self.env], capture_output=True, text=True,
+                           cwd=ROOT, env=dict(os.environ, **home))
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("every build is made for the test environment", r.stdout)
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "run", self.proj, "--out", out, "-q", "--no-visuals",
+                            "--no-kicad", "--batch", "auto"], capture_output=True, text=True, cwd=ROOT, env=dict(os.environ, **home))
+        self.assertEqual(r.returncode, 0, r.stderr[-1500:])
+        self.assertIn("test environment env: station-1", r.stdout)
+        with open(glob.glob(os.path.join(out, "*-fixture.json"))[0], encoding="utf-8") as fh:
+            meta = json.load(fh)
+        with open(glob.glob(os.path.join(out, "*-testplan.json"))[0], encoding="utf-8") as fh:
+            plan = json.load(fh)
+        n = plan["batch"]["count"]
+        self.assertEqual(len(meta["sites"]), n)
+        self.assertEqual(meta["facility"]["id"], "station-1")
+        self.assertTrue(meta["plate_fit"])
+        self.assertEqual(len(meta["nest"]["refs"]), n)                 # a nest and clamp per board of the batch
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "run", self.proj, "--out", out + "2", "-q", "--no-visuals",
+                            "--no-kicad", "--no-environment", "--no-jig"], capture_output=True, text=True, cwd=ROOT,
+                           env=dict(os.environ, **home))
+        self.assertEqual(r.returncode, 0, r.stderr[-1500:])
+        self.assertNotIn("test environment", r.stdout)
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "forget"], capture_output=True, text=True,
+                           cwd=ROOT, env=dict(os.environ, **home))
+        self.assertIn("no test environment is remembered", r.stdout)
+
+    def test_agent_tool(self):
+        from pcbtestkit import settings
+        proj = os.path.join(self.tmp, "tool_proj")
+        make_sample.main(proj)
+        ws = Workspace(os.path.join(proj, "sample_sensor.kicad_pcb"))
+        r = ws.call("set_test_environment", {"path": self.env, "batch": "auto", "remember": True, "confirm": True})
+        self.assertTrue(r["ok"], r)
+        self.assertTrue(any("station station-1" in w for w in r["warnings"]), r)
+        with open(os.path.join(proj, "pcbtestkit.json")) as fh:
+            self.assertEqual(json.load(fh)["environment"]["path"], os.path.abspath(self.env))
+        self.assertEqual(settings.remembered_environment()["path"], os.path.abspath(self.env))
+        r = ws.call("set_test_environment", {"path": os.path.join(self.tmp, "nowhere"), "dry_run": True})
+        self.assertFalse(r["ok"])
+        self.assertEqual(r["error"]["code"], "NOT_FOUND")
+
+
+class TestPower(unittest.TestCase):
+    """Long runs: keep the computer awake, then sleep / hibernate / shut down. A dry run: nothing is really done."""
+
+    def setUp(self):
+        from unittest import mock
+        self.tmp = tempfile.mkdtemp(prefix="pcbtk_power_")
+        self.env = mock.patch.dict(os.environ, {"PCBTESTKIT_POWER_DRYRUN": "1",
+                                                "PCBTESTKIT_HOME": os.path.join(self.tmp, "home")})
+        self.env.start()
+
+    def tearDown(self):
+        self.env.stop()
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_setting_and_commands(self):
+        from pcbtestkit import power as P
+        self.assertEqual(P.normalize("standby")["after"], "sleep")
+        self.assertEqual(P.normalize({"after": "Shut down"})["after"], "shutdown")
+        self.assertTrue(P.normalize({"lid": True, "keep_awake": False})["keep_awake"])     # the lid needs it awake
+        with self.assertRaises(ValueError):
+            P.normalize("reboot")
+        with self.assertRaises(ValueError):
+            P.normalize({"grace_s": "soon"})
+        self.assertFalse(P.active(P.normalize({"keep_awake": False})))
+        self.assertIn("hibernate the computer 2 min after the run has finished or failed", P.describe("hibernate"))
+        self.assertEqual(P.commands("sleep", "darwin"), [["pmset", "sleepnow"]])
+        self.assertEqual(P.commands("hibernate", "darwin"), [["pmset", "sleepnow"]])
+        self.assertIn("System Events", P.commands("shutdown", "darwin")[0][2])
+        self.assertEqual(P.commands("hibernate", "win32"), [["shutdown", "/h"]])
+        self.assertEqual(P.commands("shutdown", "win32")[0][:2], ["shutdown", "/s"])
+        self.assertIn("SetSuspendState", " ".join(P.commands("sleep", "win32")[0]))
+        self.assertEqual(P.commands("shutdown", "linux"), [["systemctl", "poweroff"]])
+        self.assertEqual(P.commands("none", "linux"), [])
+        # the macOS lid helper only gets a pid and a plain path, and reads its decision as a word
+        script = P.MAC_HELPER % {"flag": "/tmp/pcbtestkit-power-x/decision", "pid": 123, "low": P.LOW_BATTERY}
+        self.assertIn("pmset -a disablesleep 0", script)
+        self.assertNotIn("$d)", script.replace("\"$d\"", ""))
+        self.assertEqual(subprocess.run(["sh", "-n", "-c", script]).returncode, 0)
+
+    def test_session(self):
+        import threading
+        from pcbtestkit import power as P
+        out = os.path.join(self.tmp, "env")
+        ses = P.Session({"after": "sleep", "grace_s": 0}, out).start()
+        self.assertEqual(P.status(out)["state"], "watching")
+        self.assertEqual(ses.finish("done"), "sleep")
+        st = P.status(out)
+        self.assertEqual((st["state"], st["outcome"]), ("done", "done"))
+        self.assertTrue(any("would run: " + " ".join(P.commands("sleep")[0]) in ln for ln in st["log"]), st["log"])
+        ses = P.Session({"after": "shutdown", "grace_s": 0}, out).start()
+        self.assertEqual(ses.finish("cancelled"), "none")                   # cancelled: the computer stays on
+        self.assertFalse(any("would run" in ln for ln in P.status(out)["log"]))
+        ses = P.Session({"after": "shutdown", "grace_s": 30}, out).start()
+        threading.Timer(0.5, lambda: P.stay_on(out, 0)).start()             # "Stay on" during the countdown
+        t = time.time()
+        self.assertEqual(ses.finish("failed"), "kept-on")
+        self.assertLess(time.time() - t, 10)
+        self.assertEqual(P.status(out)["state"], "kept-on")
+        ses = P.Session({"after": "sleep", "grace_s": 0}, out).start()      # an old stay-on does not count
+        self.assertEqual(ses.finish("done"), "sleep")
+
+    def test_watcher(self):
+        import threading
+        from pcbtestkit import environment_job as J
+        from pcbtestkit import power as P
+        out = os.path.join(self.tmp, "job")
+        os.makedirs(out)
+
+        def job_status(**st):
+            with open(os.path.join(out, J.STATUS), "w", encoding="utf-8") as fh:
+                json.dump(st, fh)
+        dead = subprocess.Popen([sys.executable, "-c", "pass"])
+        dead.wait()
+        job_status(state="running", pid=dead.pid)                         # died without a word: it failed
+        self.assertEqual(P.watch(out, dead.pid, {"after": "hibernate", "grace_s": 0}, poll_s=0.1), "hibernate")
+        self.assertEqual(P.status(out)["outcome"], "failed")
+        job = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
+        try:
+            job_status(state="running", pid=job.pid)
+
+            def finish():
+                with open(os.path.join(out, "index.html"), "w") as fh:
+                    fh.write("<html></html>")
+                job_status(state="done", pid=job.pid, message="5 of 5 boards fit")
+            threading.Timer(0.6, finish).start()
+            self.assertEqual(P.watch(out, job.pid, {"after": "sleep", "grace_s": 0}, poll_s=0.1), "sleep")
+            st = P.status(out)
+            self.assertEqual((st["outcome"], st["reason"]), ("done", "5 of 5 boards fit"))
+            self.assertEqual(st["job_pid"], job.pid)
+            os.utime(os.path.join(out, "index.html"), (1000, 1000))           # "done" without this run's page
+            self.assertEqual(P.job_outcome(out, job.pid, time.time()), "failed")
+            job_status(state="cancelled", pid=job.pid)
+            self.assertEqual(P.watch(out, job.pid, {"after": "shutdown", "grace_s": 0}, poll_s=0.1), "none")
+        finally:
+            job.kill()
+            job.wait()
+
+    def test_cli(self):
+        from unittest import mock
+        from pcbtestkit import cli
+        from pcbtestkit import power as P
+        out = os.path.join(self.tmp, "cli_env")
+        os.makedirs(out)
+        env = {"summary": {"compatible": 2, "boards": 2}}
+        args = ["environment", "plan", "x.kicad_pcb", "--out", out, "--when-done", "sleep", "--grace", "0", "-q"]
+        with mock.patch.object(cli, "_environment_run", return_value=env), \
+                mock.patch.object(cli, "environment_text", return_value=""), \
+                mock.patch.object(cli, "_env_spec", return_value={}):
+            with open(os.path.join(out, "index.html"), "w") as fh:
+                fh.write("<html></html>")
+            self.assertEqual(cli.main(args), 0)
+            st = P.status(out)
+            self.assertEqual((st["outcome"], st["state"]), ("done", "done"))
+            self.assertTrue(any("would run" in ln for ln in st["log"]))
+        with mock.patch.object(cli, "_environment_run", side_effect=RuntimeError("boom")), \
+                mock.patch.object(cli, "_env_spec", return_value={}):
+            with self.assertRaises(RuntimeError):
+                cli.main(args)
+            self.assertEqual(P.status(out)["outcome"], "failed")
+        with mock.patch.object(cli, "_environment_run", side_effect=KeyboardInterrupt), \
+                mock.patch.object(cli, "_env_spec", return_value={}):
+            with self.assertRaises(KeyboardInterrupt):
+                cli.main(args)
+            self.assertEqual(P.status(out)["outcome"], "cancelled")
+        self.assertEqual(cli.main(["environment", "stay-on", out]), 0)
+        self.assertTrue(os.path.exists(os.path.join(out, P.STAY)))
+        with self.assertRaises(SystemExit):
+            cli.main(["environment", "plan", "x", "--when-done", "reboot"])
+
+
+def _fake_env(profs, models, spec):
+    """An environment as environment.json has it, from fake profiles and station models (no fixture is built)."""
+    from pcbtestkit import environment as E
+    cache = {}
+    ests = {p["folder"]: [E.estimate(p, m, spec, cache) for m in models] for p in profs}
+    where = E.assign(profs, models, ests)
+    rows = {}
+    for p in profs:
+        i = where[p["folder"]]
+        if i is not None:
+            e = ests[p["folder"]][i]
+            rows[p["folder"]] = {"name": p["name"], "status": "ok", "batch": e["batch"], "limit": e["limit"],
+                                 "station": models[i]["name"], "max_by": dict(e["by"])}
+    env = E._environment(profs, models, ests, rows, spec, {m["name"]: {} for m in models},
+                         {m["name"]: "/x/%s.kicad_pcb" % m["name"] for m in models}, [], "/x")
+    env.pop("_facilities")
+    return json.loads(json.dumps(E.shareable(env)))
+
+
+class TestUpgrades(unittest.TestCase):
+    """What limits every board, what an upgrade gains and costs, goals solved at the lowest cost."""
+
+    def setUp(self):
+        from pcbtestkit import environment as E
+        self.E = E
+        self.spec = E.load_spec(None, {"max_stations": 1, "max_batch": 8})
+        self.profs = [_fake_profile("can_%d" % i, ch=2, buses=["can"], site=(60.0, 70.0)) for i in range(3)]
+        self.profs += [_fake_profile("hv", ch=2, v=48.0, site=(60.0, 70.0)),
+                       _fake_profile("dual", issues=["probed from both sides (two fixture plates)"]),
+                       _fake_profile("analog", ch=20, site=(60.0, 70.0))]
+        m = E.model_from_resources({"ain": 24, "vout": 4, "buses": {"can": 2}, "dio": 0}, [300.0, 220.0], self.spec,
+                                   "station-1")
+        self.env = _fake_env(self.profs, [m], self.spec)
+
+    def test_constraints(self):
+        from pcbtestkit import upgrades as U
+        cons = {c["board"]: c for c in U.constraints(self.env)}
+        self.assertEqual(cons["can_0"]["batch"], 2)
+        self.assertIn("CAN instances", cons["can_0"]["limited_by"])
+        self.assertTrue(any("1 more CAN" in t for t in cons["can_0"]["next"]["changes"]), cons["can_0"]["next"])
+        self.assertGreater(cons["can_0"]["next"]["cost"], 0)
+        self.assertEqual(cons["hv"]["to_fit"]["change"][0], {"kind": "supply_v", "to": 48.0})
+        self.assertIn("no station change helps", cons["dual"]["to_fit"]["note"])
+        self.assertEqual(cons["analog"]["batch"], 1)                          # 20 of 24 inputs
+        self.assertIn("analog inputs", cons["analog"]["limited_by"])
+        md = U.constraints_md(self.env, list(cons.values()))
+        self.assertIn("| can_0 | station-1 | 2 |", md)
+        self.assertIn("**CAN instances 2**", md)
+
+    def test_options_and_paths(self):
+        from pcbtestkit import upgrades as U
+        opt = U.options(self.env)
+        self.assertEqual([o["id"] for o in opt["options"]], ["U%d" % (i + 1) for i in range(len(opt["options"]))])
+        can = [o for o in opt["options"] if o["change"].get("bus") == "can"]
+        self.assertTrue(can and can[0]["gain"]["slots"] == 3, [o["text"] for o in opt["options"]])
+        hv = [o for o in opt["options"] if o["change"]["kind"] == "supply_v"]
+        self.assertEqual(hv[0]["gain"]["fit"], ["hv"])
+        nets = [o["gain"]["net"] for o in opt["options"]]
+        self.assertEqual(nets, sorted(nets, reverse=True))                    # best first
+        for o in opt["options"]:
+            self.assertAlmostEqual(o["gain"]["net"], o["gain"]["worth"] - o["gain"]["cost"], delta=1.0)
+        self.assertEqual(set(opt["paths"]), {"value", "fit", "batch"})
+        self.assertTrue(opt["paths"]["fit"]["steps"])
+        md = U.upgrades_md(self.env, opt)
+        self.assertIn("| U1 |", md)
+        self.assertIn("--path value", md)
+
+    def test_changes_and_goals(self):
+        from pcbtestkit import upgrades as U
+        chs = U.parse_changes("station-1:can+1,ain+5,plate=400x300; supply_v=48; max_batch=16")
+        self.assertEqual([c["kind"] for c in chs], ["bus", "ain", "plate", "supply_v", "max_batch"])
+        for bad in ("station-1:warp+1", "can+1", "station-1:plate=40", "station-1:can+x"):
+            with self.assertRaises(ValueError):
+                U.parse_changes(bad)
+        ctx = U.Context(self.env)
+        res = U.resolve(chs[:2], ctx.models, ctx.spec)
+        self.assertEqual(res[0]["to"], 3)
+        self.assertEqual(res[1]["to"], 32)                                    # 24 + 5, in groups of 4
+        with self.assertRaises(ValueError):
+            U.resolve([{"kind": "bus", "bus": "can", "station": "station-9", "add": 1}], ctx.models, ctx.spec)
+        g = U.plan_goal(self.env, fit=["hv"], batch={"can_1": 3})
+        self.assertEqual({c["kind"] for c in g["changes"]}, {"supply_v", "bus"})
+        self.assertEqual(len(g["met"]), 2)
+        self.assertIn("hv", g["gain"]["fit"])
+        self.assertGreater(g["gain"]["cost"], 0)
+        g = U.plan_goal(self.env, fit=["dual", "nosuch"], batch={"can_1": 3}, budget=1)
+        self.assertEqual(g["unknown"], ["nosuch"])
+        self.assertEqual({c["board"] for c in g["cannot"]}, {"dual", "can_1"})
+        self.assertIn("over the budget", [c for c in g["cannot"] if c["board"] == "can_1"][0]["reason"])
+        g = U.plan_goal(self.env, changes=U.parse_changes("station-1:can+2"))
+        self.assertEqual(g["gain"]["slots"], 6)                               # three CAN boards, 2 -> 4 each
+
+    def test_spec_costs(self):
+        bad = self.E.validate_spec(dict(self.spec, costs={"widgets": 3, "station": -1, "currency": ""}))
+        self.assertTrue(any("costs.widgets" in e for e in bad), bad)
+        self.assertTrue(any("costs.station" in e for e in bad), bad)
+        self.assertTrue(any("costs.currency" in e for e in bad), bad)
+        self.assertEqual(self.E.validate_spec(dict(self.spec, costs={"station": 900, "currency": "USD"})), [])
+
+
+class TestLayouts(unittest.TestCase):
+    """Stations for groups of boards against one main station, by worth minus cost."""
+
+    def setUp(self):
+        from pcbtestkit import environment as E
+        self.E = E
+        self.spec = E.load_spec(None, {"max_stations": 2, "max_batch": 6})
+        self.profs = [_fake_profile("can_%d" % i, ch=2, buses=["can"], site=(60.0, 70.0)) for i in range(6)]
+        self.profs += [_fake_profile("eth_%d" % i, ch=2, buses=["ethernet"], site=(60.0, 70.0)) for i in range(6)]
+
+    def test_groups_and_choice(self):
+        E = self.E
+        free = 300.0 * 220.0
+        groups = E.kmeans(self.profs, 2, free)
+        self.assertEqual(sorted(sorted(p["name"][:3] for p in g) for g in groups), [["can"] * 6, ["eth"] * 6])
+        self.assertEqual(E.focus(groups[0]) in ("CAN", "Ethernet"), True)
+        lays = E.layouts(self.profs, self.spec)
+        names = [x["name"] for x in lays]
+        for n in ("general", "specialized-2", "split-can", "split-ethernet"):
+            self.assertIn(n, names)
+        for x in lays:
+            self.assertAlmostEqual(x["net"], x["worth"] - x["cost"], delta=1.0)
+            self.assertEqual(len(x["stations"]), len(x["models"]))
+        best = E.choose(lays, self.spec)
+        top = max(x["fit_weight"] for x in lays)
+        self.assertEqual(best["fit_weight"], top)
+        self.assertEqual(best["net"], max(x["net"] for x in lays if x["fit_weight"] == top))
+        self.assertEqual(E.choose(lays, dict(self.spec, layout="split-can"))["name"], "split-can")
+        only = E.layouts(self.profs, dict(self.spec, layout="general"))
+        self.assertEqual([x["name"] for x in only], ["general"])
+        self.assertTrue(any("layout must be" in e for e in E.validate_spec(dict(self.spec, layout="bogus"))))
+        self.assertEqual(E.validate_spec(dict(self.spec, layout="specialized-2")), [])
+        summ = E.layout_summary(lays, best)
+        self.assertEqual(sum(1 for x in summ if x["chosen"]), 1)
+        self.assertNotIn("where", json.dumps(summ))
+
+
+class TestStationUpgrade(unittest.TestCase):
+    """An upgraded station keeps every pin, socket and hole it had: the fixtures made for it still plug in."""
+
+    def test_pins_and_holes_stay(self):
+        from pcbtestkit import facility as F
+        from pcbtestkit import station_board as SB
+        tmp = tempfile.mkdtemp(prefix="pcbtk_stup_")
+        try:
+            res = {"ain": 8, "vout": 2, "buses": {"can": 1, "uart": 1}, "dio": 2}
+            st = {"name": "station-1", "title": "T station 1", "plate_mm": [300.0, 220.0], "resources": res,
+                  "gnd_every": 6, "max_pins": 80}
+            pcb = SB.write_station(st, os.path.join(tmp, "a"))
+            fac, _w = F.facility_from_pcb(pcb, ident="station-1", name="T station 1")
+            keep = SB.keep_of(fac)
+            res2 = {"ain": 12, "vout": 3, "buses": {"can": 2, "uart": 1, "ethernet": 1}, "dio": 2}
+            pcb2 = SB.write_station(dict(st, resources=res2, plate_mm=[400.0, 300.0], keep=keep, rev="B"),
+                                    os.path.join(tmp, "b"))
+            fac2, _w = F.facility_from_pcb(pcb2, ident="station-1", name="T station 1")
+            old_c, new_c = fac["fixture"]["connectors"], fac2["fixture"]["connectors"]
+            dx, dy = 50.0, 80.0                                              # (400 - 300) / 2, 300 - 220
+            for a, b in zip(old_c, new_c):
+                for num, fn in a["pins"].items():
+                    self.assertEqual(b["pins"][num], fn, "pin %s" % num)
+                self.assertAlmostEqual(b["at_mm"][0], a["at_mm"][0] + dx, delta=0.05)
+                self.assertAlmostEqual(b["at_mm"][1], a["at_mm"][1] + dy, delta=0.05)
+            fns = {f for c in new_c for f in c["pins"].values()}
+            self.assertTrue({"AIN12", "VOUT3", "CAN2_H", "ETH_RX_N"} <= fns, fns)
+            holes = [tuple(h["at_mm"]) for h in fac2["fixture"]["holes"]]
+            for h in fac["fixture"]["holes"]:
+                self.assertTrue(any(abs(x - h["at_mm"][0] - dx) < 0.05 and abs(y - h["at_mm"][1] - dy) < 0.05
+                                    for x, y in holes), h)
+            with open(pcb2, encoding="utf-8") as fh:
+                self.assertIn('(rev "B")', fh.read())
+            cap = F.capacity(fac2)
+            self.assertEqual((cap["inputs"], cap["supplies"], cap["buses"].get("can"), cap["buses"].get("ethernet")),
+                             (12, 3, 2, 1))
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+
+class TestEnvironmentGrow(unittest.TestCase):
+    """A built environment gets new boards (its stations stay, its boards are reused) and an upgrade."""
+
+    @classmethod
+    def setUpClass(cls):
+        import make_collection
+        cls.tmp = tempfile.mkdtemp(prefix="pcbtk_grow_")
+        cls.col = os.path.join(cls.tmp, "boards")
+        make_collection.main(cls.col, count=4, seed=5)
+        cls.more = os.path.join(cls.tmp, "more")
+        rnd = __import__("random").Random(11)
+        fam = [f for f in make_collection.FAMILIES if f[0] == "can_node"][0]
+        os.makedirs(os.path.join(cls.more, "extra_can"))
+        b, _cfg = make_collection.make_board("extra_can", fam, rnd)
+        with open(os.path.join(cls.more, "extra_can", "extra_can.kicad_pcb"), "w") as fh:
+            fh.write(b.text())
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def test_add_and_upgrade(self):
+        from pcbtestkit import environment as E
+        from pcbtestkit import upgrades as U
+        out = os.path.join(self.tmp, "env")
+        kw = dict(jobs=1, visuals=False, route=False, video="none")
+        env = E.build_environment([self.col], out, E.load_spec(None, {"name": "Grow", "max_stations": 1}), **kw)
+        n0 = env["summary"]["compatible"]
+        self.assertGreaterEqual(n0, 3)
+        with open(os.path.join(out, "sources.json"), encoding="utf-8") as fh:
+            src = fh.read()
+        self.assertNotIn(self.tmp, src)                                    # relative to the environment's folder
+        self.assertEqual(len(E.environment_sources(out)[0]), env["summary"]["boards"])
+        for f in ("constraints.md", "constraints.json", "constraints.csv", "upgrades.md", "upgrades.json"):
+            self.assertTrue(os.path.exists(os.path.join(out, f)), f)
+        with open(os.path.join(out, "index.html"), encoding="utf-8") as fh:
+            page = fh.read()
+        self.assertIn("What limits the boards", page)
+        self.assertIn("Upgrade options", page)
+        sha = env["stations"][0]["board_sha"]
+        t0 = time.time()
+        env2 = E.add_boards(out, [self.more], **kw)
+        self.assertEqual(env2["added"], ["extra_can"])
+        self.assertEqual(env2["summary"]["boards"], env["summary"]["boards"] + 1)
+        self.assertTrue(env2["stations"][0]["fixed"])
+        self.assertEqual(E.board_sha(os.path.join(out, env2["stations"][0]["board"])), sha)   # the station stays
+        self.assertLess(time.time() - t0, 90.0)
+        with self.assertRaises(ValueError):
+            E.add_boards(os.path.join(self.tmp, "nowhere"), [self.more], **kw)
+        # an upgrade: one more CAN; the station keeps its pins, boards whose batch stays keep their fixture
+        with open(os.path.join(out, "stations", "station-1", "facility.json"), encoding="utf-8") as fh:
+            before = json.load(fh)
+        can_before = int(env2["stations"][0]["resources"]["buses"].get("can", 0))
+        env3 = E.upgrade_environment(out, U.parse_changes("station-1:can+1"), **kw)
+        st = env3["stations"][0]
+        self.assertEqual(st["rev"], "B")
+        self.assertEqual(int(st["resources"]["buses"]["can"]), can_before + 1)
+        with open(os.path.join(out, "stations", "station-1", "facility.json"), encoding="utf-8") as fh:
+            after = json.load(fh)
+        for a, b in zip(before["fixture"]["connectors"], after["fixture"]["connectors"]):
+            for num, fn in a["pins"].items():
+                self.assertEqual(b["pins"][num], fn)
+        self.assertTrue(any(b.get("kept_fixture") for b in env3["boards"]), [b["name"] for b in env3["boards"]])
+        self.assertTrue(env3["upgraded"] and "more CAN" in env3["upgraded"][0]["text"])
+        # a plain build into the same folder keeps the upgraded station (it is hardware by now)
+        env5 = E.build_environment([self.col, self.more], out, E.load_spec(None, {"name": "Grow", "max_stations": 1}), **kw)
+        self.assertEqual(env5["stations"][0]["resources"]["buses"]["can"], can_before + 1)
+        self.assertEqual(env5["stations"][0]["rev"], "B")
+        self.assertTrue(any("kept as it is" in w for w in env5["warnings"]), env5["warnings"])
+        # a station that is your own board is not changed
+        with open(os.path.join(out, "environment.json"), encoding="utf-8") as fh:
+            data = json.load(fh)
+        data["stations"][0]["own"] = True
+        with open(os.path.join(out, "environment.json"), "w", encoding="utf-8") as fh:
+            json.dump(data, fh)
+        with self.assertRaises(ValueError) as cm:
+            E.upgrade_environment(out, U.parse_changes("station-1:uart+1"), **kw)
+        self.assertIn("your own station board", str(cm.exception))
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "upgrade", out, "--add", "station-1:can+1"],
+                           capture_output=True, text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 0, r.stderr[-1500:])
+        self.assertIn("more CAN", r.stdout)
+        self.assertIn("--apply", r.stdout)
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "constraints", out, "--board", "extra_can",
+                            "--json"], capture_output=True, text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 0, r.stderr[-1500:])
+        self.assertEqual(json.loads(r.stdout)[0]["board"], "extra_can")
+        r = subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "options", out], capture_output=True,
+                           text=True, cwd=ROOT)
+        self.assertEqual(r.returncode, 0, r.stderr[-1500:])
+        self.assertIn("upgrade options", r.stdout)
+
+    def test_agent_tools(self):
+        out = os.path.join(self.tmp, "env_tools")
+        from pcbtestkit import environment as E
+        E.build_environment([self.col], out, E.load_spec(None, {"max_stations": 1}), jobs=1, visuals=False, route=False,
+                            video="none")
+        ws = Workspace(None)
+        r = ws.call("get_environment", {"path": out})
+        self.assertTrue(r["ok"], r)
+        self.assertIn("options", r)
+        self.assertLess(len(json.dumps(r)), 12000)
+        with open(os.path.join(out, "environment.json"), encoding="utf-8") as fh:
+            b = json.load(fh)["boards"][0]["name"]
+        r = ws.call("get_environment", {"path": out, "board": b})
+        self.assertEqual(r["board"]["board"], b)
+        r = ws.call("plan_environment_upgrade", {"path": out, "changes": "station-1:uart+1"})
+        self.assertTrue(r["ok"], r)
+        self.assertEqual(r["changes"][0]["kind"], "bus")
+        r = ws.call("upgrade_environment", {"path": out, "changes": "station-1:uart+1"})
+        self.assertFalse(r["started"])
+        self.assertIn("CONFIRM", r["note"])
+        r = ws.call("add_boards_to_environment", {"path": out, "boards": [self.more], "dry_run": True})
+        self.assertEqual(r["new"], ["extra_can"])
+        self.assertFalse(r["started"])
+        r = ws.call("plan_environment_upgrade", {"path": out, "options": ["U999"]})
+        self.assertFalse(r["ok"])
+        self.assertEqual(r["error"]["code"], "NOT_FOUND")
+        r = ws.call("get_environment_job", {"path": out})
+        self.assertFalse(r["ok"])

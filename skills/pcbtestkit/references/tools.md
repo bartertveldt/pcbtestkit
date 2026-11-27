@@ -2,7 +2,7 @@
 
 # Tool reference (agent API and MCP)
 
-The same 34 tools are available through `pcbtestkit api <tool> --args '<json>' --compact`, the MCP server (`pcbtestkit mcp`) and Python (`pcbtestkit.agent.Workspace.call`). Every call returns one JSON object with `"ok": true|false`; errors carry `code`, `message` and often `hint` or `did_you_mean`.
+The same 40 tools are available through `pcbtestkit api <tool> --args '<json>' --compact`, the MCP server (`pcbtestkit mcp`) and Python (`pcbtestkit.agent.Workspace.call`). Every call returns one JSON object with `"ok": true|false`; errors carry `code`, `message` and often `hint` or `did_you_mean`.
 
 R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo_last` reverts up to 20 writes). Every write accepts `rationale` (one sentence), `dry_run` (preview the effects) and `confirm` (needed after a `CONFIRM_REQUIRED` answer). Core = included in the MCP `core` profile (tool profiles: full, core, readonly).
 
@@ -28,6 +28,12 @@ R = read-only, W = write (stored in `pcbtestkit.json` with an audit entry; `undo
 | [`set_fixture_options`](#set_fixture_options) | W |  | Fixture options: mode (generate\|own\|none), outline, margin, panel of N x M sites, dividers, holes, routing (route, track and via sizes), every board's nest and clamp (nest_*) |
 | [`set_batch_and_programming`](#set_batch_and_programming) | W |  | Batch size (boards per fixture and jig set) and programming: headers, fixture connector type, flash command |
 | [`set_facility`](#set_facility) | W |  | Pick the test facility (tester) the fixture plugs into, by id from get_schema('facilities'): its channel count and range, fixed connector and plate, buses and runner driver |
+| [`set_test_environment`](#set_test_environment) | W |  | Make this board's fixture and jigs for an existing test environment (a folder an environment build made, or a station board): station (auto = the one that takes most) and batch (auto = as many as it allows, or N); remember=true uses it for every future build |
+| [`get_environment`](#get_environment) | R |  | A built test environment: its stations, layout, what limits the boards and the best upgrade options with what they gain and cost; board=NAME gives that board's constraints |
+| [`plan_environment_upgrade`](#plan_environment_upgrade) | R |  | What changing a test environment gains and costs, without changing it: option ids, a path, changes of your own, or goals (boards that must fit, batches, a budget) solved at the lowest cost |
+| [`upgrade_environment`](#upgrade_environment) | W |  | Make a test environment upgrade and rebuild it in the background (hours for 100+ boards): the stations keep every pin, so existing fixtures still plug in |
+| [`add_boards_to_environment`](#add_boards_to_environment) | W |  | Add boards (project folders or .kicad_pcb files) to a built test environment in the background: its stations stay, its boards are reused, the swap videos get the new boards |
+| [`get_environment_job`](#get_environment_job) | R |  | How far a test environment's background job is (build, add, upgrade): state, message, fraction; and what it will do with the computer's power afterwards |
 | [`set_stacked_boards`](#set_stacked_boards) | W |  | Declare boards stacked on this one (daughter board, shield, display): parts, outline, height, fitted during the test or after |
 | [`set_analysis_options`](#set_analysis_options) | W | yes | Analysis settings: class system + class you will order (class_system e.g |
 | [`list_class_systems`](#list_class_systems) | R |  | Technology-class systems available (fab class tables, fab capability tiers, IPC standards), with their dimensions and levels |
@@ -308,6 +314,77 @@ Pick the test facility (tester) the fixture plugs into, by id from get_schema('f
 | Argument | Type | Description |
 |---|---|---|
 | `facility` (required) | string | Facility id, e.g. raspberry-pi. |
+
+### set_test_environment
+
+Make this board's fixture and jigs for an existing test environment (a folder an environment build made, or a station board): station (auto = the one that takes most) and batch (auto = as many as it allows, or N); remember=true uses it for every future build. path 'none' switches it off.
+
+| Argument | Type | Description |
+|---|---|---|
+| `path` (required) | string |  |
+| `station` | string |  |
+| `batch` | any | 'auto' or a number |
+| `remember` | boolean |  |
+
+### get_environment
+
+A built test environment: its stations, layout, what limits the boards and the best upgrade options with what they gain and cost; board=NAME gives that board's constraints.
+
+| Argument | Type | Description |
+|---|---|---|
+| `path` (required) | string |  |
+| `board` | string |  |
+| `top` | integer | Upgrade options to list (default 8). |
+
+### plan_environment_upgrade
+
+What changing a test environment gains and costs, without changing it: option ids, a path, changes of your own, or goals (boards that must fit, batches, a budget) solved at the lowest cost.
+
+| Argument | Type | Description |
+|---|---|---|
+| `path` (required) | string |  |
+| `options` | array of string | Option ids from get_environment (U1, ...). |
+| `path_name` | value \| fit \| batch | Take a path's changes: best value, most boards, biggest batches. |
+| `steps` | integer | Only the path's first N changes. |
+| `changes` | string | Changes of your own: 'station-1:can+1,ethernet+1,ain+8,supplies+2,plate=400x300; supply_v=48; max_batch=16; new_station'. |
+| `fit` | array of string | Boards that must fit. |
+| `batch` | object | Board -> the batch it must have, e.g. {"sensor_04": 8}. |
+| `budget` | number | At most this much (the spec's currency). |
+
+### upgrade_environment
+
+Make a test environment upgrade and rebuild it in the background (hours for 100+ boards): the stations keep every pin, so existing fixtures still plug in. Same arguments as plan_environment_upgrade; needs confirm=true.
+
+| Argument | Type | Description |
+|---|---|---|
+| `path` (required) | string |  |
+| `options` | array of string | Option ids from get_environment (U1, ...). |
+| `path_name` | value \| fit \| batch | Take a path's changes: best value, most boards, biggest batches. |
+| `steps` | integer | Only the path's first N changes. |
+| `changes` | string | Changes of your own: 'station-1:can+1,ethernet+1,ain+8,supplies+2,plate=400x300; supply_v=48; max_batch=16; new_station'. |
+| `fit` | array of string | Boards that must fit. |
+| `batch` | object | Board -> the batch it must have, e.g. {"sensor_04": 8}. |
+| `budget` | number | At most this much (the spec's currency). |
+| `when_done` | none \| sleep \| hibernate \| shutdown |  |
+
+### add_boards_to_environment
+
+Add boards (project folders or .kicad_pcb files) to a built test environment in the background: its stations stay, its boards are reused, the swap videos get the new boards. Needs confirm=true.
+
+| Argument | Type | Description |
+|---|---|---|
+| `path` (required) | string |  |
+| `boards` (required) | array of string |  |
+| `new_stations` | boolean | Design a further station for new boards no station takes (within max_stations; default true). |
+| `when_done` | none \| sleep \| hibernate \| shutdown |  |
+
+### get_environment_job
+
+How far a test environment's background job is (build, add, upgrade): state, message, fraction; and what it will do with the computer's power afterwards.
+
+| Argument | Type | Description |
+|---|---|---|
+| `path` (required) | string |  |
 
 ### set_stacked_boards
 

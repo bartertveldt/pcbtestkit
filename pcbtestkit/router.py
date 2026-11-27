@@ -45,7 +45,8 @@ DEFAULTS: Dict[str, Any] = {
     "via_cost": 8.0,             # a via costs as much as this many grid steps
     "max_passes": 4,
     "max_cells": 1600000,        # per layer; the grid is made coarser for very large boards
-    "max_expansions": 250000,    # per search (the last resort per connection has no cap)
+    "max_expansions": 250000,    # per search (the last resort per connection has no cap...)
+    "last_resort_expansions": 0,  # ...unless this is set (0 = the whole board): large fixtures in a hurry
 }
 
 _SLACK = 0.005       # extra clearance on every rule, so rounding never lands exactly on a limit
@@ -507,7 +508,7 @@ class Router:
                 wx0, wx1, wy0, wy1 = min(wx0, tx), max(wx1, tx), min(wy0, ty), max(wy1, ty)
         via_cost = int(round(float(self.o["via_cost"]) * 10))
         # searches are capped, except the last resort (whole board, narrowest track), which may visit every state
-        limit = int(self.o["max_expansions"]) if capped else 2 * N
+        limit = int(self.o["max_expansions"]) if capped else (int(self.o.get("last_resort_expansions") or 0) or 2 * N)
         wq = max(4, int(round(float(self.o["weight"]) * 4)))      # heuristic weight in quarters
         self._gen += 1
         gen = self._gen

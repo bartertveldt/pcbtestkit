@@ -12,8 +12,9 @@ except ImportError:
 
 if _IN_KICAD:
     try:
-        from .plugin.action_plugin import PCBTestKitPlugin
+        from .plugin.action_plugin import PCBTestKitEnvironmentPlugin, PCBTestKitPlugin
         PCBTestKitPlugin().register()
+        PCBTestKitEnvironmentPlugin().register()
     except Exception:  # never break KiCad's plugin loading
         import logging
         import traceback

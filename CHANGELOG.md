@@ -2,6 +2,96 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org).
 
+## 1.1.2 (2026-11-27)
+
+### Test environments: 100+ boards, one to three testers
+- `pcbtestkit environment plan | build | init`: give it every KiCad project you make (folders are searched, or
+  `.kicad_pro`/`.kicad_pcb` files, or `@list.txt`). It profiles every board in parallel (cached), designs the test
+  station that most of them fit, and further stations (up to `max_stations`, 3) for the boards the earlier ones
+  cannot take, and checks every board on its station with a real fixture layout. A greedy designer spends each
+  station's socket pins (one or two 2 x 40 sockets) on analog inputs, switched supplies and bus instances where they
+  let the most boards fit and the batches grow, within the spec's `limits`; a board goes to the first station that
+  takes it (`rebalance: true` also moves boards to a later station for a batch 1.5 times as big).
+- `build --out DIR` makes each station's KiCad board (`pcbtestkit/station_board.py`: plate, holes, sockets with every
+  signal named by net, its electronics as parts) and reads it back as the facility, every board type's outputs on its
+  station (several at a time; boards whose outputs are up to date are skipped), each station's page and swap video,
+  and `index.html`, `requirements.md` (exactly what each station needs: inputs and range, supplies with voltages and
+  current, buses with the boards that use them, programmers per interface, plate, sockets), `ranking.csv`,
+  `boards.csv`, `environment.json`, `environment-spec.json`. Boards that do not fit are listed with the reason
+  (supply voltage, probed from both sides, no reachable test point, too many channels, a bus not allowed, too big).
+- Your own environment: the spec (`environment init`), stations edited in KiCad and kept with `--environment`, or
+  stations of your own with `--station`; priorities per board (`--priorities file.csv`).
+- KiCad: *Tools > External Plugins > PCB TestKit - test environment for many boards* (and *Many boards...* in the
+  dialog): pick a folder or projects, optionally an existing environment or station board, the output folder and the
+  settings; it plans or builds in a background job with a progress window (`pcbtestkit/environment_job.py`).
+- New boards for an existing environment: `pcbtestkit environment use DIR` remembers it (`~/.pcbtestkit/settings.json`,
+  `PCBTESTKIT_HOME`), or `run --environment DIR [--station S] [--batch N|auto]` per run; the KiCad dialog's *Test &
+  fixture* tab has a *Test environment* box with *Remember for every future build*. The board's fixture, jigs and
+  runner are made for the station that takes most of them, with as many boards as it allows (inputs, supplies, buses,
+  plate, checked with a real layout) or a set batch; nothing is written into `pcbtestkit.json` but the choice.
+- `examples/make_collection.py` generates a collection of varied boards (sensor nodes, CAN nodes, RS-485 I/O, USB
+  dongles, gateways, power boards, large controllers, AVR boards, and a few that cannot fit by design).
+
+### Growing and upgrading an environment
+- **Layouts by worth and cost.** With every station new, the designer compares one main station (general) with
+  stations made for groups of boards (`specialized-N`, k-means on what the boards need; `split-<bus>`, e.g. a CAN
+  station and an Ethernet station) and keeps the one worth the most for what it costs: the boards that fit (spec
+  `costs.value_per_board`, more for bigger batches) minus stations, programmers and fixtures (spec `costs`: rough
+  EUR prices, set your own). `--layout` / spec `layout` takes another; `coverage_first` never trades boards that fit
+  for cost. *Layouts compared* on `index.html`, `layouts` in `environment.json`.
+- **Constraints per board** (`constraints.md`/`.csv`/`.json`, `environment constraints DIR [--board B]`): what each
+  resource of its station allows, which bind, what one more board per fixture needs and costs; for a board that
+  fits none, what it lacks on every station and the cheapest change (or why none helps).
+- **Upgrade options** (`upgrades.md`/`.json`, `environment options DIR`): single changes ranked by net worth (id
+  U1...) and three paths (best value, most boards, biggest batches). `environment upgrade DIR --option U1 | --path
+  value [--steps N] | --add "station-1:can+1,ain+8;supply_v=48" | --fit a,b --batch c=6 --budget 1500` shows what it
+  gains and costs; `--apply` makes it: the station's board gets a new revision that keeps every pin, socket position
+  and mounting hole (the plate grows around them), so every fixture made for it still plugs in, and boards whose
+  batch stays keep their fixture (`pcbtestkit/upgrades.py`, `station_board.upgrade_sockets`).
+- **Adding boards** (`environment add DIR BOARDS...`): the stations stay, the boards there are reused (their checks
+  are cached too), a further station only for new boards none takes; every station video is kept as clips
+  (`station_video_parts/`) and the new board types are rendered and joined after the ones it showed.
+  `sources.json` (relative paths) records where each board came from.
+- **AI assistants:** MCP/API tools `get_environment`, `plan_environment_upgrade` (goals solved at the lowest cost),
+  `upgrade_environment`, `add_boards_to_environment` (background jobs, `confirm` needed) and `get_environment_job`
+  (40 tools in all).
+- A station board's second socket with only a bus or two on it is read (an upgraded station's new socket).
+
+### Long runs: background, lid closed, then sleep or shut down
+- `environment plan/build --when-done sleep|hibernate|shutdown [--grace 120]`, `--lid`, `--no-keep-awake`,
+  `environment stay-on DIR` (`pcbtestkit/power.py`). A run keeps the computer awake (by default), also with the lid
+  closed (`--lid`: on macOS with one administrator password prompt, set back when the run ends or the battery is under
+  10 %; on Windows the lid action, set back afterwards), and once it has finished or failed (not when cancelled) puts
+  the computer to sleep, hibernates or shuts it down after a warning that *Stay on* (progress window),
+  Ctrl+C or `stay-on` can stop. A background job's power is handled by a watcher process, so a crash counts as a
+  failure. The KiCad dialog has a *Long runs* box and remembers its choice.
+
+### 3D images and rendering
+- The guide's 3D images default to the *best* preset (shadows, anti-aliasing) instead of KiCad's *high*: hardly a
+  visible difference and 6x faster (15 images: 17 s instead of 102 s). `run --image-quality`, `visuals.quality`, the
+  dialog's *3D images* choice and the environment spec/dialog set it; the images render several at a time.
+- `environment plan/build --background` runs as a background job; environment builds share the cores between the
+  boards worked on at once; a station video's frames are deleted once its MP4 is made.
+
+### Stations
+- A board's bus counts against a station only when every line of it has a probe (an unprobed USB no longer takes a
+  station's USB port). On a station fixture each board's dividers are packed under it (no header or terminal space),
+  which leaves more of the plate for more boards and routes better.
+- A station may have two interface sockets; its pins are assigned as one pool. Station boards are read with every
+  socket that carries station nets, Ethernet nets (`ETH<k>_TX_P` ...) included; only mounting holes count as holes.
+- `station run` takes a ready plan, works on several boards at a time, keeps boards whose outputs are up to date and
+  can show only the first N board types in its video; the station page shows every socket's pin map.
+- The fixture router takes search settings from `fixture.router` (`weight`, `max_passes`, `last_resort_expansions`):
+  a 4-board station fixture routes in about 40 s instead of minutes with the environment's settings.
+- Fixtures with nests put the sites 3 mm apart (`fixture.nest.site_gap_mm`): the nests keep their own clearance.
+
+### Fixes
+- A nest post's solder mask opening is on the top only: tracks that pass under its screw head on the bottom stay
+  covered (KiCad's DRC reported them as solder mask bridges). A test runs KiCad's DRC on a nest fixture.
+- The fixture's title moves along the edge when a nest post is where it would go (no silkscreen clipped by mask).
+- A programming connector that is an edge-mount part (pads on both copper layers, like an edge DB9) gets a pin header
+  with its pinout on the fixture instead of a copy with every pad on one layer (which shorted them).
+
 ## 1.1.1 (2026-11-26)
 
 ### Test stations: several board types on one tester

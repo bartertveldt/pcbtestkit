@@ -61,6 +61,15 @@ Exit codes: 0 ok, 1 findings/violations/tool error (the JSON says which), 2 bad 
   Every board gets a printed nest (slides in above the pogo tips) and a toggle clamp (`/nest` in the fixture JSON).
 - **Test station:** several board types on one tester: `pcbtestkit station plan STATION.kicad_pcb BOARD...` gives
   each type's batch and what limits it (`--json`); `station run ... --out DIR` makes every type's outputs.
+- **Test environment (many boards):** `pcbtestkit environment plan FOLDER... --json` designs 1-3 stations for a
+  whole collection and ranks the boards (`summary`, `stations[].requirements`, `ranking`, boards with `reason`);
+  `environment build FOLDER... --out DIR` makes everything (slow: minutes per board with renders). Docs: docs/ENVIRONMENTS.md.
+  A new board for an existing environment: `pcbtestkit run P --environment DIR --batch auto` (or `environment use DIR`
+  once: every later run is made for it); the run prints the station and batch. More boards into it: `environment add
+  DIR BOARDS...`. What limits each board / what an upgrade gains and costs: tool `get_environment` (or
+  `environment constraints|options DIR`), `plan_environment_upgrade` with goals (`fit`, `batch`, `budget`), then
+  `upgrade_environment` with `confirm=true` (keeps every station pin: existing fixtures still fit). Long runs:
+  `--background --when-done sleep|shutdown [--lid]`.
 - **Solder jigs:** placement + holding jig per board side, paste-print nest for the second SMD side, as many boards
   per jig as fit the printer bed.
 - **Runner:** Raspberry Pi / MCU (or the facility's driver); batch flow, results with per-step timings.

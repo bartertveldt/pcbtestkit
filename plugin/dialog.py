@@ -44,12 +44,17 @@ class MainDialog(wx.Dialog):
         root.Add(nb, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 8)
         btns = wx.BoxSizer(wx.HORIZONTAL)
         save = wx.Button(self, label="Save settings")
+        many = wx.Button(self, label="Many boards...")
+        many.SetToolTip("A test environment for a whole collection of boards: the station(s) they all fit, every "
+                        "fixture, guide and video")
         run = wx.Button(self, label="Generate")
         close = wx.Button(self, wx.ID_CANCEL, "Close")
         run.SetDefault()
         save.Bind(wx.EVT_BUTTON, lambda e: self.save_settings(True))
+        many.Bind(wx.EVT_BUTTON, self.on_many)
         run.Bind(wx.EVT_BUTTON, self.on_generate)
         btns.Add(save, 0, wx.RIGHT, 6)
+        btns.Add(many, 0, wx.RIGHT, 6)
         btns.AddStretchSpacer()
         btns.Add(run, 0, wx.RIGHT, 6)
         btns.Add(close, 0)
@@ -116,6 +121,14 @@ class MainDialog(wx.Dialog):
         keys = [k for k, _ in self.vq_opts]
         self.video_quality.SetSelection(keys.index(vq) if vq in keys else 1)
         box.Add(self.video_quality, 0, wx.LEFT | wx.BOTTOM, 24)
+        # the guide's 3D images: best is the default, high (KiCad's own soft shadows) is about 6x slower
+        self.iq_opts = [("basic", "3D images: basic (flat, fastest)"), ("standard", "3D images: standard (shadows)"),
+                        ("best", "3D images: best (shadows, anti-aliasing)"), ("high", "3D images: KiCad high (6x slower)")]
+        self.image_quality = wx.Choice(p, choices=[lab for _, lab in self.iq_opts])
+        iq = str((cfg.get("visuals") or {}).get("quality") or "best")
+        ikeys = [k for k, _ in self.iq_opts]
+        self.image_quality.SetSelection(ikeys.index(iq) if iq in ikeys else 2)
+        box.Add(self.image_quality, 0, wx.LEFT | wx.BOTTOM, 24)
         self.kicad_checks = wx.CheckBox(p, label="Include KiCad DRC / ERC (kicad-cli)")
         self.kicad_checks.SetValue(bool(cfg["analysis"].get("run_kicad_drc", True)))
         box.Add(self.kicad_checks, 0, wx.ALL, 3)
@@ -217,6 +230,7 @@ class MainDialog(wx.Dialog):
             g.Add(wx.StaticText(p, label=lab), 0, wx.ALIGN_CENTER_VERTICAL)
             g.Add(ctl)
         s.Add(g, 0, wx.ALL, 10)
+        s.Add(self._environment_box(p), 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 10)
         s.Add(wx.StaticText(p, label="Rail voltages and tolerances: Rails tab. Signal limits are learned from a known-good "
                                      "board by the test runner (learn mode).\nCustom functional steps can be added in "
                                      "pcbtestkit.json (testplan.custom_steps). No AI is needed for any of it.\n"
@@ -539,7 +553,12 @@ class MainDialog(wx.Dialog):
         fx["outline"] = self.outline.GetStringSelection()
         fx["panel"] = {"cols": 1, "rows": 1, "spacing_mm": float((fx.get("panel") or {}).get("spacing_mm", 10.0))}
         u.setdefault("batch", {}).update({"count": self.batch_n.GetValue(), "cols": self.batch_cols.GetValue()})
+        u["environment"] = self.environment_setting()
+        if self.env_remember.GetValue() and u["environment"]["path"] not in ("", "none"):
+            from ..pcbtestkit import settings
+            settings.remember_environment(u["environment"])
         u.setdefault("video", {})["quality"] = self.vq_opts[max(0, self.video_quality.GetSelection())][0]
+        u.setdefault("visuals", {})["quality"] = self.iq_opts[max(0, self.image_quality.GetSelection())][0]
         if not isinstance(u.get("facility"), dict):          # an inline definition stays as it is
             u["facility"] = self.fac_ids[max(0, self.facility.GetSelection())]
         fx["route"] = self.route_fx.GetValue()
@@ -590,6 +609,97 @@ class MainDialog(wx.Dialog):
         if notify:
             wx.MessageBox("Saved to %s" % self.design.config_path, "PCB TestKit")
         return True
+
+    # ------------------------------------------------------------------ #
+    def _environment_box(self, p):
+        """An existing test environment (made by an environment build, maybe long ago) to make this board's fixture
+        and jigs for: its station, a fixed batch or as many boards as the station allows, remembered if wanted."""
+        from ..pcbtestkit import settings
+        box = wx.StaticBoxSizer(wx.VERTICAL, p, "Test environment (stations made earlier for many boards)")
+        sb = box.GetStaticBox()
+        ec = dict(self.user.get("environment") or {})
+        rem = settings.remembered_environment()
+        self.env_path = wx.TextCtrl(sb, value="" if str(ec.get("path") or "").lower() == "none" else str(ec.get("path") or ""),
+                                    size=(380, -1))
+        self.env_path.SetHint("empty: the remembered environment" if rem else "a folder made by an environment build")
+        b_dir = wx.Button(sb, label="Folder...")
+        b_st = wx.Button(sb, label="Station board...")
+        r1 = wx.BoxSizer(wx.HORIZONTAL)
+        r1.Add(self.env_path, 1, wx.RIGHT, 6)
+        r1.Add(b_dir, 0, wx.RIGHT, 6)
+        r1.Add(b_st, 0)
+        box.Add(r1, 0, wx.EXPAND | wx.ALL, 6)
+        self.env_off = wx.CheckBox(sb, label="No test environment for this board")
+        self.env_off.SetValue(str(ec.get("path") or "").lower() == "none")
+        self.env_station = wx.ComboBox(sb, value=str(ec.get("station") or "auto"), choices=["auto"], size=(200, -1))
+        self.env_auto = wx.CheckBox(sb, label="Batch: as many boards as the station allows (else 'Boards per batch')")
+        self.env_auto.SetValue(str(ec.get("batch", "auto")).lower() == "auto")
+        self.env_remember = wx.CheckBox(sb, label="Remember this environment for every future build (all projects)")
+        r2 = wx.BoxSizer(wx.HORIZONTAL)
+        r2.Add(wx.StaticText(sb, label="Station"), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 6)
+        r2.Add(self.env_station, 0, wx.RIGHT, 12)
+        r2.Add(self.env_off, 0, wx.ALIGN_CENTER_VERTICAL)
+        box.Add(r2, 0, wx.LEFT | wx.BOTTOM, 6)
+        box.Add(self.env_auto, 0, wx.LEFT | wx.BOTTOM, 6)
+        box.Add(self.env_remember, 0, wx.LEFT | wx.BOTTOM, 6)
+        env = self.design.environment or {}
+        line = ("Remembered for every build: %s" % rem["path"]) if rem else "No environment is remembered."
+        if env.get("ok"):
+            line += "\nThis board: %s, %s, %d per batch (%s)" % (env["environment"], env["station"], env["batch"],
+                                                               "as many as it allows: " + str(env.get("limit")) if env.get("auto")
+                                                               else "fixed")
+        elif env:
+            line += "\nThis board: %s" % env.get("reason")
+        self.env_info = wx.StaticText(sb, label=line)
+        box.Add(self.env_info, 0, wx.LEFT | wx.BOTTOM, 6)
+
+        def stations(path):
+            try:
+                with open(os.path.join(path, "environment.json"), encoding="utf-8") as fh:
+                    return [st["name"] for st in json.load(fh).get("stations") or []]
+            except (OSError, ValueError, KeyError):
+                return []
+
+        def set_path(path):
+            self.env_path.SetValue(path)
+            self.env_off.SetValue(False)
+            cur = self.env_station.GetValue()
+            self.env_station.Set(["auto"] + stations(path))
+            self.env_station.SetValue(cur if cur else "auto")
+
+        def on_dir(_e):
+            with wx.DirDialog(self, "The test environment folder (with environment.json)") as dlg:
+                if dlg.ShowModal() == wx.ID_OK:
+                    if not os.path.exists(os.path.join(dlg.GetPath(), "environment.json")):
+                        wx.MessageBox("No environment.json in that folder: pick a folder an environment build made.",
+                                      "PCB TestKit", wx.ICON_WARNING)
+                        return
+                    set_path(dlg.GetPath())
+
+        def on_st(_e):
+            with wx.FileDialog(self, "A station board", wildcard="Station (*.kicad_pcb;*.json)|*.kicad_pcb;*.json",
+                               style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as dlg:
+                if dlg.ShowModal() == wx.ID_OK:
+                    set_path(dlg.GetPath())
+        b_dir.Bind(wx.EVT_BUTTON, on_dir)
+        b_st.Bind(wx.EVT_BUTTON, on_st)
+        p_ = self.env_path.GetValue() or (rem or {}).get("path") or ""
+        if p_ and os.path.isdir(p_):
+            self.env_station.Set(["auto"] + stations(p_))
+            self.env_station.SetValue(str(ec.get("station") or "auto"))
+        return box
+
+    def environment_setting(self) -> dict:
+        """The dialog's test environment choice as pcbtestkit.json "environment"."""
+        path = "none" if self.env_off.GetValue() else self.env_path.GetValue().strip()
+        return {"path": path, "station": self.env_station.GetValue().strip() or "auto",
+                "batch": "auto" if self.env_auto.GetValue() else int(self.batch_n.GetValue())}
+
+    def on_many(self, _evt):
+        from .environment_dialog import EnvironmentDialog
+        dlg = EnvironmentDialog(self, self.board_path)
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def on_decisions(self, _evt):
         from ..pcbtestkit.agent import Workspace

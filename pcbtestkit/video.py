@@ -23,7 +23,7 @@ import re
 import shutil
 import subprocess
 import sys
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Sequence
 
 from . import classify as C
 from .animate import later_jig_sets
@@ -706,6 +706,62 @@ def finish_video(work: str, py: Optional[str] = None, ff: Optional[str] = None, 
                 ff, ", ".join(e[0] for e in caps["encoders"]), _last_line(r.stderr if r else "")),
             "reused": reused,
             "log": "frames reused: %s\ncross-fades: %s\n%s" % (", ".join(reused) or "none", caps["xfade"], "\n".join(tried))}
+
+
+def encode_each(work: str, outs: Sequence[str], py: Optional[str] = None, ff: Optional[str] = None) -> Dict[str, Any]:
+    """Like finish_video, but every scene of ``work``/storyboard.json becomes an MP4 of its own (``outs``, one per
+    scene): clips that can be kept and joined again later (join_clips). Returns {"ok", "parts": [{"path",
+    "duration_s"}]} or the reason."""
+    with open(os.path.join(work, "storyboard.json"), encoding="utf-8") as fh:
+        job = json.load(fh)
+    size, fps = tuple(job["size"]), float(job.get("fps", 24))
+    drawn = draw_captions(work, py)
+    if not drawn.get("ok"):
+        return drawn
+    frames_lists = _kept_captions(work) or []
+    ff = ff or find_ffmpeg()
+    if not ff:
+        return {"ok": False, "reason": "ffmpeg not found (install it or set FFMPEG)"}
+    caps = ffmpeg_caps(ff)
+    parts = []
+    for i, (sc, fl, out) in enumerate(zip(job["scenes"], frames_lists, outs)):
+        if not fl:
+            return {"ok": False, "reason": "scene %d has no frames" % i}
+        args, durs = _clip_inputs([sc], [fl], work, fps, "part%02d" % i)
+        graph, last, t = filter_graph(durs, size, fps, 0.0, False)
+        out = os.path.abspath(out)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        r = None
+        for name, opts in caps["encoders"]:
+            r = subprocess.run(_mp4_command(ff, args, graph, last, name, opts, out), capture_output=True, timeout=3600,
+                               cwd=work, **QUIET)
+            if r.returncode == 0 and os.path.exists(out):
+                break
+        else:
+            return {"ok": False, "reason": "ffmpeg could not encode scene %d: %s" % (i, _last_line(r.stderr if r else ""))}
+        parts.append({"path": out, "duration_s": round(t, 3)})
+    return {"ok": True, "parts": parts}
+
+
+def join_clips(files: Sequence[str], durs: Sequence[float], out_path: str, size, fps: float = 24.0, fade: float = 0.6,
+               ff: Optional[str] = None) -> Dict[str, Any]:
+    """MP4 clips one after the other in one MP4, cross-faded (encode_each made them)."""
+    ff = ff or find_ffmpeg()
+    if not ff:
+        return {"ok": False, "reason": "ffmpeg not found (install it or set FFMPEG)"}
+    caps = ffmpeg_caps(ff)
+    args: List[str] = []
+    for f in files:
+        args += ["-i", os.path.abspath(f)]
+    graph, last, t = filter_graph([float(d) for d in durs], size, fps, fade, caps["xfade"])
+    r = None
+    for name, opts in caps["encoders"]:
+        r = subprocess.run(_mp4_command(ff, args, graph, last, name, opts, os.path.abspath(out_path)), capture_output=True,
+                           timeout=3600, **QUIET)
+        if r.returncode == 0 and os.path.exists(out_path):
+            return {"ok": True, "path": os.path.abspath(out_path), "duration_s": round(t, 1), "scenes": len(files),
+                    "encoder": name}
+    return {"ok": False, "reason": "ffmpeg could not join the clips: %s" % _last_line(r.stderr if r else "")}
 
 
 def _scene_seconds(sc: Dict[str, Any]) -> float:

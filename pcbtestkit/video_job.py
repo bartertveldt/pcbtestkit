@@ -118,11 +118,19 @@ def describe(st: Dict[str, Any]) -> str:
     return st.get("message", "")
 
 
+OVERRIDES = "video-job-overrides.json"
+
+
 def run(board: str, out_dir: str, tracker: Tracker, cancel: Optional[threading.Event] = None) -> Dict[str, Any]:
     """Make the video (and the guide and report with it). Returns the pipeline's video result."""
     from .pipeline import run_pipeline
     from .project import Design
-    d = Design.load(board)
+    try:                                        # the settings of the run that started the job (command line)
+        with open(os.path.join(out_dir, "visuals", OVERRIDES), encoding="utf-8") as fh:
+            over = json.load(fh) or None
+    except (OSError, ValueError):
+        over = None
+    d = Design.load(board, overrides=over)
     res = run_pipeline(d, out_dir=out_dir, outputs={"video": True, "visuals": "reuse"}, progress=tracker.update,
                        cancel=cancel)
     return res.get("video") or {"ok": False, "reason": "the video was not made"}
@@ -240,7 +248,8 @@ def _window(board: str, out_dir: str) -> int:
     return 0 if result.get("ok") else 1
 
 
-def launch(board: str, out_dir: str, window: bool = True, python: Optional[str] = None) -> Dict[str, Any]:
+def launch(board: str, out_dir: str, window: bool = True, python: Optional[str] = None,
+           overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """Start the video job in the background and return at once: {"ok", "pid", "log", "window"} or the reason it
     did not start. KiCad's Python (with wxPython) shows the progress window; otherwise the job writes its log."""
     if running(out_dir):
@@ -254,6 +263,8 @@ def launch(board: str, out_dir: str, window: bool = True, python: Optional[str] 
         from .video import find_python
         py = find_python()
     os.makedirs(os.path.join(out_dir, "visuals"), exist_ok=True)
+    with open(os.path.join(out_dir, "visuals", OVERRIDES), "w", encoding="utf-8") as fh:
+        json.dump(overrides or {}, fh)
     log = os.path.join(out_dir, "visuals", LOG)
     env = dict(os.environ)
     env["PYTHONPATH"] = os.path.dirname(HERE) + os.pathsep + env.get("PYTHONPATH", "")

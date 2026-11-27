@@ -148,8 +148,13 @@ DEFAULTS: Dict[str, Any] = {
             "spring_free_mm": 10.0,     # compression spring under each standoff boss: 8 mm outside, 0.5 mm wire
             "spring_solid_mm": 3.5,
             "finger_mm": 4.0,           # press plate push fingers
+            "site_gap_mm": 3.0,         # gap between two boards' nests and clamps on a batch fixture
         },
     },
+    # The test environment this board is made for (a folder an environment build made, or a station board):
+    # path "" = the one remembered for every build (pcbtestkit environment use), "none" = none for this board.
+    # station "auto" = the station that takes the most boards of this type; batch "auto" = as many as it allows.
+    "environment": {"path": "", "station": "auto", "batch": "auto"},
     "batch": {
         "count": 1,                 # boards per batch: one fixture site per board, jigs that hold them all
         "cols": 0,                  # 0 = automatic (as square as possible); rows follow from count
@@ -223,6 +228,10 @@ DEFAULTS: Dict[str, Any] = {
     },
     "outputs": {"spec": True, "testplan": True, "fixture": True, "jig": True, "report": True, "runner": True,
                 "guide": True, "visuals": True, "video": False, "keep_scenes": False},
+    # the guide's 3D stills: basic | standard (shadows) | best (+ anti-aliasing: the default) | high (KiCad's own soft
+    # shadows and reflections: hardly different, about 6x slower than best)
+    "visuals": {"quality": "best", "width": 1600, "height": 1000,
+                "workers": 0},              # stills rendered at the same time; 0 = one per CPU core (max 12)
 }
 
 

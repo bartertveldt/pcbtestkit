@@ -299,7 +299,7 @@ def bom(nest: Dict[str, Any]) -> List[Dict[str, Any]]:
     out = [{"qty": 1, "part": "nest (print, PETG)", "file": "nest"},
            {"qty": 4, "part": "M3 hex standoff, female-female, %d mm" % h["standoff"]},
            {"qty": 4, "part": "M3 x 6 screw + M3 large washer (DIN 9021, 9 mm), on top of each standoff"},
-           {"qty": 4, "part": "M3 x 6 screw, standoff to fixture board (from below)"},
+           {"qty": 4, "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"},
            {"qty": 4, "part": "compression spring, outer 8 mm, wire 0.5 mm, free length %.0f mm (solid %.1f mm or less)"
                               % (nest["spring"]["free_mm"], nest["spring"]["solid_mm"])}]
     if nest["clamp"] == "toggle":
@@ -307,7 +307,7 @@ def bom(nest: Dict[str, Any]) -> List[Dict[str, Any]]:
                 {"qty": 1, "part": "clamp adapter (print)", "file": "adapter"},
                 {"qty": 1, "part": "press plate (print)", "file": "press"},
                 {"qty": 4, "part": "M4 x 12 screw + M4 nut, clamp to adapter (nuts in the adapter's channels)"},
-                {"qty": 4, "part": "M3 x 10 screw, adapter to fixture board from below (cuts its own thread)"},
+                {"qty": 4, "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"},
                 {"qty": 2, "part": "nut + washer for the clamp's spindle, one each side of the press plate"}]
     return out
 

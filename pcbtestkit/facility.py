@@ -356,9 +356,11 @@ def assign_pins(fac: Dict[str, Any], channels: List[str], supply: bool, buses: L
     board ("site") it belongs to; GND belongs to all."""
     wired = {sig for b in buses if b["via"] == "fixture" for sig in b["signals"]}
     out = []
+    shared_out = iter(_assign_shared([c for c in connectors(fac) if c.get("shared")], channels, supply, wired,
+                                     max(1, int(sites))))
     for c in connectors(fac):
         if c.get("shared"):
-            out.append(_assign_shared(c, channels, supply, wired, max(1, int(sites))))
+            out.append(next(shared_out))
             continue
         ains = sorted((int(f[3:]), num) for num, f in c["pins"].items() if f.startswith("AIN"))
         ch_of = {num: channels[i] for i, (_n, num) in enumerate(ains) if i < len(channels)}
@@ -380,34 +382,41 @@ def assign_pins(fac: Dict[str, Any], channels: List[str], supply: bool, buses: L
     return out
 
 
-def _assign_shared(c: Dict[str, Any], channels: List[str], supply: bool, wired: set, sites: int) -> Dict[str, Any]:
-    ains = sorted((int(f[3:]), num) for num, f in c["pins"].items() if str(f).startswith("AIN"))
+def _assign_shared(conns: List[Dict[str, Any]], channels: List[str], supply: bool, wired: set,
+                   sites: int) -> List[Dict[str, Any]]:
+    """The shared connectors' pins as one pool (a station may have two sockets): board k gets the k-th block of
+    AIN pins by number (AIN1.. across the sockets), VOUT<k> and bus instance k."""
+    pool = [(ci, str(num), str(fn)) for ci, c in enumerate(conns) for num, fn in c["pins"].items()]
+    ains = sorted((int(f[3:]), ci, num) for ci, num, f in pool if f.startswith("AIN"))
     per = len(channels)
-    who: Dict[str, Tuple[int, str]] = {}                 # pin number -> (site, signal)
+    who: Dict[Tuple[int, str], Tuple[int, str]] = {}     # (connector, pin) -> (site, signal)
     for k in range(1, sites + 1):
         block = ains[(k - 1) * per: k * per]
-        if len(block) == per:
-            for ch, (_n, num) in zip(channels, block):
-                who[num] = (k, ch)
-    for num, fn in c["pins"].items():
-        f = str(fn)
+        if per and len(block) == per:
+            for ch, (_n, ci, num) in zip(channels, block):
+                who[(ci, num)] = (k, ch)
+    for ci, num, f in pool:
         if f.startswith("VOUT") and supply:
             k = int(f[4:])
             if 1 <= k <= sites:
-                who[num] = (k, "VIN")
+                who[(ci, num)] = (k, "VIN")
         bp = bus_pin(f)
         if bp and bp[0] in wired and 1 <= bp[1] <= sites:
-            who[num] = (bp[1], bp[0])
-    pins = []
-    for num in sorted(c["pins"], key=int):
-        fn = c["pins"][num]
-        if fn == "GND":
-            pins.append({"pin": int(num), "function": fn, "signal": "GND", "site": None})
-        elif num in who:
-            pins.append({"pin": int(num), "function": fn, "signal": who[num][1], "site": who[num][0]})
-        else:
-            pins.append({"pin": int(num), "function": fn, "signal": "NC", "site": None})
-    return {"name": c.get("name", "TESTER"), "site": 1, "shared": True, "sites": sites, "pins": pins}
+            who[(ci, num)] = (bp[1], bp[0])
+    out = []
+    for ci, c in enumerate(conns):
+        pins = []
+        for num in sorted(c["pins"], key=int):
+            fn = c["pins"][num]
+            if fn == "GND":
+                pins.append({"pin": int(num), "function": fn, "signal": "GND", "site": None})
+            elif (ci, str(num)) in who:
+                k, sig = who[(ci, str(num))]
+                pins.append({"pin": int(num), "function": fn, "signal": sig, "site": k})
+            else:
+                pins.append({"pin": int(num), "function": fn, "signal": "NC", "site": None})
+        out.append({"name": c.get("name", "TESTER"), "site": 1, "shared": True, "sites": sites, "pins": pins})
+    return out
 
 
 # --------------------------------------------------------------------------- #
@@ -446,7 +455,9 @@ def board_needs(plan: Dict[str, Any]) -> Dict[str, Any]:
     """What one board takes from a station, from its test plan: measurement channels, a switched supply, buses
     wired through the fixture."""
     chans = [p["channel"] for p in plan.get("probes") or [] if p.get("channel")]
-    buses = sorted({b["bus"] for b in (plan.get("facility") or {}).get("bus_checks") or [] if b.get("via") == "fixture"})
+    # a bus counts when it goes through the fixture and every line of it has a probe (else it is not wired)
+    buses = sorted({b["bus"] for b in (plan.get("facility") or {}).get("bus_checks") or [] if b.get("via") == "fixture"
+                    and all((b.get("probes") or {}).get(sig) for sig in (b.get("signals") or {}))})
     return {"channels": len(chans), "supply": bool((plan.get("supply") or {}).get("net")), "buses": buses}
 
 
@@ -554,6 +565,9 @@ _STATION_NET = [
     (re.compile(r"^RS485[_-]?(\d*)[_-]?(A|B)$"), lambda m: bus_function("RS485_" + m.group(2), int(m.group(1) or 1))),
     (re.compile(r"^USB[_-]?(\d*)[_-]?(DP|DM|D\+|D-)$"),
      lambda m: bus_function("USB_" + ("DP" if m.group(2) in ("DP", "D+") else "DM"), int(m.group(1) or 1))),
+    (re.compile(r"^(?:ETH|ETHERNET|ENET)[_-]?(\d*)[_-]?(TX|RX|TD|RD)[_-]?(P|N|\+|-)$"),
+     lambda m: bus_function("ETH_%s_%s" % ("TX" if m.group(2) in ("TX", "TD") else "RX",
+                                           "P" if m.group(3) in ("P", "+") else "N"), int(m.group(1) or 1))),
 ]
 # the fixture carries the mating part of the station's connector
 _MATE = [("PinSocket", "PinHeader"), ("PinHeader", "PinSocket")]
@@ -594,6 +608,32 @@ def _grid(pads: List[Tuple[int, float, float]]) -> Optional[Dict[str, Any]]:
     return best[1] if best and best[0] < 0.05 else None
 
 
+def _station_connector(path: str, b: Any, fp: Any, fns: Dict[str, Optional[str]], warns: List[str]) -> Dict[str, Any]:
+    """One interface socket of a station board as a shared facility connector (its mate goes on the fixture)."""
+    bb = b.outline_bbox()
+    pads = [(int(p.number), p.x, p.y) for p in fp.pads if str(p.number).isdigit()]
+    uniq = {}
+    for num, x, y in pads:
+        uniq.setdefault(num, (num, x, y))
+    geo = _grid(list(uniq.values()))
+    if geo is None:
+        raise ValueError("%s on %s is not a connector on a regular grid (pins numbered 1..N)" % (fp.ref, os.path.basename(path)))
+    unknown = sorted({p.net for p in fp.pads if p.net and station_pin_function(p.net) is None})
+    if unknown:
+        warns.append("%s: nets not recognised as station signals (left unconnected on fixtures): %s"
+                     % (fp.ref, ", ".join(unknown[:12]) + (" ..." if len(unknown) > 12 else "")))
+    pins = {num: (fns.get(num) or "NC") for num in sorted(fns, key=int)}
+    x1, y1 = uniq[1][1], uniq[1][2]
+    lib = fp.lib_id
+    model = next((m.path for m in fp.models if not m.hide), None)
+    for a, bmate in _MATE:
+        if a in lib:
+            lib, model = lib.replace(a, bmate), (model.replace(a, bmate) if model else model)
+            break
+    return dict(geo, name=fp.ref, shared=True, at_mm=[round(x1 - bb.x0, 3), round(y1 - bb.y0, 3)], footprint=lib,
+                pins=pins, **({"model": model} if model else {}))
+
+
 def facility_from_pcb(path: str, connector: Optional[str] = None, ident: Optional[str] = None,
                       name: Optional[str] = None, extra: Optional[Dict[str, Any]] = None) -> Tuple[Dict[str, Any], List[str]]:
     """A station facility read from the station's own KiCad board: the plate is the board outline, the holes are
@@ -619,34 +659,34 @@ def facility_from_pcb(path: str, connector: Optional[str] = None, ident: Optiona
     if best is None:
         raise ValueError("no interface connector found on %s%s: name its nets AIN1.., VOUT1.., GND, CAN1_H ..."
                          % (os.path.basename(path), " (reference %s)" % connector if connector else ""))
-    _score, fp, fns = best
-    pads = [(int(p.number), p.x, p.y) for p in fp.pads if str(p.number).isdigit()]
-    uniq = {}
-    for num, x, y in pads:
-        uniq.setdefault(num, (num, x, y))
-    geo = _grid(list(uniq.values()))
-    if geo is None:
-        raise ValueError("%s on %s is not a connector on a regular grid (pins numbered 1..N)" % (fp.ref, os.path.basename(path)))
-    unknown = sorted({p.net for p in fp.pads if p.net and station_pin_function(p.net) is None})
-    if unknown:
-        warns.append("%s: nets not recognised as station signals (left unconnected on fixtures): %s"
-                     % (fp.ref, ", ".join(unknown[:12]) + (" ..." if len(unknown) > 12 else "")))
-    pins = {num: (fns.get(num) or "NC") for num in sorted(fns, key=int)}
-    x1, y1 = uniq[1][1], uniq[1][2]
-    lib = fp.lib_id
-    model = next((m.path for m in fp.models if not m.hide), None)
-    for a, bmate in _MATE:
-        if a in lib:
-            lib, model = lib.replace(a, bmate), (model.replace(a, bmate) if model else model)
-            break
+    found = [best]
+    if not connector:                       # a second socket: another footprint carrying station signals
+        for fp2 in b.footprints:
+            if fp2 is best[1]:
+                continue
+            nums2 = [p for p in fp2.pads if str(p.number).isdigit()]
+            fns2 = {str(p.number): station_pin_function(p.net) for p in nums2}
+            sc2 = sum(1 for f in fns2.values() if f and f != "GND")
+            socket = bool(re.search(r"Pin(Socket|Header)_2x", fp2.lib_id or ""))
+            # a 2-row pin socket with a bus or two (an upgraded station's new socket) counts too
+            if (sc2 >= 4 or (socket and sc2 >= 2)) and sum(1 for f in fns2.values() if f) >= 0.6 * len(fns2):
+                found.append((sc2, fp2, fns2))
+    found = sorted(found, key=lambda t: C_.natural_key(t[1].ref))
+    conns = []
+    for _score, fp, fns in found:
+        conns.append(_station_connector(path, b, fp, fns, warns))
+    pins = {}
+    for c in conns:
+        pins.update({"%s:%s" % (c["name"], k): v for k, v in c["pins"].items()})
     holes = []
     for f2 in b.footprints:
         for pd in f2.pads:
-            if pd.drill_w >= 2.0 and (pd.is_npth or C_.is_mounting_hole(f2) or not pd.net):
+            if pd.drill_w >= 2.0 and (C_.is_mounting_hole(f2) or all(q.is_npth for q in f2.pads)):
                 holes.append({"at_mm": [round(pd.x - bb.x0, 3), round(pd.y - bb.y0, 3)], "d_mm": round(pd.drill_w, 2),
                               "label": "M%d" % int(round(pd.drill_w - 0.2)) if pd.drill_w < 6 else "HOLE"})
     funcs = list(pins.values())
     have = {bp for bp in (bus_pin(f) for f in funcs) if bp}
+    fp = found[0][1]
     buses = {bus: {"via": "fixture"} for bus in BUSES if _instances(have, bus)}
     base = os.path.splitext(os.path.basename(path))[0]
     fac: Dict[str, Any] = {
@@ -654,15 +694,14 @@ def facility_from_pcb(path: str, connector: Optional[str] = None, ident: Optiona
         "id": ident or re.sub(r"[^a-z0-9._-]+", "-", base.lower()).strip("-") or "station",
         "name": name or (b.title_block.get("title") or base),
         "description": "Test station read from %s: interface connector %s (%d pins), %.0f x %.0f mm plate." % (
-            os.path.basename(path), fp.ref, len(pins), bb.w, bb.h),
+            os.path.basename(path), " + ".join(c["name"] for c in conns), len(pins), bb.w, bb.h),
         "analog": {"inputs": sum(1 for f in funcs if f.startswith("AIN"))},
         "power": {"outputs": len({f for f in funcs if f.startswith("VOUT")}), "switched": True},
         "buses": buses,
         "fixture": {
             "plate_mm": [round(bb.w, 3), round(bb.h, 3)],
             "holes": holes,
-            "connectors": [dict(geo, name=fp.ref, shared=True, at_mm=[round(x1 - bb.x0, 3), round(y1 - bb.y0, 3)],
-                                footprint=lib, pins=pins, **({"model": model} if model else {}))],
+            "connectors": conns,
         },
         "station_pcb": os.path.basename(path),
     }

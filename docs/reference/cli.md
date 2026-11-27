@@ -15,6 +15,7 @@ Run `pcbtestkit <command> --help` for the same text. Without a pip install use `
 | `classes` | technology-class systems: list, show, check a board, validate, template |
 | `facilities` | test facilities (your tester: connector, buses, driver): list, show, validate, template |
 | `station` | several board types on one test station: plan the batch of each, or run them all |
+| `environment` | design 1-3 test stations for a whole collection of boards (100+) and make every station, fixture, guide and video: init, plan, build |
 | `mcp` | run the MCP stdio server |
 
 ## `pcbtestkit run`
@@ -25,12 +26,15 @@ full export
 pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
                       [--fab {standard,advanced,conservative}] [--class-system CLASS_SYSTEM]
                       [--tech-class TECH_CLASS] [--check-class SYSTEM[:CLASS]] [--no-kicad]
-                      [--json] [--out OUT] [--panel PANEL] [--batch BATCH] [--facility FACILITY]
+                      [--json] [--out OUT] [--panel PANEL] [--batch BATCH]
+                      [--environment ENVIRONMENT] [--station STATION] [--remember-environment]
+                      [--no-environment] [--facility FACILITY]
                       [--program-connector {same,swd10,jtag20,avr_isp6,pic_icsp6,pins}]
                       [--outline {rect,outline}] [--jig-parts JIG_PARTS] [--no-fixture]
                       [--no-route] [--no-jig] [--no-runner] [--no-visuals] [--video]
                       [--video-fps VIDEO_FPS] [--video-stills]
-                      [--video-quality {basic,standard,best,high}] [--background] [-q]
+                      [--video-quality {basic,standard,best,high}]
+                      [--image-quality {basic,standard,best,high}] [--background] [-q]
                       project
 ```
 
@@ -47,7 +51,11 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
 | `--json` |  |
 | `--out` | output folder (default <project>/production_test) |
 | `--panel` | fixture sites, e.g. 2x2 |
-| `--batch` | boards per batch: one fixture site per board, jigs that hold them all |
+| `--batch` | boards per batch: one fixture site per board, jigs that hold them all; with a test environment also 'auto' (default there: as many as its station allows) |
+| `--environment` | make the fixture for an existing test environment: a folder an environment build made, or a station board (.kicad_pcb / facility.json) |
+| `--station` | with --environment: which station (default: the one that takes the most boards) |
+| `--remember-environment` | remember --environment for every future build (pcbtestkit environment use does the same) |
+| `--no-environment` | ignore the remembered test environment for this run |
 | `--facility` | test facility the fixture plugs into (pcbtestkit facilities list), default raspberry-pi |
 | `--program-connector` | programming connector per board on the fixture (default: a copy of the board's header) (one of: same, swd10, jtag20, avr_isp6, pic_icsp6, pins) |
 | `--outline` | (one of: rect, outline) |
@@ -61,6 +69,7 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
 | `--video-fps` | frame rate of the video's motion shots (default 24) |
 | `--video-stills` | quick video from stills only, without the 3D animation |
 | `--video-quality` | ray tracing of the motion shots (default standard: shadows and ambient occlusion) (one of: basic, standard, best, high) |
+| `--image-quality` | ray tracing of the guide's 3D images (default best: shadows, anti-aliasing; high = KiCad's own, about 6x slower) (one of: basic, standard, best, high) |
 | `--background` | with --video: make everything else now and render the video in a background job (progress window) |
 | `-q`, `--quiet` |  |
 
@@ -227,6 +236,77 @@ pcbtestkit station [-h] [--out OUT] [--batch BOARD=N] [--connector CONNECTOR]
 | `-q`, `--quiet` |  |
 | `--json` |  |
 
+## `pcbtestkit environment`
+
+design 1-3 test stations for a whole collection of boards (100+) and make every station, fixture, guide and video: init, plan, build
+
+```text
+pcbtestkit environment [-h] [--use-station USE_STATION] [--use-batch USE_BATCH] [--out OUT]
+                              [--spec SPEC] [--environment ENVIRONMENT] [--station STATION]
+                              [--no-new-stations] [--max-stations MAX_STATIONS]
+                              [--max-batch MAX_BATCH] [--plate PLATE] [--name NAME]
+                              [--priorities PRIORITIES] [--layout LAYOUT] [--jobs JOBS]
+                              [--video {none,swap,all}]
+                              [--image-quality {basic,standard,best,high}]
+                              [--video-quality {basic,standard,best,high}]
+                              [--video-boards VIDEO_BOARDS] [--no-visuals] [--no-route]
+                              [--no-resume] [--top TOP] [--strict] [--background] [--window]
+                              [--when-done {none,sleep,hibernate,shutdown}] [--grace GRACE]
+                              [--no-keep-awake] [--lid] [--option OPTION]
+                              [--path {value,fit,batch}] [--steps STEPS] [--add ADD_CHANGES]
+                              [--fit FIT] [--batch BATCH_GOAL] [--budget BUDGET] [--apply]
+                              [--board BOARD] [--no-new-stations-for-new] [--force] [-q] [--json]
+                              {init,plan,build,add,upgrade,constraints,options,use,forget,show,stay-on}
+                              [boards ...]
+```
+
+| Argument | Meaning |
+|---|---|
+| `action` | init: write the spec; plan / build: design the stations for the boards; add DIR BOARDS...: new boards for a built environment (its stations stay, their videos get the new boards); upgrade DIR: what a change gains and costs, --apply makes it; constraints DIR: what limits every board; options DIR: the upgrade options; use DIR: remember an environment for every future build; forget; show; stay-on DIR: keep the computer on after the run there (one of: init, plan, build, add, upgrade, constraints, options, use, forget, show, stay-on) |
+| `boards` | project folders (searched recursively), .kicad_pro / .kicad_pcb files or @list.txt (one path per line); use: the environment folder |
+| `--use-station` | use: the station every board goes on (default auto: the one that takes the most) |
+| `--use-batch` | use: boards per batch (default auto: as many as the station allows) |
+| `--out` | init: the spec file (default environment-spec.json); build: the environment folder (stations, every board's outputs, index.html, requirements.md); plan: also write the plan's documents there |
+| `--spec` | environment spec (JSON; pcbtestkit environment init writes one to edit) |
+| `--environment` | an environment folder an earlier build made: keep its stations (edited in KiCad or not) and only design new ones for the boards they cannot take |
+| `--station` | a station of your own: its .kicad_pcb, a facility.json or a facility id (repeatable); kept as it is (default: []) |
+| `--no-new-stations` | only the given stations, design none |
+| `--max-stations` | at most this many stations (spec max_stations, default 3) |
+| `--max-batch` | at most this many boards of one type per fixture (default 12) |
+| `--plate` | station plate W x H in mm, e.g. 300x220 |
+| `--name` | the environment's name |
+| `--priorities` | CSV of board,weight: how much it matters that a board fits (default 1) |
+| `--layout` | how the stations are laid out: auto (default: the one worth the most for what it costs), general (one main station, more for what it cannot take), specialized-N (N stations for groups of similar boards) or split-<bus> (e.g. split-ethernet) |
+| `--jobs` | boards worked on at the same time (default: cores - 1, at most 8) |
+| `--video` | build: swap = each station's video of its fixtures and boards (default), all = also every board type's explainer (KiCad 3D animation, minutes each), none (one of: none, swap, all; default: swap) |
+| `--image-quality` | ray tracing of the guides' 3D images (default best; high is about 6x slower) (one of: basic, standard, best, high) |
+| `--video-quality` | ray tracing of the videos (station videos default basic, board explainers standard) (one of: basic, standard, best, high) |
+| `--video-boards` | build/add: board types in each station's video: the first build shows N, an add appends up to N of the new boards (default 8; about a minute of rendering each) (default: 8) |
+| `--no-visuals` | build: skip the KiCad 3D renders in the guides |
+| `--no-route` | build: leave the fixture boards unrouted (faster) |
+| `--no-resume` | build: make every board's outputs again, even if up to date |
+| `--top` | plan/build: rows of the ranking to print (default: 25) |
+| `--strict` | exit 1 when any board does not fit |
+| `--background` | run as a background job and return at once (progress in <out>/environment-job.log and .json) |
+| `--window` | with --background: show the progress window (KiCad's Python) |
+| `--when-done` | plan/build: once the run has finished or failed (not when cancelled), put the computer to sleep, hibernate it or shut it down, after --grace seconds (stay-on FOLDER keeps it on) (one of: none, sleep, hibernate, shutdown) |
+| `--grace` | seconds between the end of the run and --when-done (default 120) (default: 120) |
+| `--no-keep-awake` | plan/build: let the computer sleep while it runs (by default it is kept awake) |
+| `--lid` | plan/build: keep running with the lid closed (macOS asks for the administrator password once; Windows sets the lid action to do nothing until the run ends) |
+| `--option` | upgrade: an option id from upgrades.md (U1, ...), repeatable (default: []) |
+| `--path` | upgrade: the changes of a path in upgrades.md (best value, most boards, biggest batches) (one of: value, fit, batch) |
+| `--steps` | upgrade --path: only its first N changes |
+| `--add` | upgrade: changes of your own, e.g. "station-1:can+1,ethernet+1,ain+8,supplies+2,plate=400x300"; "supply_v=48"; "max_batch=16"; "new_station" (repeatable, or ; between) (default: []) |
+| `--fit` | upgrade: boards that must fit (comma separated): the cheapest changes that take them |
+| `--batch` | upgrade: a board and the batch it must have, e.g. sensor_04=8 (repeatable) (default: []) |
+| `--budget` | upgrade --fit/--batch: at most this much (spec costs currency) |
+| `--apply` | upgrade: make the changes and build the environment again (else it only shows what they gain and cost) |
+| `--board` | constraints: only this board |
+| `--no-new-stations-for-new` | add: put the new boards only on the stations there are |
+| `--force` | init: overwrite the spec file |
+| `-q`, `--quiet` |  |
+| `--json` |  |
+
 ## `pcbtestkit mcp`
 
 run the MCP stdio server
@@ -239,4 +319,4 @@ pcbtestkit mcp [-h] [--project PROJECT] [--read-only] [--profile {full,core,read
 |---|---|
 | `--project` | board or project to open at start (open_project can switch later) |
 | `--read-only` | refuse every write tool |
-| `--profile` | tools to expose: full (34), core (16, about half the tokens), readonly (one of: full, core, readonly; default: full) |
+| `--profile` | tools to expose: full (all 40), core (16, about a third of the tokens), readonly (one of: full, core, readonly; default: full) |

@@ -19,7 +19,7 @@ the model is told to call `open_project`.
 | Claude Code | The plugin (skill + MCP `core`), or only the skill | The skill drives the CLI: no tool definitions in context until used. |
 | Any agent with a shell (Codex, Cursor agent, Gemini CLI, Aider, ...) | `AGENTS.md` + `pcbtestkit guide` | Same: zero standing token cost. |
 | Chat apps without a shell (Claude Desktop, ...) | MCP with `--profile core` | 16 tools, about 3k tokens of definitions per request. |
-| Full control / tool authoring | MCP `--profile full` | All 34 tools, about 6k tokens. |
+| Full control / tool authoring | MCP `--profile full` | All 40 tools, about 9k tokens. |
 | Review only | MCP `--profile readonly` or `--read-only` | No writes possible. |
 
 ## Client setup
@@ -76,6 +76,11 @@ annotations (`readOnlyHint`, `destructiveHint` for `generate_outputs` and `add_c
 Results come back once, as compact JSON text with `"ok"`; errors carry a code, a message and usually a hint or
 `did_you_mean`. Writes support `dry_run`, `confirm`, a rationale, an audit log and `undo_last` (20 steps, kept
 on disk next to the project).
+
+**Test environments.** `get_environment`, `plan_environment_upgrade`, `upgrade_environment`,
+`add_boards_to_environment` and `get_environment_job` work on a built environment's folder (no board needs to be
+open): what limits every board, what an upgrade gains and costs, goals ("these boards must fit, under 1500") solved
+at the lowest cost, and the rebuild as a background job (`confirm=true`). See [ENVIRONMENTS.md](ENVIRONMENTS.md).
 
 **Resources.**
 

@@ -41,6 +41,8 @@ class Design:
         self.user_config = user_config
         self.config_path = config_path
         self.cfg = effective_config(user_config)
+        self.overlay: Dict[str, Any] = {}           # settings a test environment adds on top (never saved)
+        self.environment: Optional[Dict[str, Any]] = None
         self.warnings: List[str] = []
         self._systems = None
         self._measure_cache = None
@@ -66,11 +68,21 @@ class Design:
             d.warnings.extend(sch.warnings)
         else:
             d.warnings.append("no schematic found next to the board; schematic-based checks are skipped")
+        from .environment import apply_environment, environment_setting
+        envc = environment_setting(d.cfg)
+        if envc:                                   # made for a test environment: its station, the batch it allows
+            apply_environment(d, envc)
         return d
 
+    def set_overlay(self, overlay: Dict[str, Any]) -> None:
+        """Settings on top of pcbtestkit.json that are not saved in it (a test environment's station and batch)."""
+        self.overlay = dict(overlay or {})
+        self.reload_config(self.user_config)
+
     def reload_config(self, user_config: Dict[str, Any]) -> None:
+        from .config import deep_merge
         self.user_config = user_config
-        self.cfg = effective_config(user_config)
+        self.cfg = effective_config(deep_merge(user_config, self.overlay) if self.overlay else user_config)
         self._systems = None
         self._tech_cache = None
         self._net_classes = C.classify_all_nets(self.board, self.power_symbol_nets)
