@@ -1,6 +1,6 @@
 {
   "schema": "pcbtestkit-station/1",
-  "generator": "PCB TestKit 1.1.2",
+  "generator": "PCB TestKit 1.2.0",
   "station": {
     "id": "station-1",
     "name": "PCB TestKit catalog station 1",
@@ -320,7 +320,7 @@
       "supplies_used": 0,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 1.5,
+      "seconds": 1.3,
       "station": "station-1",
       "project": "usb_dongle_09",
       "folder": "usb_dongle_09",
@@ -344,8 +344,9 @@
         "jig_place_preview": "usb_dongle_09/usb_dongle_09-jig-placement.png",
         "jig_meta": "usb_dongle_09/usb_dongle_09-jig.json",
         "runner": "usb_dongle_09/runner",
-        "guide": "usb_dongle_09/usb_dongle_09-guide.html",
-        "report": "usb_dongle_09/usb_dongle_09-report.html"
+        "video": "usb_dongle_09/usb_dongle_09-explainer.mp4",
+        "report": "usb_dongle_09/usb_dongle_09-report.html",
+        "guide": "usb_dongle_09/usb_dongle_09-guide.html"
       },
       "warnings": [],
       "fixture": {
@@ -2097,33 +2098,10 @@
       "supplies_used": 0,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 1.5,
+      "seconds": 1.4,
       "station": "station-1",
       "project": "usb_dongle_11",
       "folder": "usb_dongle_11",
-      "outputs": {
-        "spec": "usb_dongle_11/usb_dongle_11-spec.json",
-        "testplan": "usb_dongle_11/usb_dongle_11-testplan.json",
-        "nest_stl": "usb_dongle_11/usb_dongle_11-fixture-nest.stl",
-        "nest_preview": "usb_dongle_11/usb_dongle_11-fixture-nest.png",
-        "nest_press_stl": "usb_dongle_11/usb_dongle_11-fixture-press-plate.stl",
-        "nest_press_preview": "usb_dongle_11/usb_dongle_11-fixture-press-plate.png",
-        "nest_adapter_stl": "usb_dongle_11/usb_dongle_11-fixture-clamp-adapter.stl",
-        "nest_adapter_preview": "usb_dongle_11/usb_dongle_11-fixture-clamp-adapter.png",
-        "fixture": "usb_dongle_11/usb_dongle_11-fixture.kicad_pcb",
-        "fixture_project": "usb_dongle_11/usb_dongle_11-fixture.kicad_pro",
-        "fixture_probes": "usb_dongle_11/usb_dongle_11-fixture-probes.csv",
-        "fixture_meta": "usb_dongle_11/usb_dongle_11-fixture.json",
-        "jig_stl": "usb_dongle_11/usb_dongle_11-jig.stl",
-        "jig_scad": "usb_dongle_11/usb_dongle_11-jig.scad",
-        "jig_preview": "usb_dongle_11/usb_dongle_11-jig.png",
-        "jig_place_stl": "usb_dongle_11/usb_dongle_11-jig-placement.stl",
-        "jig_place_preview": "usb_dongle_11/usb_dongle_11-jig-placement.png",
-        "jig_meta": "usb_dongle_11/usb_dongle_11-jig.json",
-        "runner": "usb_dongle_11/runner",
-        "guide": "usb_dongle_11/usb_dongle_11-guide.html",
-        "report": "usb_dongle_11/usb_dongle_11-report.html"
-      },
       "warnings": [
         "station station-1 serves 2 board(s) of this type at once (limited by its usb buses); the batch has 9: the other boards get no inputs, supply or bus on the connector"
       ],
@@ -3892,8 +3870,9 @@
         "jig_place_preview": "sensor_20/sensor_20-jig-placement.png",
         "jig_meta": "sensor_20/sensor_20-jig.json",
         "runner": "sensor_20/runner",
-        "guide": "sensor_20/sensor_20-guide.html",
-        "report": "sensor_20/sensor_20-report.html"
+        "video": "sensor_20/sensor_20-explainer.mp4",
+        "report": "sensor_20/sensor_20-report.html",
+        "guide": "sensor_20/sensor_20-guide.html"
       },
       "warnings": [],
       "fixture": {
@@ -5632,7 +5611,7 @@
       "supplies_used": 8,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 0.6,
+      "seconds": 0.5,
       "station": "station-1",
       "project": "usb_dongle_07",
       "folder": "usb_dongle_07",
@@ -7373,7 +7352,7 @@
       "supplies_used": 8,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 0.7,
+      "seconds": 0.6,
       "station": "station-1",
       "project": "sensor_11",
       "folder": "sensor_11",
@@ -10855,7 +10834,7 @@
       "supplies_used": 6,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 16.8,
+      "seconds": 4.4,
       "station": "station-1",
       "project": "stickhub",
       "folder": "StickHub",
@@ -12583,7 +12562,7 @@
       "supplies_used": 6,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 34.0,
+      "seconds": 8.6,
       "station": "station-1",
       "project": "royalblue54L_feather",
       "folder": "RoyalBlue54L-Feather",
@@ -14311,7 +14290,7 @@
       "supplies_used": 6,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 1.5,
+      "seconds": 1.3,
       "station": "station-1",
       "project": "sensor_07",
       "folder": "sensor_07",
@@ -16042,7 +16021,7 @@
       "supplies_used": 6,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.0,
+      "seconds": 1.9,
       "station": "station-1",
       "project": "sensor_08",
       "folder": "sensor_08",
@@ -17771,7 +17750,7 @@
       "supplies_used": 6,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.1,
+      "seconds": 1.9,
       "station": "station-1",
       "project": "sensor_18",
       "folder": "sensor_18",
@@ -19499,7 +19478,7 @@
       "supplies_used": 6,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.1,
+      "seconds": 1.9,
       "station": "station-1",
       "project": "sensor_22",
       "folder": "sensor_22",
@@ -21230,7 +21209,7 @@
       "supplies_used": 6,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 1.9,
+      "seconds": 1.7,
       "station": "station-1",
       "project": "usb_dongle_05",
       "folder": "usb_dongle_05",
@@ -22959,7 +22938,7 @@
       "supplies_used": 0,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 6.3,
+      "seconds": 1.5,
       "station": "station-1",
       "project": "ecc83",
       "folder": "ecc83-pp",
@@ -24670,7 +24649,7 @@
       "supplies_used": 0,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 5.4,
+      "seconds": 1.4,
       "station": "station-1",
       "project": "ecc83",
       "folder": "ecc83-pp_v2",
@@ -28096,7 +28075,7 @@
       "supplies_used": 4,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 1.3,
+      "seconds": 1.1,
       "station": "station-1",
       "project": "sensor_24",
       "folder": "sensor_24",
@@ -29810,7 +29789,7 @@
       "supplies_used": 4,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 1.1,
+      "seconds": 1.0,
       "station": "station-1",
       "project": "sensor_25",
       "folder": "sensor_25",
@@ -36678,7 +36657,7 @@
       "buses": {
         "uart": 4
       },
-      "seconds": 0.2,
+      "seconds": 0.1,
       "station": "station-1",
       "project": "sensor_23",
       "folder": "sensor_23",
@@ -41828,7 +41807,7 @@
       "buses": {
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "sensor_13",
       "folder": "sensor_13",
@@ -43546,7 +43525,7 @@
       "buses": {
         "i2c": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "sensor_14",
       "folder": "sensor_14",
@@ -46982,7 +46961,7 @@
       "buses": {
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "sensor_19",
       "folder": "sensor_19",
@@ -48700,7 +48679,7 @@
       "buses": {
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "sensor_21",
       "folder": "sensor_21",
@@ -50418,7 +50397,7 @@
       "buses": {
         "uart": 4
       },
-      "seconds": 0.2,
+      "seconds": 0.4,
       "station": "station-1",
       "project": "avr_board_02",
       "folder": "avr_board_02",
@@ -52136,7 +52115,7 @@
       "buses": {
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.4,
       "station": "station-1",
       "project": "avr_board_03",
       "folder": "avr_board_03",
@@ -53854,7 +53833,7 @@
       "buses": {
         "can": 4
       },
-      "seconds": 0.2,
+      "seconds": 0.3,
       "station": "station-1",
       "project": "can_node_03",
       "folder": "can_node_03",
@@ -59011,7 +58990,7 @@
         "i2c": 4,
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "sensor_06",
       "folder": "sensor_06",
@@ -60730,7 +60709,7 @@
         "i2c": 4,
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "sensor_01",
       "folder": "sensor_01",
@@ -65893,7 +65872,7 @@
         "i2c": 4,
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "sensor_16",
       "folder": "sensor_16",
@@ -67612,7 +67591,7 @@
         "i2c": 4,
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.4,
       "station": "station-1",
       "project": "avr_board_01",
       "folder": "avr_board_01",
@@ -69333,7 +69312,7 @@
         "i2c": 4,
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.4,
       "station": "station-1",
       "project": "avr_board_06",
       "folder": "avr_board_06",
@@ -71054,7 +71033,7 @@
         "i2c": 4,
         "uart": 4
       },
-      "seconds": 0.3,
+      "seconds": 0.4,
       "station": "station-1",
       "project": "avr_board_07",
       "folder": "avr_board_07",
@@ -74496,7 +74475,7 @@
         "can": 4,
         "uart": 4
       },
-      "seconds": 0.4,
+      "seconds": 0.3,
       "station": "station-1",
       "project": "can_node_06",
       "folder": "can_node_06",
@@ -79659,7 +79638,7 @@
         "can": 4,
         "uart": 4
       },
-      "seconds": 0.4,
+      "seconds": 0.3,
       "station": "station-1",
       "project": "can_node_14",
       "folder": "can_node_14",
@@ -83101,7 +83080,7 @@
         "can": 4,
         "uart": 4
       },
-      "seconds": 0.4,
+      "seconds": 0.3,
       "station": "station-1",
       "project": "can_node_17",
       "folder": "can_node_17",
@@ -88256,7 +88235,7 @@
       "supplies_used": 4,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.8,
+      "seconds": 0.5,
       "station": "station-1",
       "project": "sonde xilinx",
       "folder": "sonde_xilinx",
@@ -89972,10 +89951,36 @@
       "supplies_used": 3,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 51.9,
+      "seconds": 12.9,
       "station": "station-1",
       "project": "cm5_minima",
       "folder": "CM5_MINIMA_3",
+      "outputs": {
+        "spec": "CM5_MINIMA_3/CM5_MINIMA_3-spec.json",
+        "testplan": "CM5_MINIMA_3/CM5_MINIMA_3-testplan.json",
+        "nest_stl": "CM5_MINIMA_3/CM5_MINIMA_3-fixture-nest.stl",
+        "nest_preview": "CM5_MINIMA_3/CM5_MINIMA_3-fixture-nest.png",
+        "nest_press_stl": "CM5_MINIMA_3/CM5_MINIMA_3-fixture-press-plate.stl",
+        "nest_press_preview": "CM5_MINIMA_3/CM5_MINIMA_3-fixture-press-plate.png",
+        "nest_adapter_stl": "CM5_MINIMA_3/CM5_MINIMA_3-fixture-clamp-adapter.stl",
+        "nest_adapter_preview": "CM5_MINIMA_3/CM5_MINIMA_3-fixture-clamp-adapter.png",
+        "fixture": "CM5_MINIMA_3/CM5_MINIMA_3-fixture.kicad_pcb",
+        "fixture_project": "CM5_MINIMA_3/CM5_MINIMA_3-fixture.kicad_pro",
+        "fixture_probes": "CM5_MINIMA_3/CM5_MINIMA_3-fixture-probes.csv",
+        "fixture_meta": "CM5_MINIMA_3/CM5_MINIMA_3-fixture.json",
+        "jig_stl": "CM5_MINIMA_3/CM5_MINIMA_3-jig.stl",
+        "jig_scad": "CM5_MINIMA_3/CM5_MINIMA_3-jig.scad",
+        "jig_preview": "CM5_MINIMA_3/CM5_MINIMA_3-jig.png",
+        "jig_place_stl": "CM5_MINIMA_3/CM5_MINIMA_3-jig-placement.stl",
+        "jig_place_preview": "CM5_MINIMA_3/CM5_MINIMA_3-jig-placement.png",
+        "jig_nest_top_stl": "CM5_MINIMA_3/CM5_MINIMA_3-paste-nest-top.stl",
+        "jig_nest_top_preview": "CM5_MINIMA_3/CM5_MINIMA_3-paste-nest-top.png",
+        "jig_meta": "CM5_MINIMA_3/CM5_MINIMA_3-jig.json",
+        "runner": "CM5_MINIMA_3/runner",
+        "video": "CM5_MINIMA_3/CM5_MINIMA_3-explainer.mp4",
+        "report": "CM5_MINIMA_3/CM5_MINIMA_3-report.html",
+        "guide": "CM5_MINIMA_3/CM5_MINIMA_3-guide.html"
+      },
       "warnings": [],
       "fixture": {
         "sites": [
@@ -95106,7 +95111,7 @@
       "buses": {
         "can": 3
       },
-      "seconds": 1.9,
+      "seconds": 1.8,
       "station": "station-1",
       "project": "can_node_02",
       "folder": "can_node_02",
@@ -96818,7 +96823,7 @@
       "buses": {
         "can": 3
       },
-      "seconds": 2.0,
+      "seconds": 1.8,
       "station": "station-1",
       "project": "can_node_09",
       "folder": "can_node_09",
@@ -98530,7 +98535,7 @@
       "buses": {
         "can": 3
       },
-      "seconds": 1.9,
+      "seconds": 1.8,
       "station": "station-1",
       "project": "can_node_10",
       "folder": "can_node_10",
@@ -101960,7 +101965,7 @@
         "can": 3,
         "uart": 3
       },
-      "seconds": 2.1,
+      "seconds": 1.9,
       "station": "station-1",
       "project": "can_node_05",
       "folder": "can_node_05",
@@ -103675,7 +103680,7 @@
         "can": 3,
         "uart": 3
       },
-      "seconds": 2.1,
+      "seconds": 1.9,
       "station": "station-1",
       "project": "can_node_07",
       "folder": "can_node_07",
@@ -105387,7 +105392,7 @@
       "buses": {
         "i2c": 3
       },
-      "seconds": 2.2,
+      "seconds": 2.0,
       "station": "station-1",
       "project": "power_09",
       "folder": "power_09",
@@ -107096,7 +107101,7 @@
       "buses": {
         "i2c": 3
       },
-      "seconds": 1.0,
+      "seconds": 0.9,
       "station": "station-1",
       "project": "power_08",
       "folder": "power_08",
@@ -108802,7 +108807,7 @@
       "supplies_used": 3,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 1.0,
+      "seconds": 0.9,
       "station": "station-1",
       "project": "power_02",
       "folder": "power_02",
@@ -117317,7 +117322,7 @@
       "buses": {
         "usb": 2
       },
-      "seconds": 0.1,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "usb_dongle_02",
       "folder": "usb_dongle_02",
@@ -125828,7 +125833,7 @@
       "supplies_used": 2,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 16.9,
+      "seconds": 4.1,
       "station": "station-1",
       "project": "multichannel",
       "folder": "multichannel_mixer",
@@ -127530,7 +127535,7 @@
       "buses": {
         "rs485": 2
       },
-      "seconds": 0.6,
+      "seconds": 0.5,
       "station": "station-1",
       "project": "rs485_io_04",
       "folder": "rs485_io_04",
@@ -130937,7 +130942,7 @@
       "buses": {
         "rs485": 2
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "rs485_io_07",
       "folder": "rs485_io_07",
@@ -134346,7 +134351,7 @@
       "buses": {
         "can": 2
       },
-      "seconds": 3.0,
+      "seconds": 2.5,
       "station": "station-1",
       "project": "gateway_01",
       "folder": "gateway_01",
@@ -136051,7 +136056,7 @@
       "buses": {
         "can": 2
       },
-      "seconds": 3.1,
+      "seconds": 2.4,
       "station": "station-1",
       "project": "gateway_08",
       "folder": "gateway_08",
@@ -137751,7 +137756,7 @@
       "supplies_used": 2,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 3.0,
+      "seconds": 2.6,
       "station": "station-1",
       "project": "power_07",
       "folder": "power_07",
@@ -142857,7 +142862,7 @@
       "supplies_used": 2,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.2,
+      "seconds": 1.9,
       "station": "station-1",
       "project": "power_06",
       "folder": "power_06",
@@ -144555,7 +144560,7 @@
       "supplies_used": 2,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.0,
+      "seconds": 1.8,
       "station": "station-1",
       "project": "power_10",
       "folder": "power_10",
@@ -146260,7 +146265,7 @@
         "rs485": 2,
         "uart": 2
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "rs485_io_06",
       "folder": "rs485_io_06",
@@ -149674,7 +149679,7 @@
         "rs485": 2,
         "uart": 2
       },
-      "seconds": 0.3,
+      "seconds": 0.2,
       "station": "station-1",
       "project": "rs485_io_10",
       "folder": "rs485_io_10",
@@ -151381,7 +151386,7 @@
         "rs485": 2,
         "uart": 2
       },
-      "seconds": 0.6,
+      "seconds": 0.5,
       "station": "station-1",
       "project": "rs485_io_11",
       "folder": "rs485_io_11",
@@ -153085,7 +153090,7 @@
       "buses": {
         "ethernet": 2
       },
-      "seconds": 0.9,
+      "seconds": 0.8,
       "station": "station-1",
       "project": "gateway_05",
       "folder": "gateway_05",
@@ -154785,7 +154790,7 @@
       "supplies_used": 2,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.5,
+      "seconds": 2.1,
       "station": "station-1",
       "project": "power_05",
       "folder": "power_05",
@@ -156483,7 +156488,7 @@
       "supplies_used": 2,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.5,
+      "seconds": 2.2,
       "station": "station-1",
       "project": "power_11",
       "folder": "power_11",
@@ -158188,7 +158193,7 @@
         "rs485": 2,
         "uart": 2
       },
-      "seconds": 0.7,
+      "seconds": 0.5,
       "station": "station-1",
       "project": "rs485_io_02",
       "folder": "rs485_io_02",
@@ -159895,7 +159900,7 @@
         "can": 2,
         "usb": 2
       },
-      "seconds": 1.0,
+      "seconds": 0.8,
       "station": "station-1",
       "project": "gateway_07",
       "folder": "gateway_07",
@@ -161599,7 +161604,7 @@
       "buses": {
         "ethernet": 2
       },
-      "seconds": 0.9,
+      "seconds": 0.8,
       "station": "station-1",
       "project": "gateway_10",
       "folder": "gateway_10",
@@ -163304,7 +163309,7 @@
       "buses": {
         "i2c": 2
       },
-      "seconds": 2.5,
+      "seconds": 2.1,
       "station": "station-1",
       "project": "power_04",
       "folder": "power_04",
@@ -165002,7 +165007,7 @@
       "supplies_used": 2,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 15.1,
+      "seconds": 4.0,
       "station": "station-1",
       "project": "complex_hierarchy",
       "folder": "complex_hierarchy",
@@ -166707,7 +166712,7 @@
         "can": 2,
         "usb": 2
       },
-      "seconds": 1.2,
+      "seconds": 1.0,
       "station": "station-1",
       "project": "gateway_06",
       "folder": "gateway_06",
@@ -168411,7 +168416,7 @@
       "buses": {
         "ethernet": 2
       },
-      "seconds": 0.9,
+      "seconds": 0.8,
       "station": "station-1",
       "project": "gateway_11",
       "folder": "gateway_11",
@@ -170118,7 +170123,7 @@
         "ethernet": 2,
         "usb": 2
       },
-      "seconds": 1.1,
+      "seconds": 0.9,
       "station": "station-1",
       "project": "gateway_09",
       "folder": "gateway_09",
@@ -171828,7 +171833,7 @@
         "ethernet": 2,
         "rs485": 2
       },
-      "seconds": 1.0,
+      "seconds": 0.9,
       "station": "station-1",
       "project": "gateway_02",
       "folder": "gateway_02",
@@ -173538,7 +173543,7 @@
         "ethernet": 2,
         "rs485": 2
       },
-      "seconds": 0.9,
+      "seconds": 0.8,
       "station": "station-1",
       "project": "gateway_03",
       "folder": "gateway_03",
@@ -175248,7 +175253,7 @@
         "ethernet": 2,
         "rs485": 2
       },
-      "seconds": 1.2,
+      "seconds": 1.0,
       "station": "station-1",
       "project": "gateway_04",
       "folder": "gateway_04",
@@ -176953,7 +176958,7 @@
       "buses": {
         "i2c": 2
       },
-      "seconds": 3.0,
+      "seconds": 2.6,
       "station": "station-1",
       "project": "power_01",
       "folder": "power_01",
@@ -178651,7 +178656,7 @@
       "supplies_used": 2,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 2.8,
+      "seconds": 2.3,
       "station": "station-1",
       "project": "power_03",
       "folder": "power_03",
@@ -180355,7 +180360,7 @@
       "buses": {
         "i2c": 2
       },
-      "seconds": 36.6,
+      "seconds": 9.5,
       "station": "station-1",
       "project": "openair-max",
       "folder": "One-Air-Max",
@@ -182052,7 +182057,7 @@
       "supplies_used": 1,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 14.9,
+      "seconds": 3.9,
       "station": "station-1",
       "project": "pic_programmer",
       "folder": "pic_programmer",
@@ -183742,10 +183747,36 @@
       "supplies_used": 1,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 302.7,
+      "seconds": 74.4,
       "station": "station-1",
       "project": "jetson-agx-thor-baseboard",
       "folder": "jetson-agx-thor-baseboard",
+      "outputs": {
+        "spec": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-spec.json",
+        "testplan": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-testplan.json",
+        "nest_stl": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture-nest.stl",
+        "nest_preview": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture-nest.png",
+        "nest_press_stl": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture-press-plate.stl",
+        "nest_press_preview": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture-press-plate.png",
+        "nest_adapter_stl": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture-clamp-adapter.stl",
+        "nest_adapter_preview": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture-clamp-adapter.png",
+        "fixture": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture.kicad_pcb",
+        "fixture_project": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture.kicad_pro",
+        "fixture_probes": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture-probes.csv",
+        "fixture_meta": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-fixture.json",
+        "jig_stl": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-jig.stl",
+        "jig_scad": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-jig.scad",
+        "jig_preview": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-jig.png",
+        "jig_place_stl": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-jig-placement.stl",
+        "jig_place_preview": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-jig-placement.png",
+        "jig_nest_top_stl": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-paste-nest-top.stl",
+        "jig_nest_top_preview": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-paste-nest-top.png",
+        "jig_meta": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-jig.json",
+        "runner": "jetson-agx-thor-baseboard/runner",
+        "video": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-explainer.mp4",
+        "report": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-report.html",
+        "guide": "jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-guide.html"
+      },
       "warnings": [
         "programming header J1: no probe fits pin(s) A3 (~{SOM_PRSNT}), A6 (Net-(J1A-UFS0_REF_CLK)), A8 (~{PEWAKE}), A10 (USB2.D+), A11 (USB2.D-), A14 (TXD), A15 (TXD), A18 (VREF), A19 (DP2.HPD), A22 (USBSS1.RX+), A23 (USBSS1.RX-), A26 (PCIe_{C5x4}.RX3+), A27 (PCIe_{C5x4}.RX3-), A34 (DP3.TX2_C+), A35 (DP3.TX2_C-), A41 (CAM0.CSI2_D0+), A42 (CAM0.CSI2_D0-), A44 (CAM3.CSI7_D0+), A45 (CAM3.CSI7_D0-), A50 (DP0.TX2_C-), A51 (DP0.TX2_C+), A53 (I2C5_SCL_1V8), A54 (CAM_CTRL.VSYNC_CAM1), A56 (MISO), A57 (UART2.CTS), A58 (VREF), A59 (GPIO.USER_LED0), A60 (SWCLK), A61 (Net-(J1A-SYSTEM_OC_N)), B10 (Net-(J1A-POWER_INT_N)), B12 (RXD), B13 (RXD), B20 (RXD), B21 (RXD), B24 (PCIe_{C5x4}.RX1-), B25 (PCIe_{C5x4}.RX1+), B32 (RXD), B33 (RXD), B36 (NRST), B37 (PCIe_{C1x1}.~{CLKREQ}), B42 (CAM0.CSI2_CLK-), B43 (CAM0.CSI2_CLK+), B51 (DP0.TX1_C+), B52 (DP0.TX1_C-), B54 (CAM_CTRL.VSYNC_CAM0), B55 (Net-(J1A-GPIO30)), B56 (SPI1.~{CS1}), B58 (FMC_PRESENT), B59 (FMC_PG_C2M), B60 (TDI), B61 (CAN3.DIN), B62 (GPIO.USER_LED1), C4 (CAM_CTRL.VSYNC_CAM2), C6 (NRST), C7 (I2S_{M.2}.SDOUT), C10 (USB1.D-), C11 (USB1.D+), C14 (DP2.TX2_C-), C15 (DP2.TX2_C+), C18 (DP1.HPD), C19 (DP3.HPD), C22 (USBSS2.RX-), C23 (USBSS2.RX+), C26 (PCIe_{C5x4}.RX2-), C27 (PCIe_{C5x4}.RX2+), C34 (RXD), C35 (RXD), C38 (~{USBC2_INT}_1V8), C39 (VREF), C41 (CAM0.CSI2_D1-), C42 (CAM0.CSI2_D1+), C47 (CAM3.CSI7_D1+), C48 (CAM3.CSI7_D1-), C50 (DP0.TX3_C-), C51 (DP0.TX3_C+), C53 (I2C5_SDA_1V8), C55 (Net-(J1A-GPIO39)), C56 (UART2.RX), C57 (SPI3.~{CS0}), C58 (UART2.TX), C61 (GPIO.USER_BTN0), D5 (CAM_CTRL.VSYNC_CAM3), D8 (I2S_{M.2}.FS), D10 (NRST), D12 (PCIe_{C3x2}.RX1+), D13 (PCIe_{C3x2}.RX1-), D16 (DP1.AUX_C+), D17 (DP1.AUX_C-), D24 (RXD), D25 (RXD), D28 (SFI.RX+), D29 (SFI.RX-), D32 (TXD), D33 (TXD), D37 (Net-(D1-C)), D42 (CAM2.CSI5_D0+), D43 (CAM2.CSI5_D0-), D45 (CAM2.CSI5_D1-), D46 (CAM2.CSI5_D1+), D48 (PCIe_{C1x1}.CLK-), D49 (PCIe_{C1x1}.CLK+), D51 (TXD), D52 (TXD), D55 (MOSI), D56 (MISO), D58 (SWO), D59 (CAN2.DOUT), D60 (SPI2.~{CS0}), D61 (I2C_{CAM}.SCL), D62 (MISO), E4 (I2S2.FS), E5 (GPIO_EXP_IRQ_1V8), E11 (PCIe_{C2x1}.~{CLKREQ}), E14 (PCIe_{C2x1}R_CLK-), E15 (PCIe_{C2x1}R_CLK+), E18 (DP2.AUX_C-), E19 (DP2.AUX_C+), E22 (PCIe_{C3x2}.CLK-), E23 (PCIe_{C3x2}.CLK+), E26 (I2C7.SDA), E27 (I2C7.SCL), E38 (CAM1.CSI0_D1-), E39 (CAM1.CSI0_D1+), E41 (CAM1.CSI0_D0-), E42 (CAM1.CSI0_D0+), E44 (CAM0.CSI3_D0-), E45 (CAM0.CSI3_D0+), E47 (CAM2.CSI4_D1+), E48 (CAM2.CSI4_D1-), E53 (I2C3_SDA_1V8), E54 (FAN_TACH), E55 (SPI1.~{CS0}), E56 (SPI3.~{CS1}), E58 (SWDIO), E60 (I2C_{CAM}.SDA), E61 (SCK), F5 (I2S2.SDOUT), F6 (I2S2.SDIN), F9 (USBC2_PEN_1V8), F10 (VREF), F12 (USB0.D+), F13 (USB0.D-), F20 (DP3.AUX_C+), F21 (DP3.AUX_C-), F28 (SFI_REFCLK-), F29 (SFI_REFCLK+), F32 (PCIe_{C5x4}.CLK+), F33 (PCIe_{C5x4}.CLK-), F42 (CAM1.CSI0_CLK-), F43 (CAM1.CSI0_CLK+), F48 (CAM2.CSI4_CLK+), F49 (CAM2.CSI4_CLK-), F51 (I2C8.SDA), F52 (I2C8.SCL), F53 (I2C3_SCL_1V8), F55 (SCK), F56 (VREF), F58 (CAN2.DIN), F60 (MOSI), F61 (Net-(J1A-VCOMP_ALERT_N)), G4 (I2S2.CLK), G5 (Net-(J1A-GPIO56)), G6 (MOD_ABS), G7 (GPIO.USER_BTN1), G8 (PCIe_{C3x2}.~{CLKREQ}), G10 (USB3.D-), G11 (USB3.D+), G14 (DP2.TX3_C-), G15 (DP2.TX3_C+), G18 (I2S3.FS), G19 (I2S3.SDIN), G22 (USBSS2.TX-), G23 (USBSS2.TX+), G26 (PCIe_{C5x4}.TX2-), G27 (PCIe_{C5x4}.TX2+), G34 (TXD), G35 (TXD), G38 (CAN0.DOUT), G39 (CAN0.DIN), G41 (CAM1.CSI1_D0+), G42 (CAM1.CSI1_D0-), G44 (CAM0.CSI3_D1+), G45 (CAM0.CSI3_D1-), G47 (CAM2.CSI4_D0-), G48 (CAM2.CSI4_D0+), G50 (DP1.TX1_C-), G51 (DP1.TX1_C+), G53 (DP0.AUX_C+), G54 (DP0.AUX_C-), G56 (MOSI), G58 (UART2.RTS), G59 (Net-(J1A-THERM_SHDN_REQ_N)), G60 (NVDBG_SEL), G61 (NTRST), H5 (GPIO.20), H8 (I2S_{M.2}.SDIN), H9 (GPIO.MCLK01), H12 (PCIe_{C3x2}.TX1+), H13 (PCIe_{C3x2}.TX1-), H16 (I2S3.CLK), H17 (I2S3.SDOUT), H24 (TXD), H25 (TXD), H28 (SFI.TX+), H29 (SFI.TX-), H32 (DP3.TX3_C+), H33 (DP3.TX3_C-), H36 (CAN1.DIN), H37 (CAN1.DOUT), H45 (CAM3.CSI6_D1-), H46 (CAM3.CSI6_D1+), H48 (TXD), H49 (TXD), H52 (FMC_PRSNT_M2C_L), H53 (GPIO.MCLK03), H54 (UART1.CTS), H57 (UART5.CTS), H58 (UART5.RX), H59 (NVJTAG_SEL), H60 (Net-(J1A-GPIO31)), H61 (CAN3.DOUT), H62 (UART3_DEBUG_TX_1V8), J4 (FMC_PG_M2C), J5 (GPIO.27), J6 (USBC2_VBUS_DET_1V8), J7 (~{PDC_I2C1_IRQ}_1V8), J9 (NRST), J14 (DP2.TX1_C+), J15 (DP2.TX1_C-), J18 (GPIO.18), J22 (USBSS1.TX+), J23 (USBSS1.TX-), J26 (PCIe_{C5x4}.TX3+), J27 (PCIe_{C5x4}.TX3-), J34 (DP3.TX1_C-), J35 (DP3.TX1_C+), J41 (CAM1.CSI1_D1+), J42 (CAM1.CSI1_D1-), J44 (CAM3.CSI6_CLK+), J45 (CAM3.CSI6_CLK-), J47 (DP1.TX2_C+), J48 (DP1.TX2_C-), J52 (I2C0_SCL_1V8), J53 (I2C0_SDA_1V8), J54 (GPIO.MCLK02), J57 (SCK), J58 (UART5.TX), J60 (~{MOD_SLEEP}), J61 (I2C2_SCL_1V8), K5 (I2C1_SCL_1V8), K6 (GPIO.21), K12 (TXD), K13 (TXD), K20 (TXD), K21 (TXD), K24 (PCIe_{C5x4}.TX1-), K25 (PCIe_{C5x4}.TX1+), K32 (TXD), K33 (TXD), K37 (Net-(J1A-FSI_GPIO03)), K43 (CAM3.CSI6_D0-), K44 (CAM3.CSI6_D0+), K46 (DP1.TX3_C+), K47 (DP1.TX3_C-), K50 (DP0.HPD), K53 (UART1.TX), K54 (UART1.RX), K58 (UART5.RTS), K60 (UART3_DEBUG_RX_1V8), K61 (I2C2_SDA_1V8), K62 (FAN_PWM), L8 (I2C1_SDA_1V8), L10 (~{FORCE_RECOVERY}), L11 (~{SLEEP_REQ}), L14 (I2S_{M.2}.CLK), L15 (VREF), L18 (NRST), L19 (PCIe_{C5x4}.~{CLKREQ}), L22 (VREF), L23 (VREF), L26 (VREF), L27 (VREF), L30 (VREF), L31 (VREF), L34 (VREF), L35 (VREF), L38 (VREF), L39 (VREF), L41 (Net-(J1A-VM_SLEEP_N)), L42 (Net-(J1A-MV_LSW_MON)), L47 (Net-(J1A-VM_INT_N)), L51 (UART1.RTS), L52 (~{MODULE_SHDN}), L53 (VREF), L54 (MODULE_POWER_ON), L55 (~{VDDIN_PWR_BAD}), L56 (Net-(J1A-THERM_ALERT_N)), L58 (NRST), L59 (Net-(J1A-MODULE_POWER_GOOD)), L60 (NRST), L61 (~{SOM_POWER_BTN}), L62 (CARRIER_PWR_ON); program through test points on those nets or probe the other side"
       ],
@@ -185445,7 +185476,7 @@
         "can": 1,
         "ethernet": 1
       },
-      "seconds": 4.3,
+      "seconds": 3.9,
       "station": "station-1",
       "project": "controller_03",
       "folder": "controller_03",
@@ -187145,7 +187176,7 @@
         "can": 1,
         "ethernet": 1
       },
-      "seconds": 3.6,
+      "seconds": 3.3,
       "station": "station-1",
       "project": "controller_06",
       "folder": "controller_06",
@@ -188851,7 +188882,7 @@
         "uart": 1,
         "usb": 1
       },
-      "seconds": 4.4,
+      "seconds": 4.0,
       "station": "station-1",
       "project": "controller_05",
       "folder": "controller_05",
@@ -190557,7 +190588,7 @@
         "uart": 1,
         "usb": 1
       },
-      "seconds": 4.0,
+      "seconds": 3.6,
       "station": "station-1",
       "project": "controller_04",
       "folder": "controller_04",
@@ -192263,7 +192294,7 @@
         "uart": 1,
         "usb": 1
       },
-      "seconds": 4.4,
+      "seconds": 4.0,
       "station": "station-1",
       "project": "controller_02",
       "folder": "controller_02",
@@ -193970,7 +194001,7 @@
         "uart": 1,
         "usb": 1
       },
-      "seconds": 5.6,
+      "seconds": 4.9,
       "station": "station-1",
       "project": "controller_07",
       "folder": "controller_07",
@@ -195677,7 +195708,7 @@
         "uart": 1,
         "usb": 1
       },
-      "seconds": 4.3,
+      "seconds": 3.9,
       "station": "station-1",
       "project": "controller_01",
       "folder": "controller_01",
@@ -197367,7 +197398,7 @@
       "supplies_used": 0,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 3.8,
+      "seconds": 1.1,
       "station": "station-1",
       "project": "interf_u",
       "folder": "interf_u",
@@ -199056,7 +199087,7 @@
       "supplies_used": 1,
       "supplies_total": 8,
       "buses": {},
-      "seconds": 16.8,
+      "seconds": 4.7,
       "station": "station-1",
       "project": "tiny_tapeout",
       "folder": "tinytapeout-demo",
@@ -200757,7 +200788,7 @@
         "can": 1,
         "uart": 1
       },
-      "seconds": 13.0,
+      "seconds": 3.3,
       "station": "station-1",
       "project": "kit-dev-coldfire-xilinx_5213",
       "folder": "kit-dev-coldfire-xilinx_5213",

@@ -1,0 +1,1446 @@
+{
+  "jig_size_mm": [
+    141.25,
+    147.25,
+    16.12
+  ],
+  "support_height_mm": 13.6,
+  "floor_mm": 2.0,
+  "resolution_mm": 0.25,
+  "board_bbox_in_jig_mm": [
+    3.3,
+    3.3,
+    64.492,
+    67.496
+  ],
+  "side": "top",
+  "orientation": "PCB top side faces down into the jig; jig X = board X, jig Y = board Y (view from above shows the board's bottom side)",
+  "parts_to_place": [
+    "J1",
+    "J501"
+  ],
+  "pockets": [
+    {
+      "ref": "J1",
+      "type": "hold",
+      "center": [
+        16.375,
+        19.25
+      ],
+      "size_mm": [
+        23.0,
+        24.75
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 11.6,
+      "part_height_mm": 11.6,
+      "height_source": "box (field 'Height' height)",
+      "cells": 9108
+    },
+    {
+      "ref": "J501",
+      "type": "hold",
+      "center": [
+        27.25,
+        59.625
+      ],
+      "size_mm": [
+        15.5,
+        12.75
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 6.27,
+      "part_height_mm": 6.27,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 3107
+    },
+    {
+      "ref": "C101",
+      "type": "relief",
+      "center": [
+        12.375,
+        37.375
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "C102",
+      "type": "relief",
+      "center": [
+        16.625,
+        37.125
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "C401",
+      "type": "relief",
+      "center": [
+        29.375,
+        23.625
+      ],
+      "size_mm": [
+        2.75,
+        2.25
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 99
+    },
+    {
+      "ref": "C501",
+      "type": "relief",
+      "center": [
+        18.375,
+        53.0
+      ],
+      "size_mm": [
+        3.0,
+        2.25
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 108
+    },
+    {
+      "ref": "C502",
+      "type": "relief",
+      "center": [
+        23.375,
+        50.875
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "C601",
+      "type": "relief",
+      "center": [
+        16.5,
+        56.375
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C701",
+      "type": "relief",
+      "center": [
+        17.75,
+        50.375
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C702",
+      "type": "relief",
+      "center": [
+        10.75,
+        51.875
+      ],
+      "size_mm": [
+        5.75,
+        5.0
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 3.1,
+      "part_height_mm": 2.1,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 458
+    },
+    {
+      "ref": "C703",
+      "type": "relief",
+      "center": [
+        14.375,
+        53.25
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C704",
+      "type": "relief",
+      "center": [
+        55.375,
+        49.5
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C705",
+      "type": "relief",
+      "center": [
+        55.375,
+        51.5
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C706",
+      "type": "relief",
+      "center": [
+        54.375,
+        53.625
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "C707",
+      "type": "relief",
+      "center": [
+        56.125,
+        53.125
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "C708",
+      "type": "relief",
+      "center": [
+        50.625,
+        50.75
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C709",
+      "type": "relief",
+      "center": [
+        47.375,
+        50.75
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C710",
+      "type": "relief",
+      "center": [
+        55.125,
+        17.25
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C711",
+      "type": "relief",
+      "center": [
+        34.125,
+        18.0
+      ],
+      "size_mm": [
+        4.25,
+        3.5
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.25,
+      "part_height_mm": 1.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 238
+    },
+    {
+      "ref": "C712",
+      "type": "relief",
+      "center": [
+        52.875,
+        18.875
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 1.5,
+      "part_height_mm": 0.5,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "D101",
+      "type": "relief",
+      "center": [
+        14.375,
+        37.375
+      ],
+      "size_mm": [
+        3.75,
+        3.75
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 1.72,
+      "part_height_mm": 0.72,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 217
+    },
+    {
+      "ref": "D401",
+      "type": "relief",
+      "center": [
+        27.5,
+        50.375
+      ],
+      "size_mm": [
+        5.0,
+        4.25
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "box (default for SMD height)",
+      "cells": 340
+    },
+    {
+      "ref": "D402",
+      "type": "relief",
+      "center": [
+        30.5,
+        50.375
+      ],
+      "size_mm": [
+        5.0,
+        4.25
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "box (default for SMD height)",
+      "cells": 340
+    },
+    {
+      "ref": "D502",
+      "type": "relief",
+      "center": [
+        16.875,
+        60.375
+      ],
+      "size_mm": [
+        3.75,
+        3.75
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 1.72,
+      "part_height_mm": 0.72,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 219
+    },
+    {
+      "ref": "D605",
+      "type": "relief",
+      "center": [
+        60.25,
+        42.625
+      ],
+      "size_mm": [
+        5.25,
+        3.5
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "box (default for SMD height)",
+      "cells": 294
+    },
+    {
+      "ref": "D606",
+      "type": "relief",
+      "center": [
+        60.25,
+        39.75
+      ],
+      "size_mm": [
+        5.5,
+        3.5
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "box (default for SMD height)",
+      "cells": 308
+    },
+    {
+      "ref": "D701",
+      "type": "relief",
+      "center": [
+        14.375,
+        41.375
+      ],
+      "size_mm": [
+        3.75,
+        3.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 1.72,
+      "part_height_mm": 0.72,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 215
+    },
+    {
+      "ref": "D702",
+      "type": "relief",
+      "center": [
+        27.0,
+        8.0
+      ],
+      "size_mm": [
+        5.0,
+        3.0
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "box (default for SMD height)",
+      "cells": 240
+    },
+    {
+      "ref": "J101",
+      "type": "relief",
+      "center": [
+        14.375,
+        33.75
+      ],
+      "size_mm": [
+        10.25,
+        7.5
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "box (default for SMD height)",
+      "cells": 1230
+    },
+    {
+      "ref": "J502",
+      "type": "relief",
+      "center": [
+        13.0,
+        59.125
+      ],
+      "size_mm": [
+        8.25,
+        6.0
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 5.32,
+      "part_height_mm": 4.32,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 759
+    },
+    {
+      "ref": "J503",
+      "type": "relief",
+      "center": [
+        20.625,
+        38.25
+      ],
+      "size_mm": [
+        14.0,
+        5.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "box (default for SMD height)",
+      "cells": 1288
+    },
+    {
+      "ref": "J601",
+      "type": "relief",
+      "center": [
+        28.0,
+        32.875
+      ],
+      "size_mm": [
+        7.75,
+        5.5
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 5.25,
+      "part_height_mm": 4.25,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 652
+    },
+    {
+      "ref": "J701",
+      "type": "relief",
+      "center": [
+        41.875,
+        12.25
+      ],
+      "size_mm": [
+        24.75,
+        12.0
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "box (default for SMD height)",
+      "cells": 4752
+    },
+    {
+      "ref": "J802",
+      "type": "relief",
+      "center": [
+        57.5,
+        29.625
+      ],
+      "size_mm": [
+        17.25,
+        8.5
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 3.04,
+      "part_height_mm": 2.04,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 2216
+    },
+    {
+      "ref": "L701",
+      "type": "relief",
+      "center": [
+        50.25,
+        54.875
+      ],
+      "size_mm": [
+        7.75,
+        8.0
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 4.1,
+      "part_height_mm": 3.1,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 992
+    },
+    {
+      "ref": "R101",
+      "type": "relief",
+      "center": [
+        17.375,
+        52.875
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R401",
+      "type": "relief",
+      "center": [
+        29.375,
+        25.375
+      ],
+      "size_mm": [
+        2.75,
+        2.25
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 99
+    },
+    {
+      "ref": "R402",
+      "type": "relief",
+      "center": [
+        29.375,
+        13.625
+      ],
+      "size_mm": [
+        2.75,
+        2.25
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 99
+    },
+    {
+      "ref": "R501",
+      "type": "relief",
+      "center": [
+        16.625,
+        61.875
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R502",
+      "type": "relief",
+      "center": [
+        16.625,
+        58.625
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R605",
+      "type": "relief",
+      "center": [
+        57.125,
+        41.125
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R606",
+      "type": "relief",
+      "center": [
+        58.625,
+        39.625
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R701",
+      "type": "relief",
+      "center": [
+        16.375,
+        52.875
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R702",
+      "type": "relief",
+      "center": [
+        12.625,
+        41.125
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R703",
+      "type": "relief",
+      "center": [
+        16.125,
+        41.125
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R704",
+      "type": "relief",
+      "center": [
+        46.625,
+        55.375
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R705",
+      "type": "relief",
+      "center": [
+        56.625,
+        56.375
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R706",
+      "type": "relief",
+      "center": [
+        56.625,
+        54.375
+      ],
+      "size_mm": [
+        3.25,
+        2.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 143
+    },
+    {
+      "ref": "R707",
+      "type": "relief",
+      "center": [
+        30.0,
+        8.625
+      ],
+      "size_mm": [
+        2.75,
+        2.5
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 1.35,
+      "part_height_mm": 0.35,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 110
+    },
+    {
+      "ref": "SW501",
+      "type": "relief",
+      "center": [
+        58.875,
+        49.375
+      ],
+      "size_mm": [
+        5.75,
+        8.25
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "box (default for SMD height)",
+      "cells": 759
+    },
+    {
+      "ref": "TP101",
+      "type": "relief",
+      "center": [
+        17.625,
+        39.125
+      ],
+      "size_mm": [
+        4.25,
+        4.25
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "box (default for SMD height)",
+      "cells": 289
+    },
+    {
+      "ref": "TP102",
+      "type": "relief",
+      "center": [
+        58.375,
+        18.625
+      ],
+      "size_mm": [
+        4.25,
+        4.25
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "box (default for SMD height)",
+      "cells": 289
+    },
+    {
+      "ref": "TP103",
+      "type": "relief",
+      "center": [
+        29.625,
+        42.375
+      ],
+      "size_mm": [
+        4.25,
+        4.25
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 2.0,
+      "part_height_mm": 1.0,
+      "height_source": "box (default for SMD height)",
+      "cells": 289
+    },
+    {
+      "ref": "TP104",
+      "type": "relief",
+      "center": [
+        57.875,
+        16.125
+      ],
+      "size_mm": [
+        4.25,
+        4.25
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "box (default for THT (set a 'Height' field to override) height)",
+      "cells": 289
+    },
+    {
+      "ref": "TP105",
+      "type": "relief",
+      "center": [
+        17.625,
+        41.625
+      ],
+      "size_mm": [
+        4.25,
+        4.25
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "box (default for THT (set a 'Height' field to override) height)",
+      "cells": 289
+    },
+    {
+      "ref": "TP106",
+      "type": "relief",
+      "center": [
+        34.875,
+        43.875
+      ],
+      "size_mm": [
+        4.25,
+        4.25
+      ],
+      "rotation_deg": 0.0,
+      "depth_mm": 11.0,
+      "part_height_mm": 10.0,
+      "height_source": "box (default for THT (set a 'Height' field to override) height)",
+      "cells": 289
+    },
+    {
+      "ref": "U405",
+      "type": "relief",
+      "center": [
+        20.875,
+        50.375
+      ],
+      "size_mm": [
+        4.75,
+        4.75
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 2.55,
+      "part_height_mm": 1.55,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 350
+    },
+    {
+      "ref": "U602",
+      "type": "relief",
+      "center": [
+        57.75,
+        43.125
+      ],
+      "size_mm": [
+        4.5,
+        4.25
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 2.1,
+      "part_height_mm": 1.1,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 298
+    },
+    {
+      "ref": "U701",
+      "type": "relief",
+      "center": [
+        14.75,
+        50.25
+      ],
+      "size_mm": [
+        5.0,
+        5.0
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 2.55,
+      "part_height_mm": 1.55,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 392
+    },
+    {
+      "ref": "U702",
+      "type": "relief",
+      "center": [
+        54.875,
+        55.375
+      ],
+      "size_mm": [
+        4.25,
+        4.25
+      ],
+      "rotation_deg": -90.0,
+      "depth_mm": 1.92,
+      "part_height_mm": 0.92,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 289
+    },
+    {
+      "ref": "U703",
+      "type": "relief",
+      "center": [
+        50.625,
+        19.25
+      ],
+      "size_mm": [
+        5.5,
+        4.75
+      ],
+      "rotation_deg": 90.0,
+      "depth_mm": 1.64,
+      "part_height_mm": 0.64,
+      "height_source": "3D shape (KiCad 3D export)",
+      "cells": 418
+    },
+    {
+      "ref": "USB701",
+      "type": "relief",
+      "center": [
+        14.375,
+        45.375
+      ],
+      "size_mm": [
+        10.75,
+        7.75
+      ],
+      "rotation_deg": 180.0,
+      "depth_mm": 3.5,
+      "part_height_mm": 2.5,
+      "height_source": "box (default for SMD height)",
+      "cells": 1333
+    }
+  ],
+  "posts": [
+    {
+      "hole": "M701",
+      "center": [
+        41.85,
+        42.02
+      ],
+      "diameter_mm": 2.55
+    },
+    {
+      "hole": "H105",
+      "center": [
+        6.4,
+        64.4
+      ],
+      "diameter_mm": 2.3
+    },
+    {
+      "hole": "M702",
+      "center": [
+        41.85,
+        53.9
+      ],
+      "diameter_mm": 2.55
+    },
+    {
+      "hole": "H103",
+      "center": [
+        61.4,
+        6.4
+      ],
+      "diameter_mm": 2.3
+    },
+    {
+      "hole": "H101",
+      "center": [
+        9.0,
+        40.05
+      ],
+      "diameter_mm": 1.8
+    },
+    {
+      "hole": "H104",
+      "center": [
+        61.4,
+        64.4
+      ],
+      "diameter_mm": 2.3
+    },
+    {
+      "hole": "Module301",
+      "center": [
+        55.5,
+        60.65
+      ],
+      "diameter_mm": 2.3
+    },
+    {
+      "hole": "Module302",
+      "center": [
+        55.5,
+        60.65
+      ],
+      "diameter_mm": 2.6
+    }
+  ],
+  "pocket_floor": "shaped",
+  "room": {},
+  "ignored": {},
+  "notes": [
+    "Shape estimated as a box for 20 part(s): CN1, D401, D402, D403, D605, D606, D702, J1, J101, J503, J701, SW101 .... Their fit can't be guaranteed: add a 3D model, set jig.heights, or leave them out with jig.ignore.",
+    "Pockets follow each part's 3D shape; a hold pocket's floor is the part's own top, so every part touches its pocket as the board lands (jig.hold_depth_offset_mm +0.00 mm).",
+    "Two-jig workflow: put the PCB top side up in the placement jig, fit the parts, put this holding jig on top (pockets down), turn the stack over, lift off the placement jig and solder from above.",
+    "Fit check (76 parts, their 3D shapes): nothing touches on the way in; all 2 hand-soldered parts touch their pockets as the board lands on the support (within 0.01 mm) and are held on all four sides (0.19 to 0.26 mm of play); held by the part beside it, too close for a jig wall between them: J1 +x against D702 (0.19 mm), J1 +y against J601 (0.19 mm); the holding jig closes over the placement jig without touching it. Estimated (box) shapes: CN1, D401, D402, D403, D605, D606, D702, J1, J101, J503.",
+    "Batch of 3 boards: every jig holds all of them (2 x 2)."
+  ],
+  "scad": "CM5_MINIMA_3-jig.scad",
+  "workflow": "two_jig",
+  "placement": {
+    "jig_size_mm": [
+      146.5,
+      152.5,
+      13.32
+    ],
+    "pcb_rest_height_mm": 12.0,
+    "lead_clearance_mm": 10.0,
+    "floor_mm": 2.0,
+    "resolution_mm": 0.25,
+    "board_bbox_in_jig_mm": [
+      6.0,
+      82.25,
+      67.192,
+      146.446
+    ],
+    "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
+    "stops": [
+      {
+        "side": "right",
+        "at": [
+          136.06,
+          24.38
+        ]
+      }
+    ],
+    "lead_wells": 27,
+    "bottom_pockets": [
+      "C503",
+      "CN1",
+      "D403",
+      "Module301",
+      "Module302",
+      "R102",
+      "R104",
+      "R107",
+      "R108",
+      "R403",
+      "SW101",
+      "U1",
+      "U401",
+      "U402"
+    ],
+    "notes": [
+      "only 1 locating stop(s) fit around this outline; place the PCB carefully",
+      "Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm."
+    ],
+    "batch": {
+      "boards": 3,
+      "cols": 2,
+      "rows": 2,
+      "pitch_mm": [
+        73.25,
+        76.25
+      ],
+      "board_offsets_mm": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          73.25,
+          0.0
+        ],
+        [
+          0.0,
+          76.25
+        ]
+      ],
+      "sets": 1,
+      "batch_count": 3
+    },
+    "preview_png": "CM5_MINIMA_3-jig-placement.png",
+    "mesh": {
+      "triangles": 214498,
+      "unmatched_edges": 0,
+      "volume_mm3": 194961.6,
+      "watertight": true
+    },
+    "stl": "CM5_MINIMA_3-jig-placement.stl"
+  },
+  "fit": {
+    "parts_checked": 76,
+    "shapes": {
+      "kicad": 56,
+      "box (default for SMD height)": 16,
+      "box (field 'Height' height)": 1,
+      "box (default for THT (set a 'Height' field to override) height)": 3
+    },
+    "room": {},
+    "holding_collisions": {},
+    "touching": [
+      "J1",
+      "J501"
+    ],
+    "loose": {},
+    "side_play": {
+      "J1": {
+        "+x": 0.188,
+        "-x": 0.262,
+        "+y": 0.188,
+        "-y": 0.262
+      },
+      "J501": {
+        "+x": 0.188,
+        "-x": 0.188,
+        "+y": 0.188,
+        "-y": 0.188
+      }
+    },
+    "side_play_limit_mm": 0.45,
+    "not_held_sideways": [],
+    "held_by_parts": {
+      "J1": {
+        "+x": "D702 0.19 mm",
+        "+y": "J601 0.19 mm"
+      }
+    },
+    "placement_collisions": {},
+    "board_contacts": {
+      "holding": 0,
+      "placement": 0
+    },
+    "stack_collisions": 0,
+    "estimated_shapes": [
+      "CN1",
+      "D401",
+      "D402",
+      "D403",
+      "D605",
+      "D606",
+      "D702",
+      "J1",
+      "J101",
+      "J503",
+      "J701",
+      "SW101",
+      "SW501",
+      "TP101",
+      "TP102",
+      "TP103",
+      "TP104",
+      "TP105",
+      "TP106",
+      "USB701"
+    ],
+    "ok": true,
+    "summary": "Fit check (76 parts, their 3D shapes): nothing touches on the way in; all 2 hand-soldered parts touch their pockets as the board lands on the support (within 0.01 mm) and are held on all four sides (0.19 to 0.26 mm of play); held by the part beside it, too close for a jig wall between them: J1 +x against D702 (0.19 mm), J1 +y against J601 (0.19 mm); the holding jig closes over the placement jig without touching it. Estimated (box) shapes: CN1, D401, D402, D403, D605, D606, D702, J1, J101, J503."
+  },
+  "key": "hand_top",
+  "passes": [
+    {
+      "pass": 1,
+      "process": "smt",
+      "side": "bottom",
+      "parts": 14,
+      "jig": null
+    },
+    {
+      "pass": 2,
+      "process": "smt",
+      "side": "top",
+      "parts": 54,
+      "jig": "nest_top"
+    },
+    {
+      "pass": 3,
+      "process": "hand",
+      "side": "top",
+      "parts": [
+        "J1",
+        "J501"
+      ],
+      "jig": "hand_top"
+    }
+  ],
+  "extra": {
+    "nest_top": {
+      "jig_size_mm": [
+        182.5,
+        188.5,
+        6.82
+      ],
+      "pcb_rest_height_mm": 5.3,
+      "lead_clearance_mm": 3.3,
+      "floor_mm": 2.0,
+      "resolution_mm": 0.25,
+      "board_bbox_in_jig_mm": [
+        15.0,
+        109.25,
+        76.192,
+        173.446
+      ],
+      "orientation": "PCB top side up; jig X = board X, jig Y = -board Y (the view from above matches KiCad)",
+      "stops": [],
+      "notes": [
+        "Rest the PCB top side up in the nest; the frame is flush with the board, so the stencil lies flat. Print it in PLA or PETG: it does not go into the reflow oven.",
+        "Fit check (14 parts, their 3D shapes): the board lies flat on the nest and no part touches it. Estimated (box) shapes: CN1, D403, SW101."
+      ],
+      "kind": "paste_nest",
+      "side": "top",
+      "down_side_pockets": [
+        "C503",
+        "CN1",
+        "D403",
+        "Module301",
+        "Module302",
+        "R102",
+        "R104",
+        "R107",
+        "R108",
+        "R403",
+        "SW101",
+        "U1",
+        "U401",
+        "U402"
+      ],
+      "fit": {
+        "parts_checked": 14,
+        "shapes": {
+          "kicad": 11,
+          "box (default for SMD height)": 3
+        },
+        "placement_collisions": {},
+        "board_contacts": {
+          "holding": 0,
+          "placement": 0
+        },
+        "estimated_shapes": [
+          "CN1",
+          "D403",
+          "SW101"
+        ],
+        "ok": true,
+        "summary": "Fit check (14 parts, their 3D shapes): the board lies flat on the nest and no part touches it. Estimated (box) shapes: CN1, D403, SW101."
+      },
+      "batch": {
+        "boards": 3,
+        "cols": 2,
+        "rows": 2,
+        "pitch_mm": [
+          91.25,
+          94.25
+        ],
+        "board_offsets_mm": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            91.25,
+            0.0
+          ],
+          [
+            0.0,
+            94.25
+          ]
+        ],
+        "sets": 1,
+        "batch_count": 3
+      },
+      "preview_png": "CM5_MINIMA_3-paste-nest-top.png",
+      "mesh": {
+        "triangles": 138372,
+        "unmatched_edges": 0,
+        "volume_mm3": 210727.9,
+        "watertight": true
+      },
+      "stl": "CM5_MINIMA_3-paste-nest-top.stl"
+    }
+  },
+  "batch": {
+    "boards_per_jig": 3,
+    "cols": 2,
+    "rows": 2,
+    "sets": 1,
+    "batch_count": 3,
+    "bed_mm": [
+      220.0,
+      220.0
+    ]
+  },
+  "preview_png": "CM5_MINIMA_3-jig.png",
+  "mesh": {
+    "triangles": 168344,
+    "unmatched_edges": 0,
+    "volume_mm3": 176019.9,
+    "watertight": true
+  },
+  "stl": "CM5_MINIMA_3-jig.stl"
+}

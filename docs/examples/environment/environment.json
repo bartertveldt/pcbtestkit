@@ -1,6 +1,6 @@
 {
  "schema": "pcbtestkit-environment/1",
- "generator": "PCB TestKit 1.1.2",
+ "generator": "PCB TestKit 1.2.0",
  "name": "PCB TestKit catalog",
  "spec": {
   "schema": "pcbtestkit-environment-spec/1",
@@ -721,6 +721,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 84.6,
+   "title": "avr_board_01",
+   "layers": 2,
+   "parts": 23,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -787,6 +791,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 81.8,
+   "title": "avr_board_02",
+   "layers": 2,
+   "parts": 19,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -852,6 +860,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 75.0,
+   "title": "avr_board_03",
+   "layers": 2,
+   "parts": 21,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -917,6 +929,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 90.0,
+   "title": "avr_board_04",
+   "layers": 2,
+   "parts": 19,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -983,6 +999,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 90.0,
+   "title": "avr_board_05",
+   "layers": 2,
+   "parts": 20,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -1050,6 +1070,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 91.7,
+   "title": "avr_board_06",
+   "layers": 2,
+   "parts": 23,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -1117,6 +1141,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 78.6,
+   "title": "avr_board_07",
+   "layers": 2,
+   "parts": 25,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -1184,6 +1212,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 78.6,
+   "title": "can_node_01",
+   "layers": 2,
+   "parts": 27,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -1251,6 +1283,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 75.0,
+   "title": "can_node_02",
+   "layers": 2,
+   "parts": 25,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -1317,6 +1353,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 75.0,
+   "title": "can_node_03",
+   "layers": 2,
+   "parts": 26,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -1383,6 +1423,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 84.6,
+   "title": "can_node_04",
+   "layers": 2,
+   "parts": 28,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -1450,6 +1494,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 84.6,
+   "title": "can_node_05",
+   "layers": 2,
+   "parts": 30,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -1518,6 +1566,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 78.6,
+   "title": "can_node_06",
+   "layers": 2,
+   "parts": 29,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -1585,6 +1637,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 91.7,
+   "title": "can_node_07",
+   "layers": 2,
+   "parts": 27,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -1652,6 +1708,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 81.8,
+   "title": "can_node_08",
+   "layers": 2,
+   "parts": 26,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -1717,6 +1777,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 75.0,
+   "title": "can_node_09",
+   "layers": 2,
+   "parts": 25,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -1783,6 +1847,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 90.0,
+   "title": "can_node_10",
+   "layers": 2,
+   "parts": 23,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -1850,6 +1918,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 91.7,
+   "title": "can_node_11",
+   "layers": 2,
+   "parts": 25,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -1917,6 +1989,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 84.6,
+   "title": "can_node_12",
+   "layers": 2,
+   "parts": 25,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -1983,6 +2059,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 90.0,
+   "title": "can_node_13",
+   "layers": 2,
+   "parts": 24,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -2049,6 +2129,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 78.6,
+   "title": "can_node_14",
+   "layers": 2,
+   "parts": 29,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -2116,6 +2200,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 91.7,
+   "title": "can_node_15",
+   "layers": 2,
+   "parts": 25,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -2180,6 +2268,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 88.9,
+   "title": "can_node_16",
+   "layers": 2,
+   "parts": 24,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -2246,6 +2338,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 78.6,
+   "title": "can_node_17",
+   "layers": 2,
+   "parts": 28,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -2313,6 +2409,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 78.6,
+   "title": "can_node_18",
+   "layers": 2,
+   "parts": 28,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -2380,6 +2480,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 84.6,
+   "title": "can_node_19",
+   "layers": 2,
+   "parts": 24,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -2449,6 +2553,10 @@
    "probe_side": "bottom",
    "probes": 30,
    "coverage_pct": 93.3,
+   "title": "controller_01",
+   "layers": 2,
+   "parts": 52,
+   "tht": 6,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -2521,6 +2629,10 @@
    "probe_side": "bottom",
    "probes": 28,
    "coverage_pct": 96.3,
+   "title": "controller_02",
+   "layers": 2,
+   "parts": 53,
+   "tht": 6,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -2591,6 +2703,10 @@
    "probe_side": "bottom",
    "probes": 22,
    "coverage_pct": 87.0,
+   "title": "controller_03",
+   "layers": 2,
+   "parts": 44,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -2661,6 +2777,10 @@
    "probe_side": "bottom",
    "probes": 27,
    "coverage_pct": 92.6,
+   "title": "controller_04",
+   "layers": 2,
+   "parts": 48,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -2733,6 +2853,10 @@
    "probe_side": "bottom",
    "probes": 26,
    "coverage_pct": 92.3,
+   "title": "controller_05",
+   "layers": 2,
+   "parts": 51,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -2803,6 +2927,10 @@
    "probe_side": "bottom",
    "probes": 22,
    "coverage_pct": 95.2,
+   "title": "controller_06",
+   "layers": 2,
+   "parts": 47,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -2873,6 +3001,10 @@
    "probe_side": "bottom",
    "probes": 28,
    "coverage_pct": 96.3,
+   "title": "controller_07",
+   "layers": 2,
+   "parts": 54,
+   "tht": 6,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -2942,6 +3074,10 @@
    "probe_side": "both",
    "probes": 13,
    "coverage_pct": 100.0,
+   "title": "dual_side_01",
+   "layers": 2,
+   "parts": 22,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -2994,6 +3130,10 @@
    "probe_side": "both",
    "probes": 11,
    "coverage_pct": 90.0,
+   "title": "dual_side_02",
+   "layers": 2,
+   "parts": 22,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -3046,6 +3186,10 @@
    "probe_side": "both",
    "probes": 12,
    "coverage_pct": 100.0,
+   "title": "dual_side_03",
+   "layers": 2,
+   "parts": 23,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -3098,6 +3242,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 84.6,
+   "title": "gateway_01",
+   "layers": 2,
+   "parts": 28,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3166,6 +3314,10 @@
    "probe_side": "bottom",
    "probes": 18,
    "coverage_pct": 84.2,
+   "title": "gateway_02",
+   "layers": 2,
+   "parts": 37,
+   "tht": 6,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3235,6 +3387,10 @@
    "probe_side": "bottom",
    "probes": 18,
    "coverage_pct": 94.1,
+   "title": "gateway_03",
+   "layers": 2,
+   "parts": 36,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3304,6 +3460,10 @@
    "probe_side": "bottom",
    "probes": 18,
    "coverage_pct": 88.9,
+   "title": "gateway_04",
+   "layers": 2,
+   "parts": 37,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3371,6 +3531,10 @@
    "probe_side": "bottom",
    "probes": 14,
    "coverage_pct": 92.3,
+   "title": "gateway_05",
+   "layers": 2,
+   "parts": 28,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3437,6 +3601,10 @@
    "probe_side": "bottom",
    "probes": 16,
    "coverage_pct": 82.4,
+   "title": "gateway_06",
+   "layers": 2,
+   "parts": 34,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3504,6 +3672,10 @@
    "probe_side": "bottom",
    "probes": 15,
    "coverage_pct": 92.9,
+   "title": "gateway_07",
+   "layers": 2,
+   "parts": 29,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3570,6 +3742,10 @@
    "probe_side": "bottom",
    "probes": 12,
    "coverage_pct": 66.7,
+   "title": "gateway_08",
+   "layers": 2,
+   "parts": 31,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3637,6 +3813,10 @@
    "probe_side": "bottom",
    "probes": 17,
    "coverage_pct": 88.2,
+   "title": "gateway_09",
+   "layers": 2,
+   "parts": 33,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3703,6 +3883,10 @@
    "probe_side": "bottom",
    "probes": 15,
    "coverage_pct": 86.7,
+   "title": "gateway_10",
+   "layers": 2,
+   "parts": 29,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3768,6 +3952,10 @@
    "probe_side": "bottom",
    "probes": 16,
    "coverage_pct": 82.4,
+   "title": "gateway_11",
+   "layers": 2,
+   "parts": 30,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -3833,6 +4021,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 75.0,
+   "title": "hv_driver_01",
+   "layers": 2,
+   "parts": 27,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -3883,6 +4075,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 90.0,
+   "title": "hv_driver_02",
+   "layers": 2,
+   "parts": 22,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -3933,6 +4129,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 75.0,
+   "title": "hv_driver_03",
+   "layers": 2,
+   "parts": 28,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -3981,6 +4181,10 @@
    "probe_side": "bottom",
    "probes": 18,
    "coverage_pct": 88.9,
+   "title": "power_01",
+   "layers": 2,
+   "parts": 39,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4045,6 +4249,10 @@
    "probe_side": "bottom",
    "probes": 21,
    "coverage_pct": 86.4,
+   "title": "power_02",
+   "layers": 2,
+   "parts": 46,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -4107,6 +4315,10 @@
    "probe_side": "bottom",
    "probes": 19,
    "coverage_pct": 94.4,
+   "title": "power_03",
+   "layers": 2,
+   "parts": 42,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4170,6 +4382,10 @@
    "probe_side": "bottom",
    "probes": 15,
    "coverage_pct": 81.2,
+   "title": "power_04",
+   "layers": 2,
+   "parts": 42,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4232,6 +4448,10 @@
    "probe_side": "bottom",
    "probes": 14,
    "coverage_pct": 80.0,
+   "title": "power_05",
+   "layers": 2,
+   "parts": 40,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4293,6 +4513,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 78.6,
+   "title": "power_06",
+   "layers": 2,
+   "parts": 33,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4354,6 +4578,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 84.6,
+   "title": "power_07",
+   "layers": 2,
+   "parts": 40,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4419,6 +4647,10 @@
    "probe_side": "bottom",
    "probes": 20,
    "coverage_pct": 85.7,
+   "title": "power_08",
+   "layers": 2,
+   "parts": 46,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -4482,6 +4714,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 84.6,
+   "title": "power_09",
+   "layers": 2,
+   "parts": 37,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -4544,6 +4780,10 @@
    "probe_side": "bottom",
    "probes": 14,
    "coverage_pct": 85.7,
+   "title": "power_10",
+   "layers": 2,
+   "parts": 40,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4605,6 +4845,10 @@
    "probe_side": "bottom",
    "probes": 14,
    "coverage_pct": 92.3,
+   "title": "power_11",
+   "layers": 2,
+   "parts": 34,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4670,6 +4914,10 @@
    "probe_side": "bottom",
    "probes": 12,
    "coverage_pct": 83.3,
+   "title": "rs485_io_01",
+   "layers": 2,
+   "parts": 25,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4736,6 +4984,10 @@
    "probe_side": "bottom",
    "probes": 14,
    "coverage_pct": 92.3,
+   "title": "rs485_io_02",
+   "layers": 2,
+   "parts": 26,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4802,6 +5054,10 @@
    "probe_side": "bottom",
    "probes": 12,
    "coverage_pct": 83.3,
+   "title": "rs485_io_03",
+   "layers": 2,
+   "parts": 23,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4867,6 +5123,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 90.0,
+   "title": "rs485_io_04",
+   "layers": 2,
+   "parts": 24,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4932,6 +5192,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 81.8,
+   "title": "rs485_io_05",
+   "layers": 2,
+   "parts": 25,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -4998,6 +5262,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 91.7,
+   "title": "rs485_io_06",
+   "layers": 2,
+   "parts": 27,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -5064,6 +5332,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 75.0,
+   "title": "rs485_io_07",
+   "layers": 2,
+   "parts": 25,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -5130,6 +5402,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 78.6,
+   "title": "rs485_io_08",
+   "layers": 2,
+   "parts": 27,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -5196,6 +5472,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 75.0,
+   "title": "rs485_io_09",
+   "layers": 2,
+   "parts": 26,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -5262,6 +5542,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 91.7,
+   "title": "rs485_io_10",
+   "layers": 2,
+   "parts": 25,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -5329,6 +5613,10 @@
    "probe_side": "bottom",
    "probes": 13,
    "coverage_pct": 91.7,
+   "title": "rs485_io_11",
+   "layers": 2,
+   "parts": 26,
+   "tht": 4,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -5396,6 +5684,10 @@
    "probe_side": "bottom",
    "probes": 12,
    "coverage_pct": 76.9,
+   "title": "sensor_01",
+   "layers": 2,
+   "parts": 19,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -5463,6 +5755,10 @@
    "probe_side": "bottom",
    "probes": 12,
    "coverage_pct": 76.9,
+   "title": "sensor_02",
+   "layers": 2,
+   "parts": 17,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -5529,6 +5825,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 80.0,
+   "title": "sensor_03",
+   "layers": 2,
+   "parts": 16,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -5592,6 +5892,10 @@
    "probe_side": "bottom",
    "probes": 7,
    "coverage_pct": 75.0,
+   "title": "sensor_04",
+   "layers": 2,
+   "parts": 11,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -5655,6 +5959,10 @@
    "probe_side": "bottom",
    "probes": 9,
    "coverage_pct": 70.0,
+   "title": "sensor_05",
+   "layers": 2,
+   "parts": 16,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -5719,6 +6027,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 90.0,
+   "title": "sensor_06",
+   "layers": 2,
+   "parts": 21,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -5783,6 +6095,10 @@
    "probe_side": "bottom",
    "probes": 9,
    "coverage_pct": 77.8,
+   "title": "sensor_07",
+   "layers": 2,
+   "parts": 12,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 6,
@@ -5846,6 +6162,10 @@
    "probe_side": "bottom",
    "probes": 8,
    "coverage_pct": 85.7,
+   "title": "sensor_08",
+   "layers": 2,
+   "parts": 11,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 6,
@@ -5912,6 +6232,10 @@
    "probe_side": "bottom",
    "probes": 12,
    "coverage_pct": 83.3,
+   "title": "sensor_09",
+   "layers": 2,
+   "parts": 21,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -5979,6 +6303,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 100.0,
+   "title": "sensor_10",
+   "layers": 2,
+   "parts": 14,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6043,6 +6371,10 @@
    "probe_side": "bottom",
    "probes": 8,
    "coverage_pct": 100.0,
+   "title": "sensor_11",
+   "layers": 2,
+   "parts": 13,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 8,
@@ -6105,6 +6437,10 @@
    "probe_side": "bottom",
    "probes": 9,
    "coverage_pct": 100.0,
+   "title": "sensor_12",
+   "layers": 2,
+   "parts": 13,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 8,
@@ -6169,6 +6505,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 69.2,
+   "title": "sensor_13",
+   "layers": 2,
+   "parts": 18,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6234,6 +6574,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 88.9,
+   "title": "sensor_14",
+   "layers": 2,
+   "parts": 14,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6299,6 +6643,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 80.0,
+   "title": "sensor_15",
+   "layers": 2,
+   "parts": 20,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6363,6 +6711,10 @@
    "probe_side": "bottom",
    "probes": 12,
    "coverage_pct": 100.0,
+   "title": "sensor_16",
+   "layers": 2,
+   "parts": 16,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6427,6 +6779,10 @@
    "probe_side": "bottom",
    "probes": 9,
    "coverage_pct": 100.0,
+   "title": "sensor_17",
+   "layers": 2,
+   "parts": 12,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6490,6 +6846,10 @@
    "probe_side": "bottom",
    "probes": 8,
    "coverage_pct": 75.0,
+   "title": "sensor_18",
+   "layers": 2,
+   "parts": 11,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 6,
@@ -6555,6 +6915,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 66.7,
+   "title": "sensor_19",
+   "layers": 2,
+   "parts": 21,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6618,6 +6982,10 @@
    "probe_side": "bottom",
    "probes": 8,
    "coverage_pct": 100.0,
+   "title": "sensor_20",
+   "layers": 2,
+   "parts": 10,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 8,
@@ -6684,6 +7052,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 80.0,
+   "title": "sensor_21",
+   "layers": 2,
+   "parts": 14,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6747,6 +7119,10 @@
    "probe_side": "bottom",
    "probes": 9,
    "coverage_pct": 70.0,
+   "title": "sensor_22",
+   "layers": 2,
+   "parts": 17,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 6,
@@ -6810,6 +7186,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 88.9,
+   "title": "sensor_23",
+   "layers": 2,
+   "parts": 15,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6873,6 +7253,10 @@
    "probe_side": "bottom",
    "probes": 8,
    "coverage_pct": 66.7,
+   "title": "sensor_24",
+   "layers": 2,
+   "parts": 18,
+   "tht": 3,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6936,6 +7320,10 @@
    "probe_side": "bottom",
    "probes": 8,
    "coverage_pct": 66.7,
+   "title": "sensor_25",
+   "layers": 2,
+   "parts": 15,
+   "tht": 2,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -6999,6 +7387,10 @@
    "probe_side": "bottom",
    "probes": 6,
    "coverage_pct": 66.7,
+   "title": "usb_dongle_01",
+   "layers": 2,
+   "parts": 13,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7063,6 +7455,10 @@
    "probe_side": "bottom",
    "probes": 9,
    "coverage_pct": 80.0,
+   "title": "usb_dongle_02",
+   "layers": 2,
+   "parts": 15,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7128,6 +7524,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 80.0,
+   "title": "usb_dongle_03",
+   "layers": 2,
+   "parts": 14,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7193,6 +7593,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 100.0,
+   "title": "usb_dongle_04",
+   "layers": 2,
+   "parts": 13,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7256,6 +7660,10 @@
    "probe_side": "bottom",
    "probes": 8,
    "coverage_pct": 70.0,
+   "title": "usb_dongle_05",
+   "layers": 2,
+   "parts": 14,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 6,
@@ -7319,6 +7727,10 @@
    "probe_side": "bottom",
    "probes": 6,
    "coverage_pct": 100.0,
+   "title": "usb_dongle_06",
+   "layers": 2,
+   "parts": 11,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7380,6 +7792,10 @@
    "probe_side": "bottom",
    "probes": 5,
    "coverage_pct": 83.3,
+   "title": "usb_dongle_07",
+   "layers": 2,
+   "parts": 10,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 8,
@@ -7444,6 +7860,10 @@
    "probe_side": "bottom",
    "probes": 10,
    "coverage_pct": 80.0,
+   "title": "usb_dongle_08",
+   "layers": 2,
+   "parts": 13,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7505,6 +7925,10 @@
    "probe_side": "bottom",
    "probes": 6,
    "coverage_pct": 100.0,
+   "title": "usb_dongle_09",
+   "layers": 2,
+   "parts": 9,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 10,
@@ -7571,6 +7995,10 @@
    "probe_side": "bottom",
    "probes": 9,
    "coverage_pct": 80.0,
+   "title": "usb_dongle_10",
+   "layers": 2,
+   "parts": 14,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7632,6 +8060,10 @@
    "probe_side": "bottom",
    "probes": 6,
    "coverage_pct": 100.0,
+   "title": "usb_dongle_11",
+   "layers": 2,
+   "parts": 10,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 9,
@@ -7665,8 +8097,6 @@
    "limit": "plate",
    "entry": "left",
    "cols": 3,
-   "guide": "stations/station-1/usb_dongle_11/usb_dongle_11-guide.html",
-   "outputs_dir": "stations/station-1/usb_dongle_11",
    "routing": {
     "connections": 70,
     "unrouted_connections": 13
@@ -7698,6 +8128,10 @@
    "probe_side": "bottom",
    "probes": 9,
    "coverage_pct": 72.7,
+   "title": "usb_dongle_12",
+   "layers": 2,
+   "parts": 15,
+   "tht": 1,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7761,6 +8195,10 @@
    "probe_side": "bottom",
    "probes": 7,
    "coverage_pct": 100.0,
+   "title": "usb_dongle_13",
+   "layers": 2,
+   "parts": 12,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7822,6 +8260,10 @@
    "probe_side": "top",
    "probes": 8,
    "coverage_pct": 7.4,
+   "title": "CM5 MINIMA",
+   "layers": 6,
+   "parts": 85,
+   "tht": 14,
    "estimates": {
     "station-1": {
      "batch": 3,
@@ -7856,6 +8298,8 @@
    "limit": "plate",
    "entry": null,
    "cols": 3,
+   "guide": "stations/station-1/CM5_MINIMA_3/CM5_MINIMA_3-guide.html",
+   "outputs_dir": "stations/station-1/CM5_MINIMA_3",
    "routing": {
     "connections": 50,
     "unrouted_connections": 0
@@ -7883,6 +8327,10 @@
    "probe_side": "bottom",
    "probes": 16,
    "coverage_pct": 28.0,
+   "title": "Actionneur_piezo",
+   "layers": 2,
+   "parts": 68,
+   "tht": 68,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -7944,6 +8392,10 @@
    "probe_side": "bottom",
    "probes": 7,
    "coverage_pct": 66.7,
+   "title": "",
+   "layers": 2,
+   "parts": 15,
+   "tht": 15,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -8004,6 +8456,10 @@
    "probe_side": "bottom",
    "probes": 7,
    "coverage_pct": 66.7,
+   "title": "",
+   "layers": 2,
+   "parts": 15,
+   "tht": 15,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -8064,6 +8520,10 @@
    "probe_side": "bottom",
    "probes": 34,
    "coverage_pct": 30.0,
+   "title": "Demo",
+   "layers": 2,
+   "parts": 24,
+   "tht": 23,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -8125,6 +8585,10 @@
    "probe_side": "bottom",
    "probes": 16,
    "coverage_pct": 1.7,
+   "title": "Antmicro Baseboard for Jetson AGX Thor",
+   "layers": 10,
+   "parts": 1123,
+   "tht": 22,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -8159,6 +8623,8 @@
    "limit": "plate",
    "entry": null,
    "cols": null,
+   "guide": "stations/station-1/jetson-agx-thor-baseboard/jetson-agx-thor-baseboard-guide.html",
+   "outputs_dir": "stations/station-1/jetson-agx-thor-baseboard",
    "routing": {
     "connections": 338,
     "unrouted_connections": 2
@@ -8191,6 +8657,10 @@
    "probe_side": "bottom",
    "probes": 43,
    "coverage_pct": 19.6,
+   "title": "Demo Kicad",
+   "layers": 4,
+   "parts": 160,
+   "tht": 41,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -8253,6 +8723,10 @@
    "probe_side": "bottom",
    "probes": 0,
    "coverage_pct": 0.0,
+   "title": "",
+   "layers": 2,
+   "parts": 4,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -8301,6 +8775,10 @@
    "probe_side": "bottom",
    "probes": 11,
    "coverage_pct": 11.4,
+   "title": "",
+   "layers": 2,
+   "parts": 114,
+   "tht": 33,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -8364,6 +8842,10 @@
    "probe_side": "bottom",
    "probes": 29,
    "coverage_pct": 23.3,
+   "title": "",
+   "layers": 4,
+   "parts": 204,
+   "tht": 10,
    "estimates": {
     "station-1": {
      "batch": 2,
@@ -8425,6 +8907,10 @@
    "probe_side": "bottom",
    "probes": 14,
    "coverage_pct": 35.3,
+   "title": "SERIAL PIC PROGRAMMER",
+   "layers": 2,
+   "parts": 63,
+   "tht": 56,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -8486,6 +8972,10 @@
    "probe_side": "top",
    "probes": 6,
    "coverage_pct": 7.4,
+   "title": "",
+   "layers": 8,
+   "parts": 71,
+   "tht": 5,
    "estimates": {
     "station-1": {
      "batch": 6,
@@ -8547,6 +9037,10 @@
    "probe_side": "bottom",
    "probes": 0,
    "coverage_pct": 0.0,
+   "title": "",
+   "layers": 2,
+   "parts": 2,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -8597,6 +9091,10 @@
    "probe_side": "bottom",
    "probes": 16,
    "coverage_pct": 53.8,
+   "title": "",
+   "layers": 2,
+   "parts": 25,
+   "tht": 23,
    "estimates": {
     "station-1": {
      "batch": 4,
@@ -8657,6 +9155,10 @@
    "probe_side": "bottom",
    "probes": 1,
    "coverage_pct": 2.2,
+   "title": "",
+   "layers": 2,
+   "parts": 94,
+   "tht": 0,
    "estimates": {
     "station-1": {
      "batch": 6,
@@ -8719,6 +9221,10 @@
    "probe_side": "bottom",
    "probes": 34,
    "coverage_pct": 30.6,
+   "title": "TinyTapeout 4+ Demoboard",
+   "layers": 4,
+   "parts": 299,
+   "tht": 174,
    "estimates": {
     "station-1": {
      "batch": 1,
@@ -8779,6 +9285,10 @@
    "probe_side": "bottom",
    "probes": 34,
    "coverage_pct": 8.9,
+   "title": "KiCad demo",
+   "layers": 4,
+   "parts": 189,
+   "tht": 45,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -8844,6 +9354,10 @@
    "probe_side": "bottom",
    "probes": 127,
    "coverage_pct": 8.4,
+   "title": "",
+   "layers": 12,
+   "parts": 1508,
+   "tht": 15,
    "estimates": {
     "station-1": {
      "batch": 0,
@@ -11859,7 +12373,7 @@
   }
  ],
  "warnings": [],
- "seconds": 362.4,
+ "seconds": 113.5,
  "added": [
   "CM5_MINIMA_3",
   "complex_hierarchy",

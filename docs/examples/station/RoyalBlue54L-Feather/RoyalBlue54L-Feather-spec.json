@@ -1,7 +1,7 @@
 {
   "schema": "pcbtestkit/spec@1",
-  "generator": "PCB TestKit 1.1.2",
-  "generated": "2026-11-27T13:37:19",
+  "generator": "PCB TestKit 1.2.0",
+  "generated": "2026-11-27T18:39:57",
   "source": {
     "board": "RoyalBlue54L-Feather.kicad_pcb",
     "schematic": "RoyalBlue54L-Feather.kicad_sch",

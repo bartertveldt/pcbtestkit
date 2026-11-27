@@ -32,6 +32,11 @@ neither was ever published. Their changes, listed below under 1.1.2 and 1.1.1, a
   (cached profiles are made again once).
 - Pages are made again when their design changes (`htmlkit.PAGE_REV` is part of a station board's up-to-date
   check).
+- **The published catalog example** (`docs/examples/environment`) is a whole catalog run of 128 boards: the overview
+  video, both stations with their videos and every board's profile, card and ranking, plus five complete boards,
+  each with its explainer video. `docs/examples/environment/.gitignore` lists the boards kept, and
+  `tools/regen_examples.py` copies, films and links only those, so the repository stays small. A test checks that
+  the example pages link only to files that are there and that no example file holds a local path.
 
 ### Security and privacy
 - [SECURITY.md](SECURITY.md) is now a complete vulnerability disclosure policy:

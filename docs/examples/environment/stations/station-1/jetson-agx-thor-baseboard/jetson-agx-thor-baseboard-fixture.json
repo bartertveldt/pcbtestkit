@@ -1,0 +1,5773 @@
+{
+  "sites": [
+    {
+      "site": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 73.0,
+          "y": 140.65,
+          "fixture_net": "VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 227.6365,
+          "y": 79.21,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 235.7355,
+          "y": 79.21,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 102.51,
+          "y": 60.175,
+          "fixture_net": "TP_+3V3"
+        },
+        {
+          "probe": "PP05",
+          "x": 99.1,
+          "y": 127.6,
+          "fixture_net": "TP_+3V3_FMC"
+        },
+        {
+          "probe": "PP06",
+          "x": 99.0,
+          "y": 132.3,
+          "fixture_net": "TP_+5V_FMC"
+        },
+        {
+          "probe": "PP07",
+          "x": 99.1,
+          "y": 135.5,
+          "fixture_net": "TP_+VCC_FMC"
+        },
+        {
+          "probe": "PP08",
+          "x": 229.1,
+          "y": 109.4,
+          "fixture_net": "TP_USBC2_VBUS"
+        },
+        {
+          "probe": "PP09",
+          "x": 230.5,
+          "y": 82.4,
+          "fixture_net": "TP_USBC0_VBUS"
+        },
+        {
+          "probe": "PP10",
+          "x": 229.1,
+          "y": 96.2,
+          "fixture_net": "TP_USBC1_VBUS"
+        },
+        {
+          "probe": "PP11",
+          "x": 229.4,
+          "y": 122.7,
+          "fixture_net": "TP_USBC3_VBUS"
+        },
+        {
+          "probe": "PP12",
+          "x": 229.4,
+          "y": 134.9,
+          "fixture_net": "TP_USBC4_VBUS"
+        },
+        {
+          "probe": "PP13",
+          "x": 86.3,
+          "y": 67.2,
+          "fixture_net": "TP_SYS_VIN_HV"
+        },
+        {
+          "probe": "PP14",
+          "x": 226.96,
+          "y": 59.49,
+          "fixture_net": "TP_VCC_IN"
+        },
+        {
+          "probe": "PP15",
+          "x": 105.09,
+          "y": 60.175,
+          "fixture_net": "TP_SFI_CLK+"
+        },
+        {
+          "probe": "PP16",
+          "x": 199.5,
+          "y": 152.025,
+          "fixture_net": "TP_SH"
+        }
+      ],
+      "net_prefix": "",
+      "program": [
+        {
+          "ref": "PRG1",
+          "header": "J1",
+          "protocol": "jtag",
+          "connector": "same",
+          "pins": [
+            {
+              "pin": "A3",
+              "signal": "~{SOM_PR",
+              "net": "",
+              "dut_net": "/SoM_Power/~{SOM_PRSNT}",
+              "dut_pad": "A3"
+            },
+            {
+              "pin": "A4",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO32-PadA4)",
+              "dut_pad": "A4"
+            },
+            {
+              "pin": "A5",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO34-PadA5)",
+              "dut_pad": "A5"
+            },
+            {
+              "pin": "A6",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-UFS0_REF_CLK)",
+              "dut_pad": "A6"
+            },
+            {
+              "pin": "A7",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-GPIO29-PadA7)",
+              "dut_pad": "A7"
+            },
+            {
+              "pin": "A8",
+              "signal": "~{PEWAKE",
+              "net": "",
+              "dut_net": "/M.2/~{PEWAKE}",
+              "dut_pad": "A8"
+            },
+            {
+              "pin": "A9",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A10",
+              "signal": "USB2.D+",
+              "net": "",
+              "dut_net": "/SoM_IO2/USB2.D+",
+              "dut_pad": "A10"
+            },
+            {
+              "pin": "A11",
+              "signal": "USB2.D-",
+              "net": "",
+              "dut_net": "/SoM_IO2/USB2.D-",
+              "dut_pad": "A11"
+            },
+            {
+              "pin": "A12",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A13",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A14",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.TX0_C-",
+              "dut_pad": "A14"
+            },
+            {
+              "pin": "A15",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.TX0_C+",
+              "dut_pad": "A15"
+            },
+            {
+              "pin": "A16",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A17",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A18",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "/SoM_IO/SFP_LEDY_1V8",
+              "dut_pad": "A18"
+            },
+            {
+              "pin": "A19",
+              "signal": "DP2.HPD",
+              "net": "",
+              "dut_net": "/Expansion connector/DP2.HPD",
+              "dut_pad": "A19"
+            },
+            {
+              "pin": "A20",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A21",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A22",
+              "signal": "USBSS1.R",
+              "net": "",
+              "dut_net": "/SoM_IO2/USBSS1.RX+",
+              "dut_pad": "A22"
+            },
+            {
+              "pin": "A23",
+              "signal": "USBSS1.R",
+              "net": "",
+              "dut_net": "/SoM_IO2/USBSS1.RX-",
+              "dut_pad": "A23"
+            },
+            {
+              "pin": "A24",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A25",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A26",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.RX3+",
+              "dut_pad": "A26"
+            },
+            {
+              "pin": "A27",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.RX3-",
+              "dut_pad": "A27"
+            },
+            {
+              "pin": "A28",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A29",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A30",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX15_P-PadA30)",
+              "dut_pad": "A30"
+            },
+            {
+              "pin": "A31",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX15_N-PadA31)",
+              "dut_pad": "A31"
+            },
+            {
+              "pin": "A32",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A33",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A34",
+              "signal": "DP3.TX2_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.TX2_C+",
+              "dut_pad": "A34"
+            },
+            {
+              "pin": "A35",
+              "signal": "DP3.TX2_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.TX2_C-",
+              "dut_pad": "A35"
+            },
+            {
+              "pin": "A36",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A37",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A38",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1K-GPIO43-PadA38)",
+              "dut_pad": "A38"
+            },
+            {
+              "pin": "A39",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1K-GPIO37-PadA39)",
+              "dut_pad": "A39"
+            },
+            {
+              "pin": "A40",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A41",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI2_D0+",
+              "dut_pad": "A41"
+            },
+            {
+              "pin": "A42",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI2_D0-",
+              "dut_pad": "A42"
+            },
+            {
+              "pin": "A43",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A44",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI7_D0+",
+              "dut_pad": "A44"
+            },
+            {
+              "pin": "A45",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI7_D0-",
+              "dut_pad": "A45"
+            },
+            {
+              "pin": "A46",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A47",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-I2C10_CLK-PadA47)",
+              "dut_pad": "A47"
+            },
+            {
+              "pin": "A48",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-I2C10_DAT-PadA48)",
+              "dut_pad": "A48"
+            },
+            {
+              "pin": "A49",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A50",
+              "signal": "DP0.TX2_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.TX2_C-",
+              "dut_pad": "A50"
+            },
+            {
+              "pin": "A51",
+              "signal": "DP0.TX2_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.TX2_C+",
+              "dut_pad": "A51"
+            },
+            {
+              "pin": "A52",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "A53",
+              "signal": "I2C5_SCL",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C5_SCL_1V8",
+              "dut_pad": "A53"
+            },
+            {
+              "pin": "A54",
+              "signal": "CAM_CTRL",
+              "net": "",
+              "dut_net": "/CSI/CAM_CTRL.VSYNC_CAM1",
+              "dut_pad": "A54"
+            },
+            {
+              "pin": "A55",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-I2C9_CLK-PadA55)",
+              "dut_pad": "A55"
+            },
+            {
+              "pin": "A56",
+              "signal": "MISO",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI1.MISO",
+              "dut_pad": "A56"
+            },
+            {
+              "pin": "A57",
+              "signal": "UART2.CT",
+              "net": "",
+              "dut_net": "/Expansion connector/UART2.CTS",
+              "dut_pad": "A57"
+            },
+            {
+              "pin": "A58",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "/SoM_IO/M2_E_W_DIS_2_1V8",
+              "dut_pad": "A58"
+            },
+            {
+              "pin": "A59",
+              "signal": "GPIO.USE",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.USER_LED0",
+              "dut_pad": "A59"
+            },
+            {
+              "pin": "A60",
+              "signal": "SWCLK",
+              "net": "",
+              "dut_net": "/SoM_IO2/JTAG_TCK",
+              "dut_pad": "A60"
+            },
+            {
+              "pin": "A61",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-SYSTEM_OC_N)",
+              "dut_pad": "A61"
+            },
+            {
+              "pin": "A62",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1K-GPIO17-PadA62)",
+              "dut_pad": "A62"
+            },
+            {
+              "pin": "A63",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B3",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "B4",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B5",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO26-PadB5)",
+              "dut_pad": "B5"
+            },
+            {
+              "pin": "B6",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO30-PadB6)",
+              "dut_pad": "B6"
+            },
+            {
+              "pin": "B7",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B8",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-GPIO11-PadB8)",
+              "dut_pad": "B8"
+            },
+            {
+              "pin": "B9",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO20-PadB9)",
+              "dut_pad": "B9"
+            },
+            {
+              "pin": "B10",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-POWER_INT_N)",
+              "dut_pad": "B10"
+            },
+            {
+              "pin": "B11",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B12",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.RX0+",
+              "dut_pad": "B12"
+            },
+            {
+              "pin": "B13",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.RX0-",
+              "dut_pad": "B13"
+            },
+            {
+              "pin": "B14",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B15",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B16",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX16_P-PadB16)",
+              "dut_pad": "B16"
+            },
+            {
+              "pin": "B17",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX16_N-PadB17)",
+              "dut_pad": "B17"
+            },
+            {
+              "pin": "B18",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B19",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B20",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C2x1}.RX0-",
+              "dut_pad": "B20"
+            },
+            {
+              "pin": "B21",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C2x1}.RX0+",
+              "dut_pad": "B21"
+            },
+            {
+              "pin": "B22",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B23",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B24",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.RX1-",
+              "dut_pad": "B24"
+            },
+            {
+              "pin": "B25",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.RX1+",
+              "dut_pad": "B25"
+            },
+            {
+              "pin": "B26",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B27",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B28",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX13_N-PadB28)",
+              "dut_pad": "B28"
+            },
+            {
+              "pin": "B29",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX13_P-PadB29)",
+              "dut_pad": "B29"
+            },
+            {
+              "pin": "B30",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B31",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B32",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C1x1}.RX0-",
+              "dut_pad": "B32"
+            },
+            {
+              "pin": "B33",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C1x1}.RX0+",
+              "dut_pad": "B33"
+            },
+            {
+              "pin": "B34",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B35",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B36",
+              "signal": "NRST",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C1x1}.~{RST}",
+              "dut_pad": "B36"
+            },
+            {
+              "pin": "B37",
+              "signal": "PCIe_{C1",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C1x1}.~{CLKREQ}",
+              "dut_pad": "B37"
+            },
+            {
+              "pin": "B38",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B39",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B40",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO02-PadB40)",
+              "dut_pad": "B40"
+            },
+            {
+              "pin": "B41",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B42",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI2_CLK-",
+              "dut_pad": "B42"
+            },
+            {
+              "pin": "B43",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI2_CLK+",
+              "dut_pad": "B43"
+            },
+            {
+              "pin": "B44",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B45",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1F-CSI7_CLK_P-PadB45)",
+              "dut_pad": "B45"
+            },
+            {
+              "pin": "B46",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1F-CSI7_CLK_N-PadB46)",
+              "dut_pad": "B46"
+            },
+            {
+              "pin": "B47",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B48",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO16-PadB48)",
+              "dut_pad": "B48"
+            },
+            {
+              "pin": "B49",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO17-PadB49)",
+              "dut_pad": "B49"
+            },
+            {
+              "pin": "B50",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B51",
+              "signal": "DP0.TX1_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.TX1_C+",
+              "dut_pad": "B51"
+            },
+            {
+              "pin": "B52",
+              "signal": "DP0.TX1_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.TX1_C-",
+              "dut_pad": "B52"
+            },
+            {
+              "pin": "B53",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B54",
+              "signal": "CAM_CTRL",
+              "net": "",
+              "dut_net": "/CSI/CAM_CTRL.VSYNC_CAM0",
+              "dut_pad": "B54"
+            },
+            {
+              "pin": "B55",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-GPIO30)",
+              "dut_pad": "B55"
+            },
+            {
+              "pin": "B56",
+              "signal": "SPI1.~{C",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI1.~{CS1}",
+              "dut_pad": "B56"
+            },
+            {
+              "pin": "B57",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "B58",
+              "signal": "FMC_PRES",
+              "net": "",
+              "dut_net": "/Expansion connector/FMC_PRESENT",
+              "dut_pad": "B58"
+            },
+            {
+              "pin": "B59",
+              "signal": "FMC_PG_C",
+              "net": "",
+              "dut_net": "/Expansion connector/FMC_PG_C2M",
+              "dut_pad": "B59"
+            },
+            {
+              "pin": "B60",
+              "signal": "TDI",
+              "net": "",
+              "dut_net": "/SoM_IO2/JTAG_TDI",
+              "dut_pad": "B60"
+            },
+            {
+              "pin": "B61",
+              "signal": "CAN3.DIN",
+              "net": "",
+              "dut_net": "/Expansion connector/CAN3.DIN",
+              "dut_pad": "B61"
+            },
+            {
+              "pin": "B62",
+              "signal": "GPIO.USE",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.USER_LED1",
+              "dut_pad": "B62"
+            },
+            {
+              "pin": "B63",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "C1",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "C2",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "C3",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C4",
+              "signal": "CAM_CTRL",
+              "net": "",
+              "dut_net": "/CSI/CAM_CTRL.VSYNC_CAM2",
+              "dut_pad": "C4"
+            },
+            {
+              "pin": "C5",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-GPIO40-PadC5)",
+              "dut_pad": "C5"
+            },
+            {
+              "pin": "C6",
+              "signal": "NRST",
+              "net": "",
+              "dut_net": "Net-(J1A-UFS0_RST_N)",
+              "dut_pad": "C6"
+            },
+            {
+              "pin": "C7",
+              "signal": "I2S_{M.2",
+              "net": "",
+              "dut_net": "/SoM_IO/I2S_{M.2}.SDOUT",
+              "dut_pad": "C7"
+            },
+            {
+              "pin": "C8",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-PEX_C4_CLKREQ_N-PadC8)",
+              "dut_pad": "C8"
+            },
+            {
+              "pin": "C9",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C10",
+              "signal": "USB1.D-",
+              "net": "",
+              "dut_net": "/SoM_IO2/USB1.D-",
+              "dut_pad": "C10"
+            },
+            {
+              "pin": "C11",
+              "signal": "USB1.D+",
+              "net": "",
+              "dut_net": "/SoM_IO2/USB1.D+",
+              "dut_pad": "C11"
+            },
+            {
+              "pin": "C12",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C13",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C14",
+              "signal": "DP2.TX2_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.TX2_C-",
+              "dut_pad": "C14"
+            },
+            {
+              "pin": "C15",
+              "signal": "DP2.TX2_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.TX2_C+",
+              "dut_pad": "C15"
+            },
+            {
+              "pin": "C16",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C17",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C18",
+              "signal": "DP1.HPD",
+              "net": "",
+              "dut_net": "/Expansion connector/DP1.HPD",
+              "dut_pad": "C18"
+            },
+            {
+              "pin": "C19",
+              "signal": "DP3.HPD",
+              "net": "",
+              "dut_net": "/Expansion connector/DP3.HPD",
+              "dut_pad": "C19"
+            },
+            {
+              "pin": "C20",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C21",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C22",
+              "signal": "USBSS2.R",
+              "net": "",
+              "dut_net": "/SoM_IO2/USBSS2.RX-",
+              "dut_pad": "C22"
+            },
+            {
+              "pin": "C23",
+              "signal": "USBSS2.R",
+              "net": "",
+              "dut_net": "/SoM_IO2/USBSS2.RX+",
+              "dut_pad": "C23"
+            },
+            {
+              "pin": "C24",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C25",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C26",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.RX2-",
+              "dut_pad": "C26"
+            },
+            {
+              "pin": "C27",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.RX2+",
+              "dut_pad": "C27"
+            },
+            {
+              "pin": "C28",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C29",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C30",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX14_N-PadC30)",
+              "dut_pad": "C30"
+            },
+            {
+              "pin": "C31",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX14_P-PadC31)",
+              "dut_pad": "C31"
+            },
+            {
+              "pin": "C32",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C33",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C34",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/Recovery USB/USBSS0.RX+",
+              "dut_pad": "C34"
+            },
+            {
+              "pin": "C35",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/Recovery USB/USBSS0.RX-",
+              "dut_pad": "C35"
+            },
+            {
+              "pin": "C36",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C37",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C38",
+              "signal": "~{USBC2_",
+              "net": "",
+              "dut_net": "/SoM_IO/~{USBC2_INT}_1V8",
+              "dut_pad": "C38"
+            },
+            {
+              "pin": "C39",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "/SoM_IO/M2_E_W_DIS_1_1V8",
+              "dut_pad": "C39"
+            },
+            {
+              "pin": "C40",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C41",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI2_D1-",
+              "dut_pad": "C41"
+            },
+            {
+              "pin": "C42",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI2_D1+",
+              "dut_pad": "C42"
+            },
+            {
+              "pin": "C43",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C44",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1F-CSI5_CLK_P-PadC44)",
+              "dut_pad": "C44"
+            },
+            {
+              "pin": "C45",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1F-CSI5_CLK_N-PadC45)",
+              "dut_pad": "C45"
+            },
+            {
+              "pin": "C46",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C47",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI7_D1+",
+              "dut_pad": "C47"
+            },
+            {
+              "pin": "C48",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI7_D1-",
+              "dut_pad": "C48"
+            },
+            {
+              "pin": "C49",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C50",
+              "signal": "DP0.TX3_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.TX3_C-",
+              "dut_pad": "C50"
+            },
+            {
+              "pin": "C51",
+              "signal": "DP0.TX3_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.TX3_C+",
+              "dut_pad": "C51"
+            },
+            {
+              "pin": "C52",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C53",
+              "signal": "I2C5_SDA",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C5_SDA_1V8",
+              "dut_pad": "C53"
+            },
+            {
+              "pin": "C54",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-GPIO33-PadC54)",
+              "dut_pad": "C54"
+            },
+            {
+              "pin": "C55",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-GPIO39)",
+              "dut_pad": "C55"
+            },
+            {
+              "pin": "C56",
+              "signal": "UART2.RX",
+              "net": "",
+              "dut_net": "/Expansion connector/UART2.RX",
+              "dut_pad": "C56"
+            },
+            {
+              "pin": "C57",
+              "signal": "SPI3.~{C",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI3.~{CS0}",
+              "dut_pad": "C57"
+            },
+            {
+              "pin": "C58",
+              "signal": "UART2.TX",
+              "net": "",
+              "dut_net": "/Expansion connector/UART2.TX",
+              "dut_pad": "C58"
+            },
+            {
+              "pin": "C59",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-I2S3_SCLK-PadC59)",
+              "dut_pad": "C59"
+            },
+            {
+              "pin": "C60",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-I2S3_FS-PadC60)",
+              "dut_pad": "C60"
+            },
+            {
+              "pin": "C61",
+              "signal": "GPIO.USE",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.USER_BTN0",
+              "dut_pad": "C61"
+            },
+            {
+              "pin": "C62",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "C63",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "C64",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "C65",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "D1",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "D2",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "D3",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "D4",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D5",
+              "signal": "CAM_CTRL",
+              "net": "",
+              "dut_net": "/CSI/CAM_CTRL.VSYNC_CAM3",
+              "dut_pad": "D5"
+            },
+            {
+              "pin": "D6",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO33-PadD6)",
+              "dut_pad": "D6"
+            },
+            {
+              "pin": "D7",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D8",
+              "signal": "I2S_{M.2",
+              "net": "",
+              "dut_net": "/SoM_IO/I2S_{M.2}.FS",
+              "dut_pad": "D8"
+            },
+            {
+              "pin": "D9",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO25-PadD9)",
+              "dut_pad": "D9"
+            },
+            {
+              "pin": "D10",
+              "signal": "NRST",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C2x1}.~{RST}",
+              "dut_pad": "D10"
+            },
+            {
+              "pin": "D11",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D12",
+              "signal": "PCIe_{C3",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.RX1+",
+              "dut_pad": "D12"
+            },
+            {
+              "pin": "D13",
+              "signal": "PCIe_{C3",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.RX1-",
+              "dut_pad": "D13"
+            },
+            {
+              "pin": "D14",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D15",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D16",
+              "signal": "DP1.AUX_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.AUX_C+",
+              "dut_pad": "D16"
+            },
+            {
+              "pin": "D17",
+              "signal": "DP1.AUX_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.AUX_C-",
+              "dut_pad": "D17"
+            },
+            {
+              "pin": "D18",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D19",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D20",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX5_P-PadD20)",
+              "dut_pad": "D20"
+            },
+            {
+              "pin": "D21",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_RX5_N-PadD21)",
+              "dut_pad": "D21"
+            },
+            {
+              "pin": "D22",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D23",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D24",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.RX0+",
+              "dut_pad": "D24"
+            },
+            {
+              "pin": "D25",
+              "signal": "RXD",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.RX0-",
+              "dut_pad": "D25"
+            },
+            {
+              "pin": "D26",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D27",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D28",
+              "signal": "SFI.RX+",
+              "net": "",
+              "dut_net": "/SFP/SFI.RX+",
+              "dut_pad": "D28"
+            },
+            {
+              "pin": "D29",
+              "signal": "SFI.RX-",
+              "net": "",
+              "dut_net": "/SFP/SFI.RX-",
+              "dut_pad": "D29"
+            },
+            {
+              "pin": "D30",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D31",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D32",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.TX0_C-",
+              "dut_pad": "D32"
+            },
+            {
+              "pin": "D33",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.TX0_C+",
+              "dut_pad": "D33"
+            },
+            {
+              "pin": "D34",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D35",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D36",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO11-PadD36)",
+              "dut_pad": "D36"
+            },
+            {
+              "pin": "D37",
+              "signal": "Net-(D1-",
+              "net": "",
+              "dut_net": "Net-(D1-C)",
+              "dut_pad": "D37"
+            },
+            {
+              "pin": "D38",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D39",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D40",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO01-PadD40)",
+              "dut_pad": "D40"
+            },
+            {
+              "pin": "D41",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D42",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI5_D0+",
+              "dut_pad": "D42"
+            },
+            {
+              "pin": "D43",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI5_D0-",
+              "dut_pad": "D43"
+            },
+            {
+              "pin": "D44",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D45",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI5_D1-",
+              "dut_pad": "D45"
+            },
+            {
+              "pin": "D46",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI5_D1+",
+              "dut_pad": "D46"
+            },
+            {
+              "pin": "D47",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D48",
+              "signal": "PCIe_{C1",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C1x1}.CLK-",
+              "dut_pad": "D48"
+            },
+            {
+              "pin": "D49",
+              "signal": "PCIe_{C1",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C1x1}.CLK+",
+              "dut_pad": "D49"
+            },
+            {
+              "pin": "D50",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D51",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.TX0_C+",
+              "dut_pad": "D51"
+            },
+            {
+              "pin": "D52",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.TX0_C-",
+              "dut_pad": "D52"
+            },
+            {
+              "pin": "D53",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D54",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-GPIO03-PadD54)",
+              "dut_pad": "D54"
+            },
+            {
+              "pin": "D55",
+              "signal": "MOSI",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI1.MOSI",
+              "dut_pad": "D55"
+            },
+            {
+              "pin": "D56",
+              "signal": "MISO",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI3.MISO",
+              "dut_pad": "D56"
+            },
+            {
+              "pin": "D57",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D58",
+              "signal": "SWO",
+              "net": "",
+              "dut_net": "/SoM_IO2/JTAG_TDO",
+              "dut_pad": "D58"
+            },
+            {
+              "pin": "D59",
+              "signal": "CAN2.DOU",
+              "net": "",
+              "dut_net": "/Expansion connector/CAN2.DOUT",
+              "dut_pad": "D59"
+            },
+            {
+              "pin": "D60",
+              "signal": "SPI2.~{C",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI2.~{CS0}",
+              "dut_pad": "D60"
+            },
+            {
+              "pin": "D61",
+              "signal": "I2C_{CAM",
+              "net": "",
+              "dut_net": "/CSI/I2C_{CAM}.SCL",
+              "dut_pad": "D61"
+            },
+            {
+              "pin": "D62",
+              "signal": "MISO",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI2.MISO",
+              "dut_pad": "D62"
+            },
+            {
+              "pin": "D63",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "D64",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "D65",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "E1",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "E2",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "E3",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E4",
+              "signal": "I2S2.FS",
+              "net": "",
+              "dut_net": "/Expansion connector/I2S2.FS",
+              "dut_pad": "E4"
+            },
+            {
+              "pin": "E5",
+              "signal": "GPIO_EXP",
+              "net": "",
+              "dut_net": "/SoM_IO/GPIO_EXP_IRQ_1V8",
+              "dut_pad": "E5"
+            },
+            {
+              "pin": "E6",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-SGMII0_MDC-PadE6)",
+              "dut_pad": "E6"
+            },
+            {
+              "pin": "E7",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-SGMII0_MDIO-PadE7)",
+              "dut_pad": "E7"
+            },
+            {
+              "pin": "E8",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO35-PadE8)",
+              "dut_pad": "E8"
+            },
+            {
+              "pin": "E9",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E10",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-GPIO12-PadE10)",
+              "dut_pad": "E10"
+            },
+            {
+              "pin": "E11",
+              "signal": "PCIe_{C2",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C2x1}.~{CLKREQ}",
+              "dut_pad": "E11"
+            },
+            {
+              "pin": "E12",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E13",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E14",
+              "signal": "PCIe_{C2",
+              "net": "",
+              "dut_net": "/SoM_IO2/PCIe_{C2x1}R_CLK-",
+              "dut_pad": "E14"
+            },
+            {
+              "pin": "E15",
+              "signal": "PCIe_{C2",
+              "net": "",
+              "dut_net": "/SoM_IO2/PCIe_{C2x1}R_CLK+",
+              "dut_pad": "E15"
+            },
+            {
+              "pin": "E16",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E17",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E18",
+              "signal": "DP2.AUX_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.AUX_C-",
+              "dut_pad": "E18"
+            },
+            {
+              "pin": "E19",
+              "signal": "DP2.AUX_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.AUX_C+",
+              "dut_pad": "E19"
+            },
+            {
+              "pin": "E20",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E21",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E22",
+              "signal": "PCIe_{C3",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.CLK-",
+              "dut_pad": "E22"
+            },
+            {
+              "pin": "E23",
+              "signal": "PCIe_{C3",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.CLK+",
+              "dut_pad": "E23"
+            },
+            {
+              "pin": "E24",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E25",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E26",
+              "signal": "I2C7.SDA",
+              "net": "",
+              "dut_net": "/Expansion connector/I2C7.SDA",
+              "dut_pad": "E26"
+            },
+            {
+              "pin": "E27",
+              "signal": "I2C7.SCL",
+              "net": "",
+              "dut_net": "/Expansion connector/I2C7.SCL",
+              "dut_pad": "E27"
+            },
+            {
+              "pin": "E28",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E29",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E30",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO24-PadE30)",
+              "dut_pad": "E30"
+            },
+            {
+              "pin": "E31",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO23-PadE31)",
+              "dut_pad": "E31"
+            },
+            {
+              "pin": "E32",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E33",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E34",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO15-PadE34)",
+              "dut_pad": "E34"
+            },
+            {
+              "pin": "E35",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO14-PadE35)",
+              "dut_pad": "E35"
+            },
+            {
+              "pin": "E36",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E37",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E38",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI0_D1-",
+              "dut_pad": "E38"
+            },
+            {
+              "pin": "E39",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI0_D1+",
+              "dut_pad": "E39"
+            },
+            {
+              "pin": "E40",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E41",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI0_D0-",
+              "dut_pad": "E41"
+            },
+            {
+              "pin": "E42",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI0_D0+",
+              "dut_pad": "E42"
+            },
+            {
+              "pin": "E43",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E44",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI3_D0-",
+              "dut_pad": "E44"
+            },
+            {
+              "pin": "E45",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI3_D0+",
+              "dut_pad": "E45"
+            },
+            {
+              "pin": "E46",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E47",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI4_D1+",
+              "dut_pad": "E47"
+            },
+            {
+              "pin": "E48",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI4_D1-",
+              "dut_pad": "E48"
+            },
+            {
+              "pin": "E49",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E50",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO19-PadE50)",
+              "dut_pad": "E50"
+            },
+            {
+              "pin": "E51",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO18-PadE51)",
+              "dut_pad": "E51"
+            },
+            {
+              "pin": "E52",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E53",
+              "signal": "I2C3_SDA",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C3_SDA_1V8",
+              "dut_pad": "E53"
+            },
+            {
+              "pin": "E54",
+              "signal": "FAN_TACH",
+              "net": "",
+              "dut_net": "/Peripherals/FAN_TACH",
+              "dut_pad": "E54"
+            },
+            {
+              "pin": "E55",
+              "signal": "SPI1.~{C",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI1.~{CS0}",
+              "dut_pad": "E55"
+            },
+            {
+              "pin": "E56",
+              "signal": "SPI3.~{C",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI3.~{CS1}",
+              "dut_pad": "E56"
+            },
+            {
+              "pin": "E57",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E58",
+              "signal": "SWDIO",
+              "net": "",
+              "dut_net": "/SoM_IO2/JTAG_TMS",
+              "dut_pad": "E58"
+            },
+            {
+              "pin": "E59",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1K-GPIO38-PadE59)",
+              "dut_pad": "E59"
+            },
+            {
+              "pin": "E60",
+              "signal": "I2C_{CAM",
+              "net": "",
+              "dut_net": "/CSI/I2C_{CAM}.SDA",
+              "dut_pad": "E60"
+            },
+            {
+              "pin": "E61",
+              "signal": "SCK",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI2.SCK",
+              "dut_pad": "E61"
+            },
+            {
+              "pin": "E62",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "E63",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "E64",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "E65",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "F1",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "F2",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "F3",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "F4",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F5",
+              "signal": "I2S2.SDO",
+              "net": "",
+              "dut_net": "/Expansion connector/I2S2.SDOUT",
+              "dut_pad": "F5"
+            },
+            {
+              "pin": "F6",
+              "signal": "I2S2.SDI",
+              "net": "",
+              "dut_net": "/Expansion connector/I2S2.SDIN",
+              "dut_pad": "F6"
+            },
+            {
+              "pin": "F7",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F8",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO31-PadF8)",
+              "dut_pad": "F8"
+            },
+            {
+              "pin": "F9",
+              "signal": "USBC2_PE",
+              "net": "",
+              "dut_net": "/SoM_IO/USBC2_PEN_1V8",
+              "dut_pad": "F9"
+            },
+            {
+              "pin": "F10",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "/SoM_IO/USBC2_ID_1V8",
+              "dut_pad": "F10"
+            },
+            {
+              "pin": "F11",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F12",
+              "signal": "USB0.D+",
+              "net": "",
+              "dut_net": "/Recovery USB/USB0.D+",
+              "dut_pad": "F12"
+            },
+            {
+              "pin": "F13",
+              "signal": "USB0.D-",
+              "net": "",
+              "dut_net": "/Recovery USB/USB0.D-",
+              "dut_pad": "F13"
+            },
+            {
+              "pin": "F14",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F15",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F16",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-UPHY_REFCLK0_P-PadF16)",
+              "dut_pad": "F16"
+            },
+            {
+              "pin": "F17",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-UPHY_REFCLK0_N-PadF17)",
+              "dut_pad": "F17"
+            },
+            {
+              "pin": "F18",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F19",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F20",
+              "signal": "DP3.AUX_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.AUX_C+",
+              "dut_pad": "F20"
+            },
+            {
+              "pin": "F21",
+              "signal": "DP3.AUX_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.AUX_C-",
+              "dut_pad": "F21"
+            },
+            {
+              "pin": "F22",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F23",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F24",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-UPHY_REFCLK1_P-PadF24)",
+              "dut_pad": "F24"
+            },
+            {
+              "pin": "F25",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-UPHY_REFCLK1_N-PadF25)",
+              "dut_pad": "F25"
+            },
+            {
+              "pin": "F26",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F27",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F28",
+              "signal": "SFI_REFC",
+              "net": "",
+              "dut_net": "/SoM_IO2/SFI_REFCLK-",
+              "dut_pad": "F28"
+            },
+            {
+              "pin": "F29",
+              "signal": "SFI_REFC",
+              "net": "",
+              "dut_net": "/SoM_IO2/SFI_REFCLK+",
+              "dut_pad": "F29"
+            },
+            {
+              "pin": "F30",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F31",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F32",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.CLK+",
+              "dut_pad": "F32"
+            },
+            {
+              "pin": "F33",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.CLK-",
+              "dut_pad": "F33"
+            },
+            {
+              "pin": "F34",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F35",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F36",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO13-PadF36)",
+              "dut_pad": "F36"
+            },
+            {
+              "pin": "F37",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-FSI_GPIO12-PadF37)",
+              "dut_pad": "F37"
+            },
+            {
+              "pin": "F38",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F39",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F40",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO00-PadF40)",
+              "dut_pad": "F40"
+            },
+            {
+              "pin": "F41",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F42",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI0_CLK-",
+              "dut_pad": "F42"
+            },
+            {
+              "pin": "F43",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI0_CLK+",
+              "dut_pad": "F43"
+            },
+            {
+              "pin": "F44",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F45",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1F-CSI3_CLK_N-PadF45)",
+              "dut_pad": "F45"
+            },
+            {
+              "pin": "F46",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1F-CSI3_CLK_P-PadF46)",
+              "dut_pad": "F46"
+            },
+            {
+              "pin": "F47",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F48",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI4_CLK+",
+              "dut_pad": "F48"
+            },
+            {
+              "pin": "F49",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI4_CLK-",
+              "dut_pad": "F49"
+            },
+            {
+              "pin": "F50",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F51",
+              "signal": "I2C8.SDA",
+              "net": "",
+              "dut_net": "/Expansion connector/I2C8.SDA",
+              "dut_pad": "F51"
+            },
+            {
+              "pin": "F52",
+              "signal": "I2C8.SCL",
+              "net": "",
+              "dut_net": "/Expansion connector/I2C8.SCL",
+              "dut_pad": "F52"
+            },
+            {
+              "pin": "F53",
+              "signal": "I2C3_SCL",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C3_SCL_1V8",
+              "dut_pad": "F53"
+            },
+            {
+              "pin": "F54",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-GPIO22-PadF54)",
+              "dut_pad": "F54"
+            },
+            {
+              "pin": "F55",
+              "signal": "SCK",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI3.SCK",
+              "dut_pad": "F55"
+            },
+            {
+              "pin": "F56",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "/SoM_IO/SFP_LEDG_1V8",
+              "dut_pad": "F56"
+            },
+            {
+              "pin": "F57",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F58",
+              "signal": "CAN2.DIN",
+              "net": "",
+              "dut_net": "/Expansion connector/CAN2.DIN",
+              "dut_pad": "F58"
+            },
+            {
+              "pin": "F59",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1K-GPIO42-PadF59)",
+              "dut_pad": "F59"
+            },
+            {
+              "pin": "F60",
+              "signal": "MOSI",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI2.MOSI",
+              "dut_pad": "F60"
+            },
+            {
+              "pin": "F61",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-VCOMP_ALERT_N)",
+              "dut_pad": "F61"
+            },
+            {
+              "pin": "F62",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "F63",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "F64",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "F65",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "G1",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "G2",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "G3",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G4",
+              "signal": "I2S2.CLK",
+              "net": "",
+              "dut_net": "/Expansion connector/I2S2.CLK",
+              "dut_pad": "G4"
+            },
+            {
+              "pin": "G5",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-GPIO56)",
+              "dut_pad": "G5"
+            },
+            {
+              "pin": "G6",
+              "signal": "MOD_ABS",
+              "net": "",
+              "dut_net": "/SFP/MOD_ABS",
+              "dut_pad": "G6"
+            },
+            {
+              "pin": "G7",
+              "signal": "GPIO.USE",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.USER_BTN1",
+              "dut_pad": "G7"
+            },
+            {
+              "pin": "G8",
+              "signal": "PCIe_{C3",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.~{CLKREQ}",
+              "dut_pad": "G8"
+            },
+            {
+              "pin": "G9",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G10",
+              "signal": "USB3.D-",
+              "net": "",
+              "dut_net": "/M.2/USB3.D-",
+              "dut_pad": "G10"
+            },
+            {
+              "pin": "G11",
+              "signal": "USB3.D+",
+              "net": "",
+              "dut_net": "/M.2/USB3.D+",
+              "dut_pad": "G11"
+            },
+            {
+              "pin": "G12",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G13",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G14",
+              "signal": "DP2.TX3_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.TX3_C-",
+              "dut_pad": "G14"
+            },
+            {
+              "pin": "G15",
+              "signal": "DP2.TX3_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.TX3_C+",
+              "dut_pad": "G15"
+            },
+            {
+              "pin": "G16",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G17",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G18",
+              "signal": "I2S3.FS",
+              "net": "",
+              "dut_net": "/Expansion connector/I2S3.FS",
+              "dut_pad": "G18"
+            },
+            {
+              "pin": "G19",
+              "signal": "I2S3.SDI",
+              "net": "",
+              "dut_net": "/Expansion connector/I2S3.SDIN",
+              "dut_pad": "G19"
+            },
+            {
+              "pin": "G20",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G21",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G22",
+              "signal": "USBSS2.T",
+              "net": "",
+              "dut_net": "/SoM_IO2/USBSS2.TX-",
+              "dut_pad": "G22"
+            },
+            {
+              "pin": "G23",
+              "signal": "USBSS2.T",
+              "net": "",
+              "dut_net": "/SoM_IO2/USBSS2.TX+",
+              "dut_pad": "G23"
+            },
+            {
+              "pin": "G24",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G25",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G26",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.TX2-",
+              "dut_pad": "G26"
+            },
+            {
+              "pin": "G27",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.TX2+",
+              "dut_pad": "G27"
+            },
+            {
+              "pin": "G28",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G29",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G30",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX14_N-PadG30)",
+              "dut_pad": "G30"
+            },
+            {
+              "pin": "G31",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX14_P-PadG31)",
+              "dut_pad": "G31"
+            },
+            {
+              "pin": "G32",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G33",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G34",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C1x1}.TX0-",
+              "dut_pad": "G34"
+            },
+            {
+              "pin": "G35",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C1x1}.TX0+",
+              "dut_pad": "G35"
+            },
+            {
+              "pin": "G36",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G37",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G38",
+              "signal": "CAN0.DOU",
+              "net": "",
+              "dut_net": "/Expansion connector/CAN0.DOUT",
+              "dut_pad": "G38"
+            },
+            {
+              "pin": "G39",
+              "signal": "CAN0.DIN",
+              "net": "",
+              "dut_net": "/Expansion connector/CAN0.DIN",
+              "dut_pad": "G39"
+            },
+            {
+              "pin": "G40",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G41",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI1_D0+",
+              "dut_pad": "G41"
+            },
+            {
+              "pin": "G42",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI1_D0-",
+              "dut_pad": "G42"
+            },
+            {
+              "pin": "G43",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G44",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI3_D1+",
+              "dut_pad": "G44"
+            },
+            {
+              "pin": "G45",
+              "signal": "CAM0.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM0.CSI3_D1-",
+              "dut_pad": "G45"
+            },
+            {
+              "pin": "G46",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G47",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI4_D0-",
+              "dut_pad": "G47"
+            },
+            {
+              "pin": "G48",
+              "signal": "CAM2.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM2.CSI4_D0+",
+              "dut_pad": "G48"
+            },
+            {
+              "pin": "G49",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G50",
+              "signal": "DP1.TX1_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.TX1_C-",
+              "dut_pad": "G50"
+            },
+            {
+              "pin": "G51",
+              "signal": "DP1.TX1_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.TX1_C+",
+              "dut_pad": "G51"
+            },
+            {
+              "pin": "G52",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G53",
+              "signal": "DP0.AUX_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.AUX_C+",
+              "dut_pad": "G53"
+            },
+            {
+              "pin": "G54",
+              "signal": "DP0.AUX_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.AUX_C-",
+              "dut_pad": "G54"
+            },
+            {
+              "pin": "G55",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-GPIO23-PadG55)",
+              "dut_pad": "G55"
+            },
+            {
+              "pin": "G56",
+              "signal": "MOSI",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI3.MOSI",
+              "dut_pad": "G56"
+            },
+            {
+              "pin": "G57",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G58",
+              "signal": "UART2.RT",
+              "net": "",
+              "dut_net": "/Expansion connector/UART2.RTS",
+              "dut_pad": "G58"
+            },
+            {
+              "pin": "G59",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-THERM_SHDN_REQ_N)",
+              "dut_pad": "G59"
+            },
+            {
+              "pin": "G60",
+              "signal": "NVDBG_SE",
+              "net": "",
+              "dut_net": "/SoM_IO2/NVDBG_SEL",
+              "dut_pad": "G60"
+            },
+            {
+              "pin": "G61",
+              "signal": "NTRST",
+              "net": "",
+              "dut_net": "/SoM_IO2/JTAG_TRST_N",
+              "dut_pad": "G61"
+            },
+            {
+              "pin": "G62",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "G63",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "G64",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "G65",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "H1",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "H2",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "H3",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "H4",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H5",
+              "signal": "GPIO.20",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.20",
+              "dut_pad": "H5"
+            },
+            {
+              "pin": "H6",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-UART4_RX-PadH6)",
+              "dut_pad": "H6"
+            },
+            {
+              "pin": "H7",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H8",
+              "signal": "I2S_{M.2",
+              "net": "",
+              "dut_net": "/SoM_IO/I2S_{M.2}.SDIN",
+              "dut_pad": "H8"
+            },
+            {
+              "pin": "H9",
+              "signal": "GPIO.MCL",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.MCLK01",
+              "dut_pad": "H9"
+            },
+            {
+              "pin": "H10",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-PEX_C4_RST_N-PadH10)",
+              "dut_pad": "H10"
+            },
+            {
+              "pin": "H11",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H12",
+              "signal": "PCIe_{C3",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.TX1+",
+              "dut_pad": "H12"
+            },
+            {
+              "pin": "H13",
+              "signal": "PCIe_{C3",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.TX1-",
+              "dut_pad": "H13"
+            },
+            {
+              "pin": "H14",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H15",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H16",
+              "signal": "I2S3.CLK",
+              "net": "",
+              "dut_net": "/Expansion connector/I2S3.CLK",
+              "dut_pad": "H16"
+            },
+            {
+              "pin": "H17",
+              "signal": "I2S3.SDO",
+              "net": "",
+              "dut_net": "/Expansion connector/I2S3.SDOUT",
+              "dut_pad": "H17"
+            },
+            {
+              "pin": "H18",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H19",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H20",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX5_P-PadH20)",
+              "dut_pad": "H20"
+            },
+            {
+              "pin": "H21",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX5_N-PadH21)",
+              "dut_pad": "H21"
+            },
+            {
+              "pin": "H22",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H23",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H24",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.TX0+",
+              "dut_pad": "H24"
+            },
+            {
+              "pin": "H25",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.TX0-",
+              "dut_pad": "H25"
+            },
+            {
+              "pin": "H26",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H27",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H28",
+              "signal": "SFI.TX+",
+              "net": "",
+              "dut_net": "/SFP/SFI.TX+",
+              "dut_pad": "H28"
+            },
+            {
+              "pin": "H29",
+              "signal": "SFI.TX-",
+              "net": "",
+              "dut_net": "/SFP/SFI.TX-",
+              "dut_pad": "H29"
+            },
+            {
+              "pin": "H30",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H31",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H32",
+              "signal": "DP3.TX3_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.TX3_C+",
+              "dut_pad": "H32"
+            },
+            {
+              "pin": "H33",
+              "signal": "DP3.TX3_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.TX3_C-",
+              "dut_pad": "H33"
+            },
+            {
+              "pin": "H34",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H35",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H36",
+              "signal": "CAN1.DIN",
+              "net": "",
+              "dut_net": "/Expansion connector/CAN1.DIN",
+              "dut_pad": "H36"
+            },
+            {
+              "pin": "H37",
+              "signal": "CAN1.DOU",
+              "net": "",
+              "dut_net": "/Expansion connector/CAN1.DOUT",
+              "dut_pad": "H37"
+            },
+            {
+              "pin": "H38",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H39",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H40",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1A-MID1-PadH40)",
+              "dut_pad": "H40"
+            },
+            {
+              "pin": "H41",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H42",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1F-CSI1_CLK_N-PadH42)",
+              "dut_pad": "H42"
+            },
+            {
+              "pin": "H43",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1F-CSI1_CLK_P-PadH43)",
+              "dut_pad": "H43"
+            },
+            {
+              "pin": "H44",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H45",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI6_D1-",
+              "dut_pad": "H45"
+            },
+            {
+              "pin": "H46",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI6_D1+",
+              "dut_pad": "H46"
+            },
+            {
+              "pin": "H47",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H48",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.TX0_C-",
+              "dut_pad": "H48"
+            },
+            {
+              "pin": "H49",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.TX0_C+",
+              "dut_pad": "H49"
+            },
+            {
+              "pin": "H50",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H51",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-GPIO26-PadH51)",
+              "dut_pad": "H51"
+            },
+            {
+              "pin": "H52",
+              "signal": "FMC_PRSN",
+              "net": "",
+              "dut_net": "/Expansion connector/FMC_PRSNT_M2C_L",
+              "dut_pad": "H52"
+            },
+            {
+              "pin": "H53",
+              "signal": "GPIO.MCL",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.MCLK03",
+              "dut_pad": "H53"
+            },
+            {
+              "pin": "H54",
+              "signal": "UART1.CT",
+              "net": "",
+              "dut_net": "/SoM_IO/UART1.CTS",
+              "dut_pad": "H54"
+            },
+            {
+              "pin": "H55",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-MCLK04-PadH55)",
+              "dut_pad": "H55"
+            },
+            {
+              "pin": "H56",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H57",
+              "signal": "UART5.CT",
+              "net": "",
+              "dut_net": "/Expansion connector/UART5.CTS",
+              "dut_pad": "H57"
+            },
+            {
+              "pin": "H58",
+              "signal": "UART5.RX",
+              "net": "",
+              "dut_net": "/Expansion connector/UART5.RX",
+              "dut_pad": "H58"
+            },
+            {
+              "pin": "H59",
+              "signal": "NVJTAG_S",
+              "net": "",
+              "dut_net": "/SoM_IO2/NVJTAG_SEL",
+              "dut_pad": "H59"
+            },
+            {
+              "pin": "H60",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-GPIO31)",
+              "dut_pad": "H60"
+            },
+            {
+              "pin": "H61",
+              "signal": "CAN3.DOU",
+              "net": "",
+              "dut_net": "/Expansion connector/CAN3.DOUT",
+              "dut_pad": "H61"
+            },
+            {
+              "pin": "H62",
+              "signal": "UART3_DE",
+              "net": "",
+              "dut_net": "/SoM_IO/UART3_DEBUG_TX_1V8",
+              "dut_pad": "H62"
+            },
+            {
+              "pin": "H63",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "H64",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "H65",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "J1",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "J2",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "J3",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J4",
+              "signal": "FMC_PG_M",
+              "net": "",
+              "dut_net": "/Expansion connector/FMC_PG_M2C",
+              "dut_pad": "J4"
+            },
+            {
+              "pin": "J5",
+              "signal": "GPIO.27",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.27",
+              "dut_pad": "J5"
+            },
+            {
+              "pin": "J6",
+              "signal": "USBC2_VB",
+              "net": "",
+              "dut_net": "/SoM_IO/USBC2_VBUS_DET_1V8",
+              "dut_pad": "J6"
+            },
+            {
+              "pin": "J7",
+              "signal": "~{PDC_I2",
+              "net": "",
+              "dut_net": "/SoM_IO/~{PDC_I2C1_IRQ}_1V8",
+              "dut_pad": "J7"
+            },
+            {
+              "pin": "J8",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J9",
+              "signal": "NRST",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.~{RST}",
+              "dut_pad": "J9"
+            },
+            {
+              "pin": "J10",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO21-PadJ10)",
+              "dut_pad": "J10"
+            },
+            {
+              "pin": "J11",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-FSI_GPIO29-PadJ11)",
+              "dut_pad": "J11"
+            },
+            {
+              "pin": "J12",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J13",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J14",
+              "signal": "DP2.TX1_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.TX1_C+",
+              "dut_pad": "J14"
+            },
+            {
+              "pin": "J15",
+              "signal": "DP2.TX1_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP2.TX1_C-",
+              "dut_pad": "J15"
+            },
+            {
+              "pin": "J16",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J17",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J18",
+              "signal": "GPIO.18",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.18",
+              "dut_pad": "J18"
+            },
+            {
+              "pin": "J19",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1K-GPIO67-PadJ19)",
+              "dut_pad": "J19"
+            },
+            {
+              "pin": "J20",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J21",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J22",
+              "signal": "USBSS1.T",
+              "net": "",
+              "dut_net": "/SoM_IO2/USBSS1.TX+",
+              "dut_pad": "J22"
+            },
+            {
+              "pin": "J23",
+              "signal": "USBSS1.T",
+              "net": "",
+              "dut_net": "/SoM_IO2/USBSS1.TX-",
+              "dut_pad": "J23"
+            },
+            {
+              "pin": "J24",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J25",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J26",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.TX3+",
+              "dut_pad": "J26"
+            },
+            {
+              "pin": "J27",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.TX3-",
+              "dut_pad": "J27"
+            },
+            {
+              "pin": "J28",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J29",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J30",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX15_P-PadJ30)",
+              "dut_pad": "J30"
+            },
+            {
+              "pin": "J31",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX15_N-PadJ31)",
+              "dut_pad": "J31"
+            },
+            {
+              "pin": "J32",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J33",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J34",
+              "signal": "DP3.TX1_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.TX1_C-",
+              "dut_pad": "J34"
+            },
+            {
+              "pin": "J35",
+              "signal": "DP3.TX1_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP3.TX1_C+",
+              "dut_pad": "J35"
+            },
+            {
+              "pin": "J36",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J37",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J38",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO05-PadJ38)",
+              "dut_pad": "J38"
+            },
+            {
+              "pin": "J39",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO06-PadJ39)",
+              "dut_pad": "J39"
+            },
+            {
+              "pin": "J40",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J41",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI1_D1+",
+              "dut_pad": "J41"
+            },
+            {
+              "pin": "J42",
+              "signal": "CAM1.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM1.CSI1_D1-",
+              "dut_pad": "J42"
+            },
+            {
+              "pin": "J43",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J44",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI6_CLK+",
+              "dut_pad": "J44"
+            },
+            {
+              "pin": "J45",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI6_CLK-",
+              "dut_pad": "J45"
+            },
+            {
+              "pin": "J46",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J47",
+              "signal": "DP1.TX2_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.TX2_C+",
+              "dut_pad": "J47"
+            },
+            {
+              "pin": "J48",
+              "signal": "DP1.TX2_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.TX2_C-",
+              "dut_pad": "J48"
+            },
+            {
+              "pin": "J49",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J50",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1E-HDMI_CEC-PadJ50)",
+              "dut_pad": "J50"
+            },
+            {
+              "pin": "J51",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-GPIO24-PadJ51)",
+              "dut_pad": "J51"
+            },
+            {
+              "pin": "J52",
+              "signal": "I2C0_SCL",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C0_SCL_1V8",
+              "dut_pad": "J52"
+            },
+            {
+              "pin": "J53",
+              "signal": "I2C0_SDA",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C0_SDA_1V8",
+              "dut_pad": "J53"
+            },
+            {
+              "pin": "J54",
+              "signal": "GPIO.MCL",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.MCLK02",
+              "dut_pad": "J54"
+            },
+            {
+              "pin": "J55",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-I2C9_DAT-PadJ55)",
+              "dut_pad": "J55"
+            },
+            {
+              "pin": "J56",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J57",
+              "signal": "SCK",
+              "net": "",
+              "dut_net": "/Expansion connector/SPI1.SCK",
+              "dut_pad": "J57"
+            },
+            {
+              "pin": "J58",
+              "signal": "UART5.TX",
+              "net": "",
+              "dut_net": "/Expansion connector/UART5.TX",
+              "dut_pad": "J58"
+            },
+            {
+              "pin": "J59",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-I2S3_DIN-PadJ59)",
+              "dut_pad": "J59"
+            },
+            {
+              "pin": "J60",
+              "signal": "~{MOD_SL",
+              "net": "",
+              "dut_net": "/SoM_Power/~{MOD_SLEEP}",
+              "dut_pad": "J60"
+            },
+            {
+              "pin": "J61",
+              "signal": "I2C2_SCL",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C2_SCL_1V8",
+              "dut_pad": "J61"
+            },
+            {
+              "pin": "J62",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "J63",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "J64",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "J65",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "K3",
+              "signal": "VREF",
+              "net": "TP_SYS_VIN_HV",
+              "dut_net": "SYS_VIN_HV",
+              "dut_pad": "B3"
+            },
+            {
+              "pin": "K4",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K5",
+              "signal": "I2C1_SCL",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C1_SCL_1V8",
+              "dut_pad": "K5"
+            },
+            {
+              "pin": "K6",
+              "signal": "GPIO.21",
+              "net": "",
+              "dut_net": "/Expansion connector/GPIO.21",
+              "dut_pad": "K6"
+            },
+            {
+              "pin": "K7",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO27-PadK7)",
+              "dut_pad": "K7"
+            },
+            {
+              "pin": "K8",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K9",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO22-PadK9)",
+              "dut_pad": "K9"
+            },
+            {
+              "pin": "K10",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-FSI_GPIO28-PadK10)",
+              "dut_pad": "K10"
+            },
+            {
+              "pin": "K11",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K12",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.TX0-",
+              "dut_pad": "K12"
+            },
+            {
+              "pin": "K13",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C3x2}.TX0+",
+              "dut_pad": "K13"
+            },
+            {
+              "pin": "K14",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K15",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K16",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX16_N-PadK16)",
+              "dut_pad": "K16"
+            },
+            {
+              "pin": "K17",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX16_P-PadK17)",
+              "dut_pad": "K17"
+            },
+            {
+              "pin": "K18",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K19",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K20",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C2x1}.TX0-",
+              "dut_pad": "K20"
+            },
+            {
+              "pin": "K21",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/Expansion connector/PCIe_{C2x1}.TX0+",
+              "dut_pad": "K21"
+            },
+            {
+              "pin": "K22",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K23",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K24",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.TX1-",
+              "dut_pad": "K24"
+            },
+            {
+              "pin": "K25",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.TX1+",
+              "dut_pad": "K25"
+            },
+            {
+              "pin": "K26",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K27",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K28",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX13_N-PadK28)",
+              "dut_pad": "K28"
+            },
+            {
+              "pin": "K29",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1B-UPHY_TX13_P-PadK29)",
+              "dut_pad": "K29"
+            },
+            {
+              "pin": "K30",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K31",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K32",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/Recovery USB/USBSS0.TX+",
+              "dut_pad": "K32"
+            },
+            {
+              "pin": "K33",
+              "signal": "TXD",
+              "net": "",
+              "dut_net": "/Recovery USB/USBSS0.TX-",
+              "dut_pad": "K33"
+            },
+            {
+              "pin": "K34",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K35",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K36",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1G-FSI_GPIO04-PadK36)",
+              "dut_pad": "K36"
+            },
+            {
+              "pin": "K37",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-FSI_GPIO03)",
+              "dut_pad": "K37"
+            },
+            {
+              "pin": "K38",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K39",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K40",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1A-MID0-PadK40)",
+              "dut_pad": "K40"
+            },
+            {
+              "pin": "K41",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K42",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K43",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI6_D0-",
+              "dut_pad": "K43"
+            },
+            {
+              "pin": "K44",
+              "signal": "CAM3.CSI",
+              "net": "",
+              "dut_net": "/CSI/CAM3.CSI6_D0+",
+              "dut_pad": "K44"
+            },
+            {
+              "pin": "K45",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K46",
+              "signal": "DP1.TX3_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.TX3_C+",
+              "dut_pad": "K46"
+            },
+            {
+              "pin": "K47",
+              "signal": "DP1.TX3_",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP1.TX3_C-",
+              "dut_pad": "K47"
+            },
+            {
+              "pin": "K48",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K49",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1C-GPIO25-PadK49)",
+              "dut_pad": "K49"
+            },
+            {
+              "pin": "K50",
+              "signal": "DP0.HPD",
+              "net": "",
+              "dut_net": "/SoM_IO2/DP0.HPD",
+              "dut_pad": "K50"
+            },
+            {
+              "pin": "K51",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-GPIO69-PadK51)",
+              "dut_pad": "K51"
+            },
+            {
+              "pin": "K52",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-GPIO70-PadK52)",
+              "dut_pad": "K52"
+            },
+            {
+              "pin": "K53",
+              "signal": "UART1.TX",
+              "net": "",
+              "dut_net": "/SoM_IO/UART1.TX",
+              "dut_pad": "K53"
+            },
+            {
+              "pin": "K54",
+              "signal": "UART1.RX",
+              "net": "",
+              "dut_net": "/SoM_IO/UART1.RX",
+              "dut_pad": "K54"
+            },
+            {
+              "pin": "K55",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "K56",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-GPIO19-PadK56)",
+              "dut_pad": "K56"
+            },
+            {
+              "pin": "K57",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-PWM01-PadK57)",
+              "dut_pad": "K57"
+            },
+            {
+              "pin": "K58",
+              "signal": "UART5.RT",
+              "net": "",
+              "dut_net": "/Expansion connector/UART5.RTS",
+              "dut_pad": "K58"
+            },
+            {
+              "pin": "K59",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-I2S3_DOUT-PadK59)",
+              "dut_pad": "K59"
+            },
+            {
+              "pin": "K60",
+              "signal": "UART3_DE",
+              "net": "",
+              "dut_net": "/SoM_IO/UART3_DEBUG_RX_1V8",
+              "dut_pad": "K60"
+            },
+            {
+              "pin": "K61",
+              "signal": "I2C2_SDA",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C2_SDA_1V8",
+              "dut_pad": "K61"
+            },
+            {
+              "pin": "K62",
+              "signal": "FAN_PWM",
+              "net": "",
+              "dut_net": "/Peripherals/FAN_PWM",
+              "dut_pad": "K62"
+            },
+            {
+              "pin": "K63",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L3",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L4",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-UART4_RTS-PadL4)",
+              "dut_pad": "L4"
+            },
+            {
+              "pin": "L5",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-UART4_TX-PadL5)",
+              "dut_pad": "L5"
+            },
+            {
+              "pin": "L6",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1I-UART4_CTS-PadL6)",
+              "dut_pad": "L6"
+            },
+            {
+              "pin": "L7",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L8",
+              "signal": "I2C1_SDA",
+              "net": "",
+              "dut_net": "/SoM_IO/I2C1_SDA_1V8",
+              "dut_pad": "L8"
+            },
+            {
+              "pin": "L9",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-I2S7_DOUT-PadL9)",
+              "dut_pad": "L9"
+            },
+            {
+              "pin": "L10",
+              "signal": "~{FORCE_",
+              "net": "",
+              "dut_net": "/SoM_Power/~{FORCE_RECOVERY}",
+              "dut_pad": "L10"
+            },
+            {
+              "pin": "L11",
+              "signal": "~{SLEEP_",
+              "net": "",
+              "dut_net": "/SoM_Power/~{SLEEP_REQ}",
+              "dut_pad": "L11"
+            },
+            {
+              "pin": "L12",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L13",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L14",
+              "signal": "I2S_{M.2",
+              "net": "",
+              "dut_net": "/SoM_IO/I2S_{M.2}.CLK",
+              "dut_pad": "L14"
+            },
+            {
+              "pin": "L15",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "/SoM_IO/USBC1_FLG_1V8",
+              "dut_pad": "L15"
+            },
+            {
+              "pin": "L16",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L17",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L18",
+              "signal": "NRST",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.~{RST}",
+              "dut_pad": "L18"
+            },
+            {
+              "pin": "L19",
+              "signal": "PCIe_{C5",
+              "net": "",
+              "dut_net": "/M.2/PCIe_{C5x4}.~{CLKREQ}",
+              "dut_pad": "L19"
+            },
+            {
+              "pin": "L20",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L21",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L22",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L23",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L24",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L25",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L26",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L27",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L28",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L29",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L30",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L31",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L32",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L33",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L34",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L35",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L36",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L37",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L38",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L39",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+5V_SOM",
+              "dut_pad": "L22"
+            },
+            {
+              "pin": "L40",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L41",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-VM_SLEEP_N)",
+              "dut_pad": "L41"
+            },
+            {
+              "pin": "L42",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-MV_LSW_MON)",
+              "dut_pad": "L42"
+            },
+            {
+              "pin": "L43",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L44",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-VM_I2C_SCK-PadL44)",
+              "dut_pad": "L44"
+            },
+            {
+              "pin": "L45",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-VM_I2C_DAT-PadL45)",
+              "dut_pad": "L45"
+            },
+            {
+              "pin": "L46",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            },
+            {
+              "pin": "L47",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-VM_INT_N)",
+              "dut_pad": "L47"
+            },
+            {
+              "pin": "L48",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-I2S7_DIN-PadL48)",
+              "dut_pad": "L48"
+            },
+            {
+              "pin": "L49",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-I2S7_LRCK-PadL49)",
+              "dut_pad": "L49"
+            },
+            {
+              "pin": "L50",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1H-I2S7_SCLK-PadL50)",
+              "dut_pad": "L50"
+            },
+            {
+              "pin": "L51",
+              "signal": "UART1.RT",
+              "net": "",
+              "dut_net": "/SoM_IO/UART1.RTS",
+              "dut_pad": "L51"
+            },
+            {
+              "pin": "L52",
+              "signal": "~{MODULE",
+              "net": "",
+              "dut_net": "/SoM_Power/~{MODULE_SHDN}",
+              "dut_pad": "L52"
+            },
+            {
+              "pin": "L53",
+              "signal": "VREF",
+              "net": "",
+              "dut_net": "+3V3_AON",
+              "dut_pad": "L53"
+            },
+            {
+              "pin": "L54",
+              "signal": "MODULE_P",
+              "net": "",
+              "dut_net": "/SoM_Power/MODULE_POWER_ON",
+              "dut_pad": "L54"
+            },
+            {
+              "pin": "L55",
+              "signal": "~{VDDIN_",
+              "net": "",
+              "dut_net": "/DCDC/~{VDDIN_PWR_BAD}",
+              "dut_pad": "L55"
+            },
+            {
+              "pin": "L56",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-THERM_ALERT_N)",
+              "dut_pad": "L56"
+            },
+            {
+              "pin": "L57",
+              "signal": "unconnec",
+              "net": "",
+              "dut_net": "unconnected-(J1D-MCLK05-PadL57)",
+              "dut_pad": "L57"
+            },
+            {
+              "pin": "L58",
+              "signal": "NRST",
+              "net": "",
+              "dut_net": "Net-(J1A-PERIPHERAL_RESET_N)",
+              "dut_pad": "L58"
+            },
+            {
+              "pin": "L59",
+              "signal": "Net-(J1A",
+              "net": "",
+              "dut_net": "Net-(J1A-MODULE_POWER_GOOD)",
+              "dut_pad": "L59"
+            },
+            {
+              "pin": "L60",
+              "signal": "NRST",
+              "net": "",
+              "dut_net": "/SoM_Power/~{SYS_RESET}",
+              "dut_pad": "L60"
+            },
+            {
+              "pin": "L61",
+              "signal": "~{SOM_PO",
+              "net": "",
+              "dut_net": "/SoM_Power/~{SOM_POWER_BTN}",
+              "dut_pad": "L61"
+            },
+            {
+              "pin": "L62",
+              "signal": "CARRIER_",
+              "net": "",
+              "dut_net": "/DCDC/CARRIER_PWR_ON",
+              "dut_pad": "L62"
+            },
+            {
+              "pin": "L63",
+              "signal": "GND",
+              "net": "GND",
+              "dut_net": "GND",
+              "dut_pad": "A9"
+            }
+          ],
+          "x": 105.381,
+          "y": 181.52
+        }
+      ]
+    }
+  ],
+  "warnings": [
+    "programming connector for J1: pin A3 (~{SOM_PR) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A4 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A5 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A6 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A7 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A8 (~{PEWAKE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A10 (USB2.D+) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A11 (USB2.D-) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A14 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A15 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A18 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A19 (DP2.HPD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A22 (USBSS1.R) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A23 (USBSS1.R) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A26 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A27 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A30 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A31 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A34 (DP3.TX2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A35 (DP3.TX2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A38 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A39 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A41 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A42 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A44 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A45 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A47 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A48 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A50 (DP0.TX2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A51 (DP0.TX2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A53 (I2C5_SCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A54 (CAM_CTRL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A55 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A56 (MISO) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A57 (UART2.CT) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A58 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A59 (GPIO.USE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A60 (SWCLK) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A61 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin A62 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B5 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B6 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B8 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B9 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B10 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B12 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B13 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B16 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B17 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B20 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B21 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B24 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B25 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B28 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B29 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B32 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B33 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B36 (NRST) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B37 (PCIe_{C1) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B40 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B42 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B43 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B45 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B46 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B48 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B49 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B51 (DP0.TX1_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B52 (DP0.TX1_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B54 (CAM_CTRL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B55 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B56 (SPI1.~{C) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B58 (FMC_PRES) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B59 (FMC_PG_C) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B60 (TDI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B61 (CAN3.DIN) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin B62 (GPIO.USE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C4 (CAM_CTRL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C5 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C6 (NRST) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C7 (I2S_{M.2) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C8 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C10 (USB1.D-) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C11 (USB1.D+) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C14 (DP2.TX2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C15 (DP2.TX2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C18 (DP1.HPD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C19 (DP3.HPD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C22 (USBSS2.R) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C23 (USBSS2.R) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C26 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C27 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C30 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C31 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C34 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C35 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C38 (~{USBC2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C39 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C41 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C42 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C44 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C45 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C47 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C48 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C50 (DP0.TX3_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C51 (DP0.TX3_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C53 (I2C5_SDA) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C54 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C55 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C56 (UART2.RX) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C57 (SPI3.~{C) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C58 (UART2.TX) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C59 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C60 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin C61 (GPIO.USE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D5 (CAM_CTRL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D6 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D8 (I2S_{M.2) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D9 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D10 (NRST) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D12 (PCIe_{C3) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D13 (PCIe_{C3) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D16 (DP1.AUX_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D17 (DP1.AUX_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D20 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D21 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D24 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D25 (RXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D28 (SFI.RX+) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D29 (SFI.RX-) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D32 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D33 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D36 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D37 (Net-(D1-) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D40 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D42 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D43 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D45 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D46 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D48 (PCIe_{C1) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D49 (PCIe_{C1) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D51 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D52 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D54 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D55 (MOSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D56 (MISO) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D58 (SWO) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D59 (CAN2.DOU) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D60 (SPI2.~{C) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D61 (I2C_{CAM) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin D62 (MISO) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E4 (I2S2.FS) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E5 (GPIO_EXP) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E6 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E7 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E8 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E10 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E11 (PCIe_{C2) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E14 (PCIe_{C2) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E15 (PCIe_{C2) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E18 (DP2.AUX_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E19 (DP2.AUX_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E22 (PCIe_{C3) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E23 (PCIe_{C3) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E26 (I2C7.SDA) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E27 (I2C7.SCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E30 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E31 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E34 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E35 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E38 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E39 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E41 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E42 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E44 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E45 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E47 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E48 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E50 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E51 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E53 (I2C3_SDA) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E54 (FAN_TACH) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E55 (SPI1.~{C) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E56 (SPI3.~{C) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E58 (SWDIO) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E59 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E60 (I2C_{CAM) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin E61 (SCK) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F5 (I2S2.SDO) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F6 (I2S2.SDI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F8 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F9 (USBC2_PE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F10 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F12 (USB0.D+) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F13 (USB0.D-) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F16 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F17 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F20 (DP3.AUX_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F21 (DP3.AUX_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F24 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F25 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F28 (SFI_REFC) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F29 (SFI_REFC) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F32 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F33 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F36 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F37 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F40 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F42 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F43 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F45 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F46 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F48 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F49 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F51 (I2C8.SDA) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F52 (I2C8.SCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F53 (I2C3_SCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F54 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F55 (SCK) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F56 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F58 (CAN2.DIN) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F59 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F60 (MOSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin F61 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G4 (I2S2.CLK) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G5 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G6 (MOD_ABS) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G7 (GPIO.USE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G8 (PCIe_{C3) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G10 (USB3.D-) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G11 (USB3.D+) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G14 (DP2.TX3_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G15 (DP2.TX3_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G18 (I2S3.FS) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G19 (I2S3.SDI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G22 (USBSS2.T) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G23 (USBSS2.T) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G26 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G27 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G30 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G31 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G34 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G35 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G38 (CAN0.DOU) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G39 (CAN0.DIN) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G41 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G42 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G44 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G45 (CAM0.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G47 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G48 (CAM2.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G50 (DP1.TX1_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G51 (DP1.TX1_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G53 (DP0.AUX_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G54 (DP0.AUX_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G55 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G56 (MOSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G58 (UART2.RT) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G59 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G60 (NVDBG_SE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin G61 (NTRST) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H5 (GPIO.20) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H6 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H8 (I2S_{M.2) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H9 (GPIO.MCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H10 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H12 (PCIe_{C3) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H13 (PCIe_{C3) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H16 (I2S3.CLK) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H17 (I2S3.SDO) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H20 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H21 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H24 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H25 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H28 (SFI.TX+) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H29 (SFI.TX-) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H32 (DP3.TX3_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H33 (DP3.TX3_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H36 (CAN1.DIN) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H37 (CAN1.DOU) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H40 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H42 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H43 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H45 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H46 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H48 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H49 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H51 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H52 (FMC_PRSN) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H53 (GPIO.MCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H54 (UART1.CT) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H55 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H57 (UART5.CT) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H58 (UART5.RX) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H59 (NVJTAG_S) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H60 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H61 (CAN3.DOU) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin H62 (UART3_DE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J4 (FMC_PG_M) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J5 (GPIO.27) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J6 (USBC2_VB) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J7 (~{PDC_I2) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J9 (NRST) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J10 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J11 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J14 (DP2.TX1_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J15 (DP2.TX1_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J18 (GPIO.18) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J19 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J22 (USBSS1.T) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J23 (USBSS1.T) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J26 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J27 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J30 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J31 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J34 (DP3.TX1_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J35 (DP3.TX1_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J38 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J39 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J41 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J42 (CAM1.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J44 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J45 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J47 (DP1.TX2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J48 (DP1.TX2_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J50 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J51 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J52 (I2C0_SCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J53 (I2C0_SDA) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J54 (GPIO.MCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J55 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J57 (SCK) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J58 (UART5.TX) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J59 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J60 (~{MOD_SL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin J61 (I2C2_SCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K5 (I2C1_SCL) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K6 (GPIO.21) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K7 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K9 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K10 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K12 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K13 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K16 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K17 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K20 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K21 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K24 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K25 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K28 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K29 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K32 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K33 (TXD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K36 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K37 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K40 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K43 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K44 (CAM3.CSI) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K46 (DP1.TX3_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K47 (DP1.TX3_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K49 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K50 (DP0.HPD) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K51 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K52 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K53 (UART1.TX) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K54 (UART1.RX) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K56 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K57 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K58 (UART5.RT) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K59 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K60 (UART3_DE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K61 (I2C2_SDA) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin K62 (FAN_PWM) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L4 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L5 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L6 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L8 (I2C1_SDA) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L9 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L10 (~{FORCE_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L11 (~{SLEEP_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L14 (I2S_{M.2) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L15 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L18 (NRST) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L19 (PCIe_{C5) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L22 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L23 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L26 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L27 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L30 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L31 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L34 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L35 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L38 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L39 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L41 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L42 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L44 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L45 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L47 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L48 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L49 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L50 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L51 (UART1.RT) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L52 (~{MODULE) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L53 (VREF) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L54 (MODULE_P) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L55 (~{VDDIN_) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L56 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L57 (unconnec) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L58 (NRST) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L59 (Net-(J1A) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L60 (NRST) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L61 (~{SOM_PO) is not reached by a probe on this fixture plate",
+    "programming connector for J1: pin L62 (CARRIER_) is not reached by a probe on this fixture plate",
+    "the router left 2 of 338 connection(s) unrouted (GND, TP_USBC1_VBUS): route them in KiCad before ordering"
+  ],
+  "channel_map": [
+    {
+      "site": 1,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 3,
+      "dut_net": "/Expansion connector/+12V_FMC",
+      "divider_ratio": 1.43
+    },
+    {
+      "site": 1,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 4,
+      "dut_net": "+3V3",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 5,
+      "dut_net": "/Expansion connector/+3V3_FMC",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 6,
+      "dut_net": "/Expansion connector/+5V_FMC",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 7,
+      "dut_net": "/Expansion connector/+VCC_FMC",
+      "divider_ratio": 2.5
+    },
+    {
+      "site": 1,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 8,
+      "dut_net": "/Recovery USB/USBC2_VBUS",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH07",
+      "header": "J1",
+      "pin": 10,
+      "dut_net": "/USB Debug, PD/USBC0_VBUS",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH08",
+      "header": "J1",
+      "pin": 11,
+      "dut_net": "/USB DP Alt mode/USBC1_VBUS",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH09",
+      "header": "J1",
+      "pin": 12,
+      "dut_net": "/USB Hub/USBC3_VBUS",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH10",
+      "header": "J1",
+      "pin": 13,
+      "dut_net": "/USB Hub/USBC4_VBUS",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH11",
+      "header": "J1",
+      "pin": 14,
+      "dut_net": "SYS_VIN_HV",
+      "divider_ratio": 2.5
+    },
+    {
+      "site": 1,
+      "channel": "CH12",
+      "header": "J1",
+      "pin": 15,
+      "dut_net": "VCC_IN",
+      "divider_ratio": 2.5
+    },
+    {
+      "site": 1,
+      "channel": "CH13",
+      "header": "J1",
+      "pin": 17,
+      "dut_net": "/SoM_IO2/SFI_CLK+",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH14",
+      "header": "J1",
+      "pin": 18,
+      "dut_net": "/SFP/SH",
+      "divider_ratio": 1.0
+    }
+  ],
+  "outline_mode": "rect",
+  "outline": {
+    "x_min": -0.07,
+    "y_min": 3.6,
+    "x_max": 299.93,
+    "y_max": 223.59,
+    "width": 300.0,
+    "height": 220.0
+  },
+  "pogo_count": 16,
+  "nets": 25,
+  "routing": {
+    "nets": 19,
+    "routed_nets": 17,
+    "unrouted_nets": [
+      "GND",
+      "TP_USBC1_VBUS"
+    ],
+    "connections": 338,
+    "unrouted_connections": 2,
+    "length_mm": 3347.0,
+    "vias": 79,
+    "grid_mm": 0.254,
+    "passes": 2,
+    "best_pass": 1,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5
+  },
+  "batch": {
+    "count": 1,
+    "cols": 1,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "single board"
+  },
+  "plate_fit": true,
+  "plate_fits_cols": [],
+  "site_mm": [
+    207.0,
+    195.73
+  ],
+  "site_spacing_mm": 3.0,
+  "facility": {
+    "id": "station-1",
+    "connectors": [
+      {
+        "ref": "J1",
+        "name": "J1",
+        "site": 1,
+        "shared": true
+      },
+      {
+        "ref": "J2",
+        "name": "J2",
+        "site": 1,
+        "shared": true
+      }
+    ],
+    "plate_mm": [
+      300.0,
+      220.0
+    ]
+  },
+  "nest": {
+    "enabled": true,
+    "style": "slide",
+    "entry": "front",
+    "clamp": "toggle",
+    "heights": {
+      "work": 6.0,
+      "tips": 7.5,
+      "rest": 10.3,
+      "gap": 2.8,
+      "travel": 4.3,
+      "ledge": 2.0,
+      "wall": 5.21,
+      "boss": 6.7,
+      "bottom_rest": 8.3,
+      "bottom_work": 4.0,
+      "standoff": 15,
+      "adapter": 11.7,
+      "finger": 11.0,
+      "plate": 5.0,
+      "plate_top_work": 23.71
+    },
+    "board_mm": [
+      100.0,
+      180.0,
+      1.711
+    ],
+    "spring": {
+      "free_mm": 10.0,
+      "solid_mm": 3.5,
+      "rest_mm": 8.3,
+      "work_mm": 4.0
+    },
+    "bom": [
+      {
+        "qty": 1,
+        "part": "nest (print, PETG)",
+        "file": "nest"
+      },
+      {
+        "qty": 4,
+        "part": "M3 hex standoff, female-female, 15 mm"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw + M3 large washer (DIN 9021, 9 mm), on top of each standoff"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
+      },
+      {
+        "qty": 4,
+        "part": "compression spring, outer 8 mm, wire 0.5 mm, free length 10 mm (solid 3.5 mm or less)"
+      },
+      {
+        "qty": 1,
+        "part": "vertical toggle clamp, about 25 kg, flanged base (e.g. GH-101-A)"
+      },
+      {
+        "qty": 1,
+        "part": "clamp adapter (print)",
+        "file": "adapter"
+      },
+      {
+        "qty": 1,
+        "part": "press plate (print)",
+        "file": "press"
+      },
+      {
+        "qty": 4,
+        "part": "M4 x 12 screw + M4 nut, clamp to adapter (nuts in the adapter's channels)"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
+      },
+      {
+        "qty": 2,
+        "part": "nut + washer for the clamp's spindle, one each side of the press plate"
+      }
+    ],
+    "warnings": [],
+    "gap_reason": "J18",
+    "extents": {
+      "left": 12.5,
+      "right": 12.5,
+      "top": 46.25,
+      "bottom": 10.0
+    },
+    "fingers": 10,
+    "files": {
+      "nest": {
+        "stl": "jetson-agx-thor-baseboard-fixture-nest.stl",
+        "preview_png": "jetson-agx-thor-baseboard-fixture-nest.png",
+        "print": 1,
+        "size_mm": [
+          115.2,
+          206.0,
+          6.7
+        ]
+      },
+      "press": {
+        "stl": "jetson-agx-thor-baseboard-fixture-press-plate.stl",
+        "preview_png": "jetson-agx-thor-baseboard-fixture-press-plate.png",
+        "print": 1,
+        "size_mm": [
+          103.8,
+          188.5,
+          16.0
+        ]
+      },
+      "adapter": {
+        "stl": "jetson-agx-thor-baseboard-fixture-clamp-adapter.stl",
+        "preview_png": "jetson-agx-thor-baseboard-fixture-clamp-adapter.png",
+        "print": 1,
+        "size_mm": [
+          40.0,
+          38.0,
+          11.7
+        ]
+      }
+    },
+    "mesh": {
+      "nest": {
+        "triangles": 86168,
+        "unmatched_edges": 0,
+        "volume_mm3": 10553.9,
+        "watertight": true
+      },
+      "press": {
+        "triangles": 61982,
+        "unmatched_edges": 0,
+        "volume_mm3": 98223.1,
+        "watertight": true
+      },
+      "adapter": {
+        "triangles": 12708,
+        "unmatched_edges": 0,
+        "volume_mm3": 11973.1,
+        "watertight": true
+      }
+    },
+    "refs": [
+      {
+        "site": 1,
+        "posts": [
+          "NP1",
+          "NP2",
+          "NP3",
+          "NP4"
+        ],
+        "adapter": [
+          "NK1",
+          "NK2",
+          "NK3",
+          "NK4"
+        ],
+        "nest": "N1",
+        "clamp": "K1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+site,probe,dut_net,role,x_mm,y_mm,drill_mm,tip,channel,header_pin,divider_ratio
+1,PP01,"/Expansion connector/+12V_FMC",supply,73.0000,140.6500,1.40,spear,CH01,3,1.43
+1,PP02,"GND",ground,227.6365,79.2100,1.40,crown,,,
+1,PP03,"GND",ground,235.7355,79.2100,1.40,crown,,,
+1,PP04,"+3V3",measure,102.5100,60.1750,1.40,spear,CH02,4,1.0
+1,PP05,"/Expansion connector/+3V3_FMC",measure,99.1000,127.6000,1.40,spear,CH03,5,1.0
+1,PP06,"/Expansion connector/+5V_FMC",measure,99.0000,132.3000,1.40,spear,CH04,6,1.0
+1,PP07,"/Expansion connector/+VCC_FMC",measure,99.1000,135.5000,1.40,spear,CH05,7,2.5
+1,PP08,"/Recovery USB/USBC2_VBUS",measure,229.1000,109.4000,1.40,spear,CH06,8,1.0
+1,PP09,"/USB Debug, PD/USBC0_VBUS",measure,230.5000,82.4000,1.40,spear,CH07,10,1.0
+1,PP10,"/USB DP Alt mode/USBC1_VBUS",measure,229.1000,96.2000,1.40,spear,CH08,11,1.0
+1,PP11,"/USB Hub/USBC3_VBUS",measure,229.4000,122.7000,1.40,spear,CH09,12,1.0
+1,PP12,"/USB Hub/USBC4_VBUS",measure,229.4000,134.9000,1.40,spear,CH10,13,1.0
+1,PP13,"SYS_VIN_HV",measure,86.3000,67.2000,1.40,spear,CH11,14,2.5
+1,PP14,"VCC_IN",measure,226.9600,59.4900,1.40,crown,CH12,15,2.5
+1,PP15,"/SoM_IO2/SFI_CLK+",measure,105.0900,60.1750,1.40,spear,CH13,17,1.0
+1,PP16,"/SFP/SH",measure,199.5000,152.0250,1.40,crown,CH14,18,1.0

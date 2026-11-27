@@ -1,0 +1,6385 @@
+{
+  "schema": "pcbtestkit/spec@1",
+  "generator": "PCB TestKit 1.2.0",
+  "generated": "2026-11-27T22:13:29",
+  "source": {
+    "board": "CM5_MINIMA_3.kicad_pcb",
+    "schematic": "CM5_MINIMA_3.kicad_sch",
+    "file_format_version": 20250513,
+    "generator": "pcbnew 9.99"
+  },
+  "board": {
+    "name": "CM5_MINIMA_3",
+    "title": "CM5 MINIMA",
+    "revision": "2",
+    "date": "2025-01-04",
+    "company": "",
+    "outline_mm": {
+      "x_min": 75.05,
+      "y_min": 20.25,
+      "x_max": 136.242,
+      "y_max": 84.446,
+      "width": 61.192,
+      "height": 64.196
+    },
+    "area_mm2": 3928.3,
+    "thickness_mm": 1.5296,
+    "copper_layers": 6,
+    "layer_names": [
+      "F.Cu",
+      "In1.Cu",
+      "In2.Cu",
+      "In3.Cu",
+      "In4.Cu",
+      "B.Cu"
+    ],
+    "copper_thickness_um": 35.0,
+    "finish": "ENIG",
+    "stackup": [
+      {
+        "name": "F.SilkS",
+        "type": "Top Silk Screen",
+        "thickness": 0.0
+      },
+      {
+        "name": "F.Paste",
+        "type": "Top Solder Paste",
+        "thickness": 0.0
+      },
+      {
+        "name": "F.Mask",
+        "type": "Top Solder Mask",
+        "thickness": 0.01
+      },
+      {
+        "name": "F.Cu",
+        "type": "copper",
+        "thickness": 0.035
+      },
+      {
+        "name": "dielectric 1",
+        "type": "prepreg",
+        "thickness": 0.0994,
+        "material": "2116 RC58%"
+      },
+      {
+        "name": "In1.Cu",
+        "type": "copper",
+        "thickness": 0.0152
+      },
+      {
+        "name": "dielectric 2",
+        "type": "core",
+        "thickness": 0.5,
+        "material": "FR4"
+      },
+      {
+        "name": "In2.Cu",
+        "type": "copper",
+        "thickness": 0.0152
+      },
+      {
+        "name": "dielectric 3",
+        "type": "prepreg",
+        "thickness": 0.13,
+        "material": "2116 RC58%"
+      },
+      {
+        "name": "In3.Cu",
+        "type": "copper",
+        "thickness": 0.0152
+      },
+      {
+        "name": "dielectric 4",
+        "type": "core",
+        "thickness": 0.55,
+        "material": "FR4"
+      },
+      {
+        "name": "In4.Cu",
+        "type": "copper",
+        "thickness": 0.0152
+      },
+      {
+        "name": "dielectric 5",
+        "type": "prepreg",
+        "thickness": 0.0994,
+        "material": "2116 RC58%"
+      },
+      {
+        "name": "B.Cu",
+        "type": "copper",
+        "thickness": 0.035
+      },
+      {
+        "name": "B.Mask",
+        "type": "Bottom Solder Mask",
+        "thickness": 0.01
+      },
+      {
+        "name": "B.Paste",
+        "type": "Bottom Solder Paste",
+        "thickness": 0.0
+      },
+      {
+        "name": "B.SilkS",
+        "type": "Bottom Silk Screen",
+        "thickness": 0.0
+      }
+    ]
+  },
+  "technology": {
+    "system": "eurocircuits-2024",
+    "name": "Eurocircuits pattern + drill classes",
+    "status": "verified",
+    "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+    "required": {
+      "class": null,
+      "fits": false,
+      "services": null,
+      "levels": {
+        "pattern": null,
+        "drill": "C"
+      },
+      "beyond": [
+        "pattern"
+      ]
+    },
+    "ordered": null,
+    "layers": 6,
+    "thickness_mm": 1.5296,
+    "base_copper_um": 35.0,
+    "finish": "ENIG",
+    "short_count": 0,
+    "microvias": 0,
+    "primary": {
+      "system": "eurocircuits-2024",
+      "name": "Eurocircuits pattern + drill classes",
+      "status": "verified",
+      "source": "https://www.eurocircuits.com/pcb-design-guidelines/classification/",
+      "verified": "2026-11-19",
+      "category": "manufacturing",
+      "context": {
+        "layers": 6,
+        "copper_um": 35.0,
+        "inner_copper_um": 15.2,
+        "thickness_mm": 1.5296,
+        "finish": "ENIG",
+        "board_w_mm": 61.192,
+        "board_h_mm": 64.196,
+        "mask_color": "green",
+        "edge_process": "routed"
+      },
+      "measured": {
+        "aspect_ratio": 3.824,
+        "drill_npth": 0.8,
+        "drill_pth": 0.5,
+        "drill_via": 0.3,
+        "gap_inner": 0.13,
+        "gap_outer": 0.125,
+        "hole_to_copper_inner_pth": 0.2305,
+        "hole_to_copper_inner_via": 0.155,
+        "microvias": 0.0,
+        "ring_pth_inner": 0.1,
+        "ring_pth_outer": 0.1,
+        "ring_via_inner": 0.025,
+        "ring_via_outer": 0.025,
+        "thickness_max": 1.5296,
+        "track_inner": 0.15,
+        "track_outer": 0.13
+      },
+      "required": {
+        "levels": {
+          "pattern": null,
+          "drill": "C"
+        },
+        "fits": false,
+        "class": null,
+        "beyond": [
+          "pattern"
+        ],
+        "drivers": [
+          {
+            "dimension": "pattern",
+            "level": "9",
+            "metric": "ring_via_outer",
+            "measured": 0.025,
+            "limit": 0.1
+          },
+          {
+            "dimension": "pattern",
+            "level": "9",
+            "metric": "ring_via_inner",
+            "measured": 0.025,
+            "limit": 0.1
+          },
+          {
+            "dimension": "pattern",
+            "level": "9",
+            "metric": "hole_to_copper_inner_via",
+            "measured": 0.155,
+            "limit": 0.2
+          },
+          {
+            "dimension": "drill",
+            "level": "B",
+            "metric": "drill_via",
+            "measured": 0.3,
+            "limit": 0.35
+          }
+        ]
+      },
+      "process": {
+        "ok": true,
+        "violations": {}
+      }
+    },
+    "checks": [],
+    "overview": [
+      {
+        "system": "aisler-2025",
+        "name": "AISLER design rules (all published stack-ups)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "plated slot width",
+          "hole-to-hole gap",
+          "non-plated hole to copper",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "allpcb-2026",
+        "name": "ALLPCB standard PCB capability",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)",
+          "via annular ring (inner)",
+          "component hole annular ring (outer)",
+          "component hole annular ring (inner)"
+        ],
+        "services": []
+      },
+      {
+        "system": "eurocircuits-2024",
+        "name": "Eurocircuits pattern + drill classes",
+        "kind": "fab-classes",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "via annular ring (inner)",
+          "via annular ring (outer)",
+          "via hole (finished)",
+          "via hole to inner-layer copper"
+        ],
+        "services": []
+      },
+      {
+        "system": "ipc-2221-voltage",
+        "name": "IPC-2221 conductor spacing by voltage (Table 6-1)",
+        "kind": "standard",
+        "status": "secondary",
+        "class": "B2",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "ipc-6012-ring",
+        "name": "IPC-6012 performance class: annular ring and plating",
+        "kind": "standard",
+        "status": "partial",
+        "class": "2",
+        "fits": true,
+        "blockers": [],
+        "services": []
+      },
+      {
+        "system": "jlcpcb-2026",
+        "name": "JLCPCB rigid PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "outer pad-to-pad gap",
+          "non-plated hole to copper",
+          "component hole to inner-layer copper",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "multicb-2026",
+        "name": "Multi-CB design parameters (35 um copper)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "special",
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper",
+          "copper to board edge"
+        ],
+        "services": []
+      },
+      {
+        "system": "nextpcb-2026",
+        "name": "NextPCB standard PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "hole gap between different nets",
+          "non-plated hole to copper",
+          "copper to board edge",
+          "board thickness (allowed)"
+        ],
+        "services": []
+      },
+      {
+        "system": "oshpark-2026",
+        "name": "OSH Park services",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "non-plated hole to copper",
+          "plated slot width",
+          "copper to board edge",
+          "board thickness (allowed)"
+        ],
+        "services": []
+      },
+      {
+        "system": "pcbway-standard-2026",
+        "name": "PCBWay standard PCB capabilities",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": "standard",
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)",
+          "via annular ring (inner)"
+        ],
+        "services": []
+      },
+      {
+        "system": "seeed-fusion-2026",
+        "name": "Seeed Fusion PCB (standard FR4 specification)",
+        "kind": "fab-capability",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "via annular ring (outer)",
+          "via annular ring (inner)",
+          "component hole annular ring (outer)",
+          "component hole annular ring (inner)"
+        ],
+        "services": []
+      },
+      {
+        "system": "wurth-basic-2022",
+        "name": "Wurth Elektronik BASIC design rules",
+        "kind": "fab-classes",
+        "status": "verified",
+        "class": null,
+        "fits": false,
+        "blockers": [
+          "via hole to inner-layer copper",
+          "hole-to-hole gap",
+          "copper to board edge",
+          "component hole annular ring (inner)"
+        ],
+        "services": []
+      }
+    ]
+  },
+  "manufacturing": {
+    "fab_profile": "standard",
+    "fab_limits": {
+      "min_track": 0.127,
+      "min_clearance": 0.127,
+      "min_drill": 0.3,
+      "min_via_annular": 0.1,
+      "min_tht_annular": 0.15,
+      "min_edge_clearance": 0.3,
+      "min_hole_to_hole": 0.25,
+      "max_aspect_ratio": 8.0,
+      "warn_factor": 1.25,
+      "source": "fab profile standard"
+    },
+    "project_rules": {
+      "max_error": 0.005,
+      "min_clearance": 0.0,
+      "min_connection": 0.0,
+      "min_copper_edge_clearance": 0.372,
+      "min_groove_width": 0.0,
+      "min_hole_clearance": 0.2,
+      "min_hole_to_hole": 0.25,
+      "min_microvia_diameter": 0.2,
+      "min_microvia_drill": 0.1,
+      "min_resolved_spokes": 1.0,
+      "min_silk_clearance": 0.0,
+      "min_text_height": 0.8,
+      "min_text_thickness": 0.08,
+      "min_through_hole_diameter": 0.3,
+      "min_track_width": 0.0,
+      "min_via_annular_width": 0.075,
+      "min_via_diameter": 0.45,
+      "solder_mask_to_copper_clearance": 0.0
+    },
+    "netclasses": [
+      {
+        "name": "Default",
+        "clearance": 0.13,
+        "track_width": 0.15,
+        "via_diameter": 0.45,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.178,
+        "diff_pair_gap": 0.25
+      },
+      {
+        "name": "100ohm",
+        "clearance": 0.2,
+        "track_width": 0.127,
+        "via_diameter": 0.45,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.13,
+        "diff_pair_gap": 0.25
+      },
+      {
+        "name": "50ohm",
+        "clearance": 0.13,
+        "track_width": 0.13,
+        "via_diameter": 0.45,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.13,
+        "diff_pair_gap": 0.25
+      },
+      {
+        "name": "90ohm",
+        "clearance": 0.2,
+        "track_width": 0.147,
+        "via_diameter": 0.45,
+        "via_drill": 0.3,
+        "diff_pair_width": 0.14,
+        "diff_pair_gap": 0.154
+      }
+    ],
+    "measured": {
+      "min_track_width_mm": 0.13,
+      "min_via_drill_mm": 0.3,
+      "min_via_annular_mm": 0.075,
+      "min_tht_annular_mm": 0.15,
+      "min_hole_mm": 0.3,
+      "max_via_aspect_ratio": 5.1,
+      "min_pad_via_edge_clearance_mm": -0.309,
+      "via_count": 444,
+      "plated_holes": 468,
+      "non_plated_holes": 14,
+      "drill_histogram_mm": {
+        "0.30": 444,
+        "0.50": 11,
+        "0.80": 4,
+        "0.90": 8,
+        "1.15": 1,
+        "1.50": 2,
+        "1.65": 1,
+        "2.20": 1,
+        "2.70": 6,
+        "2.95": 2,
+        "3.00": 2
+      },
+      "track_count": 2084,
+      "zone_count": 13
+    }
+  },
+  "assembly": {
+    "component_count": 85,
+    "smd_top": 57,
+    "smd_bottom": 14,
+    "tht": 11,
+    "dnp": [
+      "M701",
+      "R103"
+    ],
+    "components": [
+      {
+        "ref": "C101",
+        "value": "100n",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "top",
+        "x": 84.025,
+        "y": 54.35,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C102",
+        "value": "100n",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "top",
+        "x": 88.275,
+        "y": 54.2,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C401",
+        "value": "100n",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "top",
+        "x": 101.15,
+        "y": 40.575,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(J1-VCC)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C501",
+        "value": "100n",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "top",
+        "x": 90.2,
+        "y": 69.95,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C502",
+        "value": "100n",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "top",
+        "x": 95.1,
+        "y": 67.9,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "HDMI_+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C503",
+        "value": "100n",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "bottom",
+        "x": 84.61,
+        "y": 74.47,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3_PI",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C601",
+        "value": "4u7",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 88.35,
+        "y": 73.4,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3_PI",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C701",
+        "value": "10u",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 89.55,
+        "y": 67.25,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "C15850",
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C702",
+        "value": "100uF",
+        "footprint": "CM5IO:CP_EIA-3528-21_Kemet-B",
+        "side": "top",
+        "x": 82.55,
+        "y": 68.802,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.1,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "VBUS_USB2.0",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C703",
+        "value": "10u",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 86.08,
+        "y": 70.22,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "C15850",
+        "pins": {
+          "1": "VBUS_USB2.0",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C704",
+        "value": "10u",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 127.24,
+        "y": 66.565,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "C15850",
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C705",
+        "value": "10u",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 127.24,
+        "y": 68.54,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "C15850",
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C706",
+        "value": "100n",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "top",
+        "x": 126.04,
+        "y": 70.465,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C707",
+        "value": "4.7nF",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "top",
+        "x": 127.89,
+        "y": 69.995,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "M2_3V3",
+          "2": "/PCIe-M2/FB"
+        }
+      },
+      {
+        "ref": "C708",
+        "value": "10u",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 122.46,
+        "y": 67.8,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "C15850",
+        "pins": {
+          "1": "M2_3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C709",
+        "value": "10u",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 119.05,
+        "y": 67.8,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "C15850",
+        "pins": {
+          "1": "M2_3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C710",
+        "value": "10u",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 126.95,
+        "y": 34.225,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "C15850",
+        "pins": {
+          "1": "M2_3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C711",
+        "value": "10u",
+        "footprint": "CM5IO:C_0805_2012Metric",
+        "side": "top",
+        "x": 105.85,
+        "y": 35.0,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.25,
+        "height_source": "3D model",
+        "mpn": "C15850",
+        "pins": {
+          "1": "M2_3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "C712",
+        "value": "100n",
+        "footprint": "CM5IO:C_0402_1005Metric",
+        "side": "top",
+        "x": 124.6,
+        "y": 35.88,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.5,
+        "height_source": "3D model",
+        "pins": {
+          "1": "M2_3V3",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "CN1",
+        "value": "SM02B-SRSS-TB (LF)(SN)",
+        "footprint": "CM5IO:CONN-SMD_2P-P1.00_SM02B-SRSS-TB-LF-SN",
+        "side": "bottom",
+        "x": 83.25,
+        "y": 69.49,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "mpn": "C160402",
+        "pins": {
+          "1": "+BATT",
+          "2": "GND",
+          "3": "unconnected-(CN1-Pad3)",
+          "4": "unconnected-(CN1-Pad4)"
+        }
+      },
+      {
+        "ref": "D101",
+        "value": "RCLAMP0502BA",
+        "footprint": "CM5IO:SOT-416",
+        "side": "top",
+        "x": 86.15,
+        "y": 54.36,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.72,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "/USB_C.D_P",
+          "2": "/USB_C.D_N",
+          "3": "GND"
+        }
+      },
+      {
+        "ref": "D401",
+        "value": "PUSB3F96X",
+        "footprint": "CM5IO:DFN2510A-10_L2.5-W1.0-P0.50-BL",
+        "side": "top",
+        "x": 99.35,
+        "y": 67.34,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "mpn": "C478121",
+        "polarized": true,
+        "pins": {
+          "1": "/CM5/HDMI_PI.D0_P",
+          "2": "/CM5/HDMI_PI.D0_N",
+          "3": "GND",
+          "4": "/CM5/HDMI_PI.CK_P",
+          "5": "/CM5/HDMI_PI.CK_N",
+          "6": "/CM5/HDMI_PI.CK_N",
+          "7": "/CM5/HDMI_PI.CK_P",
+          "8": "GND",
+          "9": "/CM5/HDMI_PI.D0_N",
+          "10": "/CM5/HDMI_PI.D0_P"
+        }
+      },
+      {
+        "ref": "D402",
+        "value": "PUSB3F96X",
+        "footprint": "CM5IO:DFN2510A-10_L2.5-W1.0-P0.50-BL",
+        "side": "top",
+        "x": 102.35,
+        "y": 67.34,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "mpn": "C478121",
+        "polarized": true,
+        "pins": {
+          "1": "/CM5/HDMI_PI.D2_P",
+          "2": "/CM5/HDMI_PI.D2_N",
+          "3": "GND",
+          "4": "/CM5/HDMI_PI.D1_P",
+          "5": "/CM5/HDMI_PI.D1_N",
+          "6": "/CM5/HDMI_PI.D1_N",
+          "7": "/CM5/HDMI_PI.D1_P",
+          "8": "GND",
+          "9": "/CM5/HDMI_PI.D2_N",
+          "10": "/CM5/HDMI_PI.D2_P"
+        }
+      },
+      {
+        "ref": "D403",
+        "value": "PUSB3F96X",
+        "footprint": "CM5IO:DFN2510A-10_L2.5-W1.0-P0.50-BL",
+        "side": "bottom",
+        "x": 95.97,
+        "y": 75.24,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "mpn": "C478121",
+        "polarized": true,
+        "pins": {
+          "1": "/CM5/HDMI_PI.CEC",
+          "2": "/CM5/HDMI_PI.HOTPLUG",
+          "3": "GND",
+          "4": "/CM5/HDMI_PI.SDA",
+          "5": "/CM5/HDMI_PI.SCL",
+          "6": "/CM5/HDMI_PI.SCL",
+          "7": "/CM5/HDMI_PI.SDA",
+          "8": "GND",
+          "9": "/CM5/HDMI_PI.HOTPLUG",
+          "10": "/CM5/HDMI_PI.CEC"
+        }
+      },
+      {
+        "ref": "D502",
+        "value": "RCLAMP0502BA",
+        "footprint": "CM5IO:SOT-416",
+        "side": "top",
+        "x": 88.6,
+        "y": 77.25,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.72,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "/IO/SCL",
+          "2": "/IO/SDA",
+          "3": "GND"
+        }
+      },
+      {
+        "ref": "D605",
+        "value": "GREEN",
+        "footprint": "CM5IO:LED-SMD_L1.7-W0.6-RD",
+        "side": "top",
+        "x": 131.94,
+        "y": 59.62,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D605-K)",
+          "2": "+5V"
+        }
+      },
+      {
+        "ref": "D606",
+        "value": "GREEN",
+        "footprint": "CM5IO:LED-SMD_L1.7-W0.6-RD",
+        "side": "top",
+        "x": 131.94,
+        "y": 56.68,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D606-K)",
+          "2": "+5V"
+        }
+      },
+      {
+        "ref": "D701",
+        "value": "RCLAMP0502BA",
+        "footprint": "CM5IO:SOT-416",
+        "side": "top",
+        "x": 86.15,
+        "y": 58.25,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.72,
+        "height_source": "3D model",
+        "polarized": true,
+        "pins": {
+          "1": "/CM5/USB2P.D_P",
+          "2": "/CM5/USB2P.D_N",
+          "3": "GND"
+        }
+      },
+      {
+        "ref": "D702",
+        "value": "GREEN",
+        "footprint": "CM5IO:LED-SMD_L1.7-W0.6-RD",
+        "side": "top",
+        "x": 98.76,
+        "y": 24.9,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "polarized": true,
+        "pins": {
+          "1": "Net-(D702-K)",
+          "2": "M2_3V3"
+        }
+      },
+      {
+        "ref": "H101",
+        "value": "MountingHole_Pad",
+        "footprint": "CM5IO:MountingHole_2.2mm_M2_DIN965_Pad_TopBottom",
+        "side": "top",
+        "x": 80.75,
+        "y": 57.0,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "H102",
+        "value": "MountingHole_Pad",
+        "footprint": "CM5IO:MountingHole_2.7mm_Pad",
+        "side": "top",
+        "x": 78.15,
+        "y": 23.35,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "H103",
+        "value": "MountingHole_Pad",
+        "footprint": "CM5IO:MountingHole_2.7mm_Pad",
+        "side": "top",
+        "x": 133.15,
+        "y": 23.35,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "H104",
+        "value": "MountingHole_Pad",
+        "footprint": "CM5IO:MountingHole_2.7mm_Pad",
+        "side": "top",
+        "x": 133.15,
+        "y": 81.35,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "H105",
+        "value": "MountingHole_Pad",
+        "footprint": "CM5IO:MountingHole_2.7mm_Pad",
+        "side": "top",
+        "x": 78.15,
+        "y": 81.35,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "J1",
+        "value": "GLPLX-SMT-188S7",
+        "footprint": "CM5IO:GLPLXSMT188S7QQYG",
+        "side": "top",
+        "x": 88.9,
+        "y": 36.15,
+        "rotation": -90.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 11.6,
+        "height_source": "field 'Height'",
+        "mpn": "GLPLX-SMT-188S7-QQ-Y/G",
+        "pins": {
+          "1": "Net-(J1-VCC)",
+          "2": "/CM5/ETH_PI.TRD0_P",
+          "3": "/CM5/ETH_PI.TRD0_N",
+          "4": "/CM5/ETH_PI.TRD1_P",
+          "5": "/CM5/ETH_PI.TRD1_N",
+          "6": "/CM5/ETH_PI.TRD2_P",
+          "7": "/CM5/ETH_PI.TRD2_N",
+          "8": "/CM5/ETH_PI.TRD3_P",
+          "9": "/CM5/ETH_PI.TRD3_N",
+          "10": "GND",
+          "11": "Net-(J1-K_GREEN)",
+          "12": "+3V3_PI",
+          "13": "Net-(J1-K_YELLOW)",
+          "14": "+3V3_PI",
+          "15": "Net-(J1-MP1)",
+          "16": "Net-(J1-MP1)"
+        }
+      },
+      {
+        "ref": "J101",
+        "value": "TYPEC-305-ACP16H458",
+        "footprint": "CM5IO:USB-C-SMD_TYPEC-305-ACP16H458",
+        "side": "top",
+        "x": 86.15,
+        "y": 50.7,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "mpn": "C5454943",
+        "pins": {
+          "1": "GND",
+          "A1": "GND",
+          "A4": "+5V",
+          "A5": "/CC1",
+          "A6": "/USB_C.D_P",
+          "A7": "/USB_C.D_N",
+          "A8": "unconnected-(J101-SBU1-PadA8)",
+          "A9": "+5V",
+          "A12": "GND",
+          "B1": "GND",
+          "B4": "+5V",
+          "B5": "/CC2",
+          "B6": "/USB_C.D_P",
+          "B7": "/USB_C.D_N",
+          "B8": "unconnected-(J101-SBU2-PadB8)",
+          "B9": "+5V",
+          "B12": "GND"
+        }
+      },
+      {
+        "ref": "J501",
+        "value": "GT-HD001B-CNNG1",
+        "footprint": "CM5IO:EDAC 690-019-298-412",
+        "side": "top",
+        "x": 99.09,
+        "y": 72.07,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 6.28,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/CM5/HDMI_PI.D2_P",
+          "2": "GND",
+          "3": "/CM5/HDMI_PI.D2_N",
+          "4": "/CM5/HDMI_PI.D1_P",
+          "5": "GND",
+          "6": "/CM5/HDMI_PI.D1_N",
+          "7": "/CM5/HDMI_PI.D0_P",
+          "8": "GND",
+          "9": "/CM5/HDMI_PI.D0_N",
+          "10": "/CM5/HDMI_PI.CK_P",
+          "11": "GND",
+          "12": "/CM5/HDMI_PI.CK_N",
+          "13": "/CM5/HDMI_PI.CEC",
+          "14": "unconnected-(J501-UTILITY{slash}HEAC+-Pad14)",
+          "15": "/CM5/HDMI_PI.SCL",
+          "16": "/CM5/HDMI_PI.SDA",
+          "17": "GND",
+          "18": "HDMI_+5V",
+          "19": "/CM5/HDMI_PI.HOTPLUG",
+          "SH1": "GND",
+          "SH2": "GND",
+          "SH3": "GND",
+          "SH4": "GND"
+        }
+      },
+      {
+        "ref": "J502",
+        "value": "I2C",
+        "footprint": "CM5IO:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
+        "side": "top",
+        "x": 84.75,
+        "y": 76.05,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 4.32,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/IO/SDA",
+          "2": "/IO/SCL",
+          "3": "GND",
+          "4": "+3V3_PI",
+          "MP": "unconnected-(J502-MountPin-PadMP)"
+        }
+      },
+      {
+        "ref": "J503",
+        "value": "SPI",
+        "footprint": "CM5IO:JST_SUR_BM10B-SURS-TF_1x10-1MP_P0.80mm_Vertical",
+        "side": "top",
+        "x": 92.43,
+        "y": 55.19,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "pins": {
+          "1": "+3V3_PI",
+          "2": "GND",
+          "3": "/CM5/DC_GPI25",
+          "4": "/CM5/RST_GPIO27",
+          "5": "/CM5/CS_GPIO18",
+          "6": "GND",
+          "7": "/CM5/BL_GPIO24",
+          "8": "/CM5/SCLK_GPIO21",
+          "9": "/CM5/MOSI_GPIO20",
+          "10": "/CM5/MISO_GPIO19",
+          "MP": "unconnected-(J503-MountPin-PadMP)"
+        }
+      },
+      {
+        "ref": "J601",
+        "value": "JST_SHBM04B-SRSS-TB",
+        "footprint": "CM5IO:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
+        "side": "top",
+        "x": 99.65,
+        "y": 49.85,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 4.25,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+5V",
+          "2": "/CM5/PWM",
+          "3": "GND",
+          "4": "/CM5/TACHO"
+        }
+      },
+      {
+        "ref": "J701",
+        "value": "Bus_M.2_Socket_M",
+        "footprint": "CM5IO:M.2 M Key socket_2230_2242",
+        "side": "top",
+        "x": 113.6,
+        "y": 30.725,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "pins": {
+          "1": "GND",
+          "2": "M2_3V3",
+          "3": "GND",
+          "4": "M2_3V3",
+          "5": "unconnected-(J701-PETn3-Pad5)",
+          "6": "unconnected-(J701-NC-Pad6)",
+          "7": "unconnected-(J701-PETp3-Pad7)",
+          "8": "unconnected-(J701-NC-Pad8)",
+          "9": "GND",
+          "10": "Net-(J701-DAS{slash}~{DSS}{slash}~{LED1})",
+          "11": "unconnected-(J701-PERn3-Pad11)",
+          "12": "M2_3V3",
+          "13": "unconnected-(J701-PERp3-Pad13)",
+          "14": "M2_3V3",
+          "15": "GND",
+          "16": "M2_3V3",
+          "17": "unconnected-(J701-PETn2-Pad17)",
+          "18": "M2_3V3",
+          "19": "unconnected-(J701-PETp2-Pad19)",
+          "20": "unconnected-(J701-NC-Pad20)",
+          "21": "GND",
+          "22": "unconnected-(J701-NC-Pad22)",
+          "23": "unconnected-(J701-PERn2-Pad23)",
+          "24": "unconnected-(J701-NC-Pad24)",
+          "25": "unconnected-(J701-PERp2-Pad25)",
+          "26": "unconnected-(J701-NC-Pad26)",
+          "27": "GND",
+          "28": "unconnected-(J701-NC-Pad28)",
+          "29": "unconnected-(J701-PETn1-Pad29)",
+          "30": "unconnected-(J701-NC-Pad30)",
+          "31": "unconnected-(J701-PETp1-Pad31)",
+          "32": "unconnected-(J701-NC-Pad32)",
+          "33": "GND",
+          "34": "unconnected-(J701-NC-Pad34)",
+          "35": "unconnected-(J701-PERn1-Pad35)",
+          "36": "unconnected-(J701-NC-Pad36)",
+          "37": "unconnected-(J701-PERp1-Pad37)",
+          "38": "unconnected-(J701-DEVSLP-Pad38)",
+          "39": "GND",
+          "40": "unconnected-(J701-NC-Pad40)",
+          "41": "/CM5/PCIE_PI.RX_P",
+          "42": "unconnected-(J701-NC-Pad42)",
+          "43": "/CM5/PCIE_PI.RX_N",
+          "44": "unconnected-(J701-NC-Pad44)",
+          "45": "GND",
+          "46": "unconnected-(J701-NC-Pad46)",
+          "47": "/CM5/PCIE_PI.TX_P",
+          "48": "unconnected-(J701-NC-Pad48)",
+          "49": "/CM5/PCIE_PI.TX_N",
+          "50": "/CM5/PCIE_PI.nRST",
+          "51": "GND",
+          "52": "/CM5/PCIE_PI.nCLKREQ",
+          "53": "/CM5/PCIE_PI.CLK_N",
+          "54": "/CM5/PCIE_PI.nWAKE",
+          "55": "/CM5/PCIE_PI.CLK_P",
+          "56": "unconnected-(J701-NC-Pad56)",
+          "57": "GND",
+          "58": "unconnected-(J701-NC-Pad58)",
+          "67": "unconnected-(J701-NC-Pad67)",
+          "68": "Net-(J701-SUSCLK)",
+          "69": "unconnected-(J701-PEDET-Pad69)",
+          "70": "M2_3V3",
+          "71": "GND",
+          "72": "M2_3V3",
+          "73": "GND",
+          "74": "M2_3V3",
+          "75": "GND",
+          "S1": "GND",
+          "S2": "GND"
+        }
+      },
+      {
+        "ref": "J802",
+        "value": "Conn_01x22_Female",
+        "footprint": "CM5IO:Hirose_FH12-22S-0.5SH_1x22-1MP_P0.50mm_Horizontal",
+        "side": "top",
+        "x": 128.0,
+        "y": 46.625,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "pins": {
+          "1": "GND",
+          "2": "/CM5/DPHY0_P.D0_N",
+          "3": "/CM5/DPHY0_P.D0_P",
+          "4": "GND",
+          "5": "/CM5/DPHY0_P.D1_N",
+          "6": "/CM5/DPHY0_P.D1_P",
+          "7": "GND",
+          "8": "/CM5/DPHY0_P.C_N",
+          "9": "/CM5/DPHY0_P.C_P",
+          "10": "GND",
+          "11": "/CM5/DPHY0_P.D2_N",
+          "12": "/CM5/DPHY0_P.D2_P",
+          "13": "GND",
+          "14": "/CM5/DPHY0_P.D3_N",
+          "15": "/CM5/DPHY0_P.D3_P",
+          "16": "GND",
+          "17": "/CM5/CAM_GPIO0",
+          "18": "/CM5/CAM_GPIO1",
+          "19": "GND",
+          "20": "/CM5/SCL0",
+          "21": "/CM5/SDA0",
+          "22": "+3V3_PI"
+        }
+      },
+      {
+        "ref": "L701",
+        "value": "2.2uH",
+        "footprint": "CM5IO:L_Coilcraft_XAL5030-XXX",
+        "side": "top",
+        "x": 122.0,
+        "y": 71.81,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 3.1,
+        "height_source": "3D model",
+        "mpn": "C920280",
+        "pins": {
+          "1": "/PCIe-M2/M2_LX",
+          "2": "M2_3V3"
+        }
+      },
+      {
+        "ref": "M701",
+        "value": "M.2 Solder Nut",
+        "footprint": "CM5IO:MountingHole_3mm_Pad",
+        "side": "top",
+        "x": 113.6,
+        "y": 58.975,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": true,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "M702",
+        "value": "M.2 Solder Nut",
+        "footprint": "CM5IO:MountingHole_3mm_Pad",
+        "side": "top",
+        "x": 113.6,
+        "y": 70.85,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 8.0,
+        "height_source": "3D model",
+        "pins": {}
+      },
+      {
+        "ref": "Module301",
+        "value": "ComputeModule5-CM5",
+        "footprint": "CM5IO:Raspberry-Pi-5-Compute-Module_GPIO",
+        "side": "bottom",
+        "x": 127.25,
+        "y": 77.6,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.41,
+        "height_source": "3D model",
+        "pins": {
+          "1": "GND",
+          "2": "GND",
+          "3": "/CM5/ETH_PI.TRD3_P",
+          "4": "/CM5/ETH_PI.TRD1_P",
+          "5": "/CM5/ETH_PI.TRD3_N",
+          "6": "/CM5/ETH_PI.TRD1_N",
+          "7": "GND",
+          "8": "GND",
+          "9": "/CM5/ETH_PI.TRD2_N",
+          "10": "/CM5/ETH_PI.TRD0_N",
+          "11": "/CM5/ETH_PI.TRD2_P",
+          "12": "/CM5/ETH_PI.TRD0_P",
+          "13": "GND",
+          "14": "GND",
+          "15": "/CM5/ETH_nLED_ACTIVITY",
+          "16": "/CM5/TACHO",
+          "17": "/CM5/nLED_SPEED_100_1000",
+          "18": "/CM5/SYNC_OUT",
+          "19": "/CM5/PWM",
+          "20": "/CM5/EEPROM_nWP",
+          "21": "/CM5/nLED_ACTIVITY",
+          "22": "GND",
+          "23": "GND",
+          "24": "/CM5/GPIO26",
+          "25": "/CM5/SCLK_GPIO21",
+          "26": "/CM5/MISO_GPIO19",
+          "27": "/CM5/MOSI_GPIO20",
+          "28": "/CM5/GPIO13",
+          "29": "/CM5/GPIO16",
+          "30": "/CM5/GPIO6",
+          "31": "/CM5/GPIO12",
+          "32": "GND",
+          "33": "GND",
+          "34": "/CM5/GPIO5",
+          "35": "/CM5/ID_SC",
+          "36": "/CM5/ID_SD",
+          "37": "/CM5/GPIO7",
+          "38": "/CM5/GPIO11",
+          "39": "/CM5/GPIO8",
+          "40": "/CM5/GPIO9",
+          "41": "/CM5/DC_GPI25",
+          "42": "GND",
+          "43": "GND",
+          "44": "/CM5/GPIO10",
+          "45": "/CM5/BL_GPIO24",
+          "46": "/CM5/GPIO22",
+          "47": "/CM5/GPIO23",
+          "48": "/CM5/RST_GPIO27",
+          "49": "/CM5/CS_GPIO18",
+          "50": "/CM5/GPIO17",
+          "51": "/CM5/GPIO15",
+          "52": "GND",
+          "53": "GND",
+          "54": "/CM5/GPIO4",
+          "55": "/CM5/GPIO14",
+          "56": "/IO/SCL",
+          "57": "/CM5/SD_CLK",
+          "58": "/IO/SDA",
+          "59": "GND",
+          "60": "GND",
+          "61": "/CM5/SD_DAT3",
+          "62": "/CM5/SD_CMD",
+          "63": "/CM5/SD_DAT0",
+          "64": "unconnected-(Module301-SD_DAT5-Pad64)",
+          "65": "GND",
+          "66": "GND",
+          "67": "/CM5/SD_DAT1",
+          "68": "unconnected-(Module301-SD_DAT4-Pad68)",
+          "69": "/CM5/SD_DAT2",
+          "70": "unconnected-(Module301-SD_DAT7-Pad70)",
+          "71": "GND",
+          "72": "unconnected-(Module301-SD_DAT6-Pad72)",
+          "73": "unconnected-(Module301-SD_VDD_Override-Pad73)",
+          "74": "GND",
+          "75": "/CM5/SD_PWR_ON",
+          "76": "+BATT",
+          "77": "+5V",
+          "78": "/CM5/GPIO_VREF",
+          "79": "+5V",
+          "80": "/CM5/SCL0",
+          "81": "+5V",
+          "82": "/CM5/SDA0",
+          "83": "+5V",
+          "84": "+3V3_PI",
+          "85": "+5V",
+          "86": "+3V3_PI",
+          "87": "+5V",
+          "88": "+1V8",
+          "89": "/CM5/WL_nDis",
+          "90": "+1V8",
+          "91": "/CM5/BT_nDis",
+          "92": "/CM5/PWR_BUT",
+          "93": "/CM5/nRPIBOOT",
+          "94": "/CC1",
+          "95": "/CM5/PI_nLED_PWR",
+          "96": "/CC2",
+          "97": "/CM5/CAM_GPIO0",
+          "98": "GND",
+          "99": "/CM5/GLOBAL_EN",
+          "100": "/CM5/CAM_GPIO1"
+        }
+      },
+      {
+        "ref": "Module302",
+        "value": "ComputeModule5-CM5",
+        "footprint": "CM5IO:Raspberry-Pi-5-Compute-Module_HSS",
+        "side": "bottom",
+        "x": 127.25,
+        "y": 77.6,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.41,
+        "height_source": "3D model",
+        "pins": {
+          "101": "/CM5/USBOTG_ID",
+          "102": "/CM5/PCIE_PI.nCLKREQ",
+          "103": "/USB_C.D_N",
+          "104": "/CM5/PCIE_PI.nWAKE",
+          "105": "/USB_C.D_P",
+          "106": "/CM5/PCIE_PI.PWR_EN",
+          "107": "GND",
+          "108": "GND",
+          "109": "/CM5/PCIE_PI.nRST",
+          "110": "/CM5/PCIE_PI.CLK_P",
+          "111": "/CM5/VBUS_EN",
+          "112": "/CM5/PCIE_PI.CLK_N",
+          "113": "GND",
+          "114": "GND",
+          "115": "/CM5/DPHY0_P.D0_N",
+          "116": "/CM5/PCIE_PI.RX_P",
+          "117": "/CM5/DPHY0_P.D0_P",
+          "118": "/CM5/PCIE_PI.RX_N",
+          "119": "GND",
+          "120": "GND",
+          "121": "/CM5/DPHY0_P.D1_N",
+          "122": "/CM5/PCIE_PI.TX_P",
+          "123": "/CM5/DPHY0_P.D1_P",
+          "124": "/CM5/PCIE_PI.TX_N",
+          "125": "GND",
+          "126": "GND",
+          "127": "/CM5/DPHY0_P.C_N",
+          "128": "/CM5/USB3-0-RX_N",
+          "129": "/CM5/DPHY0_P.C_P",
+          "130": "/CM5/USB3-0-RX_P",
+          "131": "GND",
+          "132": "GND",
+          "133": "/CM5/DPHY0_P.D2_N",
+          "134": "/CM5/USB2P.D_P",
+          "135": "/CM5/DPHY0_P.D2_P",
+          "136": "/CM5/USB2P.D_N",
+          "137": "GND",
+          "138": "GND",
+          "139": "/CM5/DPHY0_P.D3_N",
+          "140": "/CM5/USB3-0-TX_N",
+          "141": "/CM5/DPHY0_P.D3_P",
+          "142": "/CM5/USB3-0-TX_P",
+          "143": "/CM5/HDMI1_HOTPLUG",
+          "144": "GND",
+          "145": "/CM5/HDMI1_SDA",
+          "146": "/CM5/HDMI1_D2_P",
+          "147": "/CM5/HDMI1_SCL",
+          "148": "/CM5/HDMI1_D2_N",
+          "149": "/CM5/HDMI1_CEC",
+          "150": "GND",
+          "151": "/CM5/HDMI_PI.CEC",
+          "152": "/CM5/HDMI1_D1_P",
+          "153": "/CM5/HDMI_PI.HOTPLUG",
+          "154": "/CM5/HDMI1_D1_N",
+          "155": "GND",
+          "156": "GND",
+          "157": "/CM5/USB3-1-RX_N",
+          "158": "/CM5/HDMI1_D0_P",
+          "159": "/CM5/USB3-1-RX_P",
+          "160": "/CM5/HDMI1_D0_N",
+          "161": "GND",
+          "162": "GND",
+          "163": "/CM5/USB3-1-D_P",
+          "164": "/CM5/HDMI1_CK_P",
+          "165": "/CM5/USB3-1-D_N",
+          "166": "/CM5/HDMI1_CK_N",
+          "167": "GND",
+          "168": "GND",
+          "169": "/CM5/USB3-1-TX_N",
+          "170": "/CM5/HDMI_PI.D2_P",
+          "171": "/CM5/USB3-1-TX_P",
+          "172": "/CM5/HDMI_PI.D2_N",
+          "173": "GND",
+          "174": "GND",
+          "175": "/CM5/DPHY1_P.D0_N",
+          "176": "/CM5/HDMI_PI.D1_P",
+          "177": "/CM5/DPHY1_P.D0_P",
+          "178": "/CM5/HDMI_PI.D1_N",
+          "179": "GND",
+          "180": "GND",
+          "181": "/CM5/DPHY1_P.D1_N",
+          "182": "/CM5/HDMI_PI.D0_P",
+          "183": "/CM5/DPHY1_P.D1_P",
+          "184": "/CM5/HDMI_PI.D0_N",
+          "185": "GND",
+          "186": "GND",
+          "187": "/CM5/DPHY1_P.C_N",
+          "188": "/CM5/HDMI_PI.CK_P",
+          "189": "/CM5/DPHY1_P.C_P",
+          "190": "/CM5/HDMI_PI.CK_N",
+          "191": "GND",
+          "192": "GND",
+          "193": "/CM5/DPHY1_P.D2_N",
+          "194": "/CM5/DPHY1_P.D3_N",
+          "195": "/CM5/DPHY1_P.D2_P",
+          "196": "/CM5/DPHY1_P.D3_P",
+          "197": "GND",
+          "198": "GND",
+          "199": "/CM5/HDMI_PI.SDA",
+          "200": "/CM5/HDMI_PI.SCL"
+        }
+      },
+      {
+        "ref": "R101",
+        "value": "2k2",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 89.25,
+        "y": 69.95,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+5V",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R102",
+        "value": "0R",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "bottom",
+        "x": 123.93,
+        "y": 62.47,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3_PI",
+          "2": "/CM5/GPIO_VREF"
+        }
+      },
+      {
+        "ref": "R103",
+        "value": "0R",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "bottom",
+        "x": 124.39,
+        "y": 63.88,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": true,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "+1V8",
+          "2": "/CM5/GPIO_VREF"
+        }
+      },
+      {
+        "ref": "R104",
+        "value": "10k",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "bottom",
+        "x": 131.69,
+        "y": 48.54,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "C25744",
+        "pins": {
+          "1": "GND",
+          "2": "/CM5/EEPROM_nWP"
+        }
+      },
+      {
+        "ref": "R107",
+        "value": "10k",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "bottom",
+        "x": 81.57,
+        "y": 73.74,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(U1-CS)",
+          "2": "+3V3_PI"
+        }
+      },
+      {
+        "ref": "R108",
+        "value": "10k",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "bottom",
+        "x": 82.87,
+        "y": 78.19,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "GND",
+          "2": "Net-(U1-SDO)"
+        }
+      },
+      {
+        "ref": "R401",
+        "value": "470R",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 101.15,
+        "y": 42.3,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "C25117",
+        "pins": {
+          "1": "/CM5/ETH_nLED_ACTIVITY",
+          "2": "Net-(J1-K_GREEN)"
+        }
+      },
+      {
+        "ref": "R402",
+        "value": "470R",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 101.15,
+        "y": 30.525,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "C25117",
+        "pins": {
+          "1": "/CM5/nLED_SPEED_100_1000",
+          "2": "Net-(J1-K_YELLOW)"
+        }
+      },
+      {
+        "ref": "R403",
+        "value": "0R",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "bottom",
+        "x": 87.425,
+        "y": 27.05,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(J1-MP1)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R501",
+        "value": "2k2",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 88.3,
+        "y": 78.9,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3_PI",
+          "2": "/IO/SDA"
+        }
+      },
+      {
+        "ref": "R502",
+        "value": "2k2",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 88.3,
+        "y": 75.6,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3_PI",
+          "2": "/IO/SCL"
+        }
+      },
+      {
+        "ref": "R605",
+        "value": "2k2",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 128.79,
+        "y": 58.09,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D605-K)",
+          "2": "Net-(R605-Pad2)"
+        }
+      },
+      {
+        "ref": "R606",
+        "value": "2k2",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 130.44,
+        "y": 56.7,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D606-K)",
+          "2": "/CM5/nLED_ACTIVITY"
+        }
+      },
+      {
+        "ref": "R701",
+        "value": "15k",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 88.25,
+        "y": 69.95,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "C25756",
+        "pins": {
+          "1": "Net-(U701-ILIM)",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R702",
+        "value": "22k",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 84.5,
+        "y": 57.99,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "C25768",
+        "pins": {
+          "1": "/USB/CC2",
+          "2": "+5V"
+        }
+      },
+      {
+        "ref": "R703",
+        "value": "22k",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 87.78,
+        "y": 57.98,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "C25768",
+        "pins": {
+          "1": "/USB/CC1",
+          "2": "+5V"
+        }
+      },
+      {
+        "ref": "R704",
+        "value": "100k",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 118.35,
+        "y": 72.45,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "C25741",
+        "pins": {
+          "1": "/CM5/PCIE_PI.PWR_EN",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R705",
+        "value": "10k",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 128.3,
+        "y": 73.305,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "mpn": "C25744",
+        "pins": {
+          "1": "M2_3V3",
+          "2": "/PCIe-M2/FB"
+        }
+      },
+      {
+        "ref": "R706",
+        "value": "2k2",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 128.3,
+        "y": 71.425,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/PCIe-M2/FB",
+          "2": "GND"
+        }
+      },
+      {
+        "ref": "R707",
+        "value": "2k2",
+        "footprint": "CM5IO:R_0402_1005Metric",
+        "side": "top",
+        "x": 101.76,
+        "y": 25.63,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.35,
+        "height_source": "3D model",
+        "pins": {
+          "1": "Net-(D702-K)",
+          "2": "Net-(J701-DAS{slash}~{DSS}{slash}~{LED1})"
+        }
+      },
+      {
+        "ref": "REF**",
+        "value": "KiCad-Logo2_5mm_SilkScreen",
+        "footprint": "CM5IO:KiCad-Logo2_5mm_SilkScreen",
+        "side": "top",
+        "x": 116.7,
+        "y": 77.79,
+        "rotation": 0.0,
+        "mount": "other",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {}
+      },
+      {
+        "ref": "SW101",
+        "value": "MK-11C04-G013",
+        "footprint": "CM5IO:SW-SMD_MK-11C04-G013",
+        "side": "bottom",
+        "x": 130.18,
+        "y": 72.88,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "mpn": "C778185",
+        "pins": {
+          "1": "GND",
+          "2": "unconnected-(SW101-Pad2)",
+          "4": "GND",
+          "5": "GND",
+          "C": "/CM5/nRPIBOOT"
+        }
+      },
+      {
+        "ref": "SW501",
+        "value": "TS-1010A-B",
+        "footprint": "CM5IO:SW-SMD_TS-1010A-B",
+        "side": "top",
+        "x": 130.57,
+        "y": 66.27,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "mpn": "C381059",
+        "pins": {
+          "1": "/CM5/PWR_BUT",
+          "2": "GND",
+          "3": "GND",
+          "4": "GND",
+          "5": "GND"
+        }
+      },
+      {
+        "ref": "TP101",
+        "value": "VBUS",
+        "footprint": "CM5IO:TestPoint_Pad_D1.0mm",
+        "side": "top",
+        "x": 89.43,
+        "y": 56.07,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "+5V"
+        }
+      },
+      {
+        "ref": "TP102",
+        "value": "+5V_PI",
+        "footprint": "CM5IO:TestPoint_Pad_D1.0mm",
+        "side": "top",
+        "x": 130.15,
+        "y": 35.55,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "+5V"
+        }
+      },
+      {
+        "ref": "TP103",
+        "value": "+3V3_PI",
+        "footprint": "CM5IO:TestPoint_Pad_D1.0mm",
+        "side": "top",
+        "x": 101.34,
+        "y": 59.39,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.0,
+        "height_source": "default for SMD",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "+3V3_PI"
+        }
+      },
+      {
+        "ref": "TP104",
+        "value": "GND",
+        "footprint": "CM5IO:TestPoint_THTPad_D1.0mm_Drill0.5mm",
+        "side": "top",
+        "x": 129.61,
+        "y": 32.98,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "TP105",
+        "value": "GND",
+        "footprint": "CM5IO:TestPoint_THTPad_D1.0mm_Drill0.5mm",
+        "side": "top",
+        "x": 89.43,
+        "y": 58.57,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "TP106",
+        "value": "GND",
+        "footprint": "CM5IO:TestPoint_THTPad_D1.0mm_Drill0.5mm",
+        "side": "top",
+        "x": 106.56,
+        "y": 60.85,
+        "rotation": 0.0,
+        "mount": "tht",
+        "dnp": false,
+        "height_mm": 10.0,
+        "height_source": "default for THT (set a 'Height' field to override)",
+        "exclude_from_bom": true,
+        "pins": {
+          "1": "GND"
+        }
+      },
+      {
+        "ref": "U1",
+        "value": "LIS3DH",
+        "footprint": "CM5IO:LGA-16_3x3mm_P0.5mm_LayoutBorder3x5y",
+        "side": "bottom",
+        "x": 82.385,
+        "y": 75.97,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.02,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+3V3_PI",
+          "2": "unconnected-(U1-NC-Pad2)",
+          "3": "unconnected-(U1-NC-Pad3)",
+          "4": "/IO/SCL",
+          "5": "GND",
+          "6": "/IO/SDA",
+          "7": "Net-(U1-SDO)",
+          "8": "Net-(U1-CS)",
+          "9": "unconnected-(U1-INT2-Pad9)",
+          "10": "GND",
+          "11": "unconnected-(U1-INT1-Pad11)",
+          "12": "GND",
+          "13": "unconnected-(U1-ADC3-Pad13)",
+          "14": "+3V3_PI",
+          "15": "unconnected-(U1-ADC2-Pad15)",
+          "16": "unconnected-(U1-ADC1-Pad16)"
+        }
+      },
+      {
+        "ref": "U401",
+        "value": "TPD4EUSB30",
+        "footprint": "CM5IO:USON-10_2.5x1.0mm_P0.5mm",
+        "side": "bottom",
+        "x": 101.55,
+        "y": 38.198,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.52,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/CM5/ETH_PI.TRD0_P",
+          "2": "/CM5/ETH_PI.TRD0_N",
+          "3": "GND",
+          "4": "/CM5/ETH_PI.TRD1_P",
+          "5": "/CM5/ETH_PI.TRD1_N",
+          "6": "/CM5/ETH_PI.TRD1_N",
+          "7": "/CM5/ETH_PI.TRD1_P",
+          "8": "GND",
+          "9": "/CM5/ETH_PI.TRD0_N",
+          "10": "/CM5/ETH_PI.TRD0_P"
+        }
+      },
+      {
+        "ref": "U402",
+        "value": "TPD4EUSB30",
+        "footprint": "CM5IO:USON-10_2.5x1.0mm_P0.5mm",
+        "side": "bottom",
+        "x": 101.537,
+        "y": 34.123,
+        "rotation": 0.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.52,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/CM5/ETH_PI.TRD2_P",
+          "2": "/CM5/ETH_PI.TRD2_N",
+          "3": "GND",
+          "4": "/CM5/ETH_PI.TRD3_P",
+          "5": "/CM5/ETH_PI.TRD3_N",
+          "6": "/CM5/ETH_PI.TRD3_N",
+          "7": "/CM5/ETH_PI.TRD3_P",
+          "8": "GND",
+          "9": "/CM5/ETH_PI.TRD2_N",
+          "10": "/CM5/ETH_PI.TRD2_P"
+        }
+      },
+      {
+        "ref": "U405",
+        "value": "STMPS2151STR",
+        "footprint": "CM5IO:SOT-23-5",
+        "side": "top",
+        "x": 92.59,
+        "y": 67.24,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.55,
+        "height_source": "3D model",
+        "mpn": "C135998",
+        "pins": {
+          "1": "HDMI_+5V",
+          "2": "GND",
+          "3": "unconnected-(U405-FAULT-Pad3)",
+          "4": "+5V",
+          "5": "+5V"
+        }
+      },
+      {
+        "ref": "U602",
+        "value": "SN74LVC1G14DBVR",
+        "footprint": "CM5IO:SOT-353_SC-70-5",
+        "side": "top",
+        "x": 129.46,
+        "y": 59.98,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.1,
+        "height_source": "3D model",
+        "pins": {
+          "1": "unconnected-(U602-Pad1)",
+          "2": "/CM5/PI_nLED_PWR",
+          "3": "GND",
+          "4": "Net-(R605-Pad2)",
+          "5": "+5V"
+        }
+      },
+      {
+        "ref": "U701",
+        "value": "AP22653W6",
+        "footprint": "CM5IO:SOT-23-6",
+        "side": "top",
+        "x": 86.52,
+        "y": 67.25,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 1.55,
+        "height_source": "3D model",
+        "pins": {
+          "1": "+5V",
+          "2": "GND",
+          "3": "/CM5/VBUS_EN",
+          "4": "unconnected-(U701-nFault-Pad4)",
+          "5": "Net-(U701-ILIM)",
+          "6": "VBUS_USB2.0"
+        }
+      },
+      {
+        "ref": "U702",
+        "value": "AP3441SHE-7B",
+        "footprint": "CM5IO:DFN-8-1EP_2x2mm_P0.5mm_EP1.05x1.75mm",
+        "side": "top",
+        "x": 126.565,
+        "y": 72.36,
+        "rotation": -90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.92,
+        "height_source": "3D model",
+        "pins": {
+          "1": "/PCIe-M2/FB",
+          "2": "unconnected-(U702-PG-Pad2)",
+          "3": "+5V",
+          "4": "GND",
+          "5": "unconnected-(U702-nc-Pad5)",
+          "6": "/PCIe-M2/M2_LX",
+          "7": "/CM5/PCIE_PI.PWR_EN",
+          "8": "GND",
+          "9": "GND"
+        }
+      },
+      {
+        "ref": "U703",
+        "value": "ASEK-32.768KHZ-L-R-T",
+        "footprint": "CM5IO:Crystal_SMD_3225-4Pin_3.2x2.5mm",
+        "side": "top",
+        "x": 122.4,
+        "y": 36.125,
+        "rotation": 90.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 0.64,
+        "height_source": "3D model",
+        "pins": {
+          "1": "M2_3V3",
+          "2": "GND",
+          "3": "Net-(J701-SUSCLK)",
+          "4": "M2_3V3"
+        }
+      },
+      {
+        "ref": "USB701",
+        "value": "TYPEC-305-ACP16H458",
+        "footprint": "CM5IO:USB-C-SMD_TYPEC-305-ACP16H458",
+        "side": "top",
+        "x": 86.15,
+        "y": 62.25,
+        "rotation": 180.0,
+        "mount": "smd",
+        "dnp": false,
+        "height_mm": 2.5,
+        "height_source": "default for SMD",
+        "mpn": "C5454943",
+        "pins": {
+          "1": "GND",
+          "A1": "GND",
+          "A4": "VBUS_USB2.0",
+          "A5": "/USB/CC1",
+          "A6": "/CM5/USB2P.D_P",
+          "A7": "/CM5/USB2P.D_N",
+          "A8": "unconnected-(USB701-SUB1-PadA8)",
+          "A9": "VBUS_USB2.0",
+          "A12": "GND",
+          "B1": "GND",
+          "B4": "VBUS_USB2.0",
+          "B5": "/USB/CC2",
+          "B6": "/CM5/USB2P.D_P",
+          "B7": "/CM5/USB2P.D_N",
+          "B8": "unconnected-(USB701-SUB2-PadB8)",
+          "B9": "VBUS_USB2.0",
+          "B12": "GND"
+        }
+      }
+    ]
+  },
+  "electrical": {
+    "supply": {
+      "net": "VBUS_USB2.0",
+      "voltage": 5.0,
+      "reason": "highest rail on connector USB701",
+      "current_limit_a": 0.5
+    },
+    "power_nets": [
+      "+1V8",
+      "+3V3_PI",
+      "+5V",
+      "+BATT",
+      "/CM5/PWR_BUT",
+      "HDMI_+5V",
+      "M2_3V3",
+      "VBUS_USB2.0"
+    ],
+    "ground_nets": [
+      "GND"
+    ],
+    "nets": [
+      {
+        "name": "+1V8",
+        "kind": "power",
+        "pad_count": 3,
+        "pads": [
+          "Module301.88",
+          "Module301.90",
+          "R103.1"
+        ],
+        "expected_v": {
+          "nominal": 1.8,
+          "min": 1.71,
+          "max": 1.89,
+          "source": "net name"
+        }
+      },
+      {
+        "name": "+3V3_PI",
+        "kind": "power",
+        "pad_count": 16,
+        "pads": [
+          "C503.1",
+          "C601.1",
+          "J1.12",
+          "J1.14",
+          "J502.4",
+          "J503.1",
+          "J802.22",
+          "Module301.84",
+          "Module301.86",
+          "R102.1",
+          "R107.2",
+          "R501.1",
+          "R502.1",
+          "TP103.1",
+          "U1.1",
+          "U1.14"
+        ],
+        "expected_v": {
+          "nominal": 3.3,
+          "min": 3.135,
+          "max": 3.465,
+          "source": "net name"
+        },
+        "probes": [
+          "PP04"
+        ]
+      },
+      {
+        "name": "+5V",
+        "kind": "power",
+        "pad_count": 30,
+        "pads": [
+          "C101.1",
+          "C102.1",
+          "C501.1",
+          "C701.1",
+          "C704.1",
+          "C705.1",
+          "C706.1",
+          "D605.2",
+          "D606.2",
+          "J101.A4",
+          "J101.A9",
+          "J101.B4",
+          "J101.B9",
+          "J601.1",
+          "Module301.77",
+          "Module301.79",
+          "Module301.81",
+          "Module301.83",
+          "Module301.85",
+          "Module301.87",
+          "R101.1",
+          "R702.2",
+          "R703.2",
+          "TP101.1",
+          "TP102.1",
+          "U405.4",
+          "U405.5",
+          "U602.5",
+          "U701.1",
+          "U702.3"
+        ],
+        "expected_v": {
+          "nominal": 5.0,
+          "min": 4.75,
+          "max": 5.25,
+          "source": "net name"
+        },
+        "probes": [
+          "PP05"
+        ]
+      },
+      {
+        "name": "+BATT",
+        "kind": "power",
+        "pad_count": 2,
+        "pads": [
+          "CN1.1",
+          "Module301.76"
+        ]
+      },
+      {
+        "name": "/CC1",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J101.A5",
+          "Module301.94"
+        ]
+      },
+      {
+        "name": "/CC2",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J101.B5",
+          "Module301.96"
+        ]
+      },
+      {
+        "name": "/CM5/BL_GPIO24",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J503.7",
+          "Module301.45"
+        ]
+      },
+      {
+        "name": "/CM5/BT_nDis",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.91"
+        ]
+      },
+      {
+        "name": "/CM5/CAM_GPIO0",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.17",
+          "Module301.97"
+        ]
+      },
+      {
+        "name": "/CM5/CAM_GPIO1",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.18",
+          "Module301.100"
+        ]
+      },
+      {
+        "name": "/CM5/CS_GPIO18",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J503.5",
+          "Module301.49"
+        ]
+      },
+      {
+        "name": "/CM5/DC_GPI25",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J503.3",
+          "Module301.41"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.C_N",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.8",
+          "Module302.127"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.C_P",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.9",
+          "Module302.129"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.D0_N",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.2",
+          "Module302.115"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.D0_P",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.3",
+          "Module302.117"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.D1_N",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.5",
+          "Module302.121"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.D1_P",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.6",
+          "Module302.123"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.D2_N",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.11",
+          "Module302.133"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.D2_P",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.12",
+          "Module302.135"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.D3_N",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.14",
+          "Module302.139"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY0_P.D3_P",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.15",
+          "Module302.141"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.C_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.187"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.C_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.189"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.D0_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.175"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.D0_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.177"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.D1_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.181"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.D1_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.183"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.D2_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.193"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.D2_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.195"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.D3_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.194"
+        ]
+      },
+      {
+        "name": "/CM5/DPHY1_P.D3_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.196"
+        ]
+      },
+      {
+        "name": "/CM5/EEPROM_nWP",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "Module301.20",
+          "R104.2"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_PI.TRD0_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J1.3",
+          "Module301.10",
+          "U401.2",
+          "U401.9"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_PI.TRD0_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J1.2",
+          "Module301.12",
+          "U401.1",
+          "U401.10"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_PI.TRD1_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J1.5",
+          "Module301.6",
+          "U401.5",
+          "U401.6"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_PI.TRD1_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J1.4",
+          "Module301.4",
+          "U401.4",
+          "U401.7"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_PI.TRD2_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J1.7",
+          "Module301.9",
+          "U402.2",
+          "U402.9"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_PI.TRD2_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J1.6",
+          "Module301.11",
+          "U402.1",
+          "U402.10"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_PI.TRD3_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J1.9",
+          "Module301.5",
+          "U402.5",
+          "U402.6"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_PI.TRD3_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "J1.8",
+          "Module301.3",
+          "U402.4",
+          "U402.7"
+        ]
+      },
+      {
+        "name": "/CM5/ETH_nLED_ACTIVITY",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "Module301.15",
+          "R401.1"
+        ]
+      },
+      {
+        "name": "/CM5/GLOBAL_EN",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.99"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO10",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.44"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO11",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.38"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO12",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.31"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO13",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.28"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO14",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.55"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO15",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.51"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO16",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.29"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO17",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.50"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO22",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.46"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO23",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.47"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO26",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.24"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO4",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.54"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO5",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.34"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO6",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.30"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO7",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.37"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO8",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.39"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO9",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.40"
+        ]
+      },
+      {
+        "name": "/CM5/GPIO_VREF",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "Module301.78",
+          "R102.2",
+          "R103.2"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_CEC",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.149"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_CK_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.166"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_CK_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.164"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_D0_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.160"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_D0_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.158"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_D1_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.154"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_D1_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.152"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_D2_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.148"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_D2_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.146"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_HOTPLUG",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.143"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_SCL",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.147"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI1_SDA",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.145"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.CEC",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D403.1",
+          "D403.10",
+          "J501.13",
+          "Module302.151"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.CK_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D401.5",
+          "D401.6",
+          "J501.12",
+          "Module302.190"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.CK_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D401.4",
+          "D401.7",
+          "J501.10",
+          "Module302.188"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.D0_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D401.2",
+          "D401.9",
+          "J501.9",
+          "Module302.184"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.D0_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D401.1",
+          "D401.10",
+          "J501.7",
+          "Module302.182"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.D1_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D402.5",
+          "D402.6",
+          "J501.6",
+          "Module302.178"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.D1_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D402.4",
+          "D402.7",
+          "J501.4",
+          "Module302.176"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.D2_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D402.2",
+          "D402.9",
+          "J501.3",
+          "Module302.172"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.D2_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D402.1",
+          "D402.10",
+          "J501.1",
+          "Module302.170"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.HOTPLUG",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D403.2",
+          "D403.9",
+          "J501.19",
+          "Module302.153"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.SCL",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D403.5",
+          "D403.6",
+          "J501.15",
+          "Module302.200"
+        ]
+      },
+      {
+        "name": "/CM5/HDMI_PI.SDA",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D403.4",
+          "D403.7",
+          "J501.16",
+          "Module302.199"
+        ]
+      },
+      {
+        "name": "/CM5/ID_SC",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.35"
+        ]
+      },
+      {
+        "name": "/CM5/ID_SD",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.36"
+        ]
+      },
+      {
+        "name": "/CM5/MISO_GPIO19",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J503.10",
+          "Module301.26"
+        ]
+      },
+      {
+        "name": "/CM5/MOSI_GPIO20",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J503.9",
+          "Module301.27"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.CLK_N",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.53",
+          "Module302.112"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.CLK_P",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.55",
+          "Module302.110"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.PWR_EN",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "Module302.106",
+          "R704.1",
+          "U702.7"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.RX_N",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.43",
+          "Module302.118"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.RX_P",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.41",
+          "Module302.116"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.TX_N",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.49",
+          "Module302.124"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.TX_P",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.47",
+          "Module302.122"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.nCLKREQ",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.52",
+          "Module302.102"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.nRST",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.50",
+          "Module302.109"
+        ]
+      },
+      {
+        "name": "/CM5/PCIE_PI.nWAKE",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.54",
+          "Module302.104"
+        ]
+      },
+      {
+        "name": "/CM5/PI_nLED_PWR",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "Module301.95",
+          "U602.2"
+        ]
+      },
+      {
+        "name": "/CM5/PWM",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J601.2",
+          "Module301.19"
+        ]
+      },
+      {
+        "name": "/CM5/PWR_BUT",
+        "kind": "power",
+        "pad_count": 2,
+        "pads": [
+          "Module301.92",
+          "SW501.1"
+        ]
+      },
+      {
+        "name": "/CM5/RST_GPIO27",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J503.4",
+          "Module301.48"
+        ]
+      },
+      {
+        "name": "/CM5/SCL0",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.20",
+          "Module301.80"
+        ]
+      },
+      {
+        "name": "/CM5/SCLK_GPIO21",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J503.8",
+          "Module301.25"
+        ]
+      },
+      {
+        "name": "/CM5/SDA0",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J802.21",
+          "Module301.82"
+        ]
+      },
+      {
+        "name": "/CM5/SD_CLK",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.57"
+        ]
+      },
+      {
+        "name": "/CM5/SD_CMD",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.62"
+        ]
+      },
+      {
+        "name": "/CM5/SD_DAT0",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.63"
+        ]
+      },
+      {
+        "name": "/CM5/SD_DAT1",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.67"
+        ]
+      },
+      {
+        "name": "/CM5/SD_DAT2",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.69"
+        ]
+      },
+      {
+        "name": "/CM5/SD_DAT3",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.61"
+        ]
+      },
+      {
+        "name": "/CM5/SD_PWR_ON",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.75"
+        ]
+      },
+      {
+        "name": "/CM5/SYNC_OUT",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.18"
+        ]
+      },
+      {
+        "name": "/CM5/TACHO",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J601.4",
+          "Module301.16"
+        ]
+      },
+      {
+        "name": "/CM5/USB2P.D_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D701.2",
+          "Module302.136",
+          "USB701.A7",
+          "USB701.B7"
+        ]
+      },
+      {
+        "name": "/CM5/USB2P.D_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D701.1",
+          "Module302.134",
+          "USB701.A6",
+          "USB701.B6"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-0-RX_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.128"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-0-RX_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.130"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-0-TX_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.140"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-0-TX_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.142"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-1-D_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.165"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-1-D_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.163"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-1-RX_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.157"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-1-RX_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.159"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-1-TX_N",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.169"
+        ]
+      },
+      {
+        "name": "/CM5/USB3-1-TX_P",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.171"
+        ]
+      },
+      {
+        "name": "/CM5/USBOTG_ID",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module302.101"
+        ]
+      },
+      {
+        "name": "/CM5/VBUS_EN",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "Module302.111",
+          "U701.3"
+        ]
+      },
+      {
+        "name": "/CM5/WL_nDis",
+        "kind": "signal",
+        "pad_count": 1,
+        "pads": [
+          "Module301.89"
+        ]
+      },
+      {
+        "name": "/CM5/nLED_ACTIVITY",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "Module301.21",
+          "R606.2"
+        ]
+      },
+      {
+        "name": "/CM5/nLED_SPEED_100_1000",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "Module301.17",
+          "R402.1"
+        ]
+      },
+      {
+        "name": "/CM5/nRPIBOOT",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "Module301.93",
+          "SW101.C"
+        ]
+      },
+      {
+        "name": "/IO/SCL",
+        "kind": "signal",
+        "pad_count": 5,
+        "pads": [
+          "D502.1",
+          "J502.2",
+          "Module301.56",
+          "R502.2",
+          "U1.4"
+        ]
+      },
+      {
+        "name": "/IO/SDA",
+        "kind": "signal",
+        "pad_count": 5,
+        "pads": [
+          "D502.2",
+          "J502.1",
+          "Module301.58",
+          "R501.2",
+          "U1.6"
+        ]
+      },
+      {
+        "name": "/PCIe-M2/FB",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "C707.2",
+          "R705.2",
+          "R706.1",
+          "U702.1"
+        ]
+      },
+      {
+        "name": "/PCIe-M2/M2_LX",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "L701.1",
+          "U702.6"
+        ],
+        "probes": [
+          "PP07"
+        ]
+      },
+      {
+        "name": "/USB/CC1",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R703.1",
+          "USB701.A5"
+        ]
+      },
+      {
+        "name": "/USB/CC2",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R702.1",
+          "USB701.B5"
+        ]
+      },
+      {
+        "name": "/USB_C.D_N",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D101.2",
+          "J101.A7",
+          "J101.B7",
+          "Module302.103"
+        ]
+      },
+      {
+        "name": "/USB_C.D_P",
+        "kind": "signal",
+        "pad_count": 4,
+        "pads": [
+          "D101.1",
+          "J101.A6",
+          "J101.B6",
+          "Module302.105"
+        ]
+      },
+      {
+        "name": "GND",
+        "kind": "ground",
+        "pad_count": 172,
+        "pads": [
+          "C101.2",
+          "C102.2",
+          "C401.2",
+          "C501.2",
+          "C502.2",
+          "C503.2",
+          "C601.2",
+          "C701.2",
+          "C702.2",
+          "C703.2",
+          "C704.2",
+          "C705.2",
+          "C706.2",
+          "C708.2",
+          "C709.2",
+          "C710.2",
+          "C711.2",
+          "C712.2",
+          "CN1.2",
+          "D101.3",
+          "D401.3",
+          "D401.8",
+          "D402.3",
+          "D402.8",
+          "D403.3",
+          "D403.8",
+          "D502.3",
+          "D701.3",
+          "H101.1",
+          "H101.1",
+          "H101.1",
+          "H102.1",
+          "H103.1",
+          "H104.1",
+          "H105.1",
+          "J1.10",
+          "J101.1",
+          "J101.1",
+          "J101.1",
+          "J101.1",
+          "J101.A1",
+          "J101.A12",
+          "J101.B1",
+          "J101.B12",
+          "J501.2",
+          "J501.5",
+          "J501.8",
+          "J501.11",
+          "J501.17",
+          "J501.SH1",
+          "J501.SH2",
+          "J501.SH3",
+          "J501.SH4",
+          "J502.3",
+          "J503.2",
+          "J503.6",
+          "J601.3",
+          "J701.1",
+          "J701.3",
+          "J701.9",
+          "J701.15",
+          "J701.21",
+          "J701.27",
+          "J701.33",
+          "J701.39",
+          "J701.45",
+          "J701.51",
+          "J701.57",
+          "J701.71",
+          "J701.73",
+          "J701.75",
+          "J701.S1",
+          "J701.S2",
+          "J802.1",
+          "J802.4",
+          "J802.7",
+          "J802.10",
+          "J802.13",
+          "J802.16",
+          "J802.19",
+          "Module301.1",
+          "Module301.2",
+          "Module301.7",
+          "Module301.8",
+          "Module301.13",
+          "Module301.14",
+          "Module301.22",
+          "Module301.23",
+          "Module301.32",
+          "Module301.33",
+          "Module301.42",
+          "Module301.43",
+          "Module301.52",
+          "Module301.53",
+          "Module301.59",
+          "Module301.60",
+          "Module301.65",
+          "Module301.66",
+          "Module301.71",
+          "Module301.74",
+          "Module301.98",
+          "Module302.107",
+          "Module302.108",
+          "Module302.113",
+          "Module302.114",
+          "Module302.119",
+          "Module302.120",
+          "Module302.125",
+          "Module302.126",
+          "Module302.131",
+          "Module302.132",
+          "Module302.137",
+          "Module302.138",
+          "Module302.144",
+          "Module302.150",
+          "Module302.155",
+          "Module302.156",
+          "Module302.161",
+          "Module302.162",
+          "Module302.167",
+          "Module302.168",
+          "Module302.173",
+          "Module302.174",
+          "Module302.179",
+          "Module302.180",
+          "Module302.185",
+          "Module302.186",
+          "Module302.191",
+          "Module302.192",
+          "Module302.197",
+          "Module302.198",
+          "R101.2",
+          "R104.1",
+          "R108.1",
+          "R403.2",
+          "R701.2",
+          "R704.2",
+          "R706.2",
+          "SW101.1",
+          "SW101.4",
+          "SW101.5",
+          "SW501.2",
+          "SW501.3",
+          "SW501.4",
+          "SW501.4",
+          "SW501.5",
+          "SW501.5",
+          "TP104.1",
+          "TP105.1",
+          "TP106.1",
+          "U1.5",
+          "U1.10",
+          "U1.12",
+          "U401.3",
+          "U401.8",
+          "U402.3",
+          "U402.8",
+          "U405.2",
+          "U602.3",
+          "U701.2",
+          "U702.4",
+          "U702.8",
+          "U702.9",
+          "U703.2",
+          "USB701.1",
+          "USB701.1",
+          "USB701.1",
+          "USB701.1",
+          "USB701.A1",
+          "USB701.A12",
+          "USB701.B1",
+          "USB701.B12"
+        ],
+        "expected_v": {
+          "nominal": 0.0,
+          "min": -0.05,
+          "max": 0.05,
+          "source": "net name"
+        },
+        "probes": [
+          "PP02",
+          "PP03"
+        ]
+      },
+      {
+        "name": "HDMI_+5V",
+        "kind": "power",
+        "pad_count": 3,
+        "pads": [
+          "C502.1",
+          "J501.18",
+          "U405.1"
+        ],
+        "expected_v": {
+          "nominal": 5.0,
+          "min": 4.75,
+          "max": 5.25,
+          "source": "net name"
+        }
+      },
+      {
+        "name": "M2_3V3",
+        "kind": "power",
+        "pad_count": 20,
+        "pads": [
+          "C707.1",
+          "C708.1",
+          "C709.1",
+          "C710.1",
+          "C711.1",
+          "C712.1",
+          "D702.2",
+          "J701.2",
+          "J701.4",
+          "J701.12",
+          "J701.14",
+          "J701.16",
+          "J701.18",
+          "J701.70",
+          "J701.72",
+          "J701.74",
+          "L701.2",
+          "R705.1",
+          "U703.1",
+          "U703.4"
+        ],
+        "expected_v": {
+          "nominal": 3.3,
+          "min": 3.135,
+          "max": 3.465,
+          "source": "net name"
+        },
+        "probes": [
+          "PP06"
+        ]
+      },
+      {
+        "name": "Net-(D605-K)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D605.1",
+          "R605.1"
+        ]
+      },
+      {
+        "name": "Net-(D606-K)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D606.1",
+          "R606.1"
+        ]
+      },
+      {
+        "name": "Net-(D702-K)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "D702.1",
+          "R707.1"
+        ]
+      },
+      {
+        "name": "Net-(J1-K_GREEN)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J1.11",
+          "R401.2"
+        ]
+      },
+      {
+        "name": "Net-(J1-K_YELLOW)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J1.13",
+          "R402.2"
+        ]
+      },
+      {
+        "name": "Net-(J1-MP1)",
+        "kind": "signal",
+        "pad_count": 3,
+        "pads": [
+          "J1.15",
+          "J1.16",
+          "R403.1"
+        ]
+      },
+      {
+        "name": "Net-(J1-VCC)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "C401.1",
+          "J1.1"
+        ]
+      },
+      {
+        "name": "Net-(J701-DAS{slash}~{DSS}{slash}~{LED1})",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.10",
+          "R707.2"
+        ]
+      },
+      {
+        "name": "Net-(J701-SUSCLK)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "J701.68",
+          "U703.3"
+        ],
+        "probes": [
+          "PP08"
+        ]
+      },
+      {
+        "name": "Net-(R605-Pad2)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R605.2",
+          "U602.4"
+        ]
+      },
+      {
+        "name": "Net-(U1-CS)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R107.1",
+          "U1.8"
+        ]
+      },
+      {
+        "name": "Net-(U1-SDO)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R108.2",
+          "U1.7"
+        ]
+      },
+      {
+        "name": "Net-(U701-ILIM)",
+        "kind": "signal",
+        "pad_count": 2,
+        "pads": [
+          "R701.1",
+          "U701.5"
+        ]
+      },
+      {
+        "name": "VBUS_USB2.0",
+        "kind": "power",
+        "pad_count": 7,
+        "pads": [
+          "C702.1",
+          "C703.1",
+          "U701.6",
+          "USB701.A4",
+          "USB701.A9",
+          "USB701.B4",
+          "USB701.B9"
+        ],
+        "expected_v": {
+          "nominal": 5.0,
+          "min": 4.75,
+          "max": 5.25,
+          "source": "net name"
+        },
+        "probes": [
+          "PP01"
+        ]
+      }
+    ]
+  },
+  "acceptance_criteria": [
+    {
+      "id": "DIM-OUTLINE",
+      "type": "dimensional",
+      "description": "Board outline 61.19 x 64.20 mm",
+      "limits": {
+        "width_mm": [
+          60.992,
+          61.392
+        ],
+        "height_mm": [
+          63.996,
+          64.396
+        ]
+      }
+    },
+    {
+      "id": "DIM-THICKNESS",
+      "type": "dimensional",
+      "description": "Board thickness 1.53 mm +/-10%",
+      "limits": {
+        "thickness_mm": [
+          1.377,
+          1.683
+        ]
+      }
+    },
+    {
+      "id": "WORKMANSHIP",
+      "type": "visual",
+      "description": "Soldering per IPC-A-610 Class 2"
+    },
+    {
+      "id": "VIS-POLARITY",
+      "type": "visual",
+      "step": "S1",
+      "description": "Polarity/orientation correct",
+      "refs": [
+        "C702",
+        "D101",
+        "D401",
+        "D402",
+        "D403",
+        "D502",
+        "D605",
+        "D606",
+        "D701",
+        "D702"
+      ]
+    },
+    {
+      "id": "VIS-PIN1",
+      "type": "visual",
+      "step": "S1",
+      "description": "IC pin-1 orientation matches silkscreen",
+      "refs": [
+        "U1",
+        "U401",
+        "U402",
+        "U405",
+        "U602",
+        "U701",
+        "U702",
+        "U703"
+      ]
+    },
+    {
+      "id": "VIS-DNP",
+      "type": "visual",
+      "step": "S1",
+      "description": "Not populated (DNP) parts are absent",
+      "refs": [
+        "M701",
+        "R103"
+      ]
+    },
+    {
+      "id": "VIS-THT",
+      "type": "visual",
+      "step": "S1",
+      "description": "Through-hole joints filled, leads clipped <= 1.5 mm",
+      "refs": [
+        "J1",
+        "J501",
+        "TP104",
+        "TP105",
+        "TP106"
+      ]
+    },
+    {
+      "id": "VIS-BRIDGES",
+      "type": "visual",
+      "step": "S1",
+      "description": "No solder bridges on fine-pitch parts",
+      "refs": [
+        "D401",
+        "D402",
+        "D403",
+        "J701",
+        "J802",
+        "Module301",
+        "Module302",
+        "SW501",
+        "U1",
+        "U401",
+        "U402",
+        "U602",
+        "U702"
+      ]
+    },
+    {
+      "id": "R_VBUS_USB2.0",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on VBUS_USB2.0",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "R_+3V3_PI",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on +3V3_PI",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "R_+5V",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on +5V",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "R_M2_3V3",
+      "type": "electrical",
+      "step": "S2",
+      "description": "Unpowered short check (rails to GND) on M2_3V3",
+      "limits": {
+        "min_ohm": 100.0
+      }
+    },
+    {
+      "id": "V_SUPPLY",
+      "type": "electrical",
+      "step": "S3",
+      "description": "Apply power (VBUS_USB2.0 = 5.0 V) on VBUS_USB2.0",
+      "limits": {
+        "min_v": 4.75,
+        "max_v": 5.25
+      }
+    },
+    {
+      "id": "V_+3V3_PI",
+      "type": "electrical",
+      "step": "S4",
+      "description": "Rail voltages on +3V3_PI",
+      "limits": {
+        "min_v": 3.135,
+        "max_v": 3.465
+      }
+    },
+    {
+      "id": "V_+5V",
+      "type": "electrical",
+      "step": "S4",
+      "description": "Rail voltages on +5V",
+      "limits": {
+        "min_v": 4.75,
+        "max_v": 5.25
+      }
+    },
+    {
+      "id": "V_M2_3V3",
+      "type": "electrical",
+      "step": "S4",
+      "description": "Rail voltages on M2_3V3",
+      "limits": {
+        "min_v": 3.135,
+        "max_v": 3.465
+      }
+    },
+    {
+      "id": "V_M2_LX",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on /PCIe-M2/M2_LX",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    },
+    {
+      "id": "V_Net-(J701-SUSCLK)",
+      "type": "electrical",
+      "step": "S5",
+      "description": "Signal levels (idle) on Net-(J701-SUSCLK)",
+      "limits_pending": "learn from a golden unit (runner 'learn' mode) or set in config"
+    }
+  ],
+  "findings": [
+    {
+      "uid": "F001",
+      "id": "MFG-EDGE-CLEARANCE",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "2 copper item(s) closer than 0.30 mm to the board edge",
+      "detail": "Routing/scoring exposes or burrs copper that sits this close to the edge (shorts to enclosure, delamination).",
+      "recommendation": "Pull copper back to >= 0.38 mm from Edge.Cuts or ask the fab for edge plating.",
+      "refs": [
+        "J1"
+      ],
+      "nets": [
+        "Net-(J1-MP1)"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "x": 84.0,
+          "y": 27.0,
+          "kind": "pad",
+          "pad": "J1.16",
+          "net": "Net-(J1-MP1)",
+          "clearance": 0.191
+        },
+        {
+          "x": 84.0,
+          "y": 45.3,
+          "kind": "pad",
+          "pad": "J1.15",
+          "net": "Net-(J1-MP1)",
+          "clearance": 0.216
+        }
+      ]
+    },
+    {
+      "uid": "F002",
+      "id": "MFG-HOLE-SPACING",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "12 hole pair(s) closer than 0.25 mm",
+      "detail": "Thin webs between drills crack or merge during drilling.",
+      "recommendation": "Increase spacing between the holes.",
+      "count": 12,
+      "items": [
+        {
+          "x": 127.25,
+          "y": 77.6,
+          "a": "Module301.",
+          "b": "Module302.",
+          "gap": -2.85
+        },
+        {
+          "x": 127.25,
+          "y": 29.6,
+          "a": "Module301.",
+          "b": "Module302.",
+          "gap": -2.85
+        },
+        {
+          "x": 83.03,
+          "y": 60.76,
+          "a": "via",
+          "b": "USB701.1",
+          "gap": 0.24
+        },
+        {
+          "x": 83.03,
+          "y": 63.74,
+          "a": "via",
+          "b": "USB701.1",
+          "gap": 0.24
+        },
+        {
+          "x": 89.3,
+          "y": 63.74,
+          "a": "via",
+          "b": "USB701.1",
+          "gap": 0.248
+        },
+        {
+          "x": 83.0,
+          "y": 49.21,
+          "a": "via",
+          "b": "J101.1",
+          "gap": 0.248
+        },
+        {
+          "x": 83.0,
+          "y": 52.19,
+          "a": "via",
+          "b": "J101.1",
+          "gap": 0.248
+        },
+        {
+          "x": 89.3,
+          "y": 49.21,
+          "a": "via",
+          "b": "J101.1",
+          "gap": 0.248
+        },
+        {
+          "x": 89.3,
+          "y": 60.76,
+          "a": "via",
+          "b": "USB701.1",
+          "gap": 0.248
+        },
+        {
+          "x": 130.0,
+          "y": 63.02,
+          "a": "via",
+          "b": "via",
+          "gap": 0.25
+        },
+        {
+          "x": 91.17,
+          "y": 67.28,
+          "a": "via",
+          "b": "via",
+          "gap": 0.25
+        },
+        {
+          "x": 130.0,
+          "y": 62.48,
+          "a": "via",
+          "b": "via",
+          "gap": 0.25
+        }
+      ]
+    },
+    {
+      "uid": "F003",
+      "id": "MFG-TECH-CLASS",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "Board is finer than Eurocircuits supports (pattern)",
+      "detail": "No level of Eurocircuits pattern + drill classes accepts these features: via annular ring (outer) 0.025 at pattern 9 (limit 0.1); via annular ring (inner) 0.025 at pattern 9 (limit 0.1); via hole to inner-layer copper 0.155 at pattern 9 (limit 0.2); via hole (finished) 0.3 at drill B (limit 0.35).",
+      "recommendation": "Widen the listed features, or choose a finer process or another class system.",
+      "count": 1,
+      "data": {
+        "system": "eurocircuits-2024",
+        "required": null,
+        "measured": {
+          "aspect_ratio": 3.824,
+          "drill_npth": 0.8,
+          "drill_pth": 0.5,
+          "drill_via": 0.3,
+          "gap_inner": 0.13,
+          "gap_outer": 0.125,
+          "hole_to_copper_inner_pth": 0.2305,
+          "hole_to_copper_inner_via": 0.155,
+          "microvias": 0.0,
+          "ring_pth_inner": 0.1,
+          "ring_pth_outer": 0.1,
+          "ring_via_inner": 0.025,
+          "ring_via_outer": 0.025,
+          "thickness_max": 1.5296,
+          "track_inner": 0.15,
+          "track_outer": 0.13
+        },
+        "status": "verified"
+      }
+    },
+    {
+      "uid": "F004",
+      "id": "MFG-THT-ANNULAR",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "2 plated hole pad(s) with annular ring < 0.15 mm",
+      "detail": "Thin rings lift during hand or wave soldering and give weak solder fillets.",
+      "recommendation": "Enlarge the pads; a ring of >= 0.25 mm is a good target for hand-soldered parts.",
+      "refs": [
+        "SW501"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "x": 131.07,
+          "y": 64.12,
+          "pad": "SW501.4",
+          "annular": 0.15,
+          "drill": 0.9
+        },
+        {
+          "x": 131.07,
+          "y": 68.42,
+          "pad": "SW501.5",
+          "annular": 0.15,
+          "drill": 0.9
+        }
+      ]
+    },
+    {
+      "uid": "F005",
+      "id": "MFG-VIA",
+      "severity": "major",
+      "category": "manufacturing",
+      "title": "444 via(s) with annular ring below 0.100 mm",
+      "detail": "Drill wander can break out of a thin annular ring, giving intermittent or open connections.",
+      "recommendation": "Increase via pad diameter (size - drill >= 0.25 mm).",
+      "count": 444,
+      "items": [
+        {
+          "x": 86.15,
+          "y": 56.89,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 110.84,
+          "y": 26.68,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 125.16,
+          "y": 41.31,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 109.99,
+          "y": 64.67,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 105.39,
+          "y": 45.76,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 104.98,
+          "y": 48.43,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 121.79,
+          "y": 30.96,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 86.86,
+          "y": 47.92,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 118.24,
+          "y": 31.7,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 86.12,
+          "y": 55.73,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 117.84,
+          "y": 68.88,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 91.38,
+          "y": 55.91,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 85.02,
+          "y": 78.16,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 88.47,
+          "y": 67.28,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 89.4,
+          "y": 63.2,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 81.81,
+          "y": 75.45,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 108.33,
+          "y": 80.2,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 109.64,
+          "y": 63.63,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 105.15,
+          "y": 64.7,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 99.97,
+          "y": 38.17,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 99.65,
+          "y": 36.12,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 116.35,
+          "y": 51.65,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 82.95,
+          "y": 61.3,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 114.33,
+          "y": 63.63,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        },
+        {
+          "x": 132.0,
+          "y": 46.61,
+          "net": "GND",
+          "drill": 0.3,
+          "size": 0.45,
+          "annular": 0.075
+        }
+      ],
+      "items_truncated": 419
+    },
+    {
+      "uid": "F006",
+      "id": "ASM-FIDUCIALS",
+      "severity": "major",
+      "category": "assembly",
+      "title": "No fiducials on the top side (54 SMD parts)",
+      "detail": "Pick-and-place machines need >= 2 global fiducials per populated side for accurate placement.",
+      "recommendation": "Add 2-3 fiducials in opposite corners of the top side, or confirm that the panel rails carry them.",
+      "count": 1,
+      "data": {
+        "side": "top",
+        "smd_parts": 54
+      }
+    },
+    {
+      "uid": "F007",
+      "id": "ASM-FIDUCIALS",
+      "severity": "major",
+      "category": "assembly",
+      "title": "No fiducials on the bottom side (14 SMD parts)",
+      "detail": "Pick-and-place machines need >= 2 global fiducials per populated side for accurate placement.",
+      "recommendation": "Add 2-3 fiducials in opposite corners of the bottom side, or confirm that the panel rails carry them.",
+      "count": 1,
+      "data": {
+        "side": "bottom",
+        "smd_parts": 14
+      }
+    },
+    {
+      "uid": "F008",
+      "id": "ASM-TOMBSTONE",
+      "severity": "major",
+      "category": "assembly",
+      "title": "9 small part(s) with unbalanced pad heating",
+      "detail": "One pad heats much slower than the other (solid plane, wide track or via); surface tension then lifts the part on end during reflow (tombstoning/open joint).",
+      "recommendation": "Use thermal reliefs on the plane connection and equal-width tracks on both pads.",
+      "refs": [
+        "C101",
+        "C102",
+        "C401",
+        "C501",
+        "C502",
+        "C503",
+        "C707",
+        "C712",
+        "R107"
+      ],
+      "count": 9,
+      "items": [
+        {
+          "ref": "C502",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "1.05 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "C401",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "0.90 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "C712",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "0.80 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "C501",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "1.20 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "C102",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "1.20 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "C101",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "0.80 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "C707",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "1.00 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "R107",
+          "package": "0402",
+          "heavy_pad": "2",
+          "reason": "0.90 mm of track",
+          "severity": "major"
+        },
+        {
+          "ref": "C503",
+          "package": "0402",
+          "heavy_pad": "1",
+          "reason": "0.70 mm of track",
+          "severity": "major"
+        }
+      ]
+    },
+    {
+      "uid": "F009",
+      "id": "ELEC-FLOATING",
+      "severity": "major",
+      "category": "electrical",
+      "title": "1 input/power pin(s) left unconnected",
+      "detail": "Floating CMOS inputs oscillate, draw extra current and cause random behaviour; unconnected power pins leave parts of the IC unpowered.",
+      "recommendation": "Tie unused inputs to a defined level (per datasheet) and connect all power pins.",
+      "refs": [
+        "Module301"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "pad": "Module301.99",
+          "pinfunction": "PMIC_ENABLE",
+          "pintype": "input",
+          "severity": "major"
+        }
+      ]
+    },
+    {
+      "uid": "F010",
+      "id": "TEST-POWER-ACCESS",
+      "severity": "major",
+      "category": "testability",
+      "title": "4 power net(s) cannot be probed",
+      "detail": "Rails without probe access cannot be verified on the production tester.",
+      "recommendation": "Add a >= 0.9 mm test pad on the top side for each listed rail.",
+      "nets": [
+        "+1V8",
+        "+BATT",
+        "/CM5/PWR_BUT",
+        "HDMI_+5V"
+      ],
+      "count": 4,
+      "items": [
+        {
+          "net": "+1V8",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "+BATT",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/PWR_BUT",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "HDMI_+5V",
+          "reason": "no accessible pad on the top side"
+        }
+      ]
+    },
+    {
+      "uid": "F011",
+      "id": "DOC-SCH-SYNC",
+      "severity": "major",
+      "category": "documentation",
+      "title": "1 board footprint(s) not in the schematic",
+      "detail": "Extra footprints are not in the BOM/netlist (unless intended as board-only).",
+      "recommendation": "Mark them 'Not in schematic' (board only) or add symbols.",
+      "refs": [
+        "REF**"
+      ],
+      "count": 1
+    },
+    {
+      "uid": "F012",
+      "id": "MFG-ACID-TRAP",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "35 acute track junction(s) (< 80 deg)",
+      "detail": "Acute copper angles trap etchant and can over-etch, creating thin necks.",
+      "recommendation": "Re-route the junctions with 45/90 degree entries.",
+      "count": 35,
+      "items": [
+        {
+          "x": 120.68,
+          "y": 38.72,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD1_P",
+          "angle": 45.0
+        },
+        {
+          "x": 121.87,
+          "y": 39.91,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD1_P",
+          "angle": 45.0
+        },
+        {
+          "x": 120.77,
+          "y": 35.63,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD2_P",
+          "angle": 45.0
+        },
+        {
+          "x": 124.85,
+          "y": 62.95,
+          "layer": "B.Cu",
+          "net": "+3V3_PI",
+          "angle": 45.0
+        },
+        {
+          "x": 104.65,
+          "y": 65.42,
+          "layer": "In3.Cu",
+          "net": "+3V3_PI",
+          "angle": 45.0
+        },
+        {
+          "x": 88.36,
+          "y": 57.47,
+          "layer": "F.Cu",
+          "net": "+5V",
+          "angle": 45.0
+        },
+        {
+          "x": 84.12,
+          "y": 67.29,
+          "layer": "F.Cu",
+          "net": "VBUS_USB2.0",
+          "angle": 45.0
+        },
+        {
+          "x": 121.7,
+          "y": 36.3,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD2_N",
+          "angle": 45.0
+        },
+        {
+          "x": 120.41,
+          "y": 38.45,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD1_N",
+          "angle": 45.0
+        },
+        {
+          "x": 121.27,
+          "y": 39.31,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD1_N",
+          "angle": 45.0
+        },
+        {
+          "x": 121.6,
+          "y": 39.64,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD1_N",
+          "angle": 45.0
+        },
+        {
+          "x": 119.89,
+          "y": 37.66,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD1_N",
+          "angle": 45.0
+        },
+        {
+          "x": 105.1,
+          "y": 31.76,
+          "layer": "F.Cu",
+          "net": "M2_3V3",
+          "angle": 45.0
+        },
+        {
+          "x": 121.47,
+          "y": 31.7,
+          "layer": "F.Cu",
+          "net": "M2_3V3",
+          "angle": 45.0
+        },
+        {
+          "x": 115.42,
+          "y": 42.1,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.TX_N",
+          "angle": 31.0
+        },
+        {
+          "x": 117.94,
+          "y": 39.58,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.TX_N",
+          "angle": 11.3
+        },
+        {
+          "x": 117.52,
+          "y": 40.0,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.TX_N",
+          "angle": 11.3
+        },
+        {
+          "x": 116.68,
+          "y": 40.84,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.TX_N",
+          "angle": 11.3
+        },
+        {
+          "x": 116.26,
+          "y": 41.26,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.TX_N",
+          "angle": 11.3
+        },
+        {
+          "x": 126.89,
+          "y": 74.0,
+          "layer": "B.Cu",
+          "net": "/CM5/PCIE_PI.PWR_EN",
+          "angle": 45.0
+        },
+        {
+          "x": 126.89,
+          "y": 74.06,
+          "layer": "B.Cu",
+          "net": "/CM5/PCIE_PI.PWR_EN",
+          "angle": 45.0
+        },
+        {
+          "x": 114.7,
+          "y": 39.95,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.RX_N",
+          "angle": 31.0
+        },
+        {
+          "x": 115.51,
+          "y": 39.15,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.RX_N",
+          "angle": 18.4
+        },
+        {
+          "x": 113.52,
+          "y": 41.14,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.RX_N",
+          "angle": 18.4
+        },
+        {
+          "x": 114.32,
+          "y": 40.34,
+          "layer": "F.Cu",
+          "net": "/CM5/PCIE_PI.RX_N",
+          "angle": 18.4
+        }
+      ],
+      "items_truncated": 10
+    },
+    {
+      "uid": "F013",
+      "id": "MFG-EDGE-CLEARANCE",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "1 copper item(s) close to the board edge",
+      "detail": "Between 0.30 and 0.38 mm from the edge.",
+      "recommendation": "Add margin where cheap to do so.",
+      "count": 1,
+      "items": [
+        {
+          "x": 133.15,
+          "y": 23.35,
+          "kind": "pad",
+          "pad": "H103.1",
+          "net": "GND",
+          "clearance": 0.372
+        }
+      ]
+    },
+    {
+      "uid": "F014",
+      "id": "MFG-THT-ANNULAR",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "8 plated hole pad(s) with annular ring close to the minimum",
+      "detail": "Rings within 25% of the fab limit.",
+      "recommendation": "Enlarge pads where possible.",
+      "refs": [
+        "J101",
+        "USB701"
+      ],
+      "count": 8,
+      "items": [
+        {
+          "x": 89.2,
+          "y": 52.73,
+          "pad": "J101.1",
+          "annular": 0.18,
+          "drill": 0.5
+        },
+        {
+          "x": 89.2,
+          "y": 48.67,
+          "pad": "J101.1",
+          "annular": 0.18,
+          "drill": 0.5
+        },
+        {
+          "x": 83.1,
+          "y": 52.73,
+          "pad": "J101.1",
+          "annular": 0.18,
+          "drill": 0.5
+        },
+        {
+          "x": 83.1,
+          "y": 48.67,
+          "pad": "J101.1",
+          "annular": 0.18,
+          "drill": 0.5
+        },
+        {
+          "x": 89.2,
+          "y": 64.28,
+          "pad": "USB701.1",
+          "annular": 0.18,
+          "drill": 0.5
+        },
+        {
+          "x": 89.2,
+          "y": 60.22,
+          "pad": "USB701.1",
+          "annular": 0.18,
+          "drill": 0.5
+        },
+        {
+          "x": 83.1,
+          "y": 64.28,
+          "pad": "USB701.1",
+          "annular": 0.18,
+          "drill": 0.5
+        },
+        {
+          "x": 83.1,
+          "y": 60.22,
+          "pad": "USB701.1",
+          "annular": 0.18,
+          "drill": 0.5
+        }
+      ]
+    },
+    {
+      "uid": "F015",
+      "id": "MFG-TRACK-WIDTH",
+      "severity": "minor",
+      "category": "manufacturing",
+      "title": "1379 track segment(s) close to the 0.127 mm fab minimum",
+      "detail": "Narrowest track: 0.130 mm. Over-etching on thin tracks causes opens and lower yield.",
+      "recommendation": "Widen tracks to at least 0.159 mm where space allows, or choose a fab profile that supports them.",
+      "nets": [
+        "+1V8",
+        "+3V3_PI",
+        "/CC1",
+        "/CC2",
+        "/CM5/DPHY0_P.C_N",
+        "/CM5/DPHY0_P.C_P",
+        "/CM5/DPHY0_P.D0_N",
+        "/CM5/DPHY0_P.D0_P",
+        "/CM5/DPHY0_P.D1_N",
+        "/CM5/DPHY0_P.D1_P",
+        "/CM5/DPHY0_P.D2_N",
+        "/CM5/DPHY0_P.D2_P",
+        "/CM5/DPHY0_P.D3_N",
+        "/CM5/DPHY0_P.D3_P",
+        "/CM5/EEPROM_nWP",
+        "/CM5/ETH_PI.TRD0_N",
+        "/CM5/ETH_PI.TRD0_P",
+        "/CM5/ETH_PI.TRD1_N",
+        "/CM5/ETH_PI.TRD1_P",
+        "/CM5/ETH_PI.TRD2_N",
+        "/CM5/ETH_PI.TRD2_P",
+        "/CM5/ETH_PI.TRD3_N",
+        "/CM5/ETH_PI.TRD3_P",
+        "/CM5/HDMI_PI.CEC",
+        "/CM5/HDMI_PI.CK_N",
+        "/CM5/HDMI_PI.CK_P",
+        "/CM5/HDMI_PI.D0_N",
+        "/CM5/HDMI_PI.D0_P",
+        "/CM5/HDMI_PI.D1_N",
+        "/CM5/HDMI_PI.D1_P",
+        "/CM5/HDMI_PI.D2_N",
+        "/CM5/HDMI_PI.D2_P",
+        "/CM5/HDMI_PI.HOTPLUG",
+        "/CM5/HDMI_PI.SCL",
+        "/CM5/HDMI_PI.SDA",
+        "/CM5/PCIE_PI.CLK_N",
+        "/CM5/PCIE_PI.CLK_P",
+        "/CM5/PCIE_PI.RX_N",
+        "/CM5/PCIE_PI.RX_P",
+        "/CM5/PCIE_PI.TX_N",
+        "/CM5/PCIE_PI.TX_P",
+        "/CM5/PWR_BUT",
+        "/CM5/USB2P.D_N",
+        "/CM5/USB2P.D_P",
+        "/PCIe-M2/FB",
+        "/USB_C.D_N",
+        "/USB_C.D_P",
+        "Net-(J1-K_GREEN)",
+        "Net-(J1-K_YELLOW)",
+        "Net-(U1-CS)",
+        "Net-(U1-SDO)"
+      ],
+      "count": 1379,
+      "items": [
+        {
+          "x": 99.52,
+          "y": 33.28,
+          "layer": "F.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 99.92,
+          "y": 33.36,
+          "layer": "F.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 98.54,
+          "y": 33.6,
+          "layer": "F.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 99.04,
+          "y": 33.44,
+          "layer": "F.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 129.46,
+          "y": 45.09,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 101.22,
+          "y": 33.62,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 100.08,
+          "y": 33.44,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 100.48,
+          "y": 33.56,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 129.82,
+          "y": 46.7,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 100.71,
+          "y": 33.59,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 111.87,
+          "y": 33.5,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 130.31,
+          "y": 45.8,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 101.48,
+          "y": 33.59,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 100.95,
+          "y": 33.62,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 101.39,
+          "y": 33.56,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 101.96,
+          "y": 33.58,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 129.89,
+          "y": 44.73,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 129.87,
+          "y": 46.71,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 102.14,
+          "y": 33.54,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 129.89,
+          "y": 45.44,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 101.72,
+          "y": 33.62,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 101.31,
+          "y": 33.59,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 130.31,
+          "y": 43.41,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 102.28,
+          "y": 33.52,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        },
+        {
+          "x": 130.11,
+          "y": 46.51,
+          "layer": "B.Cu",
+          "net": "/CM5/ETH_PI.TRD3_P",
+          "width": 0.13
+        }
+      ],
+      "items_truncated": 1354,
+      "data": {
+        "min_width_mm": 0.13
+      }
+    },
+    {
+      "uid": "F016",
+      "id": "ASM-COMPONENT-EDGE",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "4 component(s) within 0.5 mm of (or over) the edge",
+      "detail": "Parts at the edge collide with panel rails, conveyor clamps and depaneling tools.",
+      "recommendation": "Keep courtyards >= 3.0 mm inside the outline or add breakaway rails.",
+      "refs": [
+        "D605",
+        "D606",
+        "D702",
+        "SW501"
+      ],
+      "count": 4,
+      "items": [
+        {
+          "ref": "D702",
+          "edge_mm": 0.37,
+          "overhang": false
+        },
+        {
+          "ref": "SW501",
+          "edge_mm": 0.49,
+          "overhang": false
+        },
+        {
+          "ref": "D605",
+          "edge_mm": 0.37,
+          "overhang": false
+        },
+        {
+          "ref": "D606",
+          "edge_mm": 0.37,
+          "overhang": false
+        }
+      ]
+    },
+    {
+      "uid": "F017",
+      "id": "ASM-FINE-PITCH",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "11 fine-pitch (<= 0.5 mm) part(s)",
+      "detail": "Fine pitch raises the risk of solder bridges and insufficient joints.",
+      "recommendation": "Use a <= 0.12 mm stencil with reduced apertures, solder-mask dams between pads and AOI after reflow.",
+      "refs": [
+        "D401",
+        "D402",
+        "D403",
+        "J701",
+        "J802",
+        "Module301",
+        "Module302",
+        "U1",
+        "U401",
+        "U402",
+        "U702"
+      ],
+      "count": 11,
+      "items": [
+        {
+          "ref": "U702",
+          "package": "DFN-8-1EP_2x2mm_P0.5mm_EP1.05x1.75mm",
+          "pitch": 0.5
+        },
+        {
+          "ref": "D401",
+          "package": "DFN2510A-10_L2.5-W1.0-P0.50-BL",
+          "pitch": 0.5
+        },
+        {
+          "ref": "J701",
+          "package": "M.2 M Key socket_2230_2242",
+          "pitch": 0.5
+        },
+        {
+          "ref": "D402",
+          "package": "DFN2510A-10_L2.5-W1.0-P0.50-BL",
+          "pitch": 0.5
+        },
+        {
+          "ref": "J802",
+          "package": "Hirose_FH12-22S-0.5SH_1x22-1MP_P0.50mm_Horizontal",
+          "pitch": 0.5
+        },
+        {
+          "ref": "Module301",
+          "package": "Raspberry-Pi-5-Compute-Module_GPIO",
+          "pitch": 0.4
+        },
+        {
+          "ref": "U401",
+          "package": "USON-10_2.5x1.0mm_P0.5mm",
+          "pitch": 0.5
+        },
+        {
+          "ref": "U1",
+          "package": "LGA-16_3x3mm_P0.5mm_LayoutBorder3x5y",
+          "pitch": 0.5
+        },
+        {
+          "ref": "D403",
+          "package": "DFN2510A-10_L2.5-W1.0-P0.50-BL",
+          "pitch": 0.5
+        },
+        {
+          "ref": "U402",
+          "package": "USON-10_2.5x1.0mm_P0.5mm",
+          "pitch": 0.5
+        },
+        {
+          "ref": "Module302",
+          "package": "Raspberry-Pi-5-Compute-Module_HSS",
+          "pitch": 0.4
+        }
+      ]
+    },
+    {
+      "uid": "F018",
+      "id": "ASM-PROCESS",
+      "severity": "minor",
+      "category": "assembly",
+      "title": "Assembly process: SMT top (54 parts) + SMT bottom (14 parts) + THT (5 parts: wave, selective or hand soldering)",
+      "detail": "Each extra process step adds cost and handling (handling = flex & ESD exposure). Bottom SMD + THT usually needs selective soldering or a wave pallet.",
+      "recommendation": "The generated solder jig holds the THT parts for hand soldering.",
+      "refs": [
+        "J1",
+        "J501",
+        "TP104",
+        "TP105",
+        "TP106"
+      ],
+      "count": 1,
+      "data": {
+        "smd_top": 54,
+        "smd_bottom": 14,
+        "tht": 5
+      }
+    },
+    {
+      "uid": "F019",
+      "id": "REL-MOUNTING",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "2 flex-sensitive part(s) within 3 mm of mounting holes",
+      "detail": "Screw torque bends the board locally and cracks MLCCs / BGA joints.",
+      "recommendation": "Keep MLCCs and area-array packages away from screws or use standoffs with washers.",
+      "refs": [
+        "C101",
+        "C709"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "ref": "C709",
+          "hole": "M702"
+        },
+        {
+          "ref": "C101",
+          "hole": "H101"
+        }
+      ]
+    },
+    {
+      "uid": "F020",
+      "id": "REL-SMD-CONNECTOR",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "5 connector(s) without through-hole anchors",
+      "detail": "Mating forces and cable strain go straight into SMD solder joints; pads rip off after repeated use.",
+      "recommendation": "Use connector variants with through-hole shell tabs/pegs, or add an enclosure strain relief.",
+      "refs": [
+        "CN1",
+        "J502",
+        "J503",
+        "J601",
+        "J802"
+      ],
+      "count": 5,
+      "items": [
+        {
+          "ref": "J502",
+          "footprint": "JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J601",
+          "footprint": "JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J503",
+          "footprint": "JST_SUR_BM10B-SURS-TF_1x10-1MP_P0.80mm_Vertical",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "J802",
+          "footprint": "Hirose_FH12-22S-0.5SH_1x22-1MP_P0.50mm_Horizontal",
+          "external": false,
+          "severity": "minor"
+        },
+        {
+          "ref": "CN1",
+          "footprint": "CONN-SMD_2P-P1.00_SM02B-SRSS-TB-LF-SN",
+          "external": false,
+          "severity": "minor"
+        }
+      ]
+    },
+    {
+      "uid": "F021",
+      "id": "REL-THERMAL-PAD",
+      "severity": "minor",
+      "category": "reliability",
+      "title": "1 exposed pad(s) without thermal vias",
+      "detail": "Without vias the exposed pad cannot spread heat; the part runs hot and ages faster.",
+      "recommendation": "Add an array of 0.3 mm vias (tented or filled on the bottom to limit solder voids).",
+      "refs": [
+        "U702"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "U702",
+          "pad": "9",
+          "net": "GND",
+          "pad_mm": "1.1x1.8"
+        }
+      ]
+    },
+    {
+      "uid": "F022",
+      "id": "ELEC-DECOUPLING",
+      "severity": "minor",
+      "category": "electrical",
+      "title": "1 IC power net(s) lack a nearby decoupling capacitor",
+      "detail": "Distant decoupling adds loop inductance: supply noise, brown-out resets and EMC failures that show up unit-to-unit and over temperature.",
+      "recommendation": "Place a 100 nF capacitor within 5 mm of every power pin (plus bulk capacitance per rail).",
+      "refs": [
+        "U602"
+      ],
+      "nets": [
+        "+5V"
+      ],
+      "count": 1,
+      "items": [
+        {
+          "ref": "U602",
+          "net": "+5V",
+          "nearest_cap_mm": 6.3,
+          "severity": "minor"
+        }
+      ]
+    },
+    {
+      "uid": "F023",
+      "id": "ELEC-ESD",
+      "severity": "minor",
+      "category": "electrical",
+      "title": "2 external connector(s) with unprotected signal lines",
+      "detail": "ESD at user-accessible connectors is a top cause of field returns (latent damage, not caught by test).",
+      "recommendation": "Add TVS/ESD diodes close to the connector (e.g. USBLC6 for USB, low-capacitance arrays for data lines).",
+      "refs": [
+        "J101",
+        "USB701"
+      ],
+      "nets": [
+        "/CC1",
+        "/CC2",
+        "/USB/CC1",
+        "/USB/CC2"
+      ],
+      "count": 2,
+      "items": [
+        {
+          "ref": "J101",
+          "nets": [
+            "/CC1",
+            "/CC2"
+          ]
+        },
+        {
+          "ref": "USB701",
+          "nets": [
+            "/USB/CC1",
+            "/USB/CC2"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "F024",
+      "id": "REL-POWER-TRACKS",
+      "severity": "minor",
+      "category": "electrical",
+      "title": "8 power net(s) contain tracks narrower than 0.30 mm",
+      "detail": "Thin power tracks drop voltage and heat up; capacity shown is IPC-2221 at 10 C rise (35 um Cu). Set nets.<name>.max_current_a in the config to turn this into a hard check.",
+      "recommendation": "Widen power tracks where space allows.",
+      "nets": [
+        "+1V8",
+        "+3V3_PI",
+        "+5V",
+        "+BATT",
+        "/CM5/PWR_BUT",
+        "GND",
+        "HDMI_+5V",
+        "M2_3V3"
+      ],
+      "count": 8,
+      "items": [
+        {
+          "net": "+1V8",
+          "min_width_mm": 0.15,
+          "capacity_a": 0.6
+        },
+        {
+          "net": "+3V3_PI",
+          "min_width_mm": 0.15,
+          "capacity_a": 0.6
+        },
+        {
+          "net": "+5V",
+          "min_width_mm": 0.2,
+          "capacity_a": 0.74
+        },
+        {
+          "net": "+BATT",
+          "min_width_mm": 0.2,
+          "capacity_a": 0.74
+        },
+        {
+          "net": "/CM5/PWR_BUT",
+          "min_width_mm": 0.13,
+          "capacity_a": 0.54
+        },
+        {
+          "net": "GND",
+          "min_width_mm": 0.2,
+          "capacity_a": 0.74
+        },
+        {
+          "net": "HDMI_+5V",
+          "min_width_mm": 0.25,
+          "capacity_a": 0.88
+        },
+        {
+          "net": "M2_3V3",
+          "min_width_mm": 0.25,
+          "capacity_a": 0.88
+        }
+      ]
+    },
+    {
+      "uid": "F025",
+      "id": "DOC-CAP-RATING",
+      "severity": "minor",
+      "category": "documentation",
+      "title": "17 capacitor(s) on known rails have no voltage rating",
+      "detail": "Without a rating the derating cannot be verified and purchasing may substitute a low-voltage part.",
+      "recommendation": "Add a 'Voltage' field (e.g. 16V) to the capacitor symbols.",
+      "refs": [
+        "C101",
+        "C102",
+        "C501",
+        "C502",
+        "C503",
+        "C601",
+        "C701",
+        "C702",
+        "C703",
+        "C704",
+        "C705",
+        "C706",
+        "C708",
+        "C709",
+        "C710",
+        "C711",
+        "C712"
+      ],
+      "count": 1
+    },
+    {
+      "uid": "F026",
+      "id": "DOC-MPN",
+      "severity": "minor",
+      "category": "documentation",
+      "title": "43 of 70 part(s) have no part number",
+      "detail": "Unspecified parts get substituted, which changes ratings, footprints and long-term reliability.",
+      "recommendation": "Add MPN fields for the remaining parts.",
+      "refs": [
+        "C101",
+        "C102",
+        "C401",
+        "C501",
+        "C502",
+        "C503",
+        "C601",
+        "C702",
+        "C706",
+        "C707",
+        "C712",
+        "D101",
+        "D502",
+        "D605",
+        "D606",
+        "D701",
+        "D702",
+        "J501",
+        "J502",
+        "J503",
+        "J601",
+        "J701",
+        "J802",
+        "Module301",
+        "Module302",
+        "R101",
+        "R102",
+        "R107",
+        "R108",
+        "R403",
+        "R501",
+        "R502",
+        "R605",
+        "R606",
+        "R706",
+        "R707",
+        "U1",
+        "U401",
+        "U402",
+        "U602",
+        "U701",
+        "U702",
+        "U703"
+      ],
+      "count": 1
+    },
+    {
+      "uid": "F027",
+      "id": "ASM-POLARITY",
+      "severity": "info",
+      "category": "assembly",
+      "title": "Diodes on the top side use 4 different orientations",
+      "detail": "Mixed orientations of polarized parts increase placement and visual-inspection errors.",
+      "recommendation": "Align polarized parts to one or two orientations and mark polarity clearly on silkscreen.",
+      "refs": [
+        "D101",
+        "D401",
+        "D402",
+        "D502",
+        "D605",
+        "D606",
+        "D701",
+        "D702"
+      ],
+      "count": 4,
+      "items": [
+        {
+          "rotation": 0,
+          "refs": [
+            "D502",
+            "D702"
+          ]
+        },
+        {
+          "rotation": 90,
+          "refs": [
+            "D701"
+          ]
+        },
+        {
+          "rotation": 180,
+          "refs": [
+            "D401",
+            "D402"
+          ]
+        },
+        {
+          "rotation": 270,
+          "refs": [
+            "D101",
+            "D605",
+            "D606"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "F028",
+      "id": "TEST-FIXTURE-CLEARANCE",
+      "severity": "info",
+      "category": "testability",
+      "title": "11 probe-side part(s) taller than the fixture clearance",
+      "detail": "The fixture board gets cut-outs for these parts and no probes are placed under them.",
+      "recommendation": "Check the cut-outs in the generated fixture board.",
+      "refs": [
+        "H101",
+        "H102",
+        "H103",
+        "H104",
+        "H105",
+        "J1",
+        "J501",
+        "M702",
+        "TP104",
+        "TP105",
+        "TP106"
+      ],
+      "count": 11,
+      "items": [
+        {
+          "ref": "J1",
+          "height_mm": 11.6,
+          "height_source": "field 'Height'",
+          "bbox": {
+            "x_min": 75.0,
+            "y_min": 23.95,
+            "x_max": 101.23,
+            "y_max": 48.35,
+            "width": 26.23,
+            "height": 24.4
+          },
+          "side": "top"
+        },
+        {
+          "ref": "H105",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 74.2,
+            "y_min": 77.4,
+            "x_max": 82.1,
+            "y_max": 85.3,
+            "width": 7.9,
+            "height": 7.9
+          },
+          "side": "top"
+        },
+        {
+          "ref": "M702",
+          "height_mm": 8.0,
+          "height_source": "3D model",
+          "bbox": {
+            "x_min": 110.05,
+            "y_min": 67.3,
+            "x_max": 117.15,
+            "y_max": 74.4,
+            "width": 7.1,
+            "height": 7.1
+          },
+          "side": "top"
+        },
+        {
+          "ref": "H103",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 129.2,
+            "y_min": 19.4,
+            "x_max": 137.1,
+            "y_max": 27.3,
+            "width": 7.9,
+            "height": 7.9
+          },
+          "side": "top"
+        },
+        {
+          "ref": "H101",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 77.6,
+            "y_min": 53.85,
+            "x_max": 83.9,
+            "y_max": 60.15,
+            "width": 6.3,
+            "height": 6.3
+          },
+          "side": "top"
+        },
+        {
+          "ref": "TP105",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 87.43,
+            "y_min": 56.57,
+            "x_max": 91.43,
+            "y_max": 60.57,
+            "width": 4.0,
+            "height": 4.0
+          },
+          "side": "top"
+        },
+        {
+          "ref": "J501",
+          "height_mm": 6.28,
+          "height_source": "3D model",
+          "bbox": {
+            "x_min": 89.69,
+            "y_min": 68.77,
+            "x_max": 108.59,
+            "y_max": 82.67,
+            "width": 18.9,
+            "height": 13.9
+          },
+          "side": "top"
+        },
+        {
+          "ref": "H104",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 129.2,
+            "y_min": 77.4,
+            "x_max": 137.1,
+            "y_max": 85.3,
+            "width": 7.9,
+            "height": 7.9
+          },
+          "side": "top"
+        },
+        {
+          "ref": "H102",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 74.2,
+            "y_min": 19.4,
+            "x_max": 82.1,
+            "y_max": 27.3,
+            "width": 7.9,
+            "height": 7.9
+          },
+          "side": "top"
+        },
+        {
+          "ref": "TP104",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 127.61,
+            "y_min": 30.98,
+            "x_max": 131.61,
+            "y_max": 34.98,
+            "width": 4.0,
+            "height": 4.0
+          },
+          "side": "top"
+        },
+        {
+          "ref": "TP106",
+          "height_mm": 10.0,
+          "height_source": "default for THT (set a 'Height' field to override)",
+          "bbox": {
+            "x_min": 104.56,
+            "y_min": 58.85,
+            "x_max": 108.56,
+            "y_max": 62.85,
+            "width": 4.0,
+            "height": 4.0
+          },
+          "side": "top"
+        }
+      ]
+    },
+    {
+      "uid": "F029",
+      "id": "TEST-SIGNAL-ACCESS",
+      "severity": "info",
+      "category": "testability",
+      "title": "77 signal net(s) not probed",
+      "detail": "These nets are not covered by the bed-of-nails test.",
+      "recommendation": "Add test pads, raise testplan.max_channels, or accept the gap.",
+      "nets": [
+        "/CC1",
+        "/CC2",
+        "/CM5/BL_GPIO24",
+        "/CM5/CAM_GPIO0",
+        "/CM5/CAM_GPIO1",
+        "/CM5/CS_GPIO18",
+        "/CM5/DC_GPI25",
+        "/CM5/DPHY0_P.C_N",
+        "/CM5/DPHY0_P.C_P",
+        "/CM5/DPHY0_P.D0_N",
+        "/CM5/DPHY0_P.D0_P",
+        "/CM5/DPHY0_P.D1_N",
+        "/CM5/DPHY0_P.D1_P",
+        "/CM5/DPHY0_P.D2_N",
+        "/CM5/DPHY0_P.D2_P",
+        "/CM5/DPHY0_P.D3_N",
+        "/CM5/DPHY0_P.D3_P",
+        "/CM5/EEPROM_nWP",
+        "/CM5/ETH_nLED_ACTIVITY",
+        "/CM5/ETH_PI.TRD0_N",
+        "/CM5/ETH_PI.TRD0_P",
+        "/CM5/ETH_PI.TRD1_N",
+        "/CM5/ETH_PI.TRD1_P",
+        "/CM5/ETH_PI.TRD2_N",
+        "/CM5/ETH_PI.TRD2_P",
+        "/CM5/ETH_PI.TRD3_N",
+        "/CM5/ETH_PI.TRD3_P",
+        "/CM5/GPIO_VREF",
+        "/CM5/HDMI_PI.CEC",
+        "/CM5/HDMI_PI.CK_N",
+        "/CM5/HDMI_PI.CK_P",
+        "/CM5/HDMI_PI.D0_N",
+        "/CM5/HDMI_PI.D0_P",
+        "/CM5/HDMI_PI.D1_N",
+        "/CM5/HDMI_PI.D1_P",
+        "/CM5/HDMI_PI.D2_N",
+        "/CM5/HDMI_PI.D2_P",
+        "/CM5/HDMI_PI.HOTPLUG",
+        "/CM5/HDMI_PI.SCL",
+        "/CM5/HDMI_PI.SDA",
+        "/CM5/MISO_GPIO19",
+        "/CM5/MOSI_GPIO20",
+        "/CM5/nLED_ACTIVITY",
+        "/CM5/nLED_SPEED_100_1000",
+        "/CM5/nRPIBOOT",
+        "/CM5/PCIE_PI.CLK_N",
+        "/CM5/PCIE_PI.CLK_P",
+        "/CM5/PCIE_PI.nCLKREQ",
+        "/CM5/PCIE_PI.nRST",
+        "/CM5/PCIE_PI.nWAKE",
+        "/CM5/PCIE_PI.PWR_EN",
+        "/CM5/PCIE_PI.RX_N",
+        "/CM5/PCIE_PI.RX_P",
+        "/CM5/PCIE_PI.TX_N",
+        "/CM5/PCIE_PI.TX_P",
+        "/CM5/PI_nLED_PWR",
+        "/CM5/PWM",
+        "/CM5/RST_GPIO27",
+        "/CM5/SCL0",
+        "/CM5/SCLK_GPIO21",
+        "/CM5/SDA0",
+        "/CM5/TACHO",
+        "/CM5/USB2P.D_N",
+        "/CM5/USB2P.D_P",
+        "/CM5/VBUS_EN",
+        "/IO/SCL",
+        "/IO/SDA",
+        "/PCIe-M2/FB",
+        "/USB/CC1",
+        "/USB/CC2",
+        "/USB_C.D_N",
+        "/USB_C.D_P",
+        "Net-(J1-K_GREEN)",
+        "Net-(J1-K_YELLOW)",
+        "Net-(J1-MP1)",
+        "Net-(J1-VCC)",
+        "Net-(J701-DAS{slash}~{DSS}{slash}~{LED1})"
+      ],
+      "count": 77,
+      "items": [
+        {
+          "net": "/CC1",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CC2",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/BL_GPIO24",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/CAM_GPIO0",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/CAM_GPIO1",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/CS_GPIO18",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DC_GPI25",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.C_N",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.C_P",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.D0_N",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.D0_P",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.D1_N",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.D1_P",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.D2_N",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.D2_P",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.D3_N",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/DPHY0_P.D3_P",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/EEPROM_nWP",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/ETH_nLED_ACTIVITY",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/ETH_PI.TRD0_N",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/ETH_PI.TRD0_P",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/ETH_PI.TRD1_N",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/ETH_PI.TRD1_P",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/ETH_PI.TRD2_N",
+          "reason": "no accessible pad on the top side"
+        },
+        {
+          "net": "/CM5/ETH_PI.TRD2_P",
+          "reason": "no accessible pad on the top side"
+        }
+      ],
+      "items_truncated": 52
+    },
+    {
+      "uid": "F030",
+      "id": "DOC-DNP",
+      "severity": "info",
+      "category": "documentation",
+      "title": "2 part(s) marked DNP",
+      "detail": "These must be absent on a good unit; they are listed in the visual inspection step.",
+      "refs": [
+        "M701",
+        "R103"
+      ],
+      "count": 1
+    }
+  ],
+  "summary": {
+    "counts": {
+      "critical": 0,
+      "major": 11,
+      "minor": 15,
+      "info": 4
+    },
+    "score": 4,
+    "verdict": "needs review",
+    "total": 30,
+    "waived": 0
+  },
+  "decision_log": [],
+  "warnings": []
+}

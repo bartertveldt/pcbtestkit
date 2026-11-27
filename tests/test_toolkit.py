@@ -3727,3 +3727,74 @@ class TestEnvironmentGrow(unittest.TestCase):
         self.assertEqual(r["error"]["code"], "NOT_FOUND")
         r = ws.call("get_environment_job", {"path": out})
         self.assertFalse(r["ok"])
+
+
+class TestPublishedExamples(unittest.TestCase):
+    """docs/examples as committed: the pages link only to files that are there, the catalog keeps only the boards
+    its .gitignore allows (each with its video), and nothing in it holds a local path."""
+    EX = os.path.join(ROOT, "docs", "examples")
+    TEXT = (".html", ".json", ".md", ".csv", ".kicad_pro", ".kicad_pcb", ".scad", ".py", ".txt", ".log", ".sh")
+
+    def setUp(self):
+        if not os.path.isdir(os.path.join(self.EX, "environment")):
+            self.skipTest("no published examples in this checkout")
+
+    def _files(self, exts):
+        for dirpath, dirs, files in os.walk(self.EX):
+            dirs[:] = [d for d in dirs if d not in ("scenes", "__pycache__", "results")]
+            for f in files:
+                if f.lower().endswith(exts):
+                    yield os.path.join(dirpath, f)
+
+    def test_pages_link_only_to_files_that_are_there(self):
+        import re
+        import urllib.parse
+        link = re.compile(r"""(?:href|src|poster)=['"]([^'"#?]+)""")
+        broken, pages = [], 0
+        for page in self._files((".html",)):
+            with open(page, encoding="utf-8") as fh:
+                text = fh.read()
+            pages += 1
+            for target in set(link.findall(text)):
+                if re.match(r"^(?:[a-z][a-z0-9+.-]*:|//)", target, re.I):
+                    continue                                  # https:, data:, mailto:
+                path = os.path.normpath(os.path.join(os.path.dirname(page), urllib.parse.unquote(target)))
+                if not path.startswith(self.EX + os.sep) or not os.path.exists(path):
+                    broken.append("%s -> %s" % (os.path.relpath(page, self.EX), target))
+        self.assertGreater(pages, 10)
+        self.assertEqual(broken, [])
+
+    def test_catalog_keeps_only_its_listed_boards_with_their_videos(self):
+        sys.path.insert(0, os.path.join(ROOT, "tools"))
+        import regen_examples
+        keep = regen_examples.env_keep()
+        self.assertGreaterEqual(len(keep), 2)
+        here = {}
+        for sdir in glob.glob(os.path.join(self.EX, "environment", "stations", "*")):
+            for f in os.listdir(sdir):
+                if os.path.isdir(os.path.join(sdir, f)):
+                    here[f] = os.path.join(sdir, f)
+        self.assertEqual(sorted(here), sorted(keep))
+        for f, d in here.items():
+            self.assertTrue(glob.glob(os.path.join(d, "*-explainer.mp4")), "%s has no explainer video" % f)
+            self.assertTrue(glob.glob(os.path.join(d, "*-guide.html")), "%s has no guide" % f)
+        for v in ("test-environment.mp4",):
+            self.assertTrue(os.path.exists(os.path.join(self.EX, "environment", v)))
+
+    def test_no_local_paths_or_run_state(self):
+        import re
+        bad = re.compile(r"/Users/[A-Za-z0-9._-]+/|/home/[A-Za-z0-9._-]+/|[A-Za-z]:\\\\?Users\\\\|/var/folders/|"
+                         r"/private/(?:tmp|var)/|\bpcbtk_(?:env|catalog)_\w{4,}")
+        found = []
+        for path in self._files(self.TEXT):
+            with open(path, "rb") as fh:
+                text = fh.read().decode("utf-8", "replace")
+            text = re.sub(r"data:[a-z/+.-]+;base64,[A-Za-z0-9+/=]+", "", text)     # embedded images
+            m = bad.search(text)
+            if m:
+                found.append("%s: %s" % (os.path.relpath(path, self.EX), m.group(0)))
+        self.assertEqual(found, [])
+        state = [os.path.relpath(p, self.EX) for p in self._files(("",))
+                 if os.path.basename(p) in ("sources.json", ".pcbtestkit-station.json") or p.endswith(".kicad_prl")
+                 or os.path.basename(p).startswith(("environment-job", "video-job."))]
+        self.assertEqual(state, [])

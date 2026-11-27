@@ -5,7 +5,8 @@
     python3 tools/regen_examples.py --no-video      minutes instead of half an hour
     python3 tools/regen_examples.py --only sample_sensor
     python3 tools/regen_examples.py --only station  the example test station with four board types
-    python3 tools/regen_examples.py --only environment   a test environment for 128 boards (about an hour)
+    python3 tools/regen_examples.py --only environment   a test environment for 128 boards (about two hours)
+    python3 tools/regen_examples.py --only environment --environment-from DIR   publish an earlier build
 
 Boards: the bundled sample (examples/sample_sensor) and KiCad's own demos pic_programmer, video and
 tiny_tapeout, found next to kicad-cli (macOS app bundle, /usr/share/kicad/demos, Windows install) or in --demos.
@@ -13,12 +14,14 @@ tiny_tapeout is the showcase: a batch of four boards on one fixture, programmed 
 the checks that need no firmware run, the production timing and the test shot with the tested copper lighting
 up. It runs on a copy of the demo with the settings in SHOWCASE. station: the example test station
 (examples/make_station.py) with the sample and three demos, each with its batch, and the station video.
+environment: the catalog run; docs/examples/environment/.gitignore lists the few boards the repository keeps.
 Needs KiCad 9+ (renders) and ffmpeg (video).
 """
 import argparse
 import glob
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -134,13 +137,29 @@ def station(demos: str, no_video: bool) -> None:
     print("== station", "OK" if r.returncode in (0, 1) else "FAILED (exit %d)" % r.returncode)
 
 
-# the environment example: 110 generated boards + KiCad's demos; the repository keeps the environment and station
-# level and a few complete board folders (all 119 boards' outputs are about 2.7 GB)
-ENV_KEEP = 3
+# the environment example: 110 generated boards + KiCad's demos. Every board's outputs together are about 3 GB, so
+# the repository keeps the environment and station level and the board folders its .gitignore allows ("!" lines)
+ENV_OUT = os.path.join(ROOT, "docs", "examples", "environment")
+ENV_IGNORE = os.path.join(ENV_OUT, ".gitignore")
+
+
+def env_keep(path: str = ENV_IGNORE) -> list:
+    """The board folders the repository keeps of the catalog run: the ``!/stations/*/<folder>/`` lines of
+    docs/examples/environment/.gitignore, so git and this script follow one list."""
+    keep = []
+    try:
+        with open(path, encoding="utf-8") as fh:
+            for line in fh:
+                m = re.match(r"!/stations/[^/]+/([^/\s]+)/?$", line.strip())
+                if m:
+                    keep.append(m.group(1))
+    except OSError:
+        pass
+    return keep
 
 
 def environment(demos: str, no_video: bool, built: str = None) -> None:
-    out = os.path.join(ROOT, "docs", "examples", "environment")
+    out = ENV_OUT
     if not built:
         sys.path.insert(0, os.path.join(ROOT, "examples"))
         import make_collection
@@ -152,24 +171,75 @@ def environment(demos: str, no_video: bool, built: str = None) -> None:
         subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "build", col, "--out", built,
                         "--name", "PCB TestKit catalog", "-q"] + vid, cwd=ROOT)
         subprocess.run([sys.executable, "-m", "pcbtestkit", "environment", "add", built, demos, "-q"] + vid, cwd=ROOT)
-    publish_environment(built, out, ENV_KEEP)
-    print("== environment OK:", out)
+    keep = env_keep()
+    if not no_video:
+        film_boards(built, keep)
+    publish_environment(built, out, keep)
+    print("== environment OK:", out, "(the build with every board: %s)" % built)
 
 
-def publish_environment(src: str, out: str, keep: int) -> None:
-    """Copy an environment build for the repository: every environment and station level file, and the first
-    ``keep`` board folders of each station by rank; the pages link only to the boards that are there."""
+def film_boards(built: str, keep) -> None:
+    """The explainer video of every kept board (a build films only its stations): each board's outputs are made
+    again the way the build made them (its station, batch, router and render settings), now with the video."""
+    from pcbtestkit import station as S
+    with open(os.path.join(built, "environment.json"), encoding="utf-8") as fh:
+        env = json.load(fh)
+    with open(os.path.join(built, "environment-spec.json"), encoding="utf-8") as fh:
+        spec = json.load(fh)
+    with open(os.path.join(built, "sources.json"), encoding="utf-8") as fh:
+        sources = json.load(fh)["boards"]
+    by = {b["folder"]: b for b in env["boards"]}
+    cfg = dict({"visuals": spec["visuals"]} if spec.get("visuals") else {},
+               **({"video": {"quality": spec["video_quality"]}} if spec.get("video_quality") else {})) or None
+    for folder in keep:
+        b = by.get(folder) or {}
+        if not b.get("station") or folder not in sources:
+            print("  %s: not on a station of this build, not filmed" % folder)
+            continue
+        sdir = os.path.join(built, "stations", b["station"])
+        if glob.glob(os.path.join(sdir, folder, "*-explainer.mp4")):
+            continue
+        with open(os.path.join(sdir, "facility.json"), encoding="utf-8") as fh:
+            fac = json.load(fh)
+        with open(os.path.join(sdir, "station.json"), encoding="utf-8") as fh:
+            sj = json.load(fh)
+        row = next(r for r in sj["boards"] if r.get("folder") == folder)
+        board = dict(row, project=os.path.normpath(os.path.join(built, sources[folder])))
+        if b.get("entry"):
+            board["entry"] = b["entry"]
+        print("== environment: the explainer of %s ..." % folder, flush=True)
+        res = S.board_outputs({"fac": fac, "board": board, "out_dir": sdir, "route": True, "visuals": True,
+                               "board_videos": True, "router": spec.get("router") or None, "board_cfg": cfg,
+                               "video_workers": os.cpu_count() or 2})
+        if res.get("error") or not (res.get("outputs") or {}).get("video"):
+            print("  %s: no video (%s)" % (folder, res.get("error") or (res.get("video") or {}).get("reason")))
+            continue
+        row["outputs"] = res["outputs"]
+        with open(os.path.join(sdir, "station.json"), "w", encoding="utf-8") as fh:
+            json.dump(sj, fh, indent=2)
+
+
+def publish_environment(src: str, out: str, keep) -> None:
+    """Copy an environment build for the repository: every environment and station level file, and the board
+    folders in ``keep``; the pages link only to the boards that are there. The folder's .gitignore stays."""
     from pcbtestkit import environment as E
     from pcbtestkit.station import station_html
+    rules = None
+    if os.path.exists(os.path.join(out, ".gitignore")):
+        with open(os.path.join(out, ".gitignore"), encoding="utf-8") as fh:
+            rules = fh.read()
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(out)
+    if rules is not None:
+        with open(os.path.join(out, ".gitignore"), "w", encoding="utf-8") as fh:
+            fh.write(rules)
     with open(os.path.join(src, "environment.json"), encoding="utf-8") as fh:
         env = json.load(fh)
     for f in os.listdir(src):
         p = os.path.join(src, f)
         if os.path.isfile(p) and not f.startswith("environment-job") and f != "sources.json":   # sources: local paths
             shutil.copy2(p, os.path.join(out, f))
-    rank = {r["folder"]: r["rank"] for r in env["ranking"]}
+    want = set(keep)
     kept = set()
     for st in env["stations"]:
         sdir = os.path.join(src, "stations", st["name"])
@@ -179,11 +249,12 @@ def publish_environment(src: str, out: str, keep: int) -> None:
             p = os.path.join(sdir, f)
             if os.path.isfile(p) and not f.endswith(".kicad_prl"):
                 shutil.copy2(p, os.path.join(odir, f))
-        mine = sorted(st["boards"], key=lambda b: rank.get(b, 10 ** 6))[:keep]
-        for b in mine:
-            shutil.copytree(os.path.join(sdir, b), os.path.join(odir, b),
-                            ignore=shutil.ignore_patterns("*.kicad_prl", "results", "__pycache__", ".pcbtestkit*"))
-            kept.add(b)
+        for b in st["boards"]:
+            if b in want and os.path.isdir(os.path.join(sdir, b)):
+                shutil.copytree(os.path.join(sdir, b), os.path.join(odir, b),
+                                ignore=shutil.ignore_patterns("*.kicad_prl", "results", "__pycache__", ".pcbtestkit*",
+                                                              "scenes", "video-job.*"))
+                kept.add(b)
         with open(os.path.join(odir, "station.json"), encoding="utf-8") as fh:
             sj = json.load(fh)
         for row in sj["boards"]:
@@ -202,18 +273,23 @@ def publish_environment(src: str, out: str, keep: int) -> None:
     with open(os.path.join(out, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(E.environment_html(env, out))
     E.link_stations(env, out)
+    names = {b["folder"]: b.get("title") or b["name"] for b in env["boards"]}
+    listed = "".join("* [%s](stations/%s/%s/%s-guide.html)\n" % (names.get(f, f), st["name"], f, f)
+                     for st in env["stations"] for f in st["boards"] if f in kept
+                     if os.path.exists(os.path.join(out, "stations", st["name"], f, f + "-guide.html")))
     with open(os.path.join(out, "README.md"), "w", encoding="utf-8") as fh:
-        fh.write("# A test environment for 128 boards\n\n"
+        fh.write("# A test environment for %d boards\n\n"
                  "Made with `pcbtestkit environment build` for 110 boards generated by `examples/make_collection.py` "
                  "(seed 7), then KiCad's demo projects added with `pcbtestkit environment add` (the station video "
                  "shows the demos after the boards it showed first). Start with [index.html](index.html), "
                  "[requirements.md](requirements.md), [constraints.md](constraints.md) (what limits every board) and "
                  "[upgrades.md](upgrades.md) (what an upgrade would gain and cost).\n\n"
-                 "Everything at the environment and station level is here: the stations' KiCad boards, pages and "
-                 "videos, the ranking and every board's profile. Of the boards' own outputs (guide, fixture, nest and "
-                 "clamp parts, jigs, runner: about 23 MB per board, 2.7 GB in all) only the first %d of each station "
-                 "are kept; `python3 tools/regen_examples.py --only environment` makes all of them.\n" % keep)
-
+                 "Everything at the environment and station level is here: the overview video, the stations' KiCad "
+                 "boards, pages and videos, the ranking and every board's profile. Every board's own outputs (guide, "
+                 "report, fixture, nest and clamp parts, jigs, runner) come to about 3 GB, so the repository keeps "
+                 "%d boards, each with its explainer video:\n\n%s\n"
+                 "[.gitignore](.gitignore) lists them; `python3 tools/regen_examples.py --only environment` makes "
+                 "the catalog again and keeps the boards it lists.\n" % (len(env["boards"]), len(kept), listed))
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,0 +1,28 @@
+# What the repository keeps of the catalog run (every board's outputs together are about 3 GB).
+#
+# Kept: everything at the environment and station level (pages, videos, station boards, ranking, profiles) and
+# the board folders on the "!" lines below, each with its explainer video. tools/regen_examples.py reads these
+# lines: it copies, films and links only these boards, so the pages never point at a board that is not here.
+# A full build copied in by hand stays out of git too. To keep another board, add a line for its folder.
+/stations/*/*/
+
+# rank 1 of 128: ten boards on one fixture, the biggest batch in the catalog
+!/stations/*/usb_dongle_09/
+# eight boards programmed over SWD at the same time
+!/stations/*/sensor_20/
+# KiCad demo: a 6-layer Raspberry Pi CM5 carrier, three per fixture
+!/stations/*/CM5_MINIMA_3/
+# KiCad demo: the most complex board, 1,123 parts on 10 layers, programmed over JTAG
+!/stations/*/jetson-agx-thor-baseboard/
+# KiCad demo: the one board that needs station-2 and its large plate
+!/stations/*/video/
+
+# Never published: local paths and the state of a run
+sources.json
+environment-job*
+.pcbtestkit-station.json
+*.kicad_prl
+**/runner/results/
+station_video/
+station_video_parts/
+__pycache__/

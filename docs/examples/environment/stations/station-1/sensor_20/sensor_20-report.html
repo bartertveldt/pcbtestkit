@@ -1,31 +1,158 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Production Test Report</title><style>
-:root{--bg:#f7f7f5;--card:#fff;--fg:#1d1d1f;--muted:#666;--line:#e3e3e0;--board-bg:#e9f1ea;--edge:#222;--crt-top:#3a6ea5;
---crt-bottom:#9a4ea5;--pad-top:#c08a2d;--pad-bottom:#8a5ab5;--pad-tht:#777;--txt:#333;--probe:#0a8f5a;--gnd:#333;--sup:#d13438}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161618;--card:#1f1f22;--fg:#eee;--muted:#aaa;
---line:#333;--board-bg:#1e2a22;--edge:#ddd;--txt:#ccc;--gnd:#ddd}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:1180px;margin:0 auto;padding:24px 16px 64px}h1{font-size:24px;margin:0 0 4px}h2{font-size:18px;margin:32px 0 10px}
-.muted{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}.card b{display:block;font-size:22px}
-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;color:var(--muted);font-weight:600}
-.sev{display:inline-block;padding:1px 8px;border-radius:99px;color:#fff;font-size:12px;font-weight:600}
-.wrap{overflow-x:auto}.small{font-size:12px}code{font-size:12px}.svgbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px}
-details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;border-radius:8px;border:1px solid var(--line)}
-</style></head><body><main>
-<h1>sensor_20 rev A</h1><div class='muted'>sensor_20 &middot; generated 2026-11-27T13:12:55 &middot; PCB TestKit 1.1.2</div>
-<div class='cards'>
-<div class='card'><span class='muted'>Readiness</span><b>needs review</b><span class='muted'>score 86/100</span></div>
-<div class='card'><span class='muted'>critical</span><b style='color:#d13438'>0</b></div>
-<div class='card'><span class='muted'>major</span><b style='color:#e8710a'>2</b></div>
-<div class='card'><span class='muted'>minor</span><b style='color:#c9a400'>1</b></div>
-<div class='card'><span class='muted'>info</span><b style='color:#5b7fa6'>3</b></div>
-<div class='card'><span class='muted'>Test coverage</span><b>100.0%</b><span class='muted'>4/4 nets, 3/3 power</span></div>
-<div class='card'><span class='muted'>Per board (batch of 8)</span><b>1:07</b><span class='muted'>assemble, program, test</span></div>
-</div>
-<div class='muted small'>Board 37.3 x 21.8 mm, 2 copper layers, 1.60 mm thick, 10 components (4 SMD top, 4 SMD bottom, 2 THT).</div>
-<h2>Technology class</h2>
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta http-equiv='Content-Security-Policy' content="default-src 'none'; img-src 'self' data: file:; media-src 'self' file:; style-src 'unsafe-inline'; script-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'"><meta name='referrer' content='no-referrer'><meta name='color-scheme' content='light dark'><meta name='generator' content='PCB TestKit'><meta name='description' content='Weak points, fab class, test scheme, fixture and jigs of sensor_20'><title>sensor_20 - production test report</title><link rel='icon' href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314845a'/%3E%3Cpath d='M8 22V10h7a4 4 0 0 1 0 8H8m12 4h4M20 10h4' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E"><style>
+:root{color-scheme:light dark;
+--bg:#f4f5f7;--surface:#fff;--surface-2:#f8f9fb;--fg:#15171b;--muted:#5d6470;--line:#e2e5ea;--line-2:#d3d8df;
+--accent:#14845a;--accent-2:#0f6e4a;--accent-soft:rgba(20,132,90,.10);--copper:#c0772b;--copper-soft:rgba(192,119,43,.12);
+--ok:#16834f;--ok-soft:rgba(22,131,79,.11);--warn:#a86400;--warn-soft:rgba(208,128,0,.13);--bad:#c62828;--bad-soft:rgba(198,40,40,.10);
+--info:#2f6fb2;--info-soft:rgba(47,111,178,.11);--shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.06);
+--radius:14px;--card:var(--surface);
+--board-bg:#e6f0e8;--edge:#222;--crt-top:#3a6ea5;--crt-bottom:#9a4ea5;--pad-top:#c08a2d;--pad-bottom:#8a5ab5;--pad-tht:#777;
+--txt:#333;--probe:#0a8f5a;--gnd:#333;--sup:#d13438}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#0d0f12;--surface:#161a1f;--surface-2:#1b2027;--fg:#e8eaee;--muted:#9aa3ae;--line:#272d35;--line-2:#333b45;
+--accent:#3ccf8e;--accent-2:#5fe0a6;--accent-soft:rgba(60,207,142,.12);--copper:#e59a4f;--copper-soft:rgba(229,154,79,.13);
+--ok:#46d08f;--ok-soft:rgba(70,208,143,.12);--warn:#f0b13c;--warn-soft:rgba(240,177,60,.13);--bad:#ff6b6b;--bad-soft:rgba(255,107,107,.12);
+--info:#6aa8ef;--info-soft:rgba(106,168,239,.13);--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+--board-bg:#1a2820;--edge:#ddd;--txt:#ccc;--gnd:#ddd}}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,
+"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}a:hover{color:var(--accent-2)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--surface);padding:8px 12px;border-radius:8px;z-index:9}
+.skip:focus{left:12px}
+.wrapx{max-width:1200px;margin:0 auto;padding:0 20px}
+main{max-width:1200px;margin:0 auto;padding:8px 20px 72px}
+h1,h2,h3{line-height:1.2;letter-spacing:-.015em}
+h2{font-size:22px;margin:44px 0 14px;padding-top:6px}h3{font-size:17px;margin:28px 0 10px}
+section{scroll-margin-top:72px}
+p{margin:10px 0}code{font:12.5px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--surface-2);
+border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+.muted{color:var(--muted)}.small{font-size:13px}.nowrap{white-space:nowrap}
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+background:radial-gradient(900px 360px at 0% -20%,var(--accent-soft),transparent 70%),
+radial-gradient(800px 340px at 100% 0%,var(--copper-soft),transparent 70%),var(--surface)}
+.hero::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none' stroke='%23888' stroke-width='1.2' opacity='.5'%3E%3Cpath d='M0 40h40l20 20h50l20-20h30M20 160v-40l20-20h40'/%3E%3Cpath d='M100 0v30l20 20v40l-20 20v50M160 120h-30l-20 20'/%3E%3Ccircle cx='40' cy='40' r='3'/%3E%3Ccircle cx='110' cy='60' r='3'/%3E%3Ccircle cx='80' cy='100' r='3'/%3E%3Ccircle cx='120' cy='90' r='3'/%3E%3C/svg%3E") repeat;opacity:.07;pointer-events:none}
+.hero .wrapx{position:relative;padding-top:26px;padding-bottom:28px}
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:14px}
+.crumbs a{color:var(--muted);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:2px 10px}
+.crumbs a:hover{color:var(--fg);border-color:var(--line-2)}.crumbs .sep{opacity:.6}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.hero h1{font-size:clamp(28px,4.2vw,44px);font-weight:760;margin:6px 0 8px;letter-spacing:-.025em}
+.lead{font-size:16.5px;color:var(--muted);max-width:820px;margin:0}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:3px 11px;font-size:13px;font-weight:600;
+background:var(--surface-2);border:1px solid var(--line);color:var(--fg)}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.pill.ok{background:var(--ok-soft);border-color:transparent;color:var(--ok)}.pill.ok::before{background:var(--ok)}
+.pill.warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}.pill.warn::before{background:var(--warn)}
+.pill.bad{background:var(--bad-soft);border-color:transparent;color:var(--bad)}.pill.bad::before{background:var(--bad)}
+.pill.info{background:var(--info-soft);border-color:transparent;color:var(--info)}.pill.info::before{background:var(--info)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px;
+text-decoration:none;border:1px solid var(--line-2);background:var(--surface);color:var(--fg)}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.primary:hover{background:var(--accent-2);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:26px;font-weight:760;letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}.stat.ok b{color:var(--ok)}.stat.warn b{color:var(--warn)}.stat.bad b{color:var(--bad)}
+/* the page's own short menu: a row of chips under the hero (no side menu) */
+nav.toc{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 82%,transparent);
+-webkit-backdrop-filter:saturate(1.4) blur(10px);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+@supports not (background:color-mix(in srgb,red 50%,blue)){nav.toc{background:var(--bg)}}
+nav.toc .wrapx{display:flex;gap:6px;overflow-x:auto;padding-top:9px;padding-bottom:9px;scrollbar-width:none}
+nav.toc a{flex:0 0 auto;font-size:13px;font-weight:600;text-decoration:none;color:var(--muted);padding:5px 12px;border-radius:99px;
+border:1px solid transparent}
+nav.toc a:hover{color:var(--fg);background:var(--surface);border-color:var(--line)}
+/* media */
+.media{margin:22px 0;background:#000;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
+.media video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;border-radius:0}
+.media figcaption{background:var(--surface);color:var(--muted);font-size:13px;padding:10px 14px;display:flex;gap:10px;
+justify-content:space-between;flex-wrap:wrap}
+.media figcaption b{color:var(--fg)}
+video{max-width:100%;border-radius:10px}img{max-width:100%}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+.gallery .media{margin:0}
+/* cards and grids */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.cards .card b{display:block;font-size:21px;font-weight:720;letter-spacing:-.01em;margin:2px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin:14px 0}
+.svgbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px;box-shadow:var(--shadow)}
+.shot{width:100%;border-radius:var(--radius);border:1px solid var(--line);background:#cfd3e0;box-shadow:var(--shadow);display:block}
+.cap{font-size:13px;color:var(--muted);margin-top:8px}
+img.jig{max-width:100%;image-rendering:pixelated;border-radius:10px;border:1px solid var(--line)}
+/* board and station cards */
+.boards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin:16px 0}
+.bcard{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+overflow:hidden;box-shadow:var(--shadow);transition:transform .15s ease,border-color .15s ease}
+.bcard:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.bcard .thumb{display:flex;align-items:center;justify-content:center;aspect-ratio:16/10;background:
+radial-gradient(400px 200px at 30% 20%,var(--accent-soft),transparent 70%),var(--surface-2);border-bottom:1px solid var(--line)}
+.bcard .thumb img{width:100%;height:100%;object-fit:cover}
+.bcard .thumb svg{width:62%;height:70%}
+.bcard .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.bcard h3{margin:0;font-size:17px}.bcard h3 a{color:var(--fg);text-decoration:none}.bcard h3 a:hover{color:var(--accent)}
+.bcard .why{font-size:13.5px;color:var(--muted);margin:0}
+.bcard .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.bcard .links a{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bcard .links a:hover{border-color:var(--accent)}
+.bcard details video{margin-top:8px;width:100%}
+.bcard.off{opacity:.92}.bcard.off .thumb{background:var(--surface-2)}
+.facts{display:flex;flex-wrap:wrap;gap:6px}
+.fact{font-size:12px;font-weight:600;border-radius:7px;padding:2px 8px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.fact.big{font-size:13px;color:var(--accent);background:var(--accent-soft);border-color:transparent}
+.station{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;align-items:start;margin:18px 0 8px}
+@media (max-width:860px){.station{grid-template-columns:1fr}}
+.station .media{margin:0 0 14px}
+/* tables */
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);margin:12px 0}
+table{width:100%;border-collapse:collapse;background:var(--surface);font-size:14px}
+.wrap>table{border:0}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--surface-2);
+position:sticky;top:0}
+tbody tr:hover td{background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+table.sortable th{cursor:pointer;user-select:none}table.sortable th::after{content:" \2195";opacity:.35}
+table.sortable th[aria-sort=ascending]::after{content:" \2191";opacity:.9}table.sortable th[aria-sort=descending]::after{content:" \2193";opacity:.9}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.ok{color:var(--ok);font-weight:650}.no{color:var(--bad);font-weight:650}
+.sev{display:inline-block;padding:2px 9px;border-radius:99px;color:#fff;font-size:12px;font-weight:700;letter-spacing:.02em}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.tools input,.tools select{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line-2);
+border-radius:10px;padding:8px 12px}
+.tools input{flex:1 1 260px;max-width:420px}
+/* steps */
+.step{display:flex;gap:14px;margin:12px 0;align-items:flex-start}
+.num{flex:0 0 32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;
+display:flex;align-items:center;justify-content:center;font-weight:760;font-size:14px;box-shadow:0 2px 8px var(--accent-soft)}
+.step>div:last-child{padding-top:4px}
+ol,ul{padding-left:22px}li{margin:4px 0}
+details{border-radius:10px}details summary{cursor:pointer;font-weight:600}
+.legend span{display:inline-block;width:12px;height:12px;border-radius:3px;margin:0 4px -1px 12px}
+.chips span{display:inline-block;border-radius:99px;padding:1px 9px;margin:2px;color:#fff;font-size:12px;font-weight:600}
+[id]{scroll-margin-top:64px}
+.callout{border-radius:var(--radius);padding:12px 16px;margin:14px 0;border:1px solid var(--line);background:var(--surface)}
+.callout.ok{background:var(--ok-soft);border-color:transparent;color:var(--fg)}.callout.warn{background:var(--warn-soft);border-color:transparent}
+.callout.bad{background:var(--bad-soft);border-color:transparent}.callout.info{background:var(--info-soft);border-color:transparent}
+.callout .ok,.callout .no{font-weight:700}
+/* footer */
+footer.foot{border-top:1px solid var(--line);color:var(--muted);font-size:13px;background:var(--surface)}
+footer.foot .wrapx{padding-top:18px;padding-bottom:26px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+@media (max-width:560px){.hero .wrapx{padding-top:18px;padding-bottom:20px}.stat{padding:12px}.stat b{font-size:21px}
+h2{font-size:20px;margin-top:34px}main,.wrapx{padding-left:16px;padding-right:16px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+@media print{nav.toc,.skip,.tools,video,.media video{display:none!important}.hero::before{display:none}
+body{background:#fff;color:#000}.card,.bcard,.stat,.wrap,.svgbox,.media{box-shadow:none}
+.bcard,.card,.step,tr,figure{break-inside:avoid}a{color:#000}th{position:static}}
+</style></head><body><a class='skip' href='#content'>Skip to the content</a>
+<header class='hero'><div class='wrapx'><!--pcbtk:context--><div class='crumbs'><a href='../../../index.html'>PCB TestKit catalog</a><span class='sep'>/</span><a href='../station.html'>PCB TestKit catalog station 1</a><span class='sep'>/</span><span>sensor_20 report</span></div><div class='callout info small' style='margin:0 0 14px'>Tested on <b>PCB TestKit catalog station 1</b>: 8 boards per fixture, limited by supplies. <a href='../station.html'>Station page</a></div><!--/pcbtk:context--><div class='kicker'>Production test report</div><h1>sensor_20</h1><p class='lead'>rev A · sensor_20 · 37.3 x 21.8 mm, 2 copper layers, 1.60 mm thick, 10 components (4 SMD top, 4 SMD bottom, 2 THT)</p><div class='pills'><span class='pill ok'>needs review</span><span class='pill warn'>2 major</span></div><div class='actions'><a class='btn primary' href='sensor_20-guide.html'>Open the production guide</a><a class='btn' href='sensor_20-explainer.mp4'>Watch the explainer</a></div><div class='stats'><div class='stat ok'><b>86/100</b><span>readiness score</span></div><div class='stat '><b>0</b><span>critical</span></div><div class='stat warn'><b>2</b><span>major</span></div><div class='stat '><b>1</b><span>minor</span></div><div class='stat '><b>3</b><span>info</span></div><div class='stat '><b>100.0%</b><span>test coverage (4 of 4 nets)</span></div><div class='stat '><b>1:07</b><span>per board, batch of 8</span></div></div></div></header>
+<nav class='toc' aria-label='On this page'><div class='wrapx'><a href='#classes'>Fab classes</a><a href='#findings'>Weak points</a><a href='#map'>Board map</a><a href='#scheme'>Test scheme</a><a href='#fixture'>Fixture</a><a href='#jig'>Solder jig</a><a href='#files'>Files</a></div></nav>
+<main id='content'>
+<h2 id='classes'>Technology class</h2>
 <div class='muted small'>Eurocircuits pattern + drill classes (verified). Needs: <b>3A</b> &middot; PCB proto, STANDARD pool, Defined impedance, RF pool, Semi-flex pool, IMS pool, BINDI pool. Ordered: <b>not set</b>.</div>
 <div class='wrap'><table><tr><th>Parameter</th><th>Board</th><th>Process limit</th><th></th></tr>
 <tr><td>aspect ratio (thickness : drill)</td><td>1.454</td><td>-</td><td></td></tr>
@@ -48,7 +175,7 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <tr><td>Seeed Fusion PCB (standard FR4 specification) <span class='muted small'>(verified)</span></td><td>1oz</td><td>&#10003;</td><td class='small'></td></tr>
 <tr><td>Wurth Elektronik BASIC design rules <span class='muted small'>(verified)</span></td><td>standard</td><td>&#10003;</td><td class='small'></td></tr>
 </table></div>
-<h2>Weak points</h2><div class='wrap'><table><tr><th>#</th><th>Severity</th><th>Finding</th><th>Why it matters / what to do</th><th>Parts / nets</th></tr>
+<h2 id='findings'>Weak points</h2><div class='wrap'><table><tr><th>#</th><th>Severity</th><th>Finding</th><th>Why it matters / what to do</th><th>Parts / nets</th></tr>
 <tr><td class='small'>F001</td><td><span class='sev' style='background:#e8710a'>major</span></td><td><b>No fiducials on the top side (4 SMD parts)</b><br><code>ASM-FIDUCIALS</code> &middot; assembly</td><td>Pick-and-place machines need &gt;= 2 global fiducials per populated side for accurate placement.<br><span class='muted'>Add 2-3 fiducials in opposite corners of the top side, or confirm that the panel rails carry them.</span></td><td class='small'></td></tr>
 <tr><td class='small'>F002</td><td><span class='sev' style='background:#e8710a'>major</span></td><td><b>2 IC power net(s) lack a nearby decoupling capacitor</b><br><code>ELEC-DECOUPLING</code> &middot; electrical</td><td>Distant decoupling adds loop inductance: supply noise, brown-out resets and EMC failures that show up unit-to-unit and over temperature.<br><span class='muted'>Place a 100 nF capacitor within 5 mm of every power pin (plus bulk capacitance per rail).</span></td><td class='small'>U1<br>+3V3, VIN_5V</td></tr>
 <tr><td class='small'>F003</td><td><span class='sev' style='background:#c9a400'>minor</span></td><td><b>2 capacitor(s) on known rails have no voltage rating</b><br><code>DOC-CAP-RATING</code> &middot; documentation</td><td>Without a rating the derating cannot be verified and purchasing may substitute a low-voltage part.<br><span class='muted'>Add a &#x27;Voltage&#x27; field (e.g. 16V) to the capacitor symbols.</span></td><td class='small'>C1, C2</td></tr>
@@ -56,9 +183,9 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <tr><td class='small'>F005</td><td><span class='sev' style='background:#5b7fa6'>info</span></td><td><b>Assembly process: SMT top (4 parts) + THT (2 parts: wave, selective or hand soldering)</b><br><code>ASM-PROCESS</code> &middot; assembly</td><td>Each extra process step adds cost and handling (handling = flex &amp; ESD exposure).<br><span class='muted'>The generated solder jig holds the THT parts for hand soldering.</span></td><td class='small'>J1, J2</td></tr>
 <tr><td class='small'>F006</td><td><span class='sev' style='background:#5b7fa6'>info</span></td><td><b>No manufacturer part numbers in the schematic</b><br><code>DOC-MPN</code> &middot; documentation</td><td>The BOM relies on generic values; the assembler chooses parts.<br><span class='muted'>Add an MPN field (or LCSC/Digikey numbers) to control what gets assembled.</span></td><td class='small'></td></tr>
 </table></div>
-<h2>Board map</h2><div class='muted small'>Courtyards (solid = top, dashed = bottom), pads, probe points (green = measure, red = supply, dark = ground) and finding locations (coloured dots, hover for details).</div>
+<h2 id='map'>Board map</h2><div class='muted small'>Courtyards (solid = top, dashed = bottom), pads, probe points (green = measure, red = supply, dark = ground) and finding locations (coloured dots, hover for details).</div>
 <div class='svgbox'><svg xmlns="http://www.w3.org/2000/svg" viewBox="97.000 97.000 43.300 27.800" width="100%" style="max-height:617px" role="img" aria-label="Board map"><rect x="97.000" y="97.000" width="43.300" height="27.800" fill="var(--board-bg)"/><line x1="100.000" y1="100.000" x2="137.300" y2="100.000" stroke="var(--edge)" stroke-width="0.25"/><line x1="137.300" y1="100.000" x2="137.300" y2="121.800" stroke="var(--edge)" stroke-width="0.25"/><line x1="137.300" y1="121.800" x2="100.000" y2="121.800" stroke="var(--edge)" stroke-width="0.25"/><line x1="100.000" y1="121.800" x2="100.000" y2="100.000" stroke="var(--edge)" stroke-width="0.25"/><polygon points="103.000,103.000 113.500,103.000 113.500,112.000 103.000,112.000" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>J1 PWR_IN (top)</title></polygon><polygon points="104.450,106.200 107.050,106.200 107.050,108.800 104.450,108.800" fill="var(--pad-tht)" opacity="0.75"/><polygon points="109.450,106.200 112.050,106.200 112.050,108.800 109.450,108.800" fill="var(--pad-tht)" opacity="0.75"/><text x="108.250" y="107.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">J1</text><polygon points="115.000,103.000 122.000,103.000 122.000,110.500 115.000,110.500" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>U1 REG+3V3 (top)</title></polygon><polygon points="115.700,108.900 116.700,108.900 116.700,110.900 115.700,110.900" fill="var(--pad-top)" opacity="0.75"/><polygon points="118.000,108.900 119.000,108.900 119.000,110.900 118.000,110.900" fill="var(--pad-top)" opacity="0.75"/><polygon points="120.300,108.900 121.300,108.900 121.300,110.900 120.300,110.900" fill="var(--pad-top)" opacity="0.75"/><polygon points="116.875,102.600 120.125,102.600 120.125,104.600 116.875,104.600" fill="var(--pad-top)" opacity="0.75"/><text x="118.500" y="106.750" font-size="1.1" text-anchor="middle" fill="var(--txt)">U1</text><polygon points="123.500,103.000 125.900,103.000 125.900,104.400 123.500,104.400" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>C1 10uF (top)</title></polygon><polygon points="123.475,103.225 124.375,103.225 124.375,104.175 123.475,104.175" fill="var(--pad-top)" opacity="0.75"/><polygon points="125.025,103.225 125.925,103.225 125.925,104.175 125.025,104.175" fill="var(--pad-top)" opacity="0.75"/><text x="124.700" y="103.700" font-size="1.1" text-anchor="middle" fill="var(--txt)">C1</text><polygon points="127.400,103.000 129.800,103.000 129.800,104.400 127.400,104.400" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>C2 10uF (top)</title></polygon><polygon points="127.375,103.225 128.275,103.225 128.275,104.175 127.375,104.175" fill="var(--pad-top)" opacity="0.75"/><polygon points="128.925,103.225 129.825,103.225 129.825,104.175 128.925,104.175" fill="var(--pad-top)" opacity="0.75"/><text x="128.600" y="103.700" font-size="1.1" text-anchor="middle" fill="var(--txt)">C2</text><polygon points="103.000,113.500 116.200,113.500 116.200,116.100 103.000,116.100" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>J2 SWD (top)</title></polygon><polygon points="103.670,113.950 105.370,113.950 105.370,115.650 103.670,115.650" fill="var(--pad-tht)" opacity="0.75"/><polygon points="106.210,113.950 107.910,113.950 107.910,115.650 106.210,115.650" fill="var(--pad-tht)" opacity="0.75"/><polygon points="108.750,113.950 110.450,113.950 110.450,115.650 108.750,115.650" fill="var(--pad-tht)" opacity="0.75"/><polygon points="111.290,113.950 112.990,113.950 112.990,115.650 111.290,115.650" fill="var(--pad-tht)" opacity="0.75"/><polygon points="113.830,113.950 115.530,113.950 115.530,115.650 113.830,115.650" fill="var(--pad-tht)" opacity="0.75"/><text x="109.600" y="114.800" font-size="1.1" text-anchor="middle" fill="var(--txt)">J2</text><polygon points="117.700,113.500 120.100,113.500 120.100,114.900 117.700,114.900" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>D1 LED (top)</title></polygon><polygon points="117.675,113.725 118.575,113.725 118.575,114.675 117.675,114.675" fill="var(--pad-top)" opacity="0.75"/><polygon points="119.225,113.725 120.125,113.725 120.125,114.675 119.225,114.675" fill="var(--pad-top)" opacity="0.75"/><text x="118.900" y="114.200" font-size="1.1" text-anchor="middle" fill="var(--txt)">D1</text><polygon points="127.000,116.500 129.000,116.500 129.000,118.500 127.000,118.500" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP1 VIN_5V (bottom)</title></polygon><polygon points="127.250,116.750 128.750,116.750 128.750,118.250 127.250,118.250" fill="var(--pad-bottom)" opacity="0.75"/><text x="128.000" y="117.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP1</text><polygon points="120.000,102.500 122.000,102.500 122.000,104.500 120.000,104.500" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP2 GND (bottom)</title></polygon><polygon points="120.250,102.750 121.750,102.750 121.750,104.250 120.250,104.250" fill="var(--pad-bottom)" opacity="0.75"/><text x="121.000" y="103.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP2</text><polygon points="102.500,109.500 104.500,109.500 104.500,111.500 102.500,111.500" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP3 +3V3 (bottom)</title></polygon><polygon points="102.750,109.750 104.250,109.750 104.250,111.250 102.750,111.250" fill="var(--pad-bottom)" opacity="0.75"/><text x="103.500" y="110.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP3</text><polygon points="127.000,102.500 129.000,102.500 129.000,104.500 127.000,104.500" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP4 SWDIO (bottom)</title></polygon><polygon points="127.250,102.750 128.750,102.750 128.750,104.250 127.250,104.250" fill="var(--pad-bottom)" opacity="0.75"/><text x="128.000" y="103.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP4</text><circle cx="128.000" cy="117.500" r="0.9" fill="none" stroke="var(--sup)" stroke-width="0.35"><title>PP01 VIN_5V (CH01)</title></circle><text x="129.100" y="116.500" font-size="1.2" fill="var(--sup)" font-weight="bold">PP01</text><circle cx="105.750" cy="107.500" r="0.9" fill="none" stroke="var(--sup)" stroke-width="0.35"><title>PP02 VIN_5V (supply)</title></circle><text x="106.850" y="106.500" font-size="1.2" fill="var(--sup)" font-weight="bold">PP02</text><circle cx="121.000" cy="103.500" r="0.9" fill="none" stroke="var(--gnd)" stroke-width="0.35"><title>PP03 GND (ground)</title></circle><text x="122.100" y="102.500" font-size="1.2" fill="var(--gnd)" font-weight="bold">PP03</text><circle cx="110.750" cy="107.500" r="0.9" fill="none" stroke="var(--gnd)" stroke-width="0.35"><title>PP04 GND (ground)</title></circle><text x="111.850" y="106.500" font-size="1.2" fill="var(--gnd)" font-weight="bold">PP04</text><circle cx="103.500" cy="110.500" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP05 +3V3 (CH02)</title></circle><text x="104.600" y="109.500" font-size="1.2" fill="var(--probe)" font-weight="bold">PP05</text><circle cx="128.000" cy="103.500" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP06 SWDIO (CH03)</title></circle><text x="129.100" y="102.500" font-size="1.2" fill="var(--probe)" font-weight="bold">PP06</text><circle cx="112.140" cy="114.800" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP07 SWCLK (program)</title></circle><text x="113.240" y="113.800" font-size="1.2" fill="var(--probe)" font-weight="bold">PP07</text><circle cx="114.680" cy="114.800" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP08 NRST (program)</title></circle><text x="115.780" y="113.800" font-size="1.2" fill="var(--probe)" font-weight="bold">PP08</text></svg></div>
-<h2>Test scheme</h2><div class='muted small'>Probe side: <b>bottom</b> &middot; pogo P75 (receptacle), drill 1.40 mm, min pitch 1.91 mm &middot; supply: VIN_5V @ 5.0 V</div>
+<h2 id='scheme'>Test scheme</h2><div class='muted small'>Probe side: <b>bottom</b> &middot; pogo P75 (receptacle), drill 1.40 mm, min pitch 1.91 mm &middot; supply: VIN_5V @ 5.0 V</div>
 <div class='wrap'><table><tr><th>Probe</th><th>Net</th><th>Role</th><th>Location (mm)</th><th>Target</th><th>Channel / header pin</th><th>Divider</th><th>Expected</th></tr>
 <tr><td>PP01</td><td>VIN_5V</td><td>supply</td><td>128.00, 117.50</td><td>TP1.1 (testpoint)</td><td>CH01 / 3</td><td>-</td><td>4.75 .. 5.25 V</td></tr>
 <tr><td>PP02</td><td>VIN_5V</td><td>supply</td><td>105.75, 107.50</td><td>J1.1 (tht)</td><td>-</td><td>-</td><td></td></tr>
@@ -78,11 +205,11 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <li><b>Signal levels (idle)</b> <span class='muted'>(voltage, 1 checks)</span> </li>
 <li><b>Remove power</b> <span class='muted'>(power)</span> </li>
 </ol>
-<h2>Fixture board</h2><div class='muted small'>64 pogo pin(s), 8 site(s), outline rect. The router left 10 of 119 connection(s) unrouted (S1_VIN, GND, S3_VIN, S4_VIN): route them in KiCad, run DRC and order it.</div>
+<h2 id='fixture'>Fixture board</h2><div class='muted small'>64 pogo pin(s), 8 site(s), outline rect. The router left 10 of 119 connection(s) unrouted (S1_VIN, GND, S3_VIN, S4_VIN): route them in KiCad, run DRC and order it.</div>
 <div class='small' style='color:#e8710a'>&#9888; the router left 10 of 119 connection(s) unrouted (S1_VIN, GND, S3_VIN, S4_VIN): route them in KiCad before ordering</div>
 <div class='small'>Batch of <b>8 boards</b>: 8 fixture sites (4 x 2), each with its own header, power terminal and programming connector; the runner tests them one after the other.</div>
 <div class='small'>Programming header <b>J2</b> (swd, pins carry NRST, SWCLK, SWDIO): probed on every pin; fixture connectors PRG1, PRG2, PRG3, PRG4, PRG5, PRG6, PRG7, PRG8 (same).</div>
-<h2>Solder jig</h2><div class='muted small'>192.5 x 66.0 x 17.0 mm, support plane at 15.8 mm. Parts to place: J1, J2.</div>
+<h2 id='jig'>Solder jig</h2><div class='muted small'>192.5 x 66.0 x 17.0 mm, support plane at 15.8 mm. Parts to place: J1, J2.</div>
 <p><img class='jig' alt='Jig top view (board seen from its bottom side)' src='data:image/png;base64,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'></p>
 <div class='wrap'><table><tr><th>Part</th><th>Pocket</th><th>Size</th><th>Depth</th><th>Height source</th></tr>
 <tr><td>J1</td><td>hold</td><td>11.25 x 10.50</td><td>13.80</td><td class='small'>3D shape (KiCad 3D export)</td></tr>
@@ -95,7 +222,7 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <li>SMD top side (4 parts)</li>
 <li>hand-solder top side: J1, J2 - the jig above</li>
 </ol>
-<h2>Files</h2><ul>
+<h2 id='files'>Files</h2><ul>
 <li>spec: <code>sensor_20-spec.json</code></li>
 <li>testplan: <code>sensor_20-testplan.json</code></li>
 <li>nest_stl: <code>sensor_20-fixture-nest.stl</code></li>
@@ -115,8 +242,9 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <li>jig_place_preview: <code>sensor_20-jig-placement.png</code></li>
 <li>jig_meta: <code>sensor_20-jig.json</code></li>
 <li>runner: <code>runner</code></li>
-<li>guide: <code>sensor_20-guide.html</code></li>
+<li>video: <code>sensor_20-explainer.mp4</code></li>
 <li>report: <code>sensor_20-report.html</code></li>
+<li>guide: <code>sensor_20-guide.html</code></li>
 </ul>
 <details><summary>Warnings</summary><ul><li>no schematic found next to the board; schematic-based checks are skipped</li></ul></details>
-</main></body></html>
+</main><footer class='foot'><div class='wrapx'><span>PCB TestKit 1.2.0</span><span>Made on your computer from your KiCad files. This page loads nothing from the internet. Generated 2026-11-27T22:00:35.</span></div></footer></body></html>

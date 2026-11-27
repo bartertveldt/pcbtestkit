@@ -1,7 +1,7 @@
 {
   "schema": "pcbtestkit/spec@1",
-  "generator": "PCB TestKit 1.1.2",
-  "generated": "2026-11-27T13:12:55",
+  "generator": "PCB TestKit 1.2.0",
+  "generated": "2026-11-27T22:00:35",
   "source": {
     "board": "sensor_20.kicad_pcb",
     "schematic": null,

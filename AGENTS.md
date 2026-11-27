@@ -35,7 +35,7 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | Validate class-system JSON | `python3 -m pcbtestkit classes validate` |
 | Build the KiCad Plugin Manager zip | `python3 tools/build_pcm.py` (`--check` validates only) |
 | Install into the local KiCad for a live test | `python3 install.py --version 10.0 --no-ipc`, then Tools > External Plugins > Refresh Plugins |
-| Regenerate the published examples (slow: about 35 min with video) | see CONTRIBUTING.md |
+| Regenerate the published examples (slow: about four hours with video) | see CONTRIBUTING.md |
 
 ### Repository map
 
@@ -68,7 +68,7 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `.claude-plugin/` | Claude Code plugin + marketplace manifests (skill + MCP server). |
 | `pcm/`, `tools/` | KiCad package metadata + icon; build, docs, icon and owner scripts; `sbom.py` (CycloneDX SBOM) and `release_notes.py` for releases. |
 | `SECURITY.md`, `PRIVACY.md`, `THIRD_PARTY_NOTICES.md`, `docs/examples/LICENSES.md` | Disclosure policy and threat model, privacy notice, licences (the examples keep their demo boards' licences). |
-| `docs/` | Human docs; `docs/reference/` is generated; `docs/examples/` are generated outputs. |
+| `docs/` | Human docs; `docs/reference/` is generated; `docs/examples/` are generated outputs (`docs/examples/environment/.gitignore` lists the catalog boards kept). |
 | `tests/test_toolkit.py`, `examples/make_sample.py` | Tests on a generated sample board with seeded weak points. |
 | `examples/make_station.py` | Generates the example test station board (`examples/station/`). |
 | `examples/make_collection.py` | Generates a collection of varied boards to try test environments on. |

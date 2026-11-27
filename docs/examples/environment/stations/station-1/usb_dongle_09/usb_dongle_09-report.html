@@ -1,31 +1,158 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Production Test Report</title><style>
-:root{--bg:#f7f7f5;--card:#fff;--fg:#1d1d1f;--muted:#666;--line:#e3e3e0;--board-bg:#e9f1ea;--edge:#222;--crt-top:#3a6ea5;
---crt-bottom:#9a4ea5;--pad-top:#c08a2d;--pad-bottom:#8a5ab5;--pad-tht:#777;--txt:#333;--probe:#0a8f5a;--gnd:#333;--sup:#d13438}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161618;--card:#1f1f22;--fg:#eee;--muted:#aaa;
---line:#333;--board-bg:#1e2a22;--edge:#ddd;--txt:#ccc;--gnd:#ddd}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.45 -apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:1180px;margin:0 auto;padding:24px 16px 64px}h1{font-size:24px;margin:0 0 4px}h2{font-size:18px;margin:32px 0 10px}
-.muted{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}.card b{display:block;font-size:22px}
-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;color:var(--muted);font-weight:600}
-.sev{display:inline-block;padding:1px 8px;border-radius:99px;color:#fff;font-size:12px;font-weight:600}
-.wrap{overflow-x:auto}.small{font-size:12px}code{font-size:12px}.svgbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px}
-details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;border-radius:8px;border:1px solid var(--line)}
-</style></head><body><main>
-<h1>usb_dongle_09 rev A</h1><div class='muted'>usb_dongle_09 &middot; generated 2026-11-27T13:12:55 &middot; PCB TestKit 1.1.2</div>
-<div class='cards'>
-<div class='card'><span class='muted'>Readiness</span><b>needs review</b><span class='muted'>score 80/100</span></div>
-<div class='card'><span class='muted'>critical</span><b style='color:#d13438'>0</b></div>
-<div class='card'><span class='muted'>major</span><b style='color:#e8710a'>3</b></div>
-<div class='card'><span class='muted'>minor</span><b style='color:#c9a400'>1</b></div>
-<div class='card'><span class='muted'>info</span><b style='color:#5b7fa6'>3</b></div>
-<div class='card'><span class='muted'>Test coverage</span><b>100.0%</b><span class='muted'>3/3 nets, 3/3 power</span></div>
-<div class='card'><span class='muted'>Per board (batch of 10)</span><b>0:32</b><span class='muted'>assemble, program, test</span></div>
-</div>
-<div class='muted small'>Board 24.2 x 15.5 mm, 2 copper layers, 1.60 mm thick, 9 components (3 SMD top, 6 SMD bottom, 0 THT).</div>
-<h2>Technology class</h2>
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><meta http-equiv='Content-Security-Policy' content="default-src 'none'; img-src 'self' data: file:; media-src 'self' file:; style-src 'unsafe-inline'; script-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'"><meta name='referrer' content='no-referrer'><meta name='color-scheme' content='light dark'><meta name='generator' content='PCB TestKit'><meta name='description' content='Weak points, fab class, test scheme, fixture and jigs of usb_dongle_09'><title>usb_dongle_09 - production test report</title><link rel='icon' href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314845a'/%3E%3Cpath d='M8 22V10h7a4 4 0 0 1 0 8H8m12 4h4M20 10h4' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E"><style>
+:root{color-scheme:light dark;
+--bg:#f4f5f7;--surface:#fff;--surface-2:#f8f9fb;--fg:#15171b;--muted:#5d6470;--line:#e2e5ea;--line-2:#d3d8df;
+--accent:#14845a;--accent-2:#0f6e4a;--accent-soft:rgba(20,132,90,.10);--copper:#c0772b;--copper-soft:rgba(192,119,43,.12);
+--ok:#16834f;--ok-soft:rgba(22,131,79,.11);--warn:#a86400;--warn-soft:rgba(208,128,0,.13);--bad:#c62828;--bad-soft:rgba(198,40,40,.10);
+--info:#2f6fb2;--info-soft:rgba(47,111,178,.11);--shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.06);
+--radius:14px;--card:var(--surface);
+--board-bg:#e6f0e8;--edge:#222;--crt-top:#3a6ea5;--crt-bottom:#9a4ea5;--pad-top:#c08a2d;--pad-bottom:#8a5ab5;--pad-tht:#777;
+--txt:#333;--probe:#0a8f5a;--gnd:#333;--sup:#d13438}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--bg:#0d0f12;--surface:#161a1f;--surface-2:#1b2027;--fg:#e8eaee;--muted:#9aa3ae;--line:#272d35;--line-2:#333b45;
+--accent:#3ccf8e;--accent-2:#5fe0a6;--accent-soft:rgba(60,207,142,.12);--copper:#e59a4f;--copper-soft:rgba(229,154,79,.13);
+--ok:#46d08f;--ok-soft:rgba(70,208,143,.12);--warn:#f0b13c;--warn-soft:rgba(240,177,60,.13);--bad:#ff6b6b;--bad-soft:rgba(255,107,107,.12);
+--info:#6aa8ef;--info-soft:rgba(106,168,239,.13);--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+--board-bg:#1a2820;--edge:#ddd;--txt:#ccc;--gnd:#ddd}}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,
+"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}a:hover{color:var(--accent-2)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--surface);padding:8px 12px;border-radius:8px;z-index:9}
+.skip:focus{left:12px}
+.wrapx{max-width:1200px;margin:0 auto;padding:0 20px}
+main{max-width:1200px;margin:0 auto;padding:8px 20px 72px}
+h1,h2,h3{line-height:1.2;letter-spacing:-.015em}
+h2{font-size:22px;margin:44px 0 14px;padding-top:6px}h3{font-size:17px;margin:28px 0 10px}
+section{scroll-margin-top:72px}
+p{margin:10px 0}code{font:12.5px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--surface-2);
+border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+.muted{color:var(--muted)}.small{font-size:13px}.nowrap{white-space:nowrap}
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+background:radial-gradient(900px 360px at 0% -20%,var(--accent-soft),transparent 70%),
+radial-gradient(800px 340px at 100% 0%,var(--copper-soft),transparent 70%),var(--surface)}
+.hero::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none' stroke='%23888' stroke-width='1.2' opacity='.5'%3E%3Cpath d='M0 40h40l20 20h50l20-20h30M20 160v-40l20-20h40'/%3E%3Cpath d='M100 0v30l20 20v40l-20 20v50M160 120h-30l-20 20'/%3E%3Ccircle cx='40' cy='40' r='3'/%3E%3Ccircle cx='110' cy='60' r='3'/%3E%3Ccircle cx='80' cy='100' r='3'/%3E%3Ccircle cx='120' cy='90' r='3'/%3E%3C/svg%3E") repeat;opacity:.07;pointer-events:none}
+.hero .wrapx{position:relative;padding-top:26px;padding-bottom:28px}
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:14px}
+.crumbs a{color:var(--muted);text-decoration:none;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:2px 10px}
+.crumbs a:hover{color:var(--fg);border-color:var(--line-2)}.crumbs .sep{opacity:.6}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.hero h1{font-size:clamp(28px,4.2vw,44px);font-weight:760;margin:6px 0 8px;letter-spacing:-.025em}
+.lead{font-size:16.5px;color:var(--muted);max-width:820px;margin:0}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:3px 11px;font-size:13px;font-weight:600;
+background:var(--surface-2);border:1px solid var(--line);color:var(--fg)}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.pill.ok{background:var(--ok-soft);border-color:transparent;color:var(--ok)}.pill.ok::before{background:var(--ok)}
+.pill.warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}.pill.warn::before{background:var(--warn)}
+.pill.bad{background:var(--bad-soft);border-color:transparent;color:var(--bad)}.pill.bad::before{background:var(--bad)}
+.pill.info{background:var(--info-soft);border-color:transparent;color:var(--info)}.pill.info::before{background:var(--info)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px;
+text-decoration:none;border:1px solid var(--line-2);background:var(--surface);color:var(--fg)}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.primary:hover{background:var(--accent-2);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:26px;font-weight:760;letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}.stat.ok b{color:var(--ok)}.stat.warn b{color:var(--warn)}.stat.bad b{color:var(--bad)}
+/* the page's own short menu: a row of chips under the hero (no side menu) */
+nav.toc{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 82%,transparent);
+-webkit-backdrop-filter:saturate(1.4) blur(10px);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+@supports not (background:color-mix(in srgb,red 50%,blue)){nav.toc{background:var(--bg)}}
+nav.toc .wrapx{display:flex;gap:6px;overflow-x:auto;padding-top:9px;padding-bottom:9px;scrollbar-width:none}
+nav.toc a{flex:0 0 auto;font-size:13px;font-weight:600;text-decoration:none;color:var(--muted);padding:5px 12px;border-radius:99px;
+border:1px solid transparent}
+nav.toc a:hover{color:var(--fg);background:var(--surface);border-color:var(--line)}
+/* media */
+.media{margin:22px 0;background:#000;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
+.media video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000;border-radius:0}
+.media figcaption{background:var(--surface);color:var(--muted);font-size:13px;padding:10px 14px;display:flex;gap:10px;
+justify-content:space-between;flex-wrap:wrap}
+.media figcaption b{color:var(--fg)}
+video{max-width:100%;border-radius:10px}img{max-width:100%}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+.gallery .media{margin:0}
+/* cards and grids */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.cards .card b{display:block;font-size:21px;font-weight:720;letter-spacing:-.01em;margin:2px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin:14px 0}
+.svgbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px;box-shadow:var(--shadow)}
+.shot{width:100%;border-radius:var(--radius);border:1px solid var(--line);background:#cfd3e0;box-shadow:var(--shadow);display:block}
+.cap{font-size:13px;color:var(--muted);margin-top:8px}
+img.jig{max-width:100%;image-rendering:pixelated;border-radius:10px;border:1px solid var(--line)}
+/* board and station cards */
+.boards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin:16px 0}
+.bcard{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+overflow:hidden;box-shadow:var(--shadow);transition:transform .15s ease,border-color .15s ease}
+.bcard:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.bcard .thumb{display:flex;align-items:center;justify-content:center;aspect-ratio:16/10;background:
+radial-gradient(400px 200px at 30% 20%,var(--accent-soft),transparent 70%),var(--surface-2);border-bottom:1px solid var(--line)}
+.bcard .thumb img{width:100%;height:100%;object-fit:cover}
+.bcard .thumb svg{width:62%;height:70%}
+.bcard .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.bcard h3{margin:0;font-size:17px}.bcard h3 a{color:var(--fg);text-decoration:none}.bcard h3 a:hover{color:var(--accent)}
+.bcard .why{font-size:13.5px;color:var(--muted);margin:0}
+.bcard .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.bcard .links a{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:3px 9px}
+.bcard .links a:hover{border-color:var(--accent)}
+.bcard details video{margin-top:8px;width:100%}
+.bcard.off{opacity:.92}.bcard.off .thumb{background:var(--surface-2)}
+.facts{display:flex;flex-wrap:wrap;gap:6px}
+.fact{font-size:12px;font-weight:600;border-radius:7px;padding:2px 8px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.fact.big{font-size:13px;color:var(--accent);background:var(--accent-soft);border-color:transparent}
+.station{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;align-items:start;margin:18px 0 8px}
+@media (max-width:860px){.station{grid-template-columns:1fr}}
+.station .media{margin:0 0 14px}
+/* tables */
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);margin:12px 0}
+table{width:100%;border-collapse:collapse;background:var(--surface);font-size:14px}
+.wrap>table{border:0}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--surface-2);
+position:sticky;top:0}
+tbody tr:hover td{background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+table.sortable th{cursor:pointer;user-select:none}table.sortable th::after{content:" \2195";opacity:.35}
+table.sortable th[aria-sort=ascending]::after{content:" \2191";opacity:.9}table.sortable th[aria-sort=descending]::after{content:" \2193";opacity:.9}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+.ok{color:var(--ok);font-weight:650}.no{color:var(--bad);font-weight:650}
+.sev{display:inline-block;padding:2px 9px;border-radius:99px;color:#fff;font-size:12px;font-weight:700;letter-spacing:.02em}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.tools input,.tools select{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line-2);
+border-radius:10px;padding:8px 12px}
+.tools input{flex:1 1 260px;max-width:420px}
+/* steps */
+.step{display:flex;gap:14px;margin:12px 0;align-items:flex-start}
+.num{flex:0 0 32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;
+display:flex;align-items:center;justify-content:center;font-weight:760;font-size:14px;box-shadow:0 2px 8px var(--accent-soft)}
+.step>div:last-child{padding-top:4px}
+ol,ul{padding-left:22px}li{margin:4px 0}
+details{border-radius:10px}details summary{cursor:pointer;font-weight:600}
+.legend span{display:inline-block;width:12px;height:12px;border-radius:3px;margin:0 4px -1px 12px}
+.chips span{display:inline-block;border-radius:99px;padding:1px 9px;margin:2px;color:#fff;font-size:12px;font-weight:600}
+[id]{scroll-margin-top:64px}
+.callout{border-radius:var(--radius);padding:12px 16px;margin:14px 0;border:1px solid var(--line);background:var(--surface)}
+.callout.ok{background:var(--ok-soft);border-color:transparent;color:var(--fg)}.callout.warn{background:var(--warn-soft);border-color:transparent}
+.callout.bad{background:var(--bad-soft);border-color:transparent}.callout.info{background:var(--info-soft);border-color:transparent}
+.callout .ok,.callout .no{font-weight:700}
+/* footer */
+footer.foot{border-top:1px solid var(--line);color:var(--muted);font-size:13px;background:var(--surface)}
+footer.foot .wrapx{padding-top:18px;padding-bottom:26px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+@media (max-width:560px){.hero .wrapx{padding-top:18px;padding-bottom:20px}.stat{padding:12px}.stat b{font-size:21px}
+h2{font-size:20px;margin-top:34px}main,.wrapx{padding-left:16px;padding-right:16px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+@media print{nav.toc,.skip,.tools,video,.media video{display:none!important}.hero::before{display:none}
+body{background:#fff;color:#000}.card,.bcard,.stat,.wrap,.svgbox,.media{box-shadow:none}
+.bcard,.card,.step,tr,figure{break-inside:avoid}a{color:#000}th{position:static}}
+</style></head><body><a class='skip' href='#content'>Skip to the content</a>
+<header class='hero'><div class='wrapx'><!--pcbtk:context--><div class='crumbs'><a href='../../../index.html'>PCB TestKit catalog</a><span class='sep'>/</span><a href='../station.html'>PCB TestKit catalog station 1</a><span class='sep'>/</span><span>usb_dongle_09 report</span></div><div class='callout info small' style='margin:0 0 14px'>Tested on <b>PCB TestKit catalog station 1</b>: 10 boards per fixture, limited by plate. <a href='../station.html'>Station page</a></div><!--/pcbtk:context--><div class='kicker'>Production test report</div><h1>usb_dongle_09</h1><p class='lead'>rev A · usb_dongle_09 · 24.2 x 15.5 mm, 2 copper layers, 1.60 mm thick, 9 components (3 SMD top, 6 SMD bottom, 0 THT)</p><div class='pills'><span class='pill ok'>needs review</span><span class='pill warn'>3 major</span></div><div class='actions'><a class='btn primary' href='usb_dongle_09-guide.html'>Open the production guide</a><a class='btn' href='usb_dongle_09-explainer.mp4'>Watch the explainer</a></div><div class='stats'><div class='stat ok'><b>80/100</b><span>readiness score</span></div><div class='stat '><b>0</b><span>critical</span></div><div class='stat warn'><b>3</b><span>major</span></div><div class='stat '><b>1</b><span>minor</span></div><div class='stat '><b>3</b><span>info</span></div><div class='stat '><b>100.0%</b><span>test coverage (3 of 3 nets)</span></div><div class='stat '><b>0:32</b><span>per board, batch of 10</span></div></div></div></header>
+<nav class='toc' aria-label='On this page'><div class='wrapx'><a href='#classes'>Fab classes</a><a href='#findings'>Weak points</a><a href='#map'>Board map</a><a href='#scheme'>Test scheme</a><a href='#fixture'>Fixture</a><a href='#jig'>Solder jig</a><a href='#files'>Files</a></div></nav>
+<main id='content'>
+<h2 id='classes'>Technology class</h2>
 <div class='muted small'>Eurocircuits pattern + drill classes (verified). Needs: <b>3A</b> &middot; PCB proto, STANDARD pool, Defined impedance, RF pool, Semi-flex pool, IMS pool, BINDI pool. Ordered: <b>not set</b>.</div>
 <div class='wrap'><table><tr><th>Parameter</th><th>Board</th><th>Process limit</th><th></th></tr>
 <tr><td>laser microvias</td><td>0.000</td><td>-</td><td></td></tr>
@@ -45,7 +172,7 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <tr><td>Seeed Fusion PCB (standard FR4 specification) <span class='muted small'>(verified)</span></td><td>1oz</td><td>&#10003;</td><td class='small'></td></tr>
 <tr><td>Wurth Elektronik BASIC design rules <span class='muted small'>(verified)</span></td><td>standard</td><td>&#10003;</td><td class='small'></td></tr>
 </table></div>
-<h2>Weak points</h2><div class='wrap'><table><tr><th>#</th><th>Severity</th><th>Finding</th><th>Why it matters / what to do</th><th>Parts / nets</th></tr>
+<h2 id='findings'>Weak points</h2><div class='wrap'><table><tr><th>#</th><th>Severity</th><th>Finding</th><th>Why it matters / what to do</th><th>Parts / nets</th></tr>
 <tr><td class='small'>F001</td><td><span class='sev' style='background:#e8710a'>major</span></td><td><b>No fiducials on the top side (3 SMD parts)</b><br><code>ASM-FIDUCIALS</code> &middot; assembly</td><td>Pick-and-place machines need &gt;= 2 global fiducials per populated side for accurate placement.<br><span class='muted'>Add 2-3 fiducials in opposite corners of the top side, or confirm that the panel rails carry them.</span></td><td class='small'></td></tr>
 <tr><td class='small'>F002</td><td><span class='sev' style='background:#e8710a'>major</span></td><td><b>2 IC power net(s) lack a nearby decoupling capacitor</b><br><code>ELEC-DECOUPLING</code> &middot; electrical</td><td>Distant decoupling adds loop inductance: supply noise, brown-out resets and EMC failures that show up unit-to-unit and over temperature.<br><span class='muted'>Place a 100 nF capacitor within 5 mm of every power pin (plus bulk capacitance per rail).</span></td><td class='small'>U1<br>+3V3, VBUS</td></tr>
 <tr><td class='small'>F003</td><td><span class='sev' style='background:#e8710a'>major</span></td><td><b>No supply net identified for powered tests</b><br><code>TEST-SUPPLY</code> &middot; testability</td><td>no power net reaches a connector; set supply.net<br><span class='muted'>Set supply.net (and supply.voltage) in pcbtestkit.json.</span></td><td class='small'></td></tr>
@@ -54,9 +181,9 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <tr><td class='small'>F006</td><td><span class='sev' style='background:#5b7fa6'>info</span></td><td><b>Assembly process: SMT top (3 parts)</b><br><code>ASM-PROCESS</code> &middot; assembly</td><td>Each extra process step adds cost and handling (handling = flex &amp; ESD exposure).<br><span class='muted'></span></td><td class='small'></td></tr>
 <tr><td class='small'>F007</td><td><span class='sev' style='background:#5b7fa6'>info</span></td><td><b>No manufacturer part numbers in the schematic</b><br><code>DOC-MPN</code> &middot; documentation</td><td>The BOM relies on generic values; the assembler chooses parts.<br><span class='muted'>Add an MPN field (or LCSC/Digikey numbers) to control what gets assembled.</span></td><td class='small'></td></tr>
 </table></div>
-<h2>Board map</h2><div class='muted small'>Courtyards (solid = top, dashed = bottom), pads, probe points (green = measure, red = supply, dark = ground) and finding locations (coloured dots, hover for details).</div>
+<h2 id='map'>Board map</h2><div class='muted small'>Courtyards (solid = top, dashed = bottom), pads, probe points (green = measure, red = supply, dark = ground) and finding locations (coloured dots, hover for details).</div>
 <div class='svgbox'><svg xmlns="http://www.w3.org/2000/svg" viewBox="97.000 97.000 30.200 21.500" width="100%" style="max-height:680px" role="img" aria-label="Board map"><rect x="97.000" y="97.000" width="30.200" height="21.500" fill="var(--board-bg)"/><line x1="100.000" y1="100.000" x2="124.200" y2="100.000" stroke="var(--edge)" stroke-width="0.25"/><line x1="124.200" y1="100.000" x2="124.200" y2="115.500" stroke="var(--edge)" stroke-width="0.25"/><line x1="124.200" y1="115.500" x2="100.000" y2="115.500" stroke="var(--edge)" stroke-width="0.25"/><line x1="100.000" y1="115.500" x2="100.000" y2="100.000" stroke="var(--edge)" stroke-width="0.25"/><polygon points="103.000,103.000 110.000,103.000 110.000,110.500 103.000,110.500" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>U1 REG+3V3 (top)</title></polygon><polygon points="103.700,108.900 104.700,108.900 104.700,110.900 103.700,110.900" fill="var(--pad-top)" opacity="0.75"/><polygon points="106.000,108.900 107.000,108.900 107.000,110.900 106.000,110.900" fill="var(--pad-top)" opacity="0.75"/><polygon points="108.300,108.900 109.300,108.900 109.300,110.900 108.300,110.900" fill="var(--pad-top)" opacity="0.75"/><polygon points="104.875,102.600 108.125,102.600 108.125,104.600 104.875,104.600" fill="var(--pad-top)" opacity="0.75"/><text x="106.500" y="106.750" font-size="1.1" text-anchor="middle" fill="var(--txt)">U1</text><polygon points="111.500,103.000 113.900,103.000 113.900,104.400 111.500,104.400" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>C1 10uF (top)</title></polygon><polygon points="111.475,103.225 112.375,103.225 112.375,104.175 111.475,104.175" fill="var(--pad-top)" opacity="0.75"/><polygon points="113.025,103.225 113.925,103.225 113.925,104.175 113.025,104.175" fill="var(--pad-top)" opacity="0.75"/><text x="112.700" y="103.700" font-size="1.1" text-anchor="middle" fill="var(--txt)">C1</text><polygon points="115.400,103.000 117.800,103.000 117.800,104.400 115.400,104.400" fill="none" stroke="var(--crt-top)" stroke-width="0.12"><title>C2 10uF (top)</title></polygon><polygon points="115.375,103.225 116.275,103.225 116.275,104.175 115.375,104.175" fill="var(--pad-top)" opacity="0.75"/><polygon points="116.925,103.225 117.825,103.225 117.825,104.175 116.925,104.175" fill="var(--pad-top)" opacity="0.75"/><text x="116.600" y="103.700" font-size="1.1" text-anchor="middle" fill="var(--txt)">C2</text><polygon points="113.000,106.000 115.000,106.000 115.000,108.000 113.000,108.000" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP1 VBUS (bottom)</title></polygon><polygon points="113.250,106.250 114.750,106.250 114.750,107.750 113.250,107.750" fill="var(--pad-bottom)" opacity="0.75"/><text x="114.000" y="107.000" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP1</text><polygon points="106.000,102.500 108.000,102.500 108.000,104.500 106.000,104.500" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP2 GND (bottom)</title></polygon><polygon points="106.250,102.750 107.750,102.750 107.750,104.250 106.250,104.250" fill="var(--pad-bottom)" opacity="0.75"/><text x="107.000" y="103.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP2</text><polygon points="109.500,109.500 111.500,109.500 111.500,111.500 109.500,111.500" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP3 +3V3 (bottom)</title></polygon><polygon points="109.750,109.750 111.250,109.750 111.250,111.250 109.750,111.250" fill="var(--pad-bottom)" opacity="0.75"/><text x="110.500" y="110.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP3</text><polygon points="109.500,102.500 111.500,102.500 111.500,104.500 109.500,104.500" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP4 USB_D+ (bottom)</title></polygon><polygon points="109.750,102.750 111.250,102.750 111.250,104.250 109.750,104.250" fill="var(--pad-bottom)" opacity="0.75"/><text x="110.500" y="103.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP4</text><polygon points="106.000,109.500 108.000,109.500 108.000,111.500 106.000,111.500" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP5 SWCLK (bottom)</title></polygon><polygon points="106.250,109.750 107.750,109.750 107.750,111.250 106.250,111.250" fill="var(--pad-bottom)" opacity="0.75"/><text x="107.000" y="110.500" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP5</text><polygon points="109.500,106.000 111.500,106.000 111.500,108.000 109.500,108.000" fill="none" stroke="var(--crt-bottom)" stroke-width="0.12" stroke-dasharray="0.6 0.4"><title>TP6 NRST (bottom)</title></polygon><polygon points="109.750,106.250 111.250,106.250 111.250,107.750 109.750,107.750" fill="var(--pad-bottom)" opacity="0.75"/><text x="110.500" y="107.000" font-size="1.1" text-anchor="middle" fill="var(--txt)">TP6</text><circle cx="107.000" cy="103.500" r="0.9" fill="none" stroke="var(--gnd)" stroke-width="0.35"><title>PP01 GND (ground)</title></circle><text x="108.100" y="102.500" font-size="1.2" fill="var(--gnd)" font-weight="bold">PP01</text><circle cx="110.500" cy="110.500" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP02 +3V3 (CH01)</title></circle><text x="111.600" y="109.500" font-size="1.2" fill="var(--probe)" font-weight="bold">PP02</text><circle cx="114.000" cy="107.000" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP03 VBUS (CH02)</title></circle><text x="115.100" y="106.000" font-size="1.2" fill="var(--probe)" font-weight="bold">PP03</text><circle cx="110.500" cy="107.000" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP04 NRST (CH03)</title></circle><text x="111.600" y="106.000" font-size="1.2" fill="var(--probe)" font-weight="bold">PP04</text><circle cx="107.000" cy="110.500" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP05 SWCLK (CH04)</title></circle><text x="108.100" y="109.500" font-size="1.2" fill="var(--probe)" font-weight="bold">PP05</text><circle cx="110.500" cy="103.500" r="0.9" fill="none" stroke="var(--probe)" stroke-width="0.35"><title>PP06 USB_D+ (CH05)</title></circle><text x="111.600" y="102.500" font-size="1.2" fill="var(--probe)" font-weight="bold">PP06</text></svg></div>
-<h2>Test scheme</h2><div class='muted small'>Probe side: <b>bottom</b> &middot; pogo P75 (receptacle), drill 1.40 mm, min pitch 1.91 mm &middot; supply: None @ None V</div>
+<h2 id='scheme'>Test scheme</h2><div class='muted small'>Probe side: <b>bottom</b> &middot; pogo P75 (receptacle), drill 1.40 mm, min pitch 1.91 mm &middot; supply: None @ None V</div>
 <div class='wrap'><table><tr><th>Probe</th><th>Net</th><th>Role</th><th>Location (mm)</th><th>Target</th><th>Channel / header pin</th><th>Divider</th><th>Expected</th></tr>
 <tr><td>PP01</td><td>GND</td><td>ground</td><td>107.00, 103.50</td><td>TP2.1 (testpoint)</td><td>-</td><td>-</td><td></td></tr>
 <tr><td>PP02</td><td>+3V3</td><td>measure</td><td>110.50, 110.50</td><td>TP3.1 (testpoint)</td><td>CH01 / 3</td><td>-</td><td>3.135 .. 3.465 V</td></tr>
@@ -71,17 +198,17 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <li><b>Rail voltages</b> <span class='muted'>(voltage, 2 checks)</span> </li>
 <li><b>Signal levels (idle)</b> <span class='muted'>(voltage, 3 checks)</span> </li>
 </ol>
-<h2>Fixture board</h2><div class='muted small'>60 pogo pin(s), 10 site(s), outline rect. The router left 6 of 83 connection(s) unrouted (S3_TP_VBUS, S4_TP_+3V3, S4_TP_VBUS, S8_TP_NRST, S8_TP_USB_D+, S10_TP_+3V3): route them in KiCad, run DRC and order it.</div>
+<h2 id='fixture'>Fixture board</h2><div class='muted small'>60 pogo pin(s), 10 site(s), outline rect. The router left 6 of 83 connection(s) unrouted (S3_TP_VBUS, S4_TP_+3V3, S4_TP_VBUS, S8_TP_NRST, S8_TP_USB_D+, S10_TP_+3V3): route them in KiCad, run DRC and order it.</div>
 <div class='small' style='color:#e8710a'>&#9888; the router left 6 of 83 connection(s) unrouted (S3_TP_VBUS, S4_TP_+3V3, S4_TP_VBUS, S8_TP_NRST, S8_TP_USB_D+, S10_TP_+3V3): route them in KiCad before ordering</div>
 <div class='small'>Batch of <b>10 boards</b>: 10 fixture sites (5 x 2), each with its own header, power terminal; the runner tests them one after the other.</div>
-<h2>Solder jig</h2><div class='muted small'>176.0 x 49.75 x 6.7 mm, support plane at 5.5 mm. Parts to place: none.</div>
+<h2 id='jig'>Solder jig</h2><div class='muted small'>176.0 x 49.75 x 6.7 mm, support plane at 5.5 mm. Parts to place: none.</div>
 <p><img class='jig' alt='Jig top view (board seen from its bottom side)' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAsAAAADHCAIAAACY13IpAAAJeklEQVR42u3dMYoiURQFUNcyTDA76qw7FIwajF2GsZh34AJ6CcaNgXmDkQtocAo6GTqwyvn+96ueB24oIu9w4VIgNdsfz/Jv1ttdl8VytXl7r5TZbPbr95//zuF0wYQMGTJkyBqTufKPi1c9t54gE2TIkCUhc+jgi+sJMmTIkCHLQObWwRfXE2TIkCFDloHMuYMvrifIkCFDhiwDmYt3iby4niBDhgwZsgxkLh482fQEGTJkyJBlIHPx4IvrCTJkyJAhy0DmgU/wxfUEGTJkyJBlIDPZ9AQZMmTIkCEzIMY+2fQEGTJkyJBlIBu4blImcU+QIUOGDBmyxgOi4Y/Lmto9QYZMkCFD1n5AuPjkeoIMmSBDhqw62ZBnI1fygCe7fpDelPek90EcMmTIkCFDVp2sBKzLx+eXmXzrxQq/ARkyZMiQIWtP5uh6ggwZMmTIkBkQeoIMGTJkyJAZEHqiJ8iQIUOGzIBwdD1BhgwZMmQGhKPrCTJkyJAhMyAcXU+QIUOGDBkyA0JPkCFDhgwZMgNCT/QEGTJkyJAZEHqiJ8iQIUOGzIBwdD1BhgwZMmQGhKPrCTJkyJAhQ2ZA6AkyZMiQIUM2kgGxKX6j162v/9ITZMiQIUOGbPID4gFH4tR7ggwZMmTIkBkQeoIMGTJkyJAZEHqiJ8iQIUOGzIBwdD1BhgwZMmQGhKPrCTJkyJAhQ2ZA6AkyZMiQIUNmQOgJMmTIkCFDZkDoiZ4gQ4YMGTIDwtH1BBkyZMiQGRCOrifIkCFDhsyAcHQ9QYYMGTJkyAwIPUGGDBkyZMgMCD3RE2TIkCFDZkDoiZ4gQ4YMGTIDwtH1BBkyZMiQGRCOrifIkCFDhgyZAaEnyJAhQ4YMmQGhJ8iQIUOGDJkBoSd6ggwZMmTIDAhH1xNkyJAhQ2ZAOLqeIEOGDBkyZAZE26MfThc9QYYMGTJkkydzdD1BhgwZMmTIDAg9QYYMGTJkyAwIPdETZMiQIUNmQJQffbFc3T16ggwZMmTIkGUeEOvt7mX+evfcNAb1BBkyZMiQITMg9AQZMmTIkCEzIPQEGTJkyJAhMyD0RE+QIUOGDJkB4eh6ggwZMmTIDAhH1xNkyJAhQ2ZAOLqeIEOGDBkyZAaEniBDhgwZMmQGhJ7oCTJkyJAhMyD0RE+QIUOGDJkB4eh6ggwZMmTIDIixHr1G9AQZMmTIkCELHRBPz/PIeOlceZAhQ4YMGbL2A2IMV9ATZMiQIUOGzIDQEz1BhgwZMmQGhKPrCTJkyJAhMyAcXU+QIUOGDBkyA0JPkCFDhgwZMgNCT5AhQ4YMGbIAsgT/RQlO4R9+ynuCDBkyZMiQtSfbH8/Xs1iuHu2sJelu2nvS8t2HDBkyZMiQNSbr/YQ7Dk+3YcfQExDIkCFDhqw6We8nvu/efZ30ZsjFA3qCDBkyZMiQVScb8iG5bwJ6IsiQIUMmdcmcQE8EGTJkyMSA0BNBJsiQiQGhJ3qCTJAhQ2ZAiJ4gE2SCzIAQPUGGDJkgMyBETwQZMmTIxIDQE0GGDBkyMSD0RE+QCTJkyAwIPdETZIJMkE2UbL3dSXAKe9KxuSEyQYYMWWOyhu9fFxERkYnGgBAREREDQkRERAwIERERMSBERETEgBAREREDQkRERMSAEBEREQNCREREDAgRERExIERERMSAEBERETEgRERExIAQERERA0JEREQMCBERETEgRERERAwIERERMSBERETEgBAREZFxD4in57kEp9DMAZEJMmTImme2P57l36y3uy6L5Wrz9l4ps1nRg5/D6YIJGTJkyJA1JnPlHxevem49QSbIkCFLQubQwRfXE2TIkCFDloHMrYMvrifIkCFDhiwDmXMHX1xPkCFDhgxZBjIX7xJ5cT1BhgwZMmQZyFw8eLLpCTJkyJAhy0Dm4sEX1xNkyJAhQ5aBzAOf4IvrCTJkyJAhy0BmsukJMmTIkCFDZkCMfbLpCTJkyJAhy0A2cN2kTOKeIEOGDBkyZI0HRMMflzW1e4IMmSBDhqz9gHDxyfUEGTJBhgxZdbIhz0au5AFPdv0gvSnvSe+DOGTIkCFDhqw6WeEr2D8+v8zkWy9W+A3IkCFDhgxZezJH1xNkyJAhQ4bMgNATZMiQIUOGzIDQEz1BhgwZMmQGhKPrCTJkyJAhMyAcXU+QIUOGDJkB4eh6ggwZMmTIkBkQeoIMGTJkyJAZEHqiJ8iQIUOGzIDQEz1BhgwZMmQGhKPrCTJkyJAhMyAcXU+QIUOGDBkyA0JPkCFDhgwZspEMiE3xG71uff2XniBDhgwZMmSTHxAPOBKn3hNkyJAhQ4bMgNATZMiQIUOGzIDQEz1BhgwZMmQGhKPrCTJkyJAhMyAcXU+QIUOGDBkyA0JPkCFDhgwZMgNCT5AhQ4YMGTIDQk/0BBkyZMiQGRCOrifIkCFDhsyAcHQ9QYYMGTJkBoSj6wkyZMiQIUNmQOgJMmTIkCFDZkDoiZ4gQ4YMGTIDQk/0BBkyZMiQGRCOrifIkCFDhsyAcHQ9QYYMGTJkyAwIPUGGDBkyZMgMCD1BhgwZMmTIDAg90RNkyJAhQ2ZAOLqeIEOGDBkyA8LR9QQZMmTIkCEzINoe/XC66AkyZMiQIZs8maPrCTJkyJAhQ2ZA6AkyZMiQIUNmQOiJniBDhgwZMgOi/OiL5eru0RNkyJAhQ4Ys84BYb3cv89e756YxqCfIkCFDhgyZAaEnyJAhQ4YMmQGhJ8iQIUOGDJkBoSd6ggwZMmTIDAhH1xNkyJAhQ2ZAOLqeIEOGDBkyA8LR9QQZMmTIkCEzIPQEGTJkyJAhMyD0RE+QIUOGDJkBoSd6ggwZMmTIDAhH1xNkyJAhQ2ZAjPXoNaInyJAhQ4YMWeiAeHqeR8ZL58qDDBkyZMiQtR8QY7iCniBDhgwZMmQGhJ7oCTJkyJAhMyAcXU+QIUOGDJkB4eh6ggwZMmTIkBkQeoIMGTJkyJAZEHqCDBkyZMiQBZAl+C9KcAr/8FPeE2TIkCFDhqw92f54vp7FcvVoZy1Jd9Pek5bvPmTIkCFDhqwxWe8n3HF4ug07hp6AQIYMGTJk1cl6P/F99+7rpDdDLh7QE2TIkCFDhqw62ZAPyX0T0BNBhgwZMqlL5gR6IsiQIUMmBoSeCDJBhkwMCD3RE2SCDBkyA0L0BJkgE2QGhOgJMmTIBJkBIXoiyJAhQyYGhJ4IMmTIkIkBoSd6gkyQIUNmQOiJniATZILMgBA9QYYMmSB7kPwFpDb5C8vhxi8AAAAASUVORK5CYII='></p>
 <div class='wrap'><table><tr><th>Part</th><th>Pocket</th><th>Size</th><th>Depth</th><th>Height source</th></tr>
 </table></div>
 <div class='small muted'>Mesh: 51448 triangles, watertight: True</div>
 <h3>Placement jig (two-jig workflow)</h3><div class='muted small'>181.25 x 55.0 x 13.4 mm. The PCB rests top side up 12.0 mm above the bed; 0 lead wells, 1 locating stops. only 1 locating stop(s) fit around this outline; place the PCB carefully Trim the leads to at most 10 mm below the board, or raise jig.placement_clearance_mm.</div>
 <p><img class='jig' alt='Placement jig top view' src='data:image/png;base64,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'></p>
-<h2>Files</h2><ul>
+<h2 id='files'>Files</h2><ul>
 <li>spec: <code>usb_dongle_09-spec.json</code></li>
 <li>testplan: <code>usb_dongle_09-testplan.json</code></li>
 <li>nest_stl: <code>usb_dongle_09-fixture-nest.stl</code></li>
@@ -101,8 +228,9 @@ details summary{cursor:pointer}img.jig{max-width:100%;image-rendering:pixelated;
 <li>jig_place_preview: <code>usb_dongle_09-jig-placement.png</code></li>
 <li>jig_meta: <code>usb_dongle_09-jig.json</code></li>
 <li>runner: <code>runner</code></li>
-<li>guide: <code>usb_dongle_09-guide.html</code></li>
+<li>video: <code>usb_dongle_09-explainer.mp4</code></li>
 <li>report: <code>usb_dongle_09-report.html</code></li>
+<li>guide: <code>usb_dongle_09-guide.html</code></li>
 </ul>
 <details><summary>Warnings</summary><ul><li>no schematic found next to the board; schematic-based checks are skipped</li></ul></details>
-</main></body></html>
+</main><footer class='foot'><div class='wrapx'><span>PCB TestKit 1.2.0</span><span>Made on your computer from your KiCad files. This page loads nothing from the internet. Generated 2026-11-27T21:49:31.</span></div></footer></body></html>

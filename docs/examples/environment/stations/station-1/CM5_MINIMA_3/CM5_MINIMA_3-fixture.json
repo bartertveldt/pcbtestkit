@@ -1,0 +1,591 @@
+{
+  "sites": [
+    {
+      "site": 1,
+      "offset": [
+        0.0,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 128.7422,
+          "y": 67.265,
+          "fixture_net": "S1_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 128.7422,
+          "y": 70.34,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 83.1022,
+          "y": 68.54,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 109.9522,
+          "y": 59.39,
+          "fixture_net": "S1_TP_+3V3_PI"
+        },
+        {
+          "probe": "PP05",
+          "x": 85.0022,
+          "y": 66.565,
+          "fixture_net": "S1_TP_+5V"
+        },
+        {
+          "probe": "PP06",
+          "x": 89.2922,
+          "y": 70.155,
+          "fixture_net": "S1_TP_M2_3V3"
+        },
+        {
+          "probe": "PP07",
+          "x": 89.2922,
+          "y": 73.465,
+          "fixture_net": "S1_TP_M2_LX"
+        },
+        {
+          "probe": "PP08",
+          "x": 89.7422,
+          "y": 35.025,
+          "fixture_net": "S1_TP_Net-_J701-SUSCLK"
+        }
+      ],
+      "net_prefix": "S1_",
+      "program": []
+    },
+    {
+      "site": 2,
+      "offset": [
+        91.44,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 220.1822,
+          "y": 67.265,
+          "fixture_net": "S2_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 220.1822,
+          "y": 70.34,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 174.5422,
+          "y": 68.54,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 201.3922,
+          "y": 59.39,
+          "fixture_net": "S2_TP_+3V3_PI"
+        },
+        {
+          "probe": "PP05",
+          "x": 176.4422,
+          "y": 66.565,
+          "fixture_net": "S2_TP_+5V"
+        },
+        {
+          "probe": "PP06",
+          "x": 180.7322,
+          "y": 70.155,
+          "fixture_net": "S2_TP_M2_3V3"
+        },
+        {
+          "probe": "PP07",
+          "x": 180.7322,
+          "y": 73.465,
+          "fixture_net": "S2_TP_M2_LX"
+        },
+        {
+          "probe": "PP08",
+          "x": 181.1822,
+          "y": 35.025,
+          "fixture_net": "S2_TP_Net-_J701-SUSCLK"
+        }
+      ],
+      "net_prefix": "S2_",
+      "program": []
+    },
+    {
+      "site": 3,
+      "offset": [
+        182.88,
+        0.0
+      ],
+      "header": "J1",
+      "power_terminal": null,
+      "probes": [
+        {
+          "probe": "PP01",
+          "x": 311.6222,
+          "y": 67.265,
+          "fixture_net": "S3_VIN"
+        },
+        {
+          "probe": "PP02",
+          "x": 311.6222,
+          "y": 70.34,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP03",
+          "x": 265.9822,
+          "y": 68.54,
+          "fixture_net": "GND"
+        },
+        {
+          "probe": "PP04",
+          "x": 292.8322,
+          "y": 59.39,
+          "fixture_net": "S3_TP_+3V3_PI"
+        },
+        {
+          "probe": "PP05",
+          "x": 267.8822,
+          "y": 66.565,
+          "fixture_net": "S3_TP_+5V"
+        },
+        {
+          "probe": "PP06",
+          "x": 272.1722,
+          "y": 70.155,
+          "fixture_net": "S3_TP_M2_3V3"
+        },
+        {
+          "probe": "PP07",
+          "x": 272.1722,
+          "y": 73.465,
+          "fixture_net": "S3_TP_M2_LX"
+        },
+        {
+          "probe": "PP08",
+          "x": 272.6222,
+          "y": 35.025,
+          "fixture_net": "S3_TP_Net-_J701-SUSCLK"
+        }
+      ],
+      "net_prefix": "S3_",
+      "program": []
+    }
+  ],
+  "warnings": [],
+  "channel_map": [
+    {
+      "site": 1,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 3,
+      "dut_net": "VBUS_USB2.0",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 4,
+      "dut_net": "+3V3_PI",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 5,
+      "dut_net": "+5V",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 6,
+      "dut_net": "M2_3V3",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 7,
+      "dut_net": "/PCIe-M2/M2_LX",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 1,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 8,
+      "dut_net": "Net-(J701-SUSCLK)",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 2,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 10,
+      "dut_net": "VBUS_USB2.0",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 2,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 11,
+      "dut_net": "+3V3_PI",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 2,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 12,
+      "dut_net": "+5V",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 2,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 13,
+      "dut_net": "M2_3V3",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 2,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 14,
+      "dut_net": "/PCIe-M2/M2_LX",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 2,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 15,
+      "dut_net": "Net-(J701-SUSCLK)",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 3,
+      "channel": "CH01",
+      "header": "J1",
+      "pin": 17,
+      "dut_net": "VBUS_USB2.0",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 3,
+      "channel": "CH02",
+      "header": "J1",
+      "pin": 18,
+      "dut_net": "+3V3_PI",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 3,
+      "channel": "CH03",
+      "header": "J1",
+      "pin": 19,
+      "dut_net": "+5V",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 3,
+      "channel": "CH04",
+      "header": "J1",
+      "pin": 20,
+      "dut_net": "M2_3V3",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 3,
+      "channel": "CH05",
+      "header": "J1",
+      "pin": 21,
+      "dut_net": "/PCIe-M2/M2_LX",
+      "divider_ratio": 1.0
+    },
+    {
+      "site": 3,
+      "channel": "CH06",
+      "header": "J1",
+      "pin": 22,
+      "dut_net": "Net-(J701-SUSCLK)",
+      "divider_ratio": 1.0
+    }
+  ],
+  "outline_mode": "rect",
+  "outline": {
+    "x_min": 47.21,
+    "y_min": -59.38,
+    "x_max": 347.21,
+    "y_max": 160.62,
+    "width": 300.0,
+    "height": 220.0
+  },
+  "pogo_count": 24,
+  "nets": 25,
+  "routing": {
+    "nets": 19,
+    "routed_nets": 19,
+    "unrouted_nets": [],
+    "connections": 50,
+    "unrouted_connections": 0,
+    "length_mm": 3205.0,
+    "vias": 26,
+    "grid_mm": 0.254,
+    "passes": 1,
+    "best_pass": 1,
+    "track_mm": 0.25,
+    "power_track_mm": 0.5
+  },
+  "batch": {
+    "count": 3,
+    "cols": 3,
+    "rows": 1,
+    "spacing_mm": 10.0,
+    "source": "batch"
+  },
+  "plate_fit": true,
+  "plate_fits_cols": [],
+  "site_mm": [
+    88.44,
+    136.7
+  ],
+  "site_spacing_mm": 3.0,
+  "facility": {
+    "id": "station-1",
+    "connectors": [
+      {
+        "ref": "J1",
+        "name": "J1",
+        "site": 1,
+        "shared": true
+      },
+      {
+        "ref": "J2",
+        "name": "J2",
+        "site": 1,
+        "shared": true
+      }
+    ],
+    "plate_mm": [
+      300.0,
+      220.0
+    ]
+  },
+  "nest": {
+    "enabled": true,
+    "style": "drop",
+    "entry": "front",
+    "clamp": "toggle",
+    "heights": {
+      "work": 6.0,
+      "tips": 7.5,
+      "rest": 8.5,
+      "gap": 1.0,
+      "travel": 2.5,
+      "ledge": 2.0,
+      "wall": 5.03,
+      "boss": 8.5,
+      "bottom_rest": 6.5,
+      "bottom_work": 4.0,
+      "standoff": 15,
+      "adapter": 7.5,
+      "finger": 3.5,
+      "plate": 5.0,
+      "plate_top_work": 16.03
+    },
+    "board_mm": [
+      64.2,
+      61.19,
+      1.5296
+    ],
+    "spring": {
+      "free_mm": 10.0,
+      "solid_mm": 3.5,
+      "rest_mm": 6.5,
+      "work_mm": 4.0
+    },
+    "bom": [
+      {
+        "qty": 1,
+        "part": "nest (print, PETG)",
+        "file": "nest"
+      },
+      {
+        "qty": 4,
+        "part": "M3 hex standoff, female-female, 15 mm"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw + M3 large washer (DIN 9021, 9 mm), on top of each standoff"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 6 screw + M3 nylon washer, standoff to fixture board (from below)"
+      },
+      {
+        "qty": 4,
+        "part": "compression spring, outer 8 mm, wire 0.5 mm, free length 10 mm (solid 3.5 mm or less)"
+      },
+      {
+        "qty": 1,
+        "part": "vertical toggle clamp, about 25 kg, flanged base (e.g. GH-101-A)"
+      },
+      {
+        "qty": 1,
+        "part": "clamp adapter (print)",
+        "file": "adapter"
+      },
+      {
+        "qty": 1,
+        "part": "press plate (print)",
+        "file": "press"
+      },
+      {
+        "qty": 4,
+        "part": "M4 x 12 screw + M4 nut, clamp to adapter (nuts in the adapter's channels)"
+      },
+      {
+        "qty": 4,
+        "part": "M3 x 10 screw + M3 nylon washer, adapter to fixture board from below (cuts its own thread)"
+      },
+      {
+        "qty": 2,
+        "part": "nut + washer for the clamp's spindle, one each side of the press plate"
+      }
+    ],
+    "warnings": [],
+    "gap_reason": "",
+    "extents": {
+      "left": 12.5,
+      "right": 12.5,
+      "top": 46.25,
+      "bottom": 4.25
+    },
+    "fingers": 9,
+    "files": {
+      "nest": {
+        "stl": "CM5_MINIMA_3-fixture-nest.stl",
+        "preview_png": "CM5_MINIMA_3-fixture-nest.png",
+        "print": 3,
+        "size_mm": [
+          73.8,
+          87.2,
+          8.5
+        ]
+      },
+      "press": {
+        "stl": "CM5_MINIMA_3-fixture-press-plate.stl",
+        "preview_png": "CM5_MINIMA_3-fixture-press-plate.png",
+        "print": 3,
+        "size_mm": [
+          68.0,
+          69.8,
+          8.5
+        ]
+      },
+      "adapter": {
+        "stl": "CM5_MINIMA_3-fixture-clamp-adapter.stl",
+        "preview_png": "CM5_MINIMA_3-fixture-clamp-adapter.png",
+        "print": 3,
+        "size_mm": [
+          40.0,
+          38.0,
+          7.5
+        ]
+      }
+    },
+    "mesh": {
+      "nest": {
+        "triangles": 70730,
+        "unmatched_edges": 0,
+        "volume_mm3": 8102.0,
+        "watertight": true
+      },
+      "press": {
+        "triangles": 26758,
+        "unmatched_edges": 0,
+        "volume_mm3": 23133.3,
+        "watertight": true
+      },
+      "adapter": {
+        "triangles": 12708,
+        "unmatched_edges": 0,
+        "volume_mm3": 7149.9,
+        "watertight": true
+      }
+    },
+    "refs": [
+      {
+        "site": 1,
+        "posts": [
+          "NP1",
+          "NP2",
+          "NP3",
+          "NP4"
+        ],
+        "adapter": [
+          "NK1",
+          "NK2",
+          "NK3",
+          "NK4"
+        ],
+        "nest": "N1",
+        "clamp": "K1"
+      },
+      {
+        "site": 2,
+        "posts": [
+          "NP5",
+          "NP6",
+          "NP7",
+          "NP8"
+        ],
+        "adapter": [
+          "NK5",
+          "NK6",
+          "NK7",
+          "NK8"
+        ],
+        "nest": "N2",
+        "clamp": "K2"
+      },
+      {
+        "site": 3,
+        "posts": [
+          "NP9",
+          "NP10",
+          "NP11",
+          "NP12"
+        ],
+        "adapter": [
+          "NK9",
+          "NK10",
+          "NK11",
+          "NK12"
+        ],
+        "nest": "N3",
+        "clamp": "K3"
+      }
+    ]
+  }
+}

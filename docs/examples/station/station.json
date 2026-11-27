@@ -1,6 +1,6 @@
 {
   "schema": "pcbtestkit-station/1",
-  "generator": "PCB TestKit 1.1.2",
+  "generator": "PCB TestKit 1.2.0",
   "station": {
     "id": "test_station",
     "name": "PCB TestKit test station",
@@ -258,7 +258,7 @@
       "buses": {
         "i2c": 2
       },
-      "seconds": 4.5,
+      "seconds": 2.4,
       "folder": "sample_sensor",
       "outputs": {
         "spec": "sample_sensor/sample_sensor-spec.json",
@@ -283,8 +283,8 @@
         "jig_meta": "sample_sensor/sample_sensor-jig.json",
         "runner": "sample_sensor/runner",
         "video": "sample_sensor/sample_sensor-explainer.mp4",
-        "guide": "sample_sensor/sample_sensor-guide.html",
-        "report": "sample_sensor/sample_sensor-report.html"
+        "report": "sample_sensor/sample_sensor-report.html",
+        "guide": "sample_sensor/sample_sensor-guide.html"
       },
       "warnings": [],
       "fixture": {
@@ -1349,7 +1349,7 @@
       "supplies_used": 4,
       "supplies_total": 4,
       "buses": {},
-      "seconds": 1.0,
+      "seconds": 0.9,
       "folder": "StickHub",
       "outputs": {
         "spec": "StickHub/StickHub-spec.json",
@@ -1374,8 +1374,8 @@
         "jig_meta": "StickHub/StickHub-jig.json",
         "runner": "StickHub/runner",
         "video": "StickHub/StickHub-explainer.mp4",
-        "guide": "StickHub/StickHub-guide.html",
-        "report": "StickHub/StickHub-report.html"
+        "report": "StickHub/StickHub-report.html",
+        "guide": "StickHub/StickHub-guide.html"
       },
       "warnings": [],
       "fixture": {
@@ -2456,7 +2456,7 @@
       "supplies_used": 4,
       "supplies_total": 4,
       "buses": {},
-      "seconds": 5.6,
+      "seconds": 3.8,
       "folder": "RoyalBlue54L-Feather",
       "outputs": {
         "spec": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-spec.json",
@@ -2479,8 +2479,8 @@
         "jig_meta": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-jig.json",
         "runner": "RoyalBlue54L-Feather/runner",
         "video": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-explainer.mp4",
-        "guide": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-guide.html",
-        "report": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-report.html"
+        "report": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-report.html",
+        "guide": "RoyalBlue54L-Feather/RoyalBlue54L-Feather-guide.html"
       },
       "warnings": [
         "station test_station serves 2 board(s) of this type at once (limited by its uart buses); the batch has 4: the other boards get no inputs, supply or bus on the connector"
@@ -3563,7 +3563,7 @@
       "supplies_used": 1,
       "supplies_total": 4,
       "buses": {},
-      "seconds": 4.7,
+      "seconds": 2.5,
       "folder": "pic_programmer",
       "outputs": {
         "spec": "pic_programmer/pic_programmer-spec.json",
@@ -3586,8 +3586,8 @@
         "jig_meta": "pic_programmer/pic_programmer-jig.json",
         "runner": "pic_programmer/runner",
         "video": "pic_programmer/pic_programmer-explainer.mp4",
-        "guide": "pic_programmer/pic_programmer-guide.html",
-        "report": "pic_programmer/pic_programmer-report.html"
+        "report": "pic_programmer/pic_programmer-report.html",
+        "guide": "pic_programmer/pic_programmer-guide.html"
       },
       "warnings": [],
       "fixture": {

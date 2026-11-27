@@ -42,13 +42,21 @@ test vectors at the class boundaries, and add a row to the table in `docs/CLASS_
 
 ## Regenerating the examples
 
-`docs/examples/` holds complete outputs for three boards. Regenerate them only when outputs change visibly
-(they are about 50 MB):
+`docs/examples/` holds complete outputs for four boards, a test station and a test environment (a catalog of 128
+boards). Regenerate them only when outputs change visibly:
 
 ```bash
-python3 tools/regen_examples.py              # about 35 min, needs KiCad 9+ and ffmpeg
-python3 tools/regen_examples.py --no-video   # a few minutes
+python3 tools/regen_examples.py              # about four hours, needs KiCad 9+ and ffmpeg
+python3 tools/regen_examples.py --no-video   # under an hour
+python3 tools/regen_examples.py --only environment --environment-from DIR   # publish an earlier catalog build
 ```
+
+The catalog's outputs for every board come to about 3 GB, so the repository keeps only its environment and station
+level and the boards that `docs/examples/environment/.gitignore` lists (its `!` lines). The script reads that list:
+it copies, films and links only those boards, and git leaves out any other board folder copied in by hand. To keep
+another board, add a line for its folder there. `TestPublishedExamples` checks that the pages link only to files
+that are there, that the catalog has exactly the listed boards with their videos, and that no file holds a local
+path or the state of a run.
 
 ## Security
 

@@ -1,6 +1,6 @@
 {
   "schema": "pcbtestkit-station/1",
-  "generator": "PCB TestKit 1.1.2",
+  "generator": "PCB TestKit 1.2.0",
   "station": {
     "id": "station-2",
     "name": "PCB TestKit catalog station 2",
@@ -174,7 +174,7 @@
       "supplies_used": 0,
       "supplies_total": 0,
       "buses": {},
-      "seconds": 24.9,
+      "seconds": 6.4,
       "station": "station-2",
       "project": "video",
       "folder": "video",
@@ -200,8 +200,9 @@
         "jig_nest_bottom_preview": "video/video-paste-nest-bottom.png",
         "jig_meta": "video/video-jig.json",
         "runner": "video/runner",
-        "guide": "video/video-guide.html",
-        "report": "video/video-report.html"
+        "video": "video/video-explainer.mp4",
+        "report": "video/video-report.html",
+        "guide": "video/video-guide.html"
       },
       "warnings": [],
       "fixture": {
