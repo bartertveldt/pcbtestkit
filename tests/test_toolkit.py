@@ -1857,7 +1857,7 @@ class TestVideoRecovery(Base):
         # how to finish it from the kept frames: in the folder, and named in the error file
         work = os.path.join(out, "visuals", "scenes", "video")
         with open(res["paths"]["video_error"], encoding="utf-8") as fh:
-            self.assertIn("visuals/scenes/video/BUILD-VIDEO.md".replace("/", os.sep), fh.read())
+            self.assertIn("visuals/scenes/video/BUILD-VIDEO.md", fh.read())     # / on every OS, as written
         for name in ("BUILD-VIDEO.md", "video-recipe.json", "storyboard.json"):
             with open(os.path.join(work, name), encoding="utf-8") as fh:
                 text = fh.read()
