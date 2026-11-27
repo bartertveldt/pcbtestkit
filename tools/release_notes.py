@@ -48,7 +48,7 @@ def notes(ver: str) -> str:
             "## Check the downloads\n\nEvery file has signed build provenance and a SHA-256 in `SHA256SUMS`; "
             "`pcbtestkit-%s.cdx.json` is the SBOM (CycloneDX).\n\n```bash\nsha256sum -c SHA256SUMS --ignore-missing\n"
             "gh attestation verify pcbtestkit-%s-kicad-pcm.zip --repo %s\n```\n\nSecurity problems: see "
-            "[SECURITY.md](https://github.com/%s/blob/main/SECURITY.md).\n" % (body, ver, ver, ver, ver, REPO, REPO))
+            "[SECURITY.md](https://github.com/%s/blob/v%s/SECURITY.md).\n" % (body, ver, ver, ver, ver, REPO, REPO, ver))
 
 
 if __name__ == "__main__":
