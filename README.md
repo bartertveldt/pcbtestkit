@@ -730,7 +730,7 @@ python3 install.py --version 10.0         # try it in your KiCad
 ```
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) (repository map and rules). Releases and the
-KiCad / Claude Code marketplaces: [docs/PUBLISHING.md](docs/PUBLISHING.md). Changes: [CHANGELOG.md](CHANGELOG.md).
+KiCad / Claude Code marketplaces: [docs/PUBLISHING.md](docs/PUBLISHING.md). Changes: [CHANGELOG.md](CHANGELOG.md). Planned: [ROADMAP.md](ROADMAP.md).
 
 ## License
 

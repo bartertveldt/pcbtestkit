@@ -68,6 +68,7 @@ Never read generated files whole (`*-spec.json`, `*.html`, `*.kicad_pcb`, `*.stl
 | `.claude-plugin/` | Claude Code plugin + marketplace manifests (skill + MCP server). |
 | `pcm/`, `tools/` | KiCad package metadata + icon; build, docs, icon and owner scripts; `sbom.py` (CycloneDX SBOM) and `release_notes.py` for releases. |
 | `SECURITY.md`, `PRIVACY.md`, `THIRD_PARTY_NOTICES.md`, `docs/examples/LICENSES.md` | Disclosure policy and threat model, privacy notice, licences (the examples keep their demo boards' licences). |
+| `ROADMAP.md`, `docs/roadmap/` | What is planned; `docs/roadmap/v1.3.0.md` is the 1.3.0 specification (ids E1-E6, A, B). |
 | `docs/` | Human docs; `docs/reference/` is generated; `docs/examples/` are generated outputs (`docs/examples/environment/.gitignore` lists the catalog boards kept). |
 | `tests/test_toolkit.py`, `examples/make_sample.py` | Tests on a generated sample board with seeded weak points. |
 | `examples/make_station.py` | Generates the example test station board (`examples/station/`). |
