@@ -82,6 +82,13 @@ All notable changes. Versions follow [Semantic Versioning](https://semver.org).
   estimated shape. The whole 128-board catalog passes (every jig set, both sides, paste nests).
 - **`jig-fit-check/`**: the board with its parts and every jig in its working position, in KiCad's 3D coordinates
   (open them together, or with KiCad's own STL export). The OpenSCAD file now has exactly the STL's shape.
+- **Room for heat-resistant inserts.** Hand-soldered parts that get hot all over while soldered (a heavy ground pin,
+  joined solidly to a copper zone or big, on a metal body: shielded connectors, coaxial and barrel jacks, TO-220 tabs,
+  crystal cans) are detected (`pcbtestkit/heat.py`) and their holding-jig pockets get `jig.heat_insert_mm` (1.0 mm) of
+  room all round for an insert (silicone, PTFE, FR-4); the guide has the step and the reasons, the fit check allows
+  for the insert. `jig.hot_parts` ("auto", "none", a list), `--jig-heat-insert`, an open decision for AI assistants.
+- **Room of your own** per part: `jig.room` (`{"J1": 1.5, "C*": 0.5}`), `--jig-room`, *Extra room...* in the
+  KiCad dialog.
 - **Leave parts out of the jigs** (no pocket, no 3D model, no stand-in): `jig.ignore` (references, values or
   footprint names, wildcards), `jig.ignore_models` (3D model files, e.g. an enclosure), `--jig-ignore` /
   `--jig-ignore-models`, *Leave out of the jigs* in the KiCad dialog, `set_jig_options` for AI assistants.

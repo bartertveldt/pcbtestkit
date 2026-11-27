@@ -31,8 +31,9 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
                       [--no-environment] [--facility FACILITY]
                       [--program-connector {same,swd10,jtag20,avr_isp6,pic_icsp6,pins}]
                       [--outline {rect,outline}] [--jig-parts JIG_PARTS] [--jig-ignore JIG_IGNORE]
-                      [--jig-ignore-models JIG_IGNORE_MODELS] [--no-fixture] [--no-route]
-                      [--no-jig] [--no-jig-fit-files] [--no-runner] [--no-visuals] [--video]
+                      [--jig-ignore-models JIG_IGNORE_MODELS] [--jig-room JIG_ROOM]
+                      [--jig-heat-insert MM] [--no-fixture] [--no-route] [--no-jig]
+                      [--no-jig-fit-files] [--no-runner] [--no-visuals] [--video]
                       [--video-fps VIDEO_FPS] [--video-stills]
                       [--video-quality {basic,standard,best,high}]
                       [--image-quality {basic,standard,best,high}] [--background] [-q]
@@ -63,6 +64,8 @@ pcbtestkit run [-h] [--config CONFIG] [--probe-side {auto,bottom,top}]
 | `--jig-parts` | comma separated refs (default: all THT) |
 | `--jig-ignore` | parts the jigs leave out completely (no pocket, no 3D model, no stand-in): comma separated refs, values or footprint names, wildcards allowed, e.g. ENC1,*Enclosure* |
 | `--jig-ignore-models` | 3D model files the jigs leave out, comma separated, e.g. '*case*.step' |
+| `--jig-room` | extra room all round in the holding jig for some parts, e.g. J1=1.5,C*=0.5 (mm) |
+| `--jig-heat-insert` | room for a heat-resistant insert under parts that get hot all over while soldered (default 1.0; 0 = none) |
 | `--no-fixture` |  |
 | `--no-route` | leave the fixture board unrouted (ratsnest only) |
 | `--no-jig` |  |

@@ -396,6 +396,12 @@ class MainDialog(wx.Dialog):
                           if not C.is_mounting_hole(fp)]
         self.jig_heights = dict((cfg["jig"].get("heights") or {}))
         self.jig_ignore = [str(x) for x in (cfg["jig"].get("ignore") or [])]
+        self.jig_room = {str(k): float(v) for k, v in (cfg["jig"].get("room") or {}).items()}
+        try:
+            from ..pcbtestkit.heat import hot_parts
+            self.jig_hot = hot_parts(self.design, [f for f in self.design.components() if f.is_tht])
+        except Exception:                       # the list still works without the heat detection
+            self.jig_hot = {}
         self.jig_list = wx.CheckListBox(p, choices=[self._jig_label(fp) for fp in self.jig_parts])
         self.jig_list.SetFont(wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL))
         parts = cfg["jig"].get("parts")
@@ -410,12 +416,16 @@ class MainDialog(wx.Dialog):
         b4 = wx.Button(p, label="Leave out of the jigs / take back")
         b4.SetToolTip("No pocket, no 3D model and no stand-in for this part (an enclosure or a part fitted later)")
         b4.Bind(wx.EVT_BUTTON, self.on_ignore)
+        b5 = wx.Button(p, label="Extra room...")
+        b5.SetToolTip("More room all round this part's pocket in the holding jig, e.g. for a heat-resistant insert")
+        b5.Bind(wx.EVT_BUTTON, self.on_room)
         b1.Bind(wx.EVT_BUTTON, lambda e: [self.jig_list.Check(i, fp.is_tht) for i, fp in enumerate(self.jig_parts)])
         b2.Bind(wx.EVT_BUTTON, lambda e: [self.jig_list.Check(i, False) for i in range(len(self.jig_parts))])
         row.Add(b1, 0, wx.RIGHT, 6)
         row.Add(b2, 0, wx.RIGHT, 18)
         row.Add(b3, 0, wx.RIGHT, 6)
-        row.Add(b4, 0)
+        row.Add(b4, 0, wx.RIGHT, 6)
+        row.Add(b5, 0)
         s.Add(row, 0, wx.ALL, 8)
         mrow = wx.BoxSizer(wx.HORIZONTAL)
         mrow.Add(wx.StaticText(p, label="3D model files to leave out (e.g. *enclosure*, case.step):"), 0,
@@ -423,6 +433,12 @@ class MainDialog(wx.Dialog):
         self.jig_ignore_models = wx.TextCtrl(p, value=", ".join(str(x) for x in (cfg["jig"].get("ignore_models") or [])))
         mrow.Add(self.jig_ignore_models, 1)
         s.Add(mrow, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
+        hrow = wx.BoxSizer(wx.HORIZONTAL)
+        hrow.Add(wx.StaticText(p, label="Room for a heat-resistant insert under parts marked HOT (mm, 0 = none):"), 0,
+                 wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 6)
+        self.jig_heat = wx.TextCtrl(p, value="%g" % float(cfg["jig"].get("heat_insert_mm", 1.0)), size=(60, -1))
+        hrow.Add(self.jig_heat, 0)
+        s.Add(hrow, 0, wx.LEFT | wx.RIGHT | wx.BOTTOM, 8)
         g2 = wx.FlexGridSizer(0, 2, 6, 8)
         self.jig_side_opts = [("auto", "auto (top, then bottom)"), (["top"], "top side only"), (["bottom"], "bottom side only"),
                               (["top", "bottom"], "top, then bottom"), (["bottom", "top"], "bottom, then top")]
@@ -450,8 +466,37 @@ class MainDialog(wx.Dialog):
         else:
             h, src = self.design.height_of(fp)
         mark = "LEFT OUT  " if fp.ref in getattr(self, "jig_ignore", []) else ""
-        return "%s%-6s %-6s %-18s %-34s %s  h=%.1f mm (%s)" % (mark, fp.ref, fp.side, fp.value[:18], fp.name[:34],
-                                                           fp.mount.upper(), h, src[:28])
+        extra = ""
+        if fp.ref in getattr(self, "jig_room", {}):
+            extra = "  +%.1f mm room" % self.jig_room[fp.ref]
+        elif fp.ref in getattr(self, "jig_hot", {}):
+            extra = "  HOT: %s" % self.jig_hot[fp.ref][0][:40]
+        return "%s%-6s %-6s %-18s %-34s %s  h=%.1f mm (%s)%s" % (mark, fp.ref, fp.side, fp.value[:18], fp.name[:34],
+                                                             fp.mount.upper(), h, src[:28], extra)
+
+    def on_room(self, _evt):
+        i = self.jig_list.GetSelection()
+        if i == wx.NOT_FOUND:
+            wx.MessageBox("Select a part in the list first.", "PCB TestKit")
+            return
+        fp = self.jig_parts[i]
+        dlg = wx.TextEntryDialog(self, "Extra room all round %s's pocket in the holding jig (mm, 0 = none):" % fp.ref,
+                                 "Extra room", "%g" % self.jig_room.get(fp.ref, 0.0))
+        if dlg.ShowModal() == wx.ID_OK:
+            try:
+                v = float(dlg.GetValue().replace(",", "."))
+                if not 0 <= v <= 10:
+                    raise ValueError
+                if v > 0:
+                    self.jig_room[fp.ref] = round(v, 2)
+                else:
+                    self.jig_room.pop(fp.ref, None)
+                checked = self.jig_list.IsChecked(i)
+                self.jig_list.SetString(i, self._jig_label(fp))
+                self.jig_list.Check(i, checked)
+            except ValueError:
+                wx.MessageBox("Enter a room between 0 and 10 mm.", "PCB TestKit")
+        dlg.Destroy()
 
     def on_ignore(self, _evt):
         i = self.jig_list.GetSelection()
@@ -623,6 +668,11 @@ class MainDialog(wx.Dialog):
                        and fp.ref not in self.jig_ignore]
         jg["ignore"] = list(self.jig_ignore)
         jg["ignore_models"] = [x.strip() for x in self.jig_ignore_models.GetValue().replace(";", ",").split(",") if x.strip()]
+        jg["room"] = dict(self.jig_room)
+        try:
+            jg["heat_insert_mm"] = max(0.0, min(5.0, float(self.jig_heat.GetValue().replace(",", "."))))
+        except ValueError:
+            self.problems.append("jig: heat insert %r is not a number" % self.jig_heat.GetValue())
         jg["sides"] = self.jig_side_opts[max(0, self.jig_sides.GetSelection())][0]
         jg["paste_nest"] = self.nest_opts[max(0, self.nest.GetSelection())][0]
         if self.jig_heights:

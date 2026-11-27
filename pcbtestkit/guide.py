@@ -385,6 +385,9 @@ def _hand_steps(design, jig: Dict[str, Any], side: str, stl: str, place_stl: str
                   im.get("jig2_solder") or im.get("jig_assembled"), "Solder from above; the jig holds every part flush and square")]
         if leads:
             steps.insert(0, ("Clip the soldered leads of the earlier pass short (the holding jig has shallow reliefs for them).", None, ""))
+        ins = _insert_step(jig)
+        if ins:
+            steps.insert(len(steps) - 3, (ins, None, ""))
         out.append("".join(_step_html(i + 1, t, p, c) for i, (t, p, c) in enumerate(steps)))
         out.append(_png(pj.get("preview_png"), "Placement jig (%s x %s x %s mm): lead wells, post holes and locating stops" %
                         tuple(pj["jig_size_mm"])))
@@ -392,8 +395,30 @@ def _hand_steps(design, jig: Dict[str, Any], side: str, stl: str, place_stl: str
         steps = ["Drop the parts upside down into their orange pockets: %s. Mind polarity marks." % (refs or "none"),
                  "Lower the PCB %s-side down onto the alignment posts; the leads slide through their holes." % _e(side),
                  "Solder all leads from above, clip them, lift the board out with the finger notches."]
+        ins = _insert_step(jig)
+        if ins:
+            steps.insert(0, ins)
         out.append("".join("<div class='step'><div class='num'>%d</div><div>%s</div></div>" % (i + 1, t) for i, t in enumerate(steps)))
     return "".join(out)
+
+
+def _insert_step(jig: Dict[str, Any]) -> str:
+    """The step that lines the pockets with room (heat-resistant inserts, jig.room), or ""."""
+    room = jig.get("room") or {}
+    if not room:
+        return ""
+    hot = [r for r, v in room.items() if v.get("why") == "heat insert"]
+    own = [r for r in room if r not in hot]
+    bits = []
+    if hot:
+        bits.append("<b>Heat:</b> %s get hot all over while soldered (%s). Line their pockets in the holding jig with "
+                    "%.1f mm of heat-resistant material (silicone sheet, PTFE or FR-4) so the hot part never touches the "
+                    "print." % (_e(", ".join(hot)), _e(room[hot[0]]["hot"][0] if room[hot[0]].get("hot") else "heavy pins"),
+                                room[hot[0]]["mm"]))
+    if own:
+        bits.append("The pockets of %s have extra room (%s) for what you put in them." % (
+            _e(", ".join(own)), _e(", ".join("%s %.1f mm" % (r, room[r]["mm"]) for r in own))))
+    return " ".join(bits)
 
 
 def build_guide(design, spec: Dict[str, Any], plan: Dict[str, Any], fixture: Optional[Dict[str, Any]],

@@ -537,6 +537,13 @@ def _decisions(ws: Workspace) -> List[Dict[str, Any]]:
             "pocket depth equals it. Library 3D models are often generic (e.g. all radial caps as tall as wide) - use "
             "the datasheet of the actual part number.", weak_h, "set_jig_options",
             {"heights": {weak_h[0]["ref"]: weak_h[0]["height_mm"]}, "rationale": "datasheet body height"})
+    from .heat import room_for
+    hot = {r: v for r, v in room_for(d, sel).items() if v["why"] == "heat insert"}
+    if hot and "hot_parts" not in (d.user_config.get("jig") or {}):
+        add("hot_parts", "low", "These hand-soldered parts get hot all over while soldered (heavy ground pins on a metal "
+            "body); the holding jig gives them room for a heat-resistant insert. Confirm, change the list, or set "
+            "'none'.", [{"ref": r, "room_mm": v["mm"], "why": v["hot"][:2]} for r, v in hot.items()], "set_jig_options",
+            {"hot_parts": sorted(hot), "rationale": "ground pins on a plane heat the shell"})
     if not isinstance(d.cfg["jig"].get("parts"), list):
         add("jig_parts", "low", "Parts the solder jig holds for hand soldering (auto = all through-hole parts).",
             [{"ref": f.ref, "value": f.value} for f in sel], "set_jig_options", {"parts": [f.ref for f in sel]})
@@ -924,7 +931,7 @@ _RANGES = {"pogo_drill_mm": (0.4, 3.0), "max_channels": (1, 512), "edge_keepout_
            "placement_clearance_mm": (2, 40), "placement_border_mm": (3, 30), "lead_well_margin_mm": (0, 5),
            "stop_length_mm": (3, 30), "stop_width_mm": (1, 10), "stop_clearance_mm": (0, 1),
            "bottom_part_clearance_mm": (0, 5), "stack_clearance_mm": (0, 10), "lead_relief_mm": (0, 10),
-           "overhang_clearance_mm": (0, 5),
+           "overhang_clearance_mm": (0, 5), "heat_insert_mm": (0, 5),
            "nest_border_mm": (5, 50),
            "divider_r_bottom_rail": (100, 1e6), "divider_r_bottom_signal": (1e3, 1e7),
            "track_mm": (0.1, 2.0), "power_track_mm": (0.1, 5.0), "clearance_mm": (0.1, 2.0), "via_mm": (0.3, 2.0),
@@ -995,6 +1002,11 @@ JIG_OPTS = {
     "pocket_floor": {"type": "string", "enum": ["shaped", "flat"],
                      "description": "shaped (default): pockets follow each part's 3D shape; flat: one depth per part."},
     "overhang_clearance_mm": {"type": "number", "description": "Placement jig: room around leads and overhanging parts."},
+    "heat_insert_mm": {"type": "number", "description": "Room in the holding jig for a heat-resistant insert under parts "
+                                                         "that get hot all over while soldered (0 = none)."},
+    "hot_parts": {"type": ["array", "string"], "items": {"type": "string"},
+                  "description": "'auto' (detected: heavy ground pins on a metal body), 'none', or refs / wildcards."},
+    "room": {"type": "object", "description": "{ref or wildcard: mm} extra room all round in the holding jig (0 = none)."},
     "heights": {"type": "object", "description": "{ref: body height above PCB in mm}"},
     "relief_all_top": {"type": "boolean"}, "resolution_mm": {"type": "number"}, "hold_clearance_mm": {"type": "number"},
     "relief_clearance_mm": {"type": "number"}, "relief_extra_depth_mm": {"type": "number"},
@@ -1031,6 +1043,14 @@ def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False,
         opts["parts"] = [ws.resolve_ref(r).ref for r in opts["parts"]]
     if "exclude" in opts:
         opts["exclude"] = [ws.resolve_ref(r).ref for r in opts["exclude"]]
+    if "room" in opts and opts["room"] is not None:
+        if not isinstance(opts["room"], dict):
+            raise ToolError("BAD_VALUE", "room must be {ref or wildcard: mm}")
+        opts["room"] = {str(k): _num(v, "room of %s" % k, 0, 10) for k, v in opts["room"].items()}
+    if "hot_parts" in opts and opts["hot_parts"] is not None:
+        hp = opts["hot_parts"]
+        if not (hp in ("auto", "none") or (isinstance(hp, list) and all(isinstance(x, str) for x in hp))):
+            raise ToolError("BAD_VALUE", "hot_parts must be 'auto', 'none' or a list of refs")
     for k in ("ignore", "ignore_models"):
         if k in opts and opts[k] is not None:
             if not isinstance(opts[k], list) or not all(isinstance(x, str) and x.strip() for x in opts[k]):
@@ -1059,7 +1079,8 @@ def t_set_jig_options(ws: Workspace, rationale: str = "", dry_run: bool = False,
     for k in [k for k in opts if k in ("parts", "exclude", "heights")]:
         pass
     clean = {k: v for k, v in opts.items() if v is not None}
-    special = {k: clean.pop(k) for k in ("parts", "exclude", "heights", "sides", "ignore", "ignore_models") if k in clean}
+    special = {k: clean.pop(k) for k in ("parts", "exclude", "heights", "sides", "ignore", "ignore_models", "room",
+                                         "hot_parts") if k in clean}
     res = None
     if clean:
         res = _set_section(ws, "jig", clean, JIG_OPTS, rationale, dry_run, confirm)

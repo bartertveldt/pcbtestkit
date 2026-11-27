@@ -114,7 +114,9 @@ class TestPlanFixtureJig(Base):
         self.assertGreater(r["mesh"]["volume_mm3"], 0)
         self.assertEqual(sorted(r["parts_to_place"]), ["C1", "C2", "J2", "J3", "U1"])
         holds = {p["ref"]: p for p in r["pockets"] if p["type"] == "hold"}
-        self.assertAlmostEqual(holds["U1"]["depth_mm"], holds["U1"]["part_height_mm"], places=2)   # exact: no offset
+        self.assertAlmostEqual(holds["C2"]["depth_mm"], holds["C2"]["part_height_mm"], places=2)   # exact: no offset
+        # U1 (TO-220, its ground pin joined solidly to the ground pour) gets room for a heat-resistant insert
+        self.assertAlmostEqual(holds["U1"]["depth_mm"], holds["U1"]["part_height_mm"] + 1.0, places=2)
 
 
 class TestAgentAPI(Base):
@@ -483,9 +485,9 @@ class TestJigFit(Base):
         # held sideways: every part slides at least its clearance and less than clearance + one grid cell
         self.assertEqual(sorted(f["side_play"]), sorted(j["parts_to_place"]))
         for ref, p in f["side_play"].items():
-            for way, v in p.items():
-                self.assertGreaterEqual(v, 0.15, (ref, way))
-                self.assertLess(v, f["side_play_limit_mm"], (ref, way))
+            for way, v in p.items():                          # less any room asked for an insert
+                self.assertGreaterEqual(v - f["room"].get(ref, 0.0), 0.15, (ref, way))
+                self.assertLess(v - f["room"].get(ref, 0.0), f["side_play_limit_mm"], (ref, way))
         self.assertEqual(f["not_held_sideways"], [])
         self.assertIn("Fit check", j["notes"][-1] if "Fit check" in j["notes"][-1] else " ".join(j["notes"]))
 
@@ -514,15 +516,15 @@ class TestJigFit(Base):
     def test_the_check_finds_errors(self):
         from pcbtestkit import jigfit as F
         from pcbtestkit.jig import Q, build_jigs, present_parts, select_parts, view_meshes
-        loose = build_jigs(self.design(jig={"hold_depth_offset_mm": 0.1}))["fit"]
+        loose = build_jigs(self.design(jig={"hold_depth_offset_mm": 0.1, "heat_insert_mm": 0}))["fit"]
         self.assertFalse(loose["ok"])
         self.assertEqual(sorted(loose["loose"]), sorted(loose["touching"] + list(loose["loose"])))
         self.assertTrue(all(abs(v - 0.1) < 0.012 for v in loose["loose"].values()))
-        tight = build_jigs(self.design(jig={"hold_depth_offset_mm": -0.1}))["fit"]
+        tight = build_jigs(self.design(jig={"hold_depth_offset_mm": -0.1, "heat_insert_mm": 0}))["fit"]
         self.assertEqual(len(tight["holding_collisions"]), 5)
         self.assertIn("FIT CHECK FAILED", tight["summary"])
         # one cell raised by 0.05 mm under the top of a part is found
-        d = self.design()
+        d = self.design(jig={"heat_insert_mm": 0})
         grids = {}
         j = build_jigs(d, grids=grids)
         g = grids["holding"]
@@ -545,6 +547,38 @@ class TestJigFit(Base):
         self.assertEqual((p["+x"], by["+x"]), (0.45, ""))                    # nothing holds it that way
         self.assertLess(p["-x"], 0.45)
         self.assertEqual(by["-x"], "jig")
+
+    def test_hot_parts_get_room_for_an_insert(self):
+        """A part that gets hot all over while soldered (heavy ground pin on a metal body) gets room all round for a
+        heat-resistant insert in the holding jig, and touches the insert as the board lands; jig.room gives any part
+        room of your own; hot_parts / heat_insert_mm turn it off."""
+        from pcbtestkit import heat
+        from pcbtestkit.jig import build_jigs, select_parts
+        d = self.design()
+        hot = heat.hot_parts(d, select_parts(d)[0])
+        self.assertEqual(sorted(hot), ["U1"])
+        self.assertIn("metal body (to-220)", hot["U1"])
+        self.assertTrue(any("joined solidly to the GND zone" in w for w in hot["U1"]))
+        j = build_jigs(self.design(jig={"room": {"C1": 0.5}}), grids={})
+        f = j["fit"]
+        self.assertTrue(f["ok"], f["summary"])
+        self.assertEqual(f["room"], {"U1": 1.0, "C1": 0.5})
+        self.assertIn("U1", f["touching"])                       # through its 1 mm insert
+        p = {q["ref"]: q for q in j["pockets"] if q["type"] == "hold"}
+        self.assertAlmostEqual(p["U1"]["depth_mm"] - p["U1"]["part_height_mm"], 1.0, places=2)
+        self.assertAlmostEqual(p["C1"]["depth_mm"] - p["C1"]["part_height_mm"], 0.5, places=2)
+        self.assertEqual((p["U1"]["room_for"], p["C1"]["room_for"]), ("heat insert", "jig.room"))
+        self.assertTrue(all(v >= 1.15 for v in f["side_play"]["U1"].values()))     # room sideways too
+        self.assertTrue(any(n.startswith("Heat: U1 get hot") for n in j["notes"]))
+        for over in ({"hot_parts": "none"}, {"heat_insert_mm": 0}, {"room": {"U1": 0}}):
+            self.assertEqual(build_jigs(self.design(jig=over))["room"], {}, over)
+        self.assertEqual(sorted(build_jigs(self.design(jig={"hot_parts": ["C*"]}))["room"]), ["C1", "C2"])
+        from pcbtestkit.agent import Workspace
+        ws = Workspace(self.pcb, persist=False)
+        self.assertEqual(ws.call("set_jig_options", {"room": {"J3": 20}})["error"]["code"], "OUT_OF_RANGE")
+        self.assertTrue(ws.call("set_jig_options", {"room": {"J3": 1.5}, "hot_parts": "none"})["ok"])
+        dec = {x["topic"] for x in Workspace(self.pcb, persist=False).call("get_open_decisions")["decisions"]}
+        self.assertIn("hot_parts", dec)
 
     def test_overhanging_connector(self):
         """A part reaching 5 mm past the board's edge and 3 mm below its face: the placement jig is cut away under

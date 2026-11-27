@@ -82,9 +82,10 @@ def _worst(tris, x0, y0, res, nx, ny, surf, sign: int, flip_y: bool = False, ay1
 
 
 def check_holding(view: Any, g: Dict[str, Any], meshes: Dict[str, P3.PartMesh], present: List[str],
-                  hold: List[str], Q: int) -> Dict[str, Any]:
+                  hold: List[str], Q: int, room: Optional[Dict[str, float]] = None) -> Dict[str, Any]:
     """Parts against a holding jig (grid ``g`` of one board: H, nx, ny, res, ox, oy, support). ``meshes``: the
-    parts as the (possibly turned-over) view sees them (:func:`pcbtestkit.jig.view_meshes`)."""
+    parts as the (possibly turned-over) view sees them (:func:`pcbtestkit.jig.view_meshes`). ``room``: {ref: mm} of
+    room asked for an insert: such a part touches its insert, so its gap to the jig is that room."""
     t = float(view.board.thickness)
     H, nx, ny, res, ox, oy = g["H"], g["nx"], g["ny"], g["res"], g["ox"], g["oy"]
     base = t + g["support"]
@@ -104,9 +105,12 @@ def check_holding(view: Any, g: Dict[str, Any], meshes: Dict[str, P3.PartMesh], 
             hits[ref] = round(-worst, 3)
         if ref in hold and worst < math.inf:
             gaps[ref] = round(worst, 3)
-    loose = {r: v for r, v in gaps.items() if v > TOUCH}
-    return {"collisions": hits, "gaps": gaps, "loose": loose,
-            "touching": sorted(r for r, v in gaps.items() if -TOL <= v <= TOUCH)}
+    room = room or {}
+    # a part with room touches the insert that fills it: its gap to the print is the room
+    loose = {r: round(v - room.get(r, 0.0), 3) for r, v in gaps.items() if v - room.get(r, 0.0) > TOUCH}
+    short = {r: round(room[r] - v, 3) for r, v in gaps.items() if r in room and -TOL <= v < room[r] - TOL}
+    return {"collisions": hits, "gaps": gaps, "loose": loose, "short": short,
+            "touching": sorted(r for r, v in gaps.items() if -TOL <= v - room.get(r, 0.0) <= TOUCH)}
 
 
 def occupied(view: Any, g: Dict[str, Any], meshes: Dict[str, P3.PartMesh], refs: List[str]) -> Dict[int, set]:

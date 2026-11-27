@@ -197,6 +197,11 @@ DEFAULTS: Dict[str, Any] = {
         "relief_clearance_mm": 0.8,
         "relief_extra_depth_mm": 1.0,
         "hold_depth_offset_mm": 0.0,  # 0: every part touches its pocket floor the moment the PCB lands
+        # room in the holding jig for a heat-resistant insert (silicone, PTFE, FR-4) under and around parts that get
+        # hot all over while soldered (heavy ground pins on a metal body: pcbtestkit/heat.py); 0 = none
+        "heat_insert_mm": 1.0,
+        "hot_parts": "auto",        # auto | none | [refs or wildcards]
+        "room": {},                 # extra room of your own: {"J1": 1.5, "C*": 0.5} (mm all round; 0 = none)
         "floor_mm": 2.0,
         "rim_mm": 3.0,
         "rim_height_mm": 1.2,

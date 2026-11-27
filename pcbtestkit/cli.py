@@ -57,6 +57,15 @@ def _overrides(args) -> Dict[str, Any]:
     for opt, key in (("jig_ignore", "ignore"), ("jig_ignore_models", "ignore_models")):
         if getattr(args, opt, None):
             overrides.setdefault("jig", {})[key] = [p.strip() for p in getattr(args, opt).split(",") if p.strip()]
+    if getattr(args, "jig_room", None):
+        room = {}
+        for item in args.jig_room.split(","):
+            if "=" in item:
+                k, v = item.split("=", 1)
+                room[k.strip()] = float(v)
+        overrides.setdefault("jig", {})["room"] = room
+    if getattr(args, "jig_heat_insert", None) is not None:
+        overrides.setdefault("jig", {})["heat_insert_mm"] = float(args.jig_heat_insert)
     if getattr(args, "fab", None):
         overrides["fab_profile"] = args.fab
     if getattr(args, "class_system", None):
@@ -936,6 +945,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--jig-ignore", help="parts the jigs leave out completely (no pocket, no 3D model, no stand-in): comma "
                                         "separated refs, values or footprint names, wildcards allowed, e.g. ENC1,*Enclosure*")
     p.add_argument("--jig-ignore-models", help="3D model files the jigs leave out, comma separated, e.g. '*case*.step'")
+    p.add_argument("--jig-room", help="extra room all round in the holding jig for some parts, e.g. J1=1.5,C*=0.5 (mm)")
+    p.add_argument("--jig-heat-insert", type=float, metavar="MM",
+                   help="room for a heat-resistant insert under parts that get hot all over while soldered (default "
+                        "1.0; 0 = none)")
     p.add_argument("--no-fixture", action="store_true")
     p.add_argument("--no-route", action="store_true", help="leave the fixture board unrouted (ratsnest only)")
     p.add_argument("--no-jig", action="store_true")

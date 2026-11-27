@@ -684,6 +684,8 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
     if notes_rim:
         notes.append(notes_rim)
     sel = {fp.ref for fp in selected}
+    from .heat import room_for
+    room = room_for(design, selected)         # extra room: jig.room, and heat-resistant inserts for hot parts
     present = present_parts(design, selected, mounted)
     meshes = view_meshes(design, present, log)
     zcut = t - rim_h - 0.05                       # lower than this, nothing meets the jig (its rim ends there)
@@ -691,7 +693,7 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
     for fp in present:
         sb = P3.silhouette_bbox(meshes[fp.ref], z_min=zcut) if fp.ref in meshes else None
         if sb:
-            g_ = (hold_clr if fp.ref in sel else rel_clr) + 1.5
+            g_ = (hold_clr + (room[fp.ref]["mm"] if fp.ref in room else 0.0) if fp.ref in sel else rel_clr) + 1.5
             ext.merge(BBox(sb[0] - g_, sb[1] - g_, sb[2] + g_, sb[3] + g_))
     lim = BBox(bb.x0 - border - 40.0, bb.y0 - border - 40.0, bb.x1 + border + 40.0, bb.y1 + border + 40.0)
     if ext.x0 < lim.x0 or ext.y0 < lim.y0 or ext.x1 > lim.x1 or ext.y1 > lim.y1:
@@ -719,7 +721,7 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
     hold_bb = [meshes[r].bbox for r in sel if r in meshes and meshes[r].bbox]
 
     def near_hold(b_) -> bool:
-        m_ = rel_clr + hold_clr + 2 * res + 0.5
+        m_ = rel_clr + hold_clr + 2 * res + 0.5 + max([r_["mm"] for r_ in room.values()] + [0.0])
         return any(b_[0] <= h_[3] + m_ and b_[3] >= h_[0] - m_ and b_[1] <= h_[4] + m_ and b_[4] >= h_[1] - m_
                    for h_ in hold_bb)
     for fp in present:
@@ -727,7 +729,8 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
         if pm is None:
             continue
         hold = fp.ref in sel
-        grow, extra = (hold_clr, offset) if hold else (rel_clr, rel_extra)
+        r_mm = room[fp.ref]["mm"] if hold and fp.ref in room else 0.0
+        grow, extra = (hold_clr + r_mm, offset + r_mm) if hold else (rel_clr, rel_extra)
         tris = [tr for tr in pm.tris if max(tr[2], tr[5], tr[8]) > zcut]
         if not tris:
             continue
@@ -750,6 +753,8 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
             cells.append(divmod(key, nx)[::-1])
         if cells and (hold or hmax > -1e-6):
             pockets.append(_pocket_info(fp, cells, res, dmax, hmax, owners[k_own][1], _shape_src(pm)))
+            if r_mm:
+                pockets[-1].update({"room_mm": r_mm, "room_for": room[fp.ref]["why"], "hot": room[fp.ref]["hot"]})
     # the soldered leads of the other side's parts poke out of this face: at least jig.lead_relief_mm of room
     if lead > 0:
         for fp in present:
@@ -875,6 +880,7 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
         "pockets": sorted(pockets, key=lambda p: (p["type"] != "hold", C.natural_key(p["ref"]))),
         "posts": [{"hole": ref, "center": [round(px, 2), round(py, 2)], "diameter_mm": round(2 * r, 2)} for px, py, r, ref in posts],
         "pocket_floor": "flat" if flat else "shaped",
+        "room": room,
         "ignored": {r: w for r, w in sorted(ign.items()) if w != "no pads (nothing to solder)" or
                     any(m for m in design.board.by_ref[r].models if not m.hide)} if ign else {},
         "notes": notes + ["Place parts in the 'hold' pockets, lower the PCB %s side down onto the nest, solder from above." % up,
@@ -884,6 +890,21 @@ def build_jig(design: Design, stl_path: Optional[str] = None, scad_path: Optiona
     if png_path:
         write_heightmap_png(png_path, H, nx, ny)
         result["preview_png"] = png_path
+    ins = [r for r, v in room.items() if v["why"] == "heat insert"]
+    if ins:
+        whys: List[str] = []
+        for r in ins:
+            w = "; ".join(room[r]["hot"][:2])
+            if w not in whys:
+                whys.append(w)
+        result["notes"].append(
+            "Heat: %s get hot all over while they are soldered (%s). Their pockets have %.1f mm of room all round: "
+            "line each with %.1f mm of heat-resistant material (silicone sheet, PTFE, FR-4) before the part goes in, so "
+            "the hot part never touches the print (jig.heat_insert_mm, jig.hot_parts)." % (
+                ", ".join(ins), " / ".join(whys[:3]), room[ins[0]]["mm"], room[ins[0]]["mm"]))
+    own = [r for r, v in room.items() if v["why"] == "jig.room"]
+    if own:
+        result["notes"].append("Extra room (jig.room): %s." % ", ".join("%s %.1f mm" % (r, room[r]["mm"]) for r in own))
     if lead > 0 and any(p["type"] == "lead" for p in pockets):
         result["notes"].append("Trim the soldered leads of the %s-side parts to at most %.1f mm before this pass "
                                "(lead reliefs %.1f mm deep)." % (down, max(0.5, lead - 1.0), lead))
@@ -1234,12 +1255,18 @@ def fit_check(v: Design, g: Dict[str, Dict[str, Any]], jig: Dict[str, Any], moun
         out["shapes"][meshes[r].source] = out["shapes"].get(meshes[r].source, 0) + 1
     problems: List[str] = []
     if not nest:
-        h = F.check_holding(v, g["holding"], meshes, refs, hold, Q)
+        from .heat import room_for
+        room = {r: x["mm"] for r, x in room_for(v, selected).items()}
+        h = F.check_holding(v, g["holding"], meshes, refs, hold, Q, room)
+        out["room"] = room
         out.update({"holding_collisions": h["collisions"], "touching": h["touching"], "loose": h["loose"]})
         if h["collisions"]:
             problems.append("parts reach into the holding jig: %s" % _mm_list(h["collisions"]))
         if h["loose"]:
-            problems.append("hand-soldered parts don't touch their pockets: %s" % _mm_list(h["loose"]))
+            problems.append("hand-soldered parts don't touch their pockets%s: %s" % (
+                " (or their inserts)" if room else "", _mm_list(h["loose"])))
+        if h.get("short"):
+            problems.append("parts with less room than asked for their insert: %s" % _mm_list(h["short"]))
         # held sideways: how far each part can slide before it meets a wall (the pocket's clearance, plus at most a
         # cell of the grid: more than that and it is not held on that side)
         jc = v.cfg["jig"]
@@ -1254,7 +1281,9 @@ def fit_check(v: Design, g: Dict[str, Dict[str, Any]], jig: Dict[str, Any], moun
         play, held = {}, {}
         for r in hold:
             if r in meshes:
-                play[r], held[r] = F.side_play(v, g["holding"], meshes[r], Q, low, high, occ=occ, far=far)
+                rr = room.get(r, 0.0)
+                play[r], held[r] = F.side_play(v, g["holding"], meshes[r], Q, low + rr, high + rr, occ=occ,
+                                               far=far + 2 * rr)
         free = sorted((r for r, b_ in held.items() if not all(b_.values())), key=C.natural_key)
         by_part = {r: {d_: "%s %.2f mm" % (b_[d_], play[r][d_]) for d_ in b_ if b_[d_] not in ("", "jig")}
                    for r, b_ in held.items()}
@@ -1288,17 +1317,22 @@ def fit_check(v: Design, g: Dict[str, Dict[str, Any]], jig: Dict[str, Any], moun
                           "it." % (len(refs), "" if len(refs) == 1 else "s"))
     else:
         bp = out.get("held_by_parts") or {}
-        vals = [x for r, p_ in out.get("side_play", {}).items() for d_, x in p_.items() if d_ not in bp.get(r, {})]
-        side = (" and are held on all four sides (%.2f to %.2f mm of play)" % (min(vals), max(vals))) if vals else ""
+        rm = out.get("room") or {}
+        vals = [x - rm.get(r, 0.0) for r, p_ in out.get("side_play", {}).items() for d_, x in p_.items()
+                if d_ not in bp.get(r, {})]
+        side = (" and are held on all four sides (%.2f to %.2f mm of play%s)" % (
+            min(vals), max(vals), ", inserts in place" if rm else "")) if vals else ""
         if bp:
             items = ["%s %s against %s (%s)" % (r, d_, w.split(" ")[0], w.split(" ", 1)[1])
                      for r in sorted(bp, key=C.natural_key) for d_, w in sorted(bp[r].items())]
             side += ("; held by the part beside it, too close for a jig wall between them: %s"
                      % ", ".join(items[:6]) + (" ..." if len(items) > 6 else ""))
         out["summary"] = ("Fit check (%d parts, their 3D shapes): nothing touches on the way in; all %d hand-soldered "
-                          "parts touch their pockets as the board lands on the support (within %.2f mm)%s%s."
-                          % (len(refs), len(hold), F.TOUCH, side, "; the holding jig closes over the placement jig "
-                             "without touching it" if pg else ""))
+                          "parts touch their pockets%s as the board lands on the support (within %.2f mm)%s%s%s."
+                          % (len(refs), len(hold), " (or their inserts)" if rm else "", F.TOUCH, side,
+                             ("; room for inserts: %s" % ", ".join("%s %.1f mm" % (r, x) for r, x in sorted(rm.items())))
+                             if rm else "",
+                             "; the holding jig closes over the placement jig without touching it" if pg else ""))
     if est:
         out["summary"] += " Estimated (box) shapes: %s." % ", ".join(est[:10])
     return out

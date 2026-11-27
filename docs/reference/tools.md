@@ -237,6 +237,9 @@ Solder-jig options: workflow (two jigs or one), which parts it holds, parts or 3
 | `ignore_models` | array of string | 3D model files the jigs leave out, e.g. '*case*.step' (a part whose every model is left out is ignored). |
 | `pocket_floor` | shaped \| flat | shaped (default): pockets follow each part's 3D shape; flat: one depth per part. |
 | `overhang_clearance_mm` | number | Placement jig: room around leads and overhanging parts. |
+| `heat_insert_mm` | number | Room in the holding jig for a heat-resistant insert under parts that get hot all over while soldered (0 = none). |
+| `hot_parts` | array \| string | 'auto' (detected: heavy ground pins on a metal body), 'none', or refs / wildcards. |
+| `room` | object | {ref or wildcard: mm} extra room all round in the holding jig (0 = none). |
 | `heights` | object | {ref: body height above PCB in mm} |
 | `relief_all_top` | boolean |  |
 | `resolution_mm` | number |  |

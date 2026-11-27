@@ -369,6 +369,14 @@ Details:
   KiCad files: `"jig": {"ignore": ["ENC1", "*Enclosure*"]}` (references, values or footprint names, wildcards),
   `"ignore_models": ["*case*.step"]` for 3D model files, `--jig-ignore` / `--jig-ignore-models` on the command line,
   or "Leave out of the jigs" in the KiCad dialog. Footprints without pads are never in the jigs.
+- **Hot parts.** A printed jig softens at 60 to 80 °C. Parts that get hot all over while they are soldered (a heavy
+  ground pin, joined solidly to a plane or big, on a metal body: shielded connectors, coaxial and barrel jacks,
+  TO-220 tabs, crystal cans) are found on their own (`pcbtestkit/heat.py`); their pockets in the holding jig get
+  `jig.heat_insert_mm` (1.0 mm) of room all round for a heat-resistant insert (silicone sheet, PTFE, FR-4), and the
+  guide says which parts and why. With the insert in place the part still touches as the board lands (the check
+  allows for it). `jig.hot_parts`: `"auto"`, `"none"` or your own list.
+- **Room of your own** for any part (a sleeve, tape, a finish after soldering): `"jig": {"room": {"J1": 1.5, "C*":
+  0.5}}` (mm all round), `--jig-room J1=1.5`, or *Extra room...* in the KiCad dialog.
 - `jig.heights` sets a part's height where its model is generic: its shape is stretched to it.
   `jig.pocket_floor: "flat"` makes every pocket one depth (its part's highest point) instead of its shape.
 - Prefer the old single-jig method (parts dropped into the holding jig, PCB lowered onto them)? Set `"jig": {"workflow": "single"}`.
